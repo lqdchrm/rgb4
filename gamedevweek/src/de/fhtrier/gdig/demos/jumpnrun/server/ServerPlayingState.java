@@ -20,8 +20,8 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreatePlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreatePlayer;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemovePlayer;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
@@ -45,7 +45,7 @@ public class ServerPlayingState extends PlayingState {
 			// create every (player) entity from server on client
 			for (Entity e : getFactory().getEntities()) {
 				if (e instanceof Player) {
-					NetworkComponent.getInstance().sendCommand(cmd.getSender(), new DoCreatePlayer(e.getId()));
+					NetworkComponent.getInstance().sendCommand(cmd.getSender(), new DoCreateEntity(e.getId(), EntityType.PLAYER));
 				}
 			}
 			NetworkComponent.getInstance().sendCommand(cmd.getSender(), new AckJoin());
@@ -56,7 +56,7 @@ public class ServerPlayingState extends PlayingState {
 		if (cmd instanceof QueryLeave) {
 			int playerId = ((QueryLeave)cmd).getPlayerId();
 
-			NetworkComponent.getInstance().sendCommand(new DoRemovePlayer(playerId));
+			NetworkComponent.getInstance().sendCommand(new DoRemoveEntity(playerId));
 			getLevel().remove(getFactory().getEntity(playerId));
 			getFactory().removeEntity(playerId, true);
 			NetworkComponent.getInstance().sendCommand(cmd.getSender(), new AckLeave());
@@ -71,7 +71,7 @@ public class ServerPlayingState extends PlayingState {
 
 			// send command to all clients to create player
 			NetworkComponent.getInstance().sendCommand(
-					new DoCreatePlayer(playerId));
+					new DoCreateEntity(playerId, EntityType.PLAYER));
 			
 			// tell client that this is his player
 			NetworkComponent.getInstance().sendCommand(cmd.getSender(), new AckCreatePlayer(playerId));

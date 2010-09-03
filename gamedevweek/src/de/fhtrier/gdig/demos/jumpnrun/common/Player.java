@@ -6,21 +6,18 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
-import org.newdawn.slick.tiled.TiledMap;
 
+import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.EntityData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerState;
 import de.fhtrier.gdig.engine.entities.gfx.AnimationEntity;
 import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
-import de.fhtrier.gdig.engine.entities.physics.Collisions;
-import de.fhtrier.gdig.engine.entities.physics.PhysicsEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
 
-public class Player extends PhysicsEntity {
+public class Player extends LevelCollidableEntity {
 
 	private static final Color[] PlayerColors = { Color.blue, Color.green,
 			Color.red, Color.yellow, Color.black };
@@ -28,9 +25,6 @@ public class Player extends PhysicsEntity {
 	private static float EPSILON = 0.0001f;
 
 	private int currentState = -1;
-	private boolean onGround;
-
-	private Level level;
 	private ImageEntity idleImage;
 	private AnimationEntity runAnimation;
 	private AnimationEntity jumpAnimation;
@@ -73,155 +67,22 @@ public class Player extends PhysicsEntity {
 																	// rot
 		setVel(new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 }); // no speed
 		setAcc(new float[] { 0, 981, 0, 0, 0, 0, 0, 0, 0 }); // gravity
-		setBounds(new Rectangle(30, 0, 36, 96)); // bounding box
+		setBounds(new Rectangle(-18, -96, 36, 96)); // bounding box
 
 		setVisible(true);
 		setActive(true);
 
 		// order
 		setOrder(EntityOrder.Player);
-		level = null;
 
 		// startup
 		setState(PlayerState.Idle);
 	}
 
-	private boolean handleCollisions() {
-
-		this.onGround = false;
-		boolean collided = false;
-
-		TiledMap map = this.level.getMap();
-
-		// Player BoundingBox
-		Shape bbPlayer = new Rectangle(getData()[X] - 18, getData()[Y] - 96,
-				36, 96);
-
-		// determine tiles to check for collisions
-		int leftTile = (int) (Math.floor(bbPlayer.getMinX()
-				/ map.getTileWidth()));
-		int rightTile = (int) (Math.ceil(bbPlayer.getMaxX()
-				/ map.getTileWidth()));
-		int topTile = (int) (Math.floor(bbPlayer.getMinY()
-				/ map.getTileHeight()));
-		int bottomTile = (int) (Math.ceil(bbPlayer.getMaxY()
-				/ map.getTileHeight()));
-
-		for (int y = Math.max(0, topTile); y < Math.min(map.getHeight(),
-				bottomTile); y++) {
-			for (int x = Math.max(0, leftTile); x < Math.min(map.getWidth(),
-					rightTile); x++) {
-
-				// items
-				int tileId = map.getTileId(x, y, 0);
-
-				if (tileId > 0) {
-					Rectangle bbTile = new Rectangle(x * map.getTileWidth(), y
-							* map.getTileHeight(), map.getTileWidth(),
-							map.getTileHeight());
-
-					float[] depth = Collisions.getIntersectionDepth(bbPlayer,
-							bbTile);
-
-					float absDepthX = Math.abs(depth[X]);
-					float absDepthY = Math.abs(depth[Y]);
-
-					if ((absDepthX > 0) || (absDepthY > 0)) {
-
-						switch (tileId) {
-						case 1:
-						case 13:
-							map.setTileId(x, y, 0, 0);
-							break;
-						default:
-							if (absDepthY < absDepthX) {
-								getData()[Y] += depth[Y];
-								getVel()[Y] = 0.0f;
-								bbPlayer = new Rectangle(getData()[X] - 18,
-										getData()[Y] - 96, 36, 96);
-
-								if (depth[Y] < 0) {
-									this.onGround = true;
-								}
-
-								collided = true;
-							} else {
-								getData()[X] += depth[X];
-								getVel()[X] = 0.0f;
-								bbPlayer = new Rectangle(getData()[X] - 18,
-										getData()[Y] - 96, 36, 96);
-								collided = true;
-							}
-							break;
-						}
-					}
-				}
-			}
-		}
-		return collided;
-	}
-
-	private void markCollisionTiles() {
-
-		// Player BoundingBox
-		Shape bbPlayer = new Rectangle(getData()[X] - 18, getData()[Y] - 96,
-				36, 96);
-
-		TiledMap map = this.level.getMap();
-
-		// determine tiles to check for collisions
-		int leftTile = (int) (Math.floor(bbPlayer.getMinX()
-				/ map.getTileWidth()));
-		int rightTile = (int) (Math.ceil(bbPlayer.getMaxX()
-				/ map.getTileWidth())) - 1;
-		int topTile = (int) (Math.floor(bbPlayer.getMinY()
-				/ map.getTileHeight()));
-		int bottomTile = (int) (Math.ceil(bbPlayer.getMaxY()
-				/ map.getTileHeight())) - 1;
-
-		// mark Collision Tiles
-		for (int y = topTile - 1; y <= bottomTile + 1; y++) {
-
-			if ((y < 0) || (y >= map.getHeight())) {
-				continue;
-			}
-
-			for (int x = leftTile - 1; x <= rightTile + 1; x++) {
-
-				if ((x < 0) || (x >= map.getWidth())) {
-					continue;
-				}
-
-				// if tile is not empty
-				// TODO read from special layer
-				int tileId = map.getTileId(x, y, 0);
-				if (tileId > 0) {
-
-					// Bounding box for current tile
-					Rectangle bbTile = new Rectangle(x * map.getTileWidth(), y
-							* map.getTileHeight(), map.getTileWidth(),
-							map.getTileHeight());
-
-					if (bbPlayer.intersects(bbTile)) {
-						// mark tile
-						if (tileId < 12) {
-							map.setTileId(x, y, 0, tileId + 12);
-						}
-					} else {
-						// unmark tile
-						if (tileId > 12) {
-							map.setTileId(x, y, 0, tileId - 12);
-						}
-					}
-				}
-			}
-		}
-	}
-
 	@Override
 	public void update(int deltaInMillis) {
 
-		if (isActive() && level != null) {
+		if (isActive()) {
 
 			super.update(deltaInMillis); // calc physics
 
@@ -241,7 +102,7 @@ public class Player extends PhysicsEntity {
 				getVel()[Y] = -this.maxPlayerSpeed;
 			}
 
-			markCollisionTiles();
+			markCollisionTiles(12);
 			handleCollisions();
 
 			if ((this.currentState == PlayerState.Idle)
@@ -343,14 +204,6 @@ public class Player extends PhysicsEntity {
 		}
 	}
 
-	public boolean isOnGround() {
-		return this.onGround;
-	}
-
-	public void setOnGround(boolean onGround) {
-		this.onGround = onGround;
-	}
-
 	public EntityData getPlayerData() {
 		if (this.playerData == null) {
 			this.playerData = new EntityData();
@@ -364,6 +217,6 @@ public class Player extends PhysicsEntity {
 	}
 
 	public void setLevel(Level level) {
-		this.level = level;
+		this.setMap(level.getMap());
 	}
 }

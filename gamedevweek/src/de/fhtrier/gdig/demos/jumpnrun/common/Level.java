@@ -12,11 +12,11 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
 import de.fhtrier.gdig.engine.entities.gfx.TiledMapEntity;
-import de.fhtrier.gdig.engine.entities.physics.PhysicsEntity;
+import de.fhtrier.gdig.engine.entities.physics.MoveableEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 
-public class Level extends PhysicsEntity {
+public class Level extends MoveableEntity {
 
 	private GameFactory factory;
 

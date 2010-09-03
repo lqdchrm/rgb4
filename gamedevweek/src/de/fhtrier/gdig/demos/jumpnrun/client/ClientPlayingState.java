@@ -16,14 +16,13 @@ import de.fhtrier.gdig.demos.jumpnrun.common.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.EntityData;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreatePlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreatePlayer;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemovePlayer;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
@@ -56,7 +55,7 @@ public class ClientPlayingState extends PlayingState {
 		setState(LocalState.JOINING);
 		
 		// HACK load and play sound
-		getFactory().getAssetMgr().storeSound(Assets.LevelSoundtrack, "sounds/kaliba.ogg").loop();
+		// getFactory().getAssetMgr().storeSound(Assets.LevelSoundtrack, "sounds/kaliba.ogg").loop();
 	}
 
 	private boolean handleProtocolCommands(INetworkCommand cmd) {
@@ -96,8 +95,8 @@ public class ClientPlayingState extends PlayingState {
 
 		// DoCreatePlayer tells us to create a player, e.g. because someone has
 		// joined
-		if (cmd instanceof DoCreatePlayer) {
-			DoCreatePlayer dcp = (DoCreatePlayer) cmd;
+		if (cmd instanceof DoCreateEntity) {
+			DoCreateEntity dcp = (DoCreateEntity) cmd;
 
 			// Create Player
 			int playerId = this.getFactory().createEntity(dcp.getPlayerId(),
@@ -108,8 +107,8 @@ public class ClientPlayingState extends PlayingState {
 
 		// DoRemovePlayer tells us to drop a Player, e.g. because someone has
 		// left
-		if (cmd instanceof DoRemovePlayer) {
-			DoRemovePlayer drp = (DoRemovePlayer) cmd;
+		if (cmd instanceof DoRemoveEntity) {
+			DoRemoveEntity drp = (DoRemoveEntity) cmd;
 
 			// Remove Player
 			int playerId = drp.getPlayerId();
