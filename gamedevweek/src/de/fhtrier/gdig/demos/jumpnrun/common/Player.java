@@ -1,7 +1,6 @@
 package de.fhtrier.gdig.demos.jumpnrun.common;
 
 import org.newdawn.slick.Animation;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
@@ -13,6 +12,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.network.EntityData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerState;
+import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.gfx.AnimationEntity;
 import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
 import de.fhtrier.gdig.engine.entities.physics.Collisions;
@@ -22,16 +22,12 @@ import de.fhtrier.gdig.engine.management.Factory;
 
 public class Player extends PhysicsEntity {
 
-	private static final Color[] PlayerColors = { Color.blue, Color.green,
-			Color.red, Color.yellow, Color.black };
-
-	private static float EPSILON = 0.0001f;
-
 	private int currentState = -1;
 	private boolean onGround;
 
 	private Level level;
 	private ImageEntity idleImage;
+	private Entity playerGroup;
 	private AnimationEntity runAnimation;
 	private AnimationEntity jumpAnimation;
 	private Animation jump;
@@ -39,10 +35,14 @@ public class Player extends PhysicsEntity {
 	private float maxPlayerSpeed = 1000.0f;
 
 	private EntityData playerData;
+	
+    public PlayerState state;
 
 	public Player(int id, Factory factory) throws SlickException {
 		super(id);
 
+		state = new PlayerState();
+		state.name = "Player";
 		AssetMgr assets = factory.getAssetMgr();
 
 		// gfx
@@ -59,20 +59,28 @@ public class Player extends PhysicsEntity {
 				Assets.PlayerRunAnim);
 		this.jumpAnimation = factory.createAnimationEntity(
 				Assets.PlayerJumpAnim, Assets.PlayerJumpAnim);
+		
+		playerGroup = factory.createEntity(EntityOrder.Player);
+		
+		playerGroup.getData()[X] = -48;
+		playerGroup.getData()[Y] = -96;
+		playerGroup.getData()[CENTER_X] = 48;
+		playerGroup.getData()[CENTER_Y] = 96;
+		
+		playerGroup.add(this.idleImage);
+		playerGroup.add(this.runAnimation);
+		playerGroup.add(this.jumpAnimation);
 
-		add(this.idleImage);
-		add(this.runAnimation);
-		add(this.jumpAnimation);
-
+		add(playerGroup);
 		// physics
-		// X Y OX OY FX FY SY SY ROT
-		initData(new float[] { 200, 200, 48, 96, 0, 0, 1, 1, 0 }); // pos +
+		// X Y OX OY SY SY ROT
+		initData(new float[] { 200, 200, 48, 96, 1, 1, 0 }); // pos +
 																	// origin +
 																	// focus +
 																	// scale +
 																	// rot
-		setVel(new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 }); // no speed
-		setAcc(new float[] { 0, 981, 0, 0, 0, 0, 0, 0, 0 }); // gravity
+		setVel(new float[] { 0, 0, 0, 0, 0, 0, 0 }); // no speed
+		setAcc(new float[] { 0, 981, 0, 0, 0, 0, 0 }); // gravity
 		setBounds(new Rectangle(30, 0, 36, 96)); // bounding box
 
 		setVisible(true);
@@ -245,23 +253,30 @@ public class Player extends PhysicsEntity {
 			handleCollisions();
 
 			if ((this.currentState == PlayerState.Idle)
-					&& (Math.abs(getData()[X] - getPrevPos()[X]) < EPSILON)
-					&& (Math.abs(getData()[Y] - getPrevPos()[Y]) < EPSILON)) {
+					&& (Math.abs(getData()[X] - getPrevPos()[X]) < Constants.EPSILON)
+					&& (Math.abs(getData()[Y] - getPrevPos()[Y]) < Constants.EPSILON)) {
 				getVel()[X] = getVel()[Y] = 0.0f;
 			}
 		}
 	}
 
 	@Override
-	public void renderImpl(Graphics graphicContext) {
+	public void renderImpl(Graphics g) {
 
 		if (getId() == -1) {
 			throw new RuntimeException("Wrong Initialization: no Client ID set");
 		}
+		
+		
+		super.renderImpl(g);
 
-		graphicContext.setColor(PlayerColors[getId() % PlayerColors.length]);
-
-		super.renderImpl(graphicContext);
+		if (state.name != null)
+		{
+			int x = g.getFont().getWidth(state.name)/2;
+			int y = 96+g.getFont().getHeight(state.name);
+			g.drawString(state.name, -x,-y);
+		}
+		
 	}
 
 	@Override
@@ -324,13 +339,13 @@ public class Player extends PhysicsEntity {
 			break;
 		case PlayerState.RunLeft:
 			getAcc()[X] = -2000.0f;
-			getData()[SX] = 1;
+			playerGroup.getData()[SCALE_X] = 1;
 			this.runAnimation.setActive(true);
 			this.runAnimation.setVisible(true);
 			break;
 		case PlayerState.RunRight:
 			getAcc()[X] = 2000.0f;
-			getData()[SX] = -1;
+			playerGroup.getData()[SCALE_X] = -1;
 			this.runAnimation.setActive(true);
 			this.runAnimation.setVisible(true);
 			break;

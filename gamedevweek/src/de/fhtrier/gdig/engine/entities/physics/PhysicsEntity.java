@@ -3,6 +3,7 @@ package de.fhtrier.gdig.engine.entities.physics;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Shape;
 
+import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
 import de.fhtrier.gdig.engine.entities.Entity;
 
 public class PhysicsEntity extends Entity {
@@ -21,9 +22,9 @@ public class PhysicsEntity extends Entity {
 	public PhysicsEntity(int id) {
 		super(id);
 
-		this.prevPos = new float[] { 0, 0, 0, 0, 0, 0, 1, 1, 0};
-		this.vel = new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		this.acc = new float[] { 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0};
+		this.prevPos = new float[] { 0, 0, 0, 0, 1, 1, 0};
+		this.vel = new float[] { 0, 0, 0, 0, 0, 0, 0};
+		this.acc = new float[] { 0 ,0 ,0 ,0 ,0 ,0 ,0};
 		this.bounds = null;
 	}
 
@@ -33,7 +34,7 @@ public class PhysicsEntity extends Entity {
 
 			float secs = deltaInMillis / 1000.0f;
 
-			for (int i = 0; i < 9; i++) {
+			for (int i = 0; i < getData().length; i++) {
 				// simple euler integration
 				this.vel[i] += this.acc[i] * secs;
 				this.getData()[i] = this.getData()[i] + this.vel[i] * secs;
@@ -47,14 +48,15 @@ public class PhysicsEntity extends Entity {
 	public void renderImpl(Graphics graphicContext) {
 		super.renderImpl(graphicContext);
 
-		if (this.bounds != null) {
+		if (this.bounds != null && Constants.Debug.drawBounds) {
+			graphicContext.setColor(Constants.Debug.boundColor);
 			graphicContext.draw(this.bounds);
 		}
 	}
 
 	public void initData(float[] pos) {
 		setData(pos);
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < getData().length; i++) {
 			this.prevPos[i] = pos[i];
 		}
 	}

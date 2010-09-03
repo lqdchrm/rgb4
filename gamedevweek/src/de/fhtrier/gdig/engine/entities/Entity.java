@@ -15,13 +15,11 @@ public class Entity implements Identifiable {
 
 	public static final int X = 0; // pos
 	public static final int Y = 1;
-	public static final int OX = 2; // origin
-	public static final int OY = 3;
-	public static final int FX = 4; // focus
-	public static final int FY = 5;
-	public static final int SX = 6; // scale
-	public static final int SY = 7;
-	public static final int ROT = 8; // rotation
+	public static final int CENTER_X = 2; // origin
+	public static final int CENTER_Y = 3;
+	public static final int SCALE_X = 4; // scale
+	public static final int SCALE_Y = 5;
+	public static final int ROTATION = 6; // rotation
 
 	private int id;
 
@@ -64,8 +62,10 @@ public class Entity implements Identifiable {
 		this.recursing = true;
 
 		this.setOrder(id);
-
-		this.data = new float[] { 0, 0, 0, 0, 0, 0, 1, 1, 0 };
+		this.data = new float[7];
+		this.data[SCALE_X] = 1;
+		this.data[SCALE_Y] = 1;
+		
 	}
 
 	public Entity add(Entity e) {
@@ -105,20 +105,19 @@ public class Entity implements Identifiable {
 
 	protected void preRender(Graphics graphicContext) {
 		graphicContext.pushTransform();
-
+		
+		graphicContext.translate(getData()[CENTER_X], getData()[CENTER_Y]); // set origin
+		
 		graphicContext.translate(getData()[X], getData()[Y]); // move to
 																// position
 
-		graphicContext.translate(getData()[FX], getData()[FY]); // move to focus
 																// point
-		graphicContext.rotate(0, 0, getData()[ROT]); // rotate
-		graphicContext.scale(getData()[SX], getData()[SY]); // zoom
-		graphicContext.translate(-getData()[FX], -getData()[FY]); // move back
+		graphicContext.rotate(0, 0, getData()[ROTATION]); // rotate
+		graphicContext.scale(getData()[SCALE_X], getData()[SCALE_Y]); // zoom
 																	// from
-																	// focus
 																	// point
 
-		graphicContext.translate(-getData()[OX], -getData()[OY]); // set origin
+		graphicContext.translate(-getData()[CENTER_X], -getData()[CENTER_Y]); // set origin
 	}
 
 	protected void renderImpl(Graphics graphicContext) {
@@ -186,6 +185,11 @@ public class Entity implements Identifiable {
 
 	public float[] getData() {
 		return this.data;
+	}
+	
+	public float getData(int position)
+	{
+		return this.data[position];
 	}
 
 	public void setData(float[] data) {

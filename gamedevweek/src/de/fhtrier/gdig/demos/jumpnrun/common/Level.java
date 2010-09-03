@@ -67,7 +67,7 @@ public class Level extends PhysicsEntity {
 		add(this.ground);
 
 		// physics
-		setData(new float[] { 0, 0, 0, 0, 0, 0, 1, 1, 0 });
+		setData(new float[] { 0, 0, 0, 0, 1, 1, 0 });
 
 		// order
 		setOrder(EntityOrder.Level);
@@ -85,11 +85,10 @@ public class Level extends PhysicsEntity {
 		graphicContext.drawString(
 				"Level\n" +
 				"ID: " + e.getId() + "\n" + " X: " + e.getData()[X] + "  Y: "
-						+ e.getData()[Y] + "\n" + "OX: " + e.getData()[OX]
-						+ " OY: " + e.getData()[OY] + "\n" + "FX: "
-						+ e.getData()[FX] + " FY: " + e.getData()[FY] + "\n"
-						+ "SX: " + e.getData()[SX] + " SY: " + e.getData()[SY]
-						+ "\n" + "ROT: " + e.getData()[ROT], 20, 100);
+						+ e.getData()[Y] + "\n" + "OX: " + e.getData()[CENTER_X]
+						+ " OY: " + e.getData()[CENTER_Y] + "\n" + "FX: "
+						+ "SX: " + e.getData()[SCALE_X] + " SY: " + e.getData()[SCALE_Y]
+						+ "\n" + "ROT: " + e.getData()[ROTATION], 20, 100);
 
 		e = getCurrentPlayer();
 		if (e != null) {
@@ -97,11 +96,10 @@ public class Level extends PhysicsEntity {
 					"Player\n" +
 					"ID: " + e.getId() + "\n" + " X: " + e.getData()[X]
 							+ "  Y: " + e.getData()[Y] + "\n" + "OX: "
-							+ e.getData()[OX] + " OY: " + e.getData()[OY]
-							+ "\n" + "FX: " + e.getData()[FX] + " FY: "
-							+ e.getData()[FY] + "\n" + "SX: " + e.getData()[SX]
-							+ " SY: " + e.getData()[SY] + "\n" + "ROT: "
-							+ e.getData()[ROT], 20, 250);
+							+ e.getData()[CENTER_X] + " OY: " + e.getData()[CENTER_Y]
+                        	+ "SX: " + e.getData()[SCALE_X]
+							+ " SY: " + e.getData()[SCALE_Y] + "\n" + "ROT: "
+							+ e.getData()[ROTATION], 20, 250);
 		}
 	}
 
@@ -171,8 +169,6 @@ public class Level extends PhysicsEntity {
 			// Focus on Player
 			getData()[X] = JumpNRun.SCREENWIDTH/2 - player.getData()[X];
 			getData()[Y] = JumpNRun.SCREENHEIGHT/2 - player.getData()[Y];
-			getData()[FX] = player.getData()[X];
-			getData()[FY] = player.getData()[Y];
 		}
 	}
 
@@ -206,27 +202,27 @@ public class Level extends PhysicsEntity {
 
 			// Zoom
 			if (!input.isKeyDown(Input.KEY_R) && !input.isKeyDown(Input.KEY_F)) {
-				getVel()[SX] = getVel()[SY] = 0.0f;
+				getVel()[SCALE_X] = getVel()[SCALE_Y] = 0.0f;
 			}
 
 			if (input.isKeyDown(Input.KEY_R)) {
-				getVel()[SX] = getVel()[SY] = 1;
+				getVel()[SCALE_X] = getVel()[SCALE_Y] = 1;
 			}
 
 			if (input.isKeyDown(Input.KEY_F)) {
-				getVel()[SX] = getVel()[SY] = -1;
+				getVel()[SCALE_X] = getVel()[SCALE_Y] = -1;
 			}
 
 			// Rotation
 			if (!input.isKeyDown(Input.KEY_Q) && !input.isKeyDown(Input.KEY_E)) {
-				getVel()[ROT] = 0.0f;
+				getVel()[ROTATION] = 0.0f;
 			}
 
 			if (input.isKeyDown(Input.KEY_Q)) {
-				getVel()[ROT] = -15;
+				getVel()[ROTATION] = -15;
 			}
 			if (input.isKeyDown(Input.KEY_E)) {
-				getVel()[ROT] = 15;
+				getVel()[ROTATION] = 15;
 			}
 		}
 		super.handleInput(input);
