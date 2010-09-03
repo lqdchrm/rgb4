@@ -1,8 +1,8 @@
 package de.fhtrier.gdig.demos.jumpnrun.common;
 
-import de.fhtrier.gdig.engine.entities.physics.PhysicsEntity;
+import de.fhtrier.gdig.engine.entities.physics.CollidableEntity;
 
-public class Bullet extends PhysicsEntity{
+public class Bullet extends CollidableEntity{
 
 	
 	public Bullet(int id) {

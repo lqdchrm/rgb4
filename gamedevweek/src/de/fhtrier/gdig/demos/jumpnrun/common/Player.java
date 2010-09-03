@@ -75,7 +75,7 @@ public class Player extends LevelCollidableEntity {
 																	// rot
 		setVel(new float[] { 0, 0, 0, 0, 0, 0, 0 }); // no speed
 		setAcc(new float[] { 0, 981, 0, 0, 0, 0, 0 }); // gravity
-		setBounds(new Rectangle(30, 0, 36, 96)); // bounding box
+		setBounds(new Rectangle(-18, -96, 36, 96)); // bounding box
 
 		setVisible(true);
 		setActive(true);

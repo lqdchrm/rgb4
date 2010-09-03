@@ -8,18 +8,19 @@ public class MoveableEntity extends Entity {
 	private float vel[];
 	private float acc[];
 
-	/**
-	 * @param id
-	 */
+
 	/**
 	 * @param id
 	 */
 	public MoveableEntity(int id) {
 		super(id);
 
-		this.prevPos = new float[] { 0, 0, 0, 0, 0, 0, 1, 1, 0};
-		this.vel = new float[] { 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		this.acc = new float[] { 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0};
+		this.prevPos = new float[7];
+		this.prevPos[SCALE_X] = 1;
+		this.prevPos[SCALE_Y] = 1;
+		
+		this.vel = new float[7];
+		this.acc = new float[7];
 	}
 
 	@Override
@@ -28,7 +29,7 @@ public class MoveableEntity extends Entity {
 
 			float secs = deltaInMillis / 1000.0f;
 
-			for (int i = 0; i < 9; i++) {
+			for (int i = 0; i < getData().length; i++) {
 				// simple euler integration
 				this.vel[i] += this.acc[i] * secs;
 				this.getData()[i] = this.getData()[i] + this.vel[i] * secs;
@@ -40,7 +41,7 @@ public class MoveableEntity extends Entity {
 
 	public void initData(float[] pos) {
 		setData(pos);
-		for (int i = 0; i < 9; i++) {
+		for (int i = 0; i < prevPos.length; i++) {
 			this.prevPos[i] = pos[i];
 		}
 	}

@@ -15,6 +15,6 @@ public class EntityData implements Serializable {
 	public EntityData() {
 		this.id = -1;
 		this.state = -1;
-		this.data = new float[9];
+		this.data = new float[7];
 	}
 }
