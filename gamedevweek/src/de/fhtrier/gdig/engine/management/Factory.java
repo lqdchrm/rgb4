@@ -104,4 +104,11 @@ public class Factory {
 	public static void setLastId(int id) {
 		lastId = id;
 	}
+
+	public Entity createEntity(int order) {
+		Entity result = new Entity(getNewId());
+		result.setOrder(order);
+		add(result);
+		return result;
+	}
 }
