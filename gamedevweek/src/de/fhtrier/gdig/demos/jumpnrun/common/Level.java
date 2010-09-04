@@ -99,7 +99,7 @@ public class Level extends MoveableEntity {
 							+ e.getData()[CENTER_X] + " OY: " + e.getData()[CENTER_Y]
                         	+ "SX: " + e.getData()[SCALE_X]
 							+ " SY: " + e.getData()[SCALE_Y] + "\n" + "ROT: "
-							+ e.getData()[ROTATION], 20, 250);
+							+ e.getData()[ROTATION] + "\n" + "STATE: " + ((Player)e).currentState, 20, 250);
 		}
 	}
 

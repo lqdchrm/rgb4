@@ -122,8 +122,7 @@ public class LevelCollidableEntity extends CollidableEntity {
 		if (map != null && getBounds()!= null) {
 
 			// Player BoundingBox
-			Shape bbPlayer = new Rectangle(getData()[X] - 18,
-					getData()[Y] - 96, 36, 96);
+			Shape bbPlayer = getTransformedBounds();
 
 			// determine tiles to check for collisions
 			int leftTile = (int) (Math.floor(bbPlayer.getMinX()

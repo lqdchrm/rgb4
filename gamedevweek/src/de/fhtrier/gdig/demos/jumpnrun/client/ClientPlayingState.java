@@ -15,14 +15,14 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.common.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.PlayingState;
-import de.fhtrier.gdig.demos.jumpnrun.common.network.EntityData;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreatePlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
+import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
@@ -96,30 +96,29 @@ public class ClientPlayingState extends PlayingState {
 		// DoCreatePlayer tells us to create a player, e.g. because someone has
 		// joined
 		if (cmd instanceof DoCreateEntity) {
-			DoCreateEntity dcp = (DoCreateEntity) cmd;
+			DoCreateEntity dce = (DoCreateEntity) cmd;
 
-			// Create Player
-			int playerId = this.getFactory().createEntity(dcp.getPlayerId(),
-					EntityType.PLAYER);
-			getLevel().add(getFactory().getEntity(playerId));
+			// Create Entity
+			int id = this.getFactory().createEntity(dce.getEntityId(), dce.getType());
+			getLevel().add(getFactory().getEntity(id));
 			return true;
 		}
 
 		// DoRemovePlayer tells us to drop a Player, e.g. because someone has
 		// left
 		if (cmd instanceof DoRemoveEntity) {
-			DoRemoveEntity drp = (DoRemoveEntity) cmd;
+			DoRemoveEntity dre = (DoRemoveEntity) cmd;
 
-			// Remove Player
-			int playerId = drp.getPlayerId();
+			// Remove entity if it is a player
+			int id = dre.getEntityId();
 
-			if (getLevel().getCurrentPlayer() != null && playerId == getLevel().getCurrentPlayer().getId()) {
+			if (getLevel().getCurrentPlayer() != null && id == getLevel().getCurrentPlayer().getId()) {
 				getLevel().setCurrentPlayer(-1);
 			}
-			getLevel().remove(getFactory().getEntity(playerId));
+			getLevel().remove(getFactory().getEntity(id));
 			
-			// remove Player recursively from Factory
-			getFactory().removeEntity(playerId, true);
+			// remove Entity recursively from Factory
+			getFactory().removeEntity(id, true);
 
 			return true;
 		}
@@ -169,15 +168,14 @@ public class ClientPlayingState extends PlayingState {
 
 				// do stuff with received data
 				if (this.recv != null) {
-					for (Entry<Integer, EntityData> e : this.recv.entrySet()) {
+					for (Entry<Integer, NetworkData> e : this.recv.entrySet()) {
 
 						if (player == null
 								|| (!e.getKey().equals(player.getId()))) {
 
-							Player p = level.getPlayer(e.getKey());
-							if (p != null) {
-								p.setData(e.getValue().data);
-								p.setState(e.getValue().state);
+							Entity ent = this.getFactory().getEntity(e.getKey());
+							if (ent != null && ent.isTransmitting()) {
+								ent.applyNetworkData(e.getValue());
 							}
 						}
 					}
@@ -195,7 +193,7 @@ public class ClientPlayingState extends PlayingState {
 			if (level != null) {
 				Player player = level.getCurrentPlayer();
 				if (player != null) {
-					this.send.setPlayerData(player.getPlayerData());
+					this.send.setNetworkData(player.getNetworkData());
 					NetworkComponent.getInstance().sendCommand(this.send);
 				}
 			}

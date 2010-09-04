@@ -2,11 +2,11 @@ package de.fhtrier.gdig.demos.jumpnrun.server.network;
 
 import java.util.TreeMap;
 
-import de.fhtrier.gdig.demos.jumpnrun.common.network.EntityData;
+import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 
-public class ServerData extends TreeMap<Integer, EntityData> implements
+public class ServerData extends TreeMap<Integer, NetworkData> implements
 		INetworkCommand {
 
 	private static final long serialVersionUID = 5621266482979265456L;
