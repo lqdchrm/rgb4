@@ -6,15 +6,15 @@ public class DoRemoveEntity extends ProtocolCommand {
 
 	private static final long serialVersionUID = -7514424748885675255L;
 
-	private int playerId;
+	private int id;
 	
-	public DoRemoveEntity(int playerId) {
+	public DoRemoveEntity(int id) {
 		super("DoRemoveEntity");
-		this.playerId = playerId;
+		this.id = id;
 	}
 	
-	public int getPlayerId() {
-		return playerId;
+	public int getEntityId() {
+		return id;
 	}
 
 }

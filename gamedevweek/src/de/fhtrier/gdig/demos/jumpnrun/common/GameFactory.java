@@ -37,6 +37,10 @@ public class GameFactory extends Factory {
 				Level newLevel = new Level(id, this);
 				add(newLevel);
 				return id;
+			case GEM:
+				Gem newGem = new Gem(id, this);
+				add(newGem);
+				return id;
 			}
 		} catch (SlickException e) {
 			// TODO Auto-generated catch block

@@ -6,8 +6,10 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
+import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
-import de.fhtrier.gdig.demos.jumpnrun.common.network.EntityData;
+import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
+import de.fhtrier.gdig.demos.jumpnrun.common.network.PlayerData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerState;
@@ -16,10 +18,12 @@ import de.fhtrier.gdig.engine.entities.gfx.AnimationEntity;
 import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
+import de.fhtrier.gdig.engine.network.NetworkComponent;
 
 public class Player extends LevelCollidableEntity {
 
-	private int currentState = -1;
+	// HACK make it private
+	public int currentState = -1;
 	private ImageEntity idleImage;
 	private Entity playerGroup;
 	private AnimationEntity runAnimation;
@@ -27,8 +31,7 @@ public class Player extends LevelCollidableEntity {
 	private Animation jump;
 
 	private float maxPlayerSpeed = 1000.0f;
-
-	private EntityData playerData;
+	private float playerHalfWidth = 48;
 	
     public PlayerState state;
 
@@ -56,37 +59,36 @@ public class Player extends LevelCollidableEntity {
 		
 		playerGroup = factory.createEntity(EntityOrder.Player);
 		
-		playerGroup.getData()[X] = -48;
-		playerGroup.getData()[Y] = -96;
 		playerGroup.getData()[CENTER_X] = 48;
-		playerGroup.getData()[CENTER_Y] = 96;
+		playerGroup.getData()[CENTER_Y] = 48;
 		
 		playerGroup.add(this.idleImage);
 		playerGroup.add(this.runAnimation);
 		playerGroup.add(this.jumpAnimation);
 
 		add(playerGroup);
+		
 		// physics
 		// X Y OX OY SY SY ROT
-		initData(new float[] { 200, 200, 48, 96, 1, 1, 0 }); // pos +
-																	// origin +
-																	// focus +
+		initData(new float[] { 200, 200, 0, 0, 1, 1, 0 }); // pos +
+																	// center of rotation +
 																	// scale +
 																	// rot
 		setVel(new float[] { 0, 0, 0, 0, 0, 0, 0 }); // no speed
 		setAcc(new float[] { 0, 981, 0, 0, 0, 0, 0 }); // gravity
-		setBounds(new Rectangle(-18, -96, 36, 96)); // bounding box
+		setBounds(new Rectangle(30, 0, 36, 96)); // bounding box
 
 		setVisible(true);
 		setActive(true);
-
+		
 		// order
 		setOrder(EntityOrder.Player);
 
 		// startup
 		setState(PlayerState.Idle);
 	}
-
+	
+	// update
 	@Override
 	public void update(int deltaInMillis) {
 
@@ -121,6 +123,8 @@ public class Player extends LevelCollidableEntity {
 		}
 	}
 
+	
+	// render
 	@Override
 	public void renderImpl(Graphics g) {
 
@@ -133,13 +137,14 @@ public class Player extends LevelCollidableEntity {
 
 		if (state.name != null)
 		{
-			int x = g.getFont().getWidth(state.name)/2;
-			int y = 96+g.getFont().getHeight(state.name);
-			g.drawString(state.name, -x,-y);
+			float x = playerHalfWidth - g.getFont().getWidth(state.name)/2.0f;
+			float y = -g.getFont().getHeight(state.name);
+			g.drawString(state.name, x,y);
 		}
 		
 	}
 
+	// input
 	@Override
 	public void handleInput(Input input) {
 		if (isActive()) {
@@ -162,10 +167,38 @@ public class Player extends LevelCollidableEntity {
 					setState(PlayerState.Jump);
 				}
 			}
+			
+			if (input.isKeyPressed(Input.KEY_SPACE)) {
+				NetworkComponent.getInstance().sendCommand(new QueryAction(PlayerAction.DROPGEM));
+			}
 		}
 		super.handleInput(input);
 	}
 
+	// network
+	@Override
+	protected NetworkData _createNetworkData() {
+		return new PlayerData(getId());
+	}
+	
+	@Override
+	public NetworkData getNetworkData() {
+		PlayerData result = (PlayerData)super.getNetworkData();
+		result.state = this.currentState;
+		
+		return result;
+	}
+
+	@Override
+	public void applyNetworkData(NetworkData networkData) {
+		super.applyNetworkData(networkData);
+		
+		this.setState(((PlayerData)networkData).getState());
+	}
+
+	
+	
+	// game logic
 	public void setState(int state) {
 		if (state != this.currentState) {
 			leaveState(this.currentState);
@@ -217,18 +250,6 @@ public class Player extends LevelCollidableEntity {
 			this.jumpAnimation.setVisible(true);
 			break;
 		}
-	}
-
-	public EntityData getPlayerData() {
-		if (this.playerData == null) {
-			this.playerData = new EntityData();
-			this.playerData.id = getId();
-		}
-
-		this.playerData.state = this.currentState;
-		this.playerData.data = getData();
-
-		return this.playerData;
 	}
 
 	public void setLevel(Level level) {

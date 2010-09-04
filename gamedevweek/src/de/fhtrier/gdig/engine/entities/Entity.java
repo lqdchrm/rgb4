@@ -9,13 +9,14 @@ import java.util.TreeSet;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 
+import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.engine.helpers.Identifiable;
 
 public class Entity implements Identifiable {
 
 	public static final int X = 0; // pos
 	public static final int Y = 1;
-	public static final int CENTER_X = 2; // origin
+	public static final int CENTER_X = 2; // center of scaling and rotating
 	public static final int CENTER_Y = 3;
 	public static final int SCALE_X = 4; // scale
 	public static final int SCALE_Y = 5;
@@ -28,6 +29,7 @@ public class Entity implements Identifiable {
 
 	private boolean active;
 	private boolean visible;
+	private boolean transmitting;
 	private boolean recursing;
 
 	private Integer order;
@@ -37,6 +39,9 @@ public class Entity implements Identifiable {
 	// for incremental updates
 	// posX, posY, originX, originY, focusX, focusY, scaleX, scaleY, rotation
 	private float[] data;
+	
+	// holds a copy of internal data for network transfer
+	private NetworkData networkData;
 
 	public Entity(int id) {
 
@@ -57,14 +62,21 @@ public class Entity implements Identifiable {
 			}
 		});
 
-		this.active = true;
-		this.visible = true;
-		this.recursing = true;
-
-		this.setOrder(id);
+		// physics
 		this.data = new float[7];
 		this.data[SCALE_X] = 1;
 		this.data[SCALE_Y] = 1;
+		
+		// network
+		this.networkData = _createNetworkData();
+		
+		// config
+		this.active = true;
+		this.visible = true;
+		this.transmitting = false;
+		this.recursing = true;
+
+		this.setOrder(id);
 		
 	}
 
@@ -106,18 +118,18 @@ public class Entity implements Identifiable {
 	protected void preRender(Graphics graphicContext) {
 		graphicContext.pushTransform();
 		
-		graphicContext.translate(getData()[CENTER_X], getData()[CENTER_Y]); // set origin
 		
-		graphicContext.translate(getData()[X], getData()[Y]); // move to
-																// position
+		graphicContext.translate(getData()[X], getData()[Y]); // move to pos																// position
 
-																// point
+		graphicContext.translate(getData()[CENTER_X], getData()[CENTER_Y]); // translate back 
+		
 		graphicContext.rotate(0, 0, getData()[ROTATION]); // rotate
+		
 		graphicContext.scale(getData()[SCALE_X], getData()[SCALE_Y]); // zoom
 																	// from
 																	// point
 
-		graphicContext.translate(-getData()[CENTER_X], -getData()[CENTER_Y]); // set origin
+		graphicContext.translate(-getData()[CENTER_X], -getData()[CENTER_Y]); // set center of rotation
 	}
 
 	protected void renderImpl(Graphics graphicContext) {
@@ -137,7 +149,7 @@ public class Entity implements Identifiable {
 	protected void postRender(Graphics graphicContext) {
 		graphicContext.popTransform();
 	}
-
+	
 	public void update(int deltaInMillis) {
 		if (this.recursing) {
 			for (Entity child : this.childrenInOrder) {
@@ -145,7 +157,7 @@ public class Entity implements Identifiable {
 			}
 		}
 	}
-
+	
 	public void handleInput(Input input) {
 		if (this.recursing) {
 			for (Entity child : this.childrenInOrder) {
@@ -154,6 +166,33 @@ public class Entity implements Identifiable {
 		}
 	}
 
+	/**
+	 * internal factory method to create network data object
+	 * must be overloaded for inherited classes !!
+	 * @return
+	 */
+	protected NetworkData _createNetworkData() {
+		return new NetworkData(this.getId());
+	}
+	
+	/**
+	 * updates the network data member and returns it
+	 * @return
+	 */
+	public NetworkData getNetworkData() {
+
+		this.networkData.data = getData();		
+		return this.networkData;
+	}
+	
+	/**
+	 * Used to set data values coming from the network into entity
+	 * @param networkData
+	 */
+	public void applyNetworkData(NetworkData networkData) {
+		this.setData(networkData.data);
+	}
+	
 	public boolean isActive() {
 		return this.active;
 	}
@@ -170,6 +209,14 @@ public class Entity implements Identifiable {
 		this.visible = visible;
 	}
 
+	public boolean isTransmitting() {
+		return this.transmitting;
+	}
+	
+	public void setTransmitting(boolean transmitting) {
+		this.transmitting = transmitting;
+	}
+	
 	@Override
 	public Integer getId() {
 		return this.id;

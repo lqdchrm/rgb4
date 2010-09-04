@@ -7,18 +7,18 @@ public class DoCreateEntity extends ProtocolCommand {
 
 	private static final long serialVersionUID = -2494668970339654827L;
 
-	private int playerId;
+	private int entityId;
 	private EntityType type;
 	
-	public DoCreateEntity(int playerId, EntityType type) {
+	public DoCreateEntity(int entityId, EntityType type) {
 		super("DoCreateEntity");
 		
-		this.playerId = playerId;
+		this.entityId = entityId;
 		this.type = type;
 	}
 
-	public int getPlayerId() {
-		return playerId;
+	public int getEntityId() {
+		return entityId;
 	}
 	
 	public EntityType getType() {
