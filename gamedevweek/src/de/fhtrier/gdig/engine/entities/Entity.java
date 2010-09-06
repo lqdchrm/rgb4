@@ -10,6 +10,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.helpers.Identifiable;
 
 public class Entity implements Identifiable
@@ -46,6 +47,8 @@ public class Entity implements Identifiable
 	private EntityUpdateStrategy updateStrategy;
 	
 	private Integer order;
+	
+	private EntityType type;
 
 	/**
 	 * encoding of position, scale and rotation: having all in a single float
@@ -57,10 +60,11 @@ public class Entity implements Identifiable
 	// holds a copy of internal data for network transfer
 	private NetworkData networkData;
 
-	public Entity(final int id)
+	public Entity(final int id, EntityType type)
 	{
 
 		this.id = id;
+		this.type = type;
 
 		this.children = new TreeMap<Integer, Entity>();
 		this.childrenInOrder = new TreeSet<Entity>(new Comparator<Entity>()
@@ -196,7 +200,7 @@ public class Entity implements Identifiable
 	public boolean handleCollisions() {
 		boolean result = false;
 		if (this.recursing) {
-			for (Entity child : this.childrenInOrder) {
+			for (Entity child : new TreeSet<Entity>(this.childrenInOrder)) {
 				result |= child.handleCollisions();
 			}
 		}
@@ -320,6 +324,10 @@ public class Entity implements Identifiable
 		this.visible = visible;
 	}
 
+	public EntityType getType() {
+		return type;
+	}
+		
 	public void update(final int deltaInMillis)
 	{
 		if (this.recursing)

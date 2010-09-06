@@ -5,6 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import org.newdawn.slick.util.Log;
+
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 
 /**
@@ -29,7 +31,7 @@ public class ServerHandler extends Thread {
 			this.out = new ObjectOutputStream(s.getOutputStream());
 			this.in = new ObjectInputStream(s.getInputStream());
 		} catch (IOException e) {
-			System.err.println("Erstellen der Streams zum Server fehlgeschlagen.");
+			Log.error("Erstellen der Streams zum Server fehlgeschlagen.");
 			e.printStackTrace();
 		}
 		this.doClose = false;
@@ -58,7 +60,7 @@ public class ServerHandler extends Thread {
 			this.out.flush();
 			this.out.reset();
 		} catch (IOException e) {
-			System.err.println("Sending to server failed.");
+			Log.error("Sending to server failed.");
 			e.printStackTrace();
 		}
 	}

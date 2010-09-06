@@ -15,7 +15,9 @@ import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.PlayerData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerState;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerActionState;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.StateColor;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.gfx.AnimationEntity;
 import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
@@ -37,15 +39,16 @@ public class Player extends LevelCollidableEntity
 	private final float maxPlayerSpeed = 1000.0f;
 	private final float playerHalfWidth = 48;
 
-	public PlayerState state;
+	private PlayerState state;
 
-	public Player(final int id, final Factory factory) throws SlickException
+	public Player(int id, Factory factory) throws SlickException
 	{
-		super(id);
+		super(id, EntityType.PLAYER);
+		
 		state = new PlayerState();
 		state.name = "Player";
-		state.color = Constants.StateColor.RED; // player gets default-color: red
-		state.weaponColor = Constants.StateColor.RED; // weapon of player get default-color: red
+		state.color = StateColor.RED; // player gets default-color: red
+		state.weaponColor = StateColor.RED; // weapon of player get default-color: red
 		AssetMgr assets = factory.getAssetMgr();
 
 		// gfx
@@ -61,7 +64,8 @@ public class Player extends LevelCollidableEntity
 		this.jumpAnimation = factory.createAnimationEntity(
 				Assets.PlayerJumpAnim, Assets.PlayerJumpAnim);
 
-		this.playerGroup = factory.createEntity(EntityOrder.Player);
+		int groupId = factory.createEntity(EntityOrder.Player, EntityType.HELPER);
+		this.playerGroup = factory.getEntity(groupId);
 
 		this.playerGroup.getData()[Entity.CENTER_X] = assets.getAnimation(Assets.PlayerIdleImage).getWidth()/2;
 		this.playerGroup.getData()[Entity.CENTER_Y] = assets.getAnimation(Assets.PlayerIdleImage).getHeight()/2;
@@ -92,7 +96,7 @@ public class Player extends LevelCollidableEntity
 		this.setOrder(EntityOrder.Player);
 
 		// startup
-		setState(PlayerState.Idle);
+		setState(PlayerActionState.Idle);
 	}
 
 	@Override
@@ -100,7 +104,7 @@ public class Player extends LevelCollidableEntity
 	{
 		super.applyNetworkData(networkData);
 
-			if ((this.currentState == PlayerState.Idle)
+			if ((this.currentState == PlayerActionState.Idle)
 					&& (Math.abs(getData()[X] - getPrevPos()[X]) < Constants.EPSILON)
 					&& (Math.abs(getData()[Y] - getPrevPos()[Y]) < Constants.EPSILON)) {
 				getVel()[X] = getVel()[Y] = 0.0f;
@@ -113,25 +117,27 @@ public class Player extends LevelCollidableEntity
 		this.currentState = state;
 		switch (state)
 		{
-		case PlayerState.Idle:
+		case PlayerActionState.Idle:
 			this.getAcc()[Entity.X] = 0.0f;
 			this.idleImage.setActive(true);
 			this.idleImage.setVisible(true);
 			break;
-		case PlayerState.RunLeft:
-			this.getAcc()[Entity.X] = -2000.0f;
+		case PlayerActionState.RunLeft:
+			this.getAcc()[Entity.X] = -Constants.GamePlayConstants.walkVelo;
 			this.playerGroup.getData()[Entity.SCALE_X] = 1;
 			this.runAnimation.setActive(true);
 			this.runAnimation.setVisible(true);
+			this.state.shootDirection = state;
 			break;
-		case PlayerState.RunRight:
-			this.getAcc()[Entity.X] = 2000.0f;
+		case PlayerActionState.RunRight:
+			this.getAcc()[Entity.X] = Constants.GamePlayConstants.walkVelo;
 			this.playerGroup.getData()[Entity.SCALE_X] = -1;
 			this.runAnimation.setActive(true);
 			this.runAnimation.setVisible(true);
+			this.state.shootDirection = state;
 			break;
-		case PlayerState.Jump:
-			this.getVel()[Entity.Y] = -800;
+		case PlayerActionState.Jump:
+			this.getVel()[Entity.Y] = -Constants.GamePlayConstants.JumpVelo;
 			this.jump.start();
 			this.jumpAnimation.setActive(true);
 			this.jumpAnimation.setVisible(true);
@@ -143,7 +149,10 @@ public class Player extends LevelCollidableEntity
 	@Override
 	public boolean handleCollisions()
 	{
-		markCollisionTiles(12);
+		if (!isActive())
+		{
+			return false;
+		}
 		
 		boolean result = super.handleCollisions();
 
@@ -170,31 +179,31 @@ public class Player extends LevelCollidableEntity
 					&& !input.isKeyDown(Input.KEY_RIGHT)
 					&& !input.isKeyDown(Input.KEY_SPACE))
 			{
-				this.setState(PlayerState.Idle);
+				this.setState(PlayerActionState.Idle);
 			}
 
 			if (input.isKeyDown(Input.KEY_LEFT))
 			{
-				this.setState(PlayerState.RunLeft);
+				this.setState(PlayerActionState.RunLeft);
 			}
 
 			if (input.isKeyDown(Input.KEY_RIGHT))
 			{
-				this.setState(PlayerState.RunRight);
+				this.setState(PlayerActionState.RunRight);
 			}
 
 			if (input.isKeyDown(Input.KEY_UP))
 			{
 				if (this.isOnGround())
 				{
-					this.setState(PlayerState.Jump);
+					this.setState(PlayerActionState.Jump);
 				}
 			}
 
 			if (input.isKeyPressed(Input.KEY_SPACE))
 			{
 				NetworkComponent.getInstance().sendCommand(
-						new QueryAction(PlayerAction.DROPGEM));
+						new QueryAction(PlayerAction.SHOOT));
 			}
 		}
 		super.handleInput(input);
@@ -216,16 +225,16 @@ public class Player extends LevelCollidableEntity
 	
 	private void leaveState(int state) {
 		switch (state) {
-		case PlayerState.Idle:
+		case PlayerActionState.Idle:
 			this.idleImage.setActive(false);
 			this.idleImage.setVisible(false);
 			break;
-		case PlayerState.RunLeft:
-		case PlayerState.RunRight:
+		case PlayerActionState.RunLeft:
+		case PlayerActionState.RunRight:
 			this.runAnimation.setActive(false);
 			this.runAnimation.setVisible(false);
 			break;
-		case PlayerState.Jump:
+		case PlayerActionState.Jump:
 			this.jumpAnimation.setActive(false);
 			this.jumpAnimation.setVisible(false);
 		}
@@ -247,9 +256,10 @@ public class Player extends LevelCollidableEntity
 		{
 			float x = playerHalfWidth - g.getFont().getWidth(state.name)/2.0f;
 			float y = -g.getFont().getHeight(state.name);
-			g.setColor(Constants.StateColor.constIntoColor( state.color )); // colors the name of player with his color
-			
-			g.drawString(state.name + " " + state.weaponColor, x,y);
+			g.setColor(StateColor.constIntoColor( state.color )); // colors the name of player with his color
+			g.drawString(state.name + " " + getId(), x,y);
+			g.setColor(StateColor.constIntoColor(state.weaponColor));
+			g.drawString("Weapon", x,y+80);
 			g.setColor(Color.white); // default-color when changed
 		}
 
@@ -300,7 +310,7 @@ public class Player extends LevelCollidableEntity
 				this.getVel()[Entity.Y] = -this.maxPlayerSpeed;
 			}
 
-			if (this.currentState == PlayerState.Idle
+			if (this.currentState == PlayerActionState.Idle
 					&& Math.abs(this.getData()[Entity.X]
 							- this.getPrevPos()[Entity.X]) < Constants.EPSILON
 					&& Math.abs(this.getData()[Entity.Y]
@@ -309,5 +319,9 @@ public class Player extends LevelCollidableEntity
 				this.getVel()[Entity.X] = this.getVel()[Entity.Y] = 0.0f;
 			}
 		}
+	}
+
+	public PlayerState getState() {
+		return state;
 	}
 }

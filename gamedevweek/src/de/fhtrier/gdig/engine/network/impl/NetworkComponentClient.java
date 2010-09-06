@@ -7,6 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import org.newdawn.slick.util.Log;
+
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.impl.protocol.ClientQueryConnect;
 import de.fhtrier.gdig.engine.network.impl.protocol.ClientQueryDisconnect;
@@ -40,11 +42,11 @@ public class NetworkComponentClient extends NetworkComponentImpl {
 				this.serverHandler.start();
 				askForNetworkId();
 			} catch (UnknownHostException e) {
-				System.err.println("Unknown host");
+				Log.error("Unknown host");
 //				e.printStackTrace();
 				return false;
 			} catch (IOException e) {
-//				System.err.println("Fail connecting");
+//				Log.error("Fail connecting");
 //				e.printStackTrace();
 				return false;
 			}
@@ -87,7 +89,7 @@ public class NetworkComponentClient extends NetworkComponentImpl {
 			throw new IllegalArgumentException("new state must not be null");
 		}
 		
-		System.out.println("NetworkComponent: Changed state from " + ((localState == null) ? "null" : localState.name()) + " to " + state.name());
+		Log.debug("NetworkComponent: Changed state from " + ((localState == null) ? "null" : localState.name()) + " to " + state.name());
 		localState = state;
 	}
 	

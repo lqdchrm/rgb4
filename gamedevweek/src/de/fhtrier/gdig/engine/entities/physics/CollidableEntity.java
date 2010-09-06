@@ -3,16 +3,18 @@ package de.fhtrier.gdig.engine.entities.physics;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Shape;
 
+import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 
 public class CollidableEntity extends MoveableEntity
 {
 
 	private Shape bounds;
 
-	public CollidableEntity(final int id)
+	public CollidableEntity(int id, EntityType type)
 	{
-		super(id);
+		super(id, type);
 
 		CollisionManager.addEntety(this);
 
@@ -25,17 +27,18 @@ public class CollidableEntity extends MoveableEntity
 	}
 
 	@Override
-	public void renderImpl(final Graphics graphicContext)
+	public void renderImpl(Graphics graphicContext)
 	{
 		super.renderImpl(graphicContext);
 
-		if (this.bounds != null)
+		if (this.bounds != null && Constants.Debug.drawBounds)
 		{
+			graphicContext.setColor(Constants.Debug.boundColor);
 			graphicContext.draw(this.bounds);
 		}
 	}
 
-	public void setBounds(final Shape bounds)
+	public void setBounds(Shape bounds)
 	{
 		this.bounds = bounds;
 	}

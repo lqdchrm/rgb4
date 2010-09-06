@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TreeMap;
 
+import org.newdawn.slick.util.Log;
+
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.gfx.AnimationEntity;
 import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
@@ -31,11 +34,11 @@ public class Factory {
 		return newId;
 	}
 
-	public Entity createEntity(int order) {
-		Entity result = new Entity(getNewId());
+	public int createEntity(int order, EntityType type) {
+		Entity result = new Entity(getNewId(), type);
 		result.setOrder(order);
 		add(result);
-		return result;
+		return result.getId();
 	}
 	
 	public ImageEntity createImageEntity(int order, int assetId) {
@@ -100,7 +103,7 @@ public class Factory {
 			throw new IllegalArgumentException("Factory already contains an entity with this id");
 		}
 		entities.put(e.getId(), e);
-		System.out.println("Factory: Entity " + e.getId() + " added");
+		Log.debug("Factory: Entity " + e.getId() + " added");
 		return e;
 	}
 
