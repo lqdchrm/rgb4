@@ -9,6 +9,7 @@ import java.util.List;
 import de.fhtrier.gdig.demos.jumpnrun.client.ClientGame;
 import de.fhtrier.gdig.demos.jumpnrun.server.ServerGame;
 import de.fhtrier.gdig.engine.network.INetworkLobby;
+import de.fhtrier.gdig.engine.network.NetworkServerObject;
 import de.fhtrier.gdig.engine.network.impl.NetworkLobby;
 
 public class Lobby extends JDialog {
@@ -127,7 +128,7 @@ public class Lobby extends JDialog {
 		case SPECTATOR:
 			ClientGame.isSpectator = true;
 		case CLIENT: {
-			INetworkLobby networkLobby = new NetworkLobby();
+			NetworkLobby networkLobby = new NetworkLobby();
 			List<InterfaceAddress> interfaces = networkLobby.getInterfaces();
 			
 			Object[] serverListe = new Object[interfaces.size()];
@@ -153,18 +154,47 @@ public class Lobby extends JDialog {
 			}
 
             networkLobby.getServers( ni );
+            
+            try
+            {
+               Thread.sleep( 1000 );   
+            }
+            catch( InterruptedException e )
+            {
+               System.out.println( e.getLocalizedMessage() );
+            }
+            
+            List<NetworkServerObject> sList = networkLobby.getServerList();
+            
+            Object[] servers = new Object[sList.size()];
+            
+            for ( int x = 0; x < sList.size(); x++ )
+            {
+               servers[x] = sList.get( x ).getIp().getHostAddress();
+            }
 			
 			// if client ask for server ip and port number
-			String strServerAndPort = (String) JOptionPane
+			String strServer = (String) JOptionPane
 					.showInputDialog(
 							null,
-							"Please select serverip and port number like (\"127.0.0.1:49999\")",
+							"Please select server",
 							"You are Client", JOptionPane.PLAIN_MESSAGE, null,
-							null, ClientGame.nameOrIp + ":" + ClientGame.port);
+							servers, ClientGame.nameOrIp );
+			
+			String ip = "127.0.0.1";
+			int port = 49999;
+			
+			for ( int x = 0; x < sList.size(); x++ )
+			{
+			   if ( sList.get( x ).getIp().getHostAddress().contains( strServer ) )
+			   {
+			      ip = sList.get( x ).getIp().getHostAddress();
+			      port = sList.get( x ).getPort();
+			   }
+			}
 
-			String strings[] = strServerAndPort.split(":");
 			networkLobby.stopGetServers();
-			return createClient(strings[0], Integer.parseInt(strings[1]));
+			return createClient( ip, port );
 		}
 		default:
 			return null;
