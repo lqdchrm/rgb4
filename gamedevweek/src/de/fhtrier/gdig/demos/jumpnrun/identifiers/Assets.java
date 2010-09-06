@@ -11,4 +11,5 @@ public class Assets {
 	public static final int PlayerJumpAnim = 13;
 	
 	public static final int GemImage = 20;
+	public static final int BulletImage = 21;
 }

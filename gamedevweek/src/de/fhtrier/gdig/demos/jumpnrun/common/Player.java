@@ -120,12 +120,14 @@ public class Player extends LevelCollidableEntity
 			this.playerGroup.getData()[Entity.SCALE_X] = 1;
 			this.runAnimation.setActive(true);
 			this.runAnimation.setVisible(true);
+			this.state.shootDirection = state;
 			break;
 		case PlayerState.RunRight:
 			this.getAcc()[Entity.X] = 2000.0f;
 			this.playerGroup.getData()[Entity.SCALE_X] = -1;
 			this.runAnimation.setActive(true);
 			this.runAnimation.setVisible(true);
+			this.state.shootDirection = state;
 			break;
 		case PlayerState.Jump:
 			this.getVel()[Entity.Y] = -800;
@@ -191,7 +193,7 @@ public class Player extends LevelCollidableEntity
 			if (input.isKeyPressed(Input.KEY_SPACE))
 			{
 				NetworkComponent.getInstance().sendCommand(
-						new QueryAction(PlayerAction.DROPGEM));
+						new QueryAction(PlayerAction.SHOOT));
 			}
 		}
 		super.handleInput(input);

@@ -18,6 +18,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerState;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreatePlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
@@ -44,38 +45,57 @@ public class ServerPlayingState extends PlayingState {
 	}
 
 	private boolean handlePlayerActions(QueryAction actionCmd) {
-
+		Entity e;
+		int playerId = networkId2Player.get(actionCmd.getSender());
+		Player player = (Player) getFactory().getEntity(
+				playerId);
 		switch (actionCmd.getAction()) {
 		case DROPGEM:
-			int id = this.getFactory().createEntity(EntityType.GEM);
-			
-			Entity e = getFactory().getEntity(id);
-			
-			e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
-			e.setActive(true);
-			
-			getLevel().add(e);
-
-			// send command to all clients to create gem
-			NetworkComponent.getInstance().sendCommand(
-					new DoCreateEntity(id, EntityType.GEM));
+			 e = createEntity(EntityType.GEM);
 
 			// set values
-			MoveableEntity gem = (MoveableEntity) getFactory().getEntity(id);
-			int playerId = networkId2Player.get(actionCmd.getSender());
+			MoveableEntity gem = (MoveableEntity) e;
 
 			// set player pos as gem pos
-			MoveableEntity player = (MoveableEntity) getFactory().getEntity(
-					playerId);
 			gem.getData()[Entity.X] = player.getData()[Entity.X];
 			gem.getData()[Entity.Y] = player.getData()[Entity.Y];
 			gem.getVel()[Entity.X] = player.getVel()[Entity.X];
 			gem.getVel()[Entity.Y] = player.getVel()[Entity.Y] - 50.0f;
 
 			return true;
+		case SHOOT:
+			e = createEntity(EntityType.BULLET);
+			
+			// set values
+			MoveableEntity bullet = (MoveableEntity) e;
+			
+			// set player pos as gem pos
+			bullet.getData()[Entity.X] = player.getData()[Entity.X];
+			bullet.getData()[Entity.Y] = player.getData()[Entity.Y];
+			bullet.getVel()[Entity.X] = player.getVel()[Entity.X] + (player.state.shootDirection == PlayerState.RunRight ? +50:-50);
+			
+			return true;
+			
+			
 		}
 
 		return false;
+	}
+
+	private Entity createEntity(EntityType type) {
+		int id = this.getFactory().createEntity(type);
+		
+		Entity e = getFactory().getEntity(id);
+		
+		e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+		e.setActive(true);
+		
+		getLevel().add(e);
+
+		// send command to all clients to create gem
+		NetworkComponent.getInstance().sendCommand(
+				new DoCreateEntity(id, type));
+		return e;
 	}
 
 	private boolean handleProtocolCommands(INetworkCommand cmd) {
