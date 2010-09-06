@@ -7,9 +7,11 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
 
 import de.fhtrier.gdig.demos.jumpnrun.JumpNRun;
+import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.engine.entities.Entity;
+import de.fhtrier.gdig.engine.entities.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
 import de.fhtrier.gdig.engine.entities.gfx.TiledMapEntity;
 import de.fhtrier.gdig.engine.entities.physics.MoveableEntity;
@@ -68,9 +70,16 @@ public class Level extends MoveableEntity {
 
 		// physics
 		setData(new float[] { 0, 0, 0, 0, 1, 1, 0 });
+		
+		// network
+		setUpdateStrategy(EntityUpdateStrategy.Local);
 
 		// order
 		setOrder(EntityOrder.Level);
+		
+		// setup
+		setActive(true);
+		setVisible(true);
 	}
 
 	@Override
@@ -267,8 +276,8 @@ public class Level extends MoveableEntity {
 		Entity result = super.add(e);
 
 		// tell player that he belongs to level
-		if (e instanceof Player) {
-			((Player) e).setLevel(this);
+		if (e instanceof LevelCollidableEntity) {
+			((LevelCollidableEntity) e).setLevel(this);
 		}
 
 		return result;

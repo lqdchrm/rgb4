@@ -41,7 +41,7 @@ public class JumpNRun {
 				} else {
 					gc.setVSync(false);
 					gc.setSmoothDeltas(false);
-					gc.setAlwaysRender(false);
+					gc.setAlwaysRender(true);
 					gc.setUpdateOnlyWhenVisible(false);
 				}
 				

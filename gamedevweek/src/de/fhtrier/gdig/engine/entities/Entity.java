@@ -29,9 +29,10 @@ public class Entity implements Identifiable {
 
 	private boolean active;
 	private boolean visible;
-	private boolean transmitting;
 	private boolean recursing;
 
+	private EntityUpdateStrategy updateStrategy;
+	
 	private Integer order;
 
 	// encoding of position, scale and rotation:
@@ -69,11 +70,11 @@ public class Entity implements Identifiable {
 		
 		// network
 		this.networkData = _createNetworkData();
+		this.updateStrategy = EntityUpdateStrategy.Local;
 		
 		// config
-		this.active = true;
-		this.visible = true;
-		this.transmitting = false;
+		this.active = false;
+		this.visible = false;
 		this.recursing = true;
 
 		this.setOrder(id);
@@ -165,6 +166,16 @@ public class Entity implements Identifiable {
 			}
 		}
 	}
+	
+	public boolean handleCollisions() {
+		boolean result = false;
+		if (this.recursing) {
+			for (Entity child : this.childrenInOrder) {
+				result |= child.handleCollisions();
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * internal factory method to create network data object
@@ -208,14 +219,6 @@ public class Entity implements Identifiable {
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
-
-	public boolean isTransmitting() {
-		return this.transmitting;
-	}
-	
-	public void setTransmitting(boolean transmitting) {
-		this.transmitting = transmitting;
-	}
 	
 	@Override
 	public Integer getId() {
@@ -230,6 +233,14 @@ public class Entity implements Identifiable {
 		return this.recursing;
 	}
 
+	public EntityUpdateStrategy getUpdateStrategy() {
+		return updateStrategy;
+	}
+	
+	public void setUpdateStrategy(EntityUpdateStrategy updateStrategy) {
+		this.updateStrategy = updateStrategy;
+	}
+	
 	public float[] getData() {
 		return this.data;
 	}

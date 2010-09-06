@@ -17,6 +17,10 @@ public class Constants {
 		public static final int WHITE = RED|GREEN|BLUE;	
 	}
 	
+	public static class GamePlayConstants {
+		public static final float gravity = 981.0f;
+	}
+	
 	public static class Debug{
 		
 		public static final int NONE = 0;

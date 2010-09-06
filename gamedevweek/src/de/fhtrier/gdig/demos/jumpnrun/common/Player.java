@@ -7,6 +7,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
+import de.fhtrier.gdig.demos.jumpnrun.common.Constants.GamePlayConstants;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.PlayerData;
@@ -37,7 +38,7 @@ public class Player extends LevelCollidableEntity {
 
 	public Player(int id, Factory factory) throws SlickException {
 		super(id);
-
+		
 		state = new PlayerState();
 		state.name = "Player";
 		AssetMgr assets = factory.getAssetMgr();
@@ -75,16 +76,17 @@ public class Player extends LevelCollidableEntity {
 																	// scale +
 																	// rot
 		setVel(new float[] { 0, 0, 0, 0, 0, 0, 0 }); // no speed
-		setAcc(new float[] { 0, 981, 0, 0, 0, 0, 0 }); // gravity
+		setAcc(new float[] { 0, GamePlayConstants.gravity, 0, 0, 0, 0, 0 }); // gravity
 		setBounds(new Rectangle(30, 0, 36, 96)); // bounding box
 
 		setVisible(true);
-		setActive(true);
 		
 		// order
 		setOrder(EntityOrder.Player);
 
 		// startup
+		setActive(true);
+		setVisible(true);
 		setState(PlayerState.Idle);
 	}
 	
@@ -111,9 +113,6 @@ public class Player extends LevelCollidableEntity {
 			if (getVel()[Y] < -this.maxPlayerSpeed) {
 				getVel()[Y] = -this.maxPlayerSpeed;
 			}
-
-			markCollisionTiles(12);
-			handleCollisions();
 
 			if ((this.currentState == PlayerState.Idle)
 					&& (Math.abs(getData()[X] - getPrevPos()[X]) < Constants.EPSILON)
@@ -175,6 +174,12 @@ public class Player extends LevelCollidableEntity {
 		super.handleInput(input);
 	}
 
+	@Override
+	public boolean handleCollisions() {
+		markCollisionTiles(12);
+		return super.handleCollisions();
+	}
+	
 	// network
 	@Override
 	protected NetworkData _createNetworkData() {
@@ -250,9 +255,5 @@ public class Player extends LevelCollidableEntity {
 			this.jumpAnimation.setVisible(true);
 			break;
 		}
-	}
-
-	public void setLevel(Level level) {
-		this.setMap(level.getMap());
 	}
 }

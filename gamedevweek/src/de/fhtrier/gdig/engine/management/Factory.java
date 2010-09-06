@@ -31,6 +31,13 @@ public class Factory {
 		return newId;
 	}
 
+	public Entity createEntity(int order) {
+		Entity result = new Entity(getNewId());
+		result.setOrder(order);
+		add(result);
+		return result;
+	}
+	
 	public ImageEntity createImageEntity(int order, int assetId) {
 		ImageEntity result = new ImageEntity(getNewId(), assetId, assets);
 		result.setOrder(order);
@@ -103,12 +110,5 @@ public class Factory {
 	
 	public static void setLastId(int id) {
 		lastId = id;
-	}
-
-	public Entity createEntity(int order) {
-		Entity result = new Entity(getNewId());
-		result.setOrder(order);
-		add(result);
-		return result;
 	}
 }

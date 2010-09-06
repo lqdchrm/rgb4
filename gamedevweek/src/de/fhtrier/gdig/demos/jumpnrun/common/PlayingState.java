@@ -75,6 +75,9 @@ public abstract class PlayingState extends BasicGameState implements
 		if (level != null) {
 			level.handleInput(input);
 			level.update(deltaInMillis);
+			
+			// HACK
+			level.handleCollisions();
 		}
 	}
 

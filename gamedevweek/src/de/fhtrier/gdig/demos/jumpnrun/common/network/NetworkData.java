@@ -8,11 +8,6 @@ public class NetworkData implements Serializable {
 	
 	public int id;
 	public float[] data;
-
-//	public NetworkData() {
-//		this.id = -1;
-//		this.data = new float[7];
-//	}
 	
 	public NetworkData(int id) {
 		this.id = id;

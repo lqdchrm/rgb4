@@ -9,13 +9,12 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
-import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreatePlayer;
+import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
-import de.fhtrier.gdig.demos.jumpnrun.common.Level;
-import de.fhtrier.gdig.demos.jumpnrun.common.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreatePlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
@@ -23,6 +22,7 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.engine.entities.Entity;
+import de.fhtrier.gdig.engine.entities.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
@@ -53,9 +53,10 @@ public class ClientPlayingState extends PlayingState {
 		// ask server to join game
 		NetworkComponent.getInstance().sendCommand(new QueryJoin());
 		setState(LocalState.JOINING);
-		
+
 		// HACK load and play sound
-		// getFactory().getAssetMgr().storeSound(Assets.LevelSoundtrack, "sounds/kaliba.ogg").loop();
+		// getFactory().getAssetMgr().storeSound(Assets.LevelSoundtrack,
+		// "sounds/kaliba.ogg").loop();
 	}
 
 	private boolean handleProtocolCommands(INetworkCommand cmd) {
@@ -69,10 +70,11 @@ public class ClientPlayingState extends PlayingState {
 			}
 
 			if (!ClientGame.isSpectator) {
-			// Joining successful -> create player
-			// ask for player to be created by the server
-			NetworkComponent.getInstance().sendCommand(new QueryCreatePlayer());
-			setState(LocalState.CREATINGPLAYER); 
+				// Joining successful -> create player
+				// ask for player to be created by the server
+				NetworkComponent.getInstance().sendCommand(
+						new QueryCreateEntity(EntityType.PLAYER));
+				setState(LocalState.CREATINGPLAYER);
 			} else {
 				// we are only spectator -> don't create player
 				setState(LocalState.PLAYING);
@@ -99,7 +101,11 @@ public class ClientPlayingState extends PlayingState {
 			DoCreateEntity dce = (DoCreateEntity) cmd;
 
 			// Create Entity
-			int id = this.getFactory().createEntity(dce.getEntityId(), dce.getType());
+			int id = this.getFactory().createEntity(dce.getEntityId(),
+					dce.getType());
+			Entity e = this.getFactory().getEntity(id);
+			e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+			
 			getLevel().add(getFactory().getEntity(id));
 			return true;
 		}
@@ -112,11 +118,12 @@ public class ClientPlayingState extends PlayingState {
 			// Remove entity if it is a player
 			int id = dre.getEntityId();
 
-			if (getLevel().getCurrentPlayer() != null && id == getLevel().getCurrentPlayer().getId()) {
+			if (getLevel().getCurrentPlayer() != null
+					&& id == getLevel().getCurrentPlayer().getId()) {
 				getLevel().setCurrentPlayer(-1);
 			}
 			getLevel().remove(getFactory().getEntity(id));
-			
+
 			// remove Entity recursively from Factory
 			getFactory().removeEntity(id, true);
 
@@ -131,6 +138,11 @@ public class ClientPlayingState extends PlayingState {
 						+ LocalState.CREATINGPLAYER.name());
 			}
 			AckCreatePlayer acp = (AckCreatePlayer) cmd;
+			int playerId = acp.getPlayerId();
+			
+			Entity player = getFactory().getEntity(playerId);
+			player.setUpdateStrategy(EntityUpdateStrategy.ClientToServer);
+			
 			this.getLevel().setCurrentPlayer(acp.getPlayerId());
 
 			// we got a player, now we can start :-)
@@ -156,28 +168,18 @@ public class ClientPlayingState extends PlayingState {
 			}
 		}
 		queue.clear();
-		
+
 		// apply game data received from server
 		if (localState == LocalState.PLAYING) {
 
-			Level level = getLevel();
+			// do stuff with received data
+			if (this.recv != null) {
+				for (Entry<Integer, NetworkData> e : this.recv.entrySet()) {
 
-			if (level != null) {
-
-				Player player = level.getCurrentPlayer();
-
-				// do stuff with received data
-				if (this.recv != null) {
-					for (Entry<Integer, NetworkData> e : this.recv.entrySet()) {
-
-						if (player == null
-								|| (!e.getKey().equals(player.getId()))) {
-
-							Entity ent = this.getFactory().getEntity(e.getKey());
-							if (ent != null && ent.isTransmitting()) {
-								ent.applyNetworkData(e.getValue());
-							}
-						}
+					Entity ent = this.getFactory().getEntity(e.getKey());
+					if (ent != null
+							&& ent.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient) {
+						ent.applyNetworkData(e.getValue());
 					}
 				}
 			}
@@ -188,12 +190,19 @@ public class ClientPlayingState extends PlayingState {
 
 		// send local data to server
 		if (localState == LocalState.PLAYING) {
-			// if we have a player, send updates to the server
-			Level level = getLevel();
-			if (level != null) {
-				Player player = level.getCurrentPlayer();
-				if (player != null) {
-					this.send.setNetworkData(player.getNetworkData());
+			// // if we have a player, send updates to the server
+			// Level level = getLevel();
+			// if (level != null) {
+			// Player player = level.getCurrentPlayer();
+			// if (player != null) {
+			// this.send.setNetworkData(player.getNetworkData());
+			// NetworkComponent.getInstance().sendCommand(this.send);
+			// }
+
+			// for all entites with strategy clienttoserver do
+			for (Entity e : this.getFactory().getEntities()) {
+				if (e.getUpdateStrategy() == EntityUpdateStrategy.ClientToServer) {
+					this.send.setNetworkData(e.getNetworkData());
 					NetworkComponent.getInstance().sendCommand(this.send);
 				}
 			}

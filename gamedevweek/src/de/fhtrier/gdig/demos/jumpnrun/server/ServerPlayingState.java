@@ -10,7 +10,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
-import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreatePlayer;
+import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.common.Level;
@@ -25,6 +25,7 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.engine.entities.Entity;
+import de.fhtrier.gdig.engine.entities.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.entities.physics.MoveableEntity;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
@@ -43,81 +44,105 @@ public class ServerPlayingState extends PlayingState {
 	}
 
 	private boolean handlePlayerActions(QueryAction actionCmd) {
-				
-		switch(actionCmd.getAction()) {
+
+		switch (actionCmd.getAction()) {
 		case DROPGEM:
 			int id = this.getFactory().createEntity(EntityType.GEM);
-			getLevel().add(getFactory().getEntity(id));
+			
+			Entity e = getFactory().getEntity(id);
+			
+			e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+			e.setActive(true);
+			
+			getLevel().add(e);
 
-			// send command to all clients to create bullet
+			// send command to all clients to create gem
 			NetworkComponent.getInstance().sendCommand(
 					new DoCreateEntity(id, EntityType.GEM));
-			
+
 			// set values
-			MoveableEntity gem = (MoveableEntity)getFactory().getEntity(id);
+			MoveableEntity gem = (MoveableEntity) getFactory().getEntity(id);
 			int playerId = networkId2Player.get(actionCmd.getSender());
-			MoveableEntity player = (MoveableEntity)getFactory().getEntity(playerId);
+
+			// set player pos as gem pos
+			MoveableEntity player = (MoveableEntity) getFactory().getEntity(
+					playerId);
 			gem.getData()[Entity.X] = player.getData()[Entity.X];
 			gem.getData()[Entity.Y] = player.getData()[Entity.Y];
 			gem.getVel()[Entity.X] = player.getVel()[Entity.X];
-			gem.getVel()[Entity.Y] = player.getVel()[Entity.Y]-50.0f;
-			
+			gem.getVel()[Entity.Y] = player.getVel()[Entity.Y] - 50.0f;
+
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	private boolean handleProtocolCommands(INetworkCommand cmd) {
 
 		// QueryJoin
 		if (cmd instanceof QueryJoin) {
-			
+
 			// create every (player) entity from server on client
 			for (Entity e : getFactory().getEntities()) {
 				if (e instanceof Player) {
-					NetworkComponent.getInstance().sendCommand(cmd.getSender(), new DoCreateEntity(e.getId(), EntityType.PLAYER));
+					NetworkComponent.getInstance().sendCommand(cmd.getSender(),
+							new DoCreateEntity(e.getId(), EntityType.PLAYER));
 				}
 			}
-			NetworkComponent.getInstance().sendCommand(cmd.getSender(), new AckJoin());
+			NetworkComponent.getInstance().sendCommand(cmd.getSender(),
+					new AckJoin());
 			return true;
 		}
-		
+
 		// QueryLeave
 		if (cmd instanceof QueryLeave) {
-			int playerId = ((QueryLeave)cmd).getPlayerId();
+			int playerId = ((QueryLeave) cmd).getPlayerId();
 
-			NetworkComponent.getInstance().sendCommand(new DoRemoveEntity(playerId));
+			NetworkComponent.getInstance().sendCommand(
+					new DoRemoveEntity(playerId));
 			getLevel().remove(getFactory().getEntity(playerId));
 			getFactory().removeEntity(playerId, true);
-			NetworkComponent.getInstance().sendCommand(cmd.getSender(), new AckLeave());
+			NetworkComponent.getInstance().sendCommand(cmd.getSender(),
+					new AckLeave());
 		}
-		
+
 		// QueryCreatePlayer
-		if (cmd instanceof QueryCreatePlayer) {
+		if (cmd instanceof QueryCreateEntity) {
 
-			// create player on server
-			int playerId = this.getFactory().createEntity(EntityType.PLAYER);
-			getLevel().add(getFactory().getEntity(playerId));
+			EntityType type = ((QueryCreateEntity) cmd).getType();
 
-			// send command to all clients to create player
-			NetworkComponent.getInstance().sendCommand(
-					new DoCreateEntity(playerId, EntityType.PLAYER));
-			
-			// tell client that this is his player
-			NetworkComponent.getInstance().sendCommand(cmd.getSender(), new AckCreatePlayer(playerId));
-			
-			// remember, which networkId has which playerId
-			networkId2Player.put(cmd.getSender(), playerId);
-			
+			// currently, only client creation of player is allowed
+			if (type == EntityType.PLAYER) {
+				int id = this.getFactory().createEntity(type);
+
+				Entity e = getFactory().getEntity(id);
+				e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+				getLevel().add(e);
+
+				// send command to all clients to create entity
+				NetworkComponent.getInstance().sendCommand(
+						new DoCreateEntity(id, EntityType.PLAYER));
+
+				// if query requested new player assume that's the one to be
+				// controlled by client
+				NetworkComponent.getInstance().sendCommand(cmd.getSender(),
+						new AckCreatePlayer(id));
+
+				// remember, which networkId identifies which player
+				networkId2Player.put(cmd.getSender(), id);
+			} else {
+				throw new RuntimeException(
+						"Client side entity creation only allowed for type PLAYER");
+			}
 			return true;
 		}
-		
+
 		// QueryAction
 		if (cmd instanceof QueryAction) {
-			return handlePlayerActions((QueryAction)cmd);
+			return handlePlayerActions((QueryAction) cmd);
 		}
-		
+
 		return false;
 	}
 
@@ -134,7 +159,8 @@ public class ServerPlayingState extends PlayingState {
 					ClientData d = (ClientData) data;
 					Level level = getLevel();
 					if (level != null) {
-						Entity e = getFactory().getEntity(d.getNetworkData().id);
+						Entity e = getFactory()
+								.getEntity(d.getNetworkData().id);
 						if (e != null) {
 							e.applyNetworkData(d.getNetworkData());
 						}
@@ -157,9 +183,13 @@ public class ServerPlayingState extends PlayingState {
 
 		this.send.clear();
 
+		// send entity data every frame
 		for (Entity e : this.getFactory().getEntities()) {
-			NetworkData data = e.getNetworkData();
-			this.send.put(data.id, data);
+			if (e.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient) {
+
+				NetworkData data = e.getNetworkData();
+				this.send.put(data.id, data);
+			}
 		}
 
 		NetworkComponent.getInstance().sendCommand(this.send);

@@ -5,6 +5,7 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.tiled.TiledMap;
 
+import de.fhtrier.gdig.demos.jumpnrun.common.Level;
 import de.fhtrier.gdig.engine.entities.physics.CollidableEntity;
 import de.fhtrier.gdig.engine.entities.physics.Collisions;
 
@@ -33,12 +34,16 @@ public class LevelCollidableEntity extends CollidableEntity {
 		return getBounds().transform(Transform.createTranslateTransform(getData()[X], getData()[Y]));
 	}
 	
+	
 	/**
 	 * handles collisions for entity with tiledmap
 	 * @return hasCollided
 	 */
+	@Override
 	public boolean handleCollisions() {
 
+		boolean result = super.handleCollisions();
+		
 		this.onGround = false;
 		boolean collided = false;
 
@@ -107,7 +112,7 @@ public class LevelCollidableEntity extends CollidableEntity {
 				}
 			}
 		}
-		return collided;
+		return (collided || result);
 	}
 
 	/**
@@ -122,16 +127,16 @@ public class LevelCollidableEntity extends CollidableEntity {
 		if (map != null && getBounds()!= null) {
 
 			// Player BoundingBox
-			Shape bbPlayer = getTransformedBounds();
+			Shape bbEntity = getTransformedBounds();
 
 			// determine tiles to check for collisions
-			int leftTile = (int) (Math.floor(bbPlayer.getMinX()
+			int leftTile = (int) (Math.floor(bbEntity.getMinX()
 					/ map.getTileWidth()));
-			int rightTile = (int) (Math.ceil(bbPlayer.getMaxX()
+			int rightTile = (int) (Math.ceil(bbEntity.getMaxX()
 					/ map.getTileWidth())) - 1;
-			int topTile = (int) (Math.floor(bbPlayer.getMinY()
+			int topTile = (int) (Math.floor(bbEntity.getMinY()
 					/ map.getTileHeight()));
-			int bottomTile = (int) (Math.ceil(bbPlayer.getMaxY()
+			int bottomTile = (int) (Math.ceil(bbEntity.getMaxY()
 					/ map.getTileHeight())) - 1;
 
 			// mark Collision Tiles
@@ -158,7 +163,7 @@ public class LevelCollidableEntity extends CollidableEntity {
 								y * map.getTileHeight(), map.getTileWidth(),
 								map.getTileHeight());
 
-						if (bbPlayer.intersects(bbTile)) {
+						if (bbEntity.intersects(bbTile)) {
 							// mark tile
 							if (tileId < offset) {
 								map.setTileId(x, y, 0, tileId + offset);
@@ -184,7 +189,7 @@ public class LevelCollidableEntity extends CollidableEntity {
 		this.onGround = onGround;
 	}
 
-	public void setMap(TiledMap map) {
-		this.map = map;
+	public void setLevel(Level level) {
+		this.map = level.getMap();
 	}
 }
