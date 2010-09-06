@@ -196,7 +196,7 @@ public class Entity implements Identifiable
 	public boolean handleCollisions() {
 		boolean result = false;
 		if (this.recursing) {
-			for (Entity child : this.childrenInOrder) {
+			for (Entity child : new TreeSet<Entity>(this.childrenInOrder)) {
 				result |= child.handleCollisions();
 			}
 		}

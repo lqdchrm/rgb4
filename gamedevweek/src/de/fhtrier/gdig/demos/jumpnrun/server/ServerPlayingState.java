@@ -13,6 +13,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
+import de.fhtrier.gdig.demos.jumpnrun.common.Bullet;
 import de.fhtrier.gdig.demos.jumpnrun.common.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.PlayingState;
@@ -67,8 +68,9 @@ public class ServerPlayingState extends PlayingState {
 			e = createEntity(EntityType.BULLET);
 			
 			// set values
-			MoveableEntity bullet = (MoveableEntity) e;
-			
+			Bullet bullet = (Bullet) e;
+			bullet.owner = player;
+			bullet.color = player.state.weaponColor;
 			// set player pos as gem pos
 			bullet.getData()[Entity.X] = player.getData()[Entity.X];
 			bullet.getData()[Entity.Y] = player.getData()[Entity.Y];

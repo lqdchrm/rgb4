@@ -142,6 +142,11 @@ public class Player extends LevelCollidableEntity
 	@Override
 	public boolean handleCollisions()
 	{
+		if (!isActive())
+		{
+			return false;
+		}
+		
 		markCollisionTiles(12);
 		
 		boolean result = super.handleCollisions();

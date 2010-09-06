@@ -46,6 +46,10 @@ public class LevelCollidableEntity extends CollidableEntity
 	 */
 	@Override
 	public boolean handleCollisions() {
+		if(!isActive())
+		{
+			return false;
+		}
 		boolean result = super.handleCollisions();
 		
 		this.onGround = false;
