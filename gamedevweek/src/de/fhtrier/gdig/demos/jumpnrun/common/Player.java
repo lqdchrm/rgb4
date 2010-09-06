@@ -30,7 +30,7 @@ public class Player extends LevelCollidableEntity
 
 	// HACK make it private
 	public int currentState = -1;
-	private final ImageEntity idleImage;
+	private final AnimationEntity idleImage;
 	private final Entity playerGroup;
 	private final AnimationEntity runAnimation;
 	private final AnimationEntity jumpAnimation;
@@ -52,23 +52,25 @@ public class Player extends LevelCollidableEntity
 		AssetMgr assets = factory.getAssetMgr();
 
 		// gfx
-		assets.storeImage(Assets.PlayerIdleImage, Assets.PlayerIdleAnimImage);
+		assets.storeAnimation(Assets.PlayerIdleAnim, Assets.PlayerIdleAnimImage);
 		assets.storeAnimation(Assets.PlayerRunAnim, Assets.PlayerRunAnimImage);
 		this.jump = assets.storeAnimation(Assets.PlayerJumpAnim, Assets.PlayerIdleAnimImage);
 		this.jump.setLooping(false);
 
-		this.idleImage = factory.createImageEntity(Assets.PlayerIdleImage,
-				Assets.PlayerIdleImage);
+		this.idleImage = factory.createAnimationEntity(Assets.PlayerIdleAnim,
+				Assets.PlayerIdleAnim);
 		this.runAnimation = factory.createAnimationEntity(Assets.PlayerRunAnim,
 				Assets.PlayerRunAnim);
 		this.jumpAnimation = factory.createAnimationEntity(
 				Assets.PlayerJumpAnim, Assets.PlayerJumpAnim);
 
 		int groupId = factory.createEntity(EntityOrder.Player, EntityType.HELPER);
+		System.out.println("GROUPID " + groupId+ "\n\n\n\n\n\n\n" );
 		this.playerGroup = factory.getEntity(groupId);
-
-		this.playerGroup.getData()[Entity.CENTER_X] = assets.getAnimation(Assets.PlayerIdleImage).getWidth()/2;
-		this.playerGroup.getData()[Entity.CENTER_Y] = assets.getAnimation(Assets.PlayerIdleImage).getHeight()/2;
+		System.out.println("playerGroup==null " + playerGroup==null+ "\n\n\n\n\n\n\n" );
+		
+		this.playerGroup.getData()[Entity.CENTER_X] = assets.getAnimation(Assets.PlayerIdleAnim).getWidth()/2;
+		this.playerGroup.getData()[Entity.CENTER_Y] = assets.getAnimation(Assets.PlayerIdleAnim).getHeight()/2;
 
 		this.playerGroup.add(this.idleImage);
 		this.playerGroup.add(this.runAnimation);
@@ -87,8 +89,8 @@ public class Player extends LevelCollidableEntity
 		
 		// set bounding box according to idle animation size
 		int x = 10;
-		int width = assets.getAnimation(Assets.PlayerIdleImage).getWidth();
-		int height = assets.getAnimation(Assets.PlayerIdleImage).getHeight();
+		int width = assets.getAnimation(Assets.PlayerIdleAnim).getWidth();
+		int height = assets.getAnimation(Assets.PlayerIdleAnim).getHeight();
 		setBounds(new Rectangle(x, 0, width, height)); // bounding box
 
 		setVisible(true);
