@@ -7,6 +7,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.engine.entities.Entity;
@@ -15,15 +16,40 @@ import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 
 public abstract class PlayingState extends BasicGameState implements
-		INetworkCommandListener {
+		INetworkCommandListener
+{
 
 	private AssetMgr assets;
 	private GameFactory factory;
 	private int levelId;
 
+	public abstract void cleanup(GameContainer container, StateBasedGame game);
+
+	public GameFactory getFactory()
+	{
+		return this.factory;
+	}
+
 	@Override
-	public void init(GameContainer arg0, StateBasedGame arg1)
-			throws SlickException {
+	public int getID()
+	{
+		return GameStates.PLAYING;
+	}
+
+	public Level getLevel()
+	{
+		final Entity level = this.factory.getEntity(this.levelId);
+		if (level instanceof Level)
+		{
+			return (Level) level;
+		}
+		return null;
+	}
+
+	@Override
+	public void init(final GameContainer arg0, final StateBasedGame arg1)
+			throws SlickException
+	{
 
 		// create assetmgr
 		this.assets = new AssetMgr();
@@ -31,34 +57,45 @@ public abstract class PlayingState extends BasicGameState implements
 		this.assets.setAssetFallbackPathPrefix("content/jumpnrun/default/");
 
 		// Factory
-		this.factory = new GameFactory(assets);
+		this.factory = new GameFactory(this.assets);
 
 		// Level
-		this.levelId = factory.createEntity(EntityType.LEVEL);
+		this.levelId = this.factory.createEntity(EntityType.LEVEL);
 	}
 
 	@Override
-	public void render(GameContainer container, StateBasedGame game,
-			Graphics graphicsContext) throws SlickException {
-		
-		Level level = getLevel();
-		
-		if (level != null) {
+	public abstract void notify(INetworkCommand cmd);
+
+	@Override
+	public void render(final GameContainer container,
+			final StateBasedGame game, final Graphics graphicsContext)
+			throws SlickException
+	{
+
+		final Level level = this.getLevel();
+
+		if (level != null)
+		{
 			level.render(graphicsContext);
 		}
 	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame game,
-			int deltaInMillis) throws SlickException {
-		Input input = container.getInput();
+	public void update(final GameContainer container,
+			final StateBasedGame game, final int deltaInMillis)
+			throws SlickException
+	{
+		final Input input = container.getInput();
 
-		if (input.isKeyPressed(Input.KEY_F1)) {
+		if (input.isKeyPressed(Input.KEY_F1))
+		{
 			container.setPaused(true);
-			try {
-			container.setFullscreen(!container.isFullscreen());
-			} catch(SlickException e) {
-				
+			try
+			{
+				container.setFullscreen(!container.isFullscreen());
+			} catch (final SlickException e)
+			{
+
 			}
 			container.setVSync(true);
 			container.setSmoothDeltas(true);
@@ -66,37 +103,24 @@ public abstract class PlayingState extends BasicGameState implements
 			container.setPaused(false);
 		}
 
-		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-			cleanup(container, game);
+		if (input.isKeyPressed(Input.KEY_ESCAPE))
+		{
+			this.cleanup(container, game);
 		}
 
-		Level level = getLevel();
+		final Level level = this.getLevel();
 
-		if (level != null) {
+		if (level != null)
+		{
 			level.handleInput(input);
 			level.update(deltaInMillis);
+			// Patrick BEGIN
+			// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2. Zeile
+			// Den Objekten gesagt wird die Kollision zu behandeln.
+			CollisionManager.update();
+			level.handleCollision();
+			// Patrick END
 		}
-	}
 
-	@Override
-	public int getID() {
-		return GameStates.PLAYING;
-	}
-
-	@Override
-	public abstract void notify(INetworkCommand cmd);
-	
-	public abstract void cleanup(GameContainer container, StateBasedGame game);
-
-	public Level getLevel() {
-		Entity level = factory.getEntity(this.levelId);
-		if (level instanceof Level) {
-			return (Level)level;
-		}
-		return null;
-	}
-	
-	public GameFactory getFactory() {
-		return factory;
 	}
 }
