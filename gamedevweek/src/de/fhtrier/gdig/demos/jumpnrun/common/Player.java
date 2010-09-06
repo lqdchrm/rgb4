@@ -5,6 +5,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Vector2f;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
@@ -70,14 +71,14 @@ public class Player extends LevelCollidableEntity {
 		
 		// physics
 		// X Y OX OY SY SY ROT
-		initData(new float[] { 200, 200, 0, 0, 1, 1, 0 }); // pos +
+		initData(new float[] { 200, 200, 48, 48, 1, 1, 0 }); // pos +
 																	// center of rotation +
 																	// scale +
 																	// rot
 		setVel(new float[] { 0, 0, 0, 0, 0, 0, 0 }); // no speed
 		setAcc(new float[] { 0, 981, 0, 0, 0, 0, 0 }); // gravity
 		setBounds(new Rectangle(30, 0, 36, 96)); // bounding box
-
+		
 		setVisible(true);
 		setActive(true);
 		
