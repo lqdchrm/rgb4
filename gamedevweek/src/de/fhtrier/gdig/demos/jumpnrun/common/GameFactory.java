@@ -41,6 +41,10 @@ public class GameFactory extends Factory {
 				Gem newGem = new Gem(id, this);
 				add(newGem);
 				return id;
+			case BULLET:
+				Bullet newBullet = new Bullet(id, this);
+				add(newBullet);
+				return id;
 			}
 		} catch (SlickException e) {
 			// TODO Auto-generated catch block

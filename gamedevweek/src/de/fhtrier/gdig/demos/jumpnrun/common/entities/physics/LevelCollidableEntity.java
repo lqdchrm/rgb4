@@ -5,6 +5,7 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.tiled.TiledMap;
 
+import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.common.Level;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.entities.Entity;
@@ -47,6 +48,15 @@ public class LevelCollidableEntity extends CollidableEntity
 	 */
 	@Override
 	public boolean handleCollisions() {
+		if(!isActive())
+		{
+			return false;
+		}
+		
+		if (Constants.Debug.showCollisions) {
+			markCollisionTiles(12);
+		}
+		
 		boolean result = super.handleCollisions();
 		
 		this.onGround = false;

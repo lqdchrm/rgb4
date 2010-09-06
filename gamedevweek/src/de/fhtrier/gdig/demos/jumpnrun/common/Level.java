@@ -21,7 +21,7 @@ import de.fhtrier.gdig.engine.network.NetworkComponent;
 
 public class Level extends MoveableEntity {
 
-	private GameFactory factory;
+	public GameFactory factory;
 
 	private ImageEntity backgroundImage;
 	private ImageEntity middlegroundImage;
