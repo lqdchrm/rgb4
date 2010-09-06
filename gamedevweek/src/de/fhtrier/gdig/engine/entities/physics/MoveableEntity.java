@@ -9,7 +9,6 @@ public class MoveableEntity extends Entity {
 	private float vel[];
 	private float acc[];
 
-
 	/**
 	 * @param id
 	 */
@@ -19,7 +18,7 @@ public class MoveableEntity extends Entity {
 		this.prevPos = new float[7];
 		this.prevPos[SCALE_X] = 1;
 		this.prevPos[SCALE_Y] = 1;
-		
+
 		this.vel = new float[7];
 		this.acc = new float[7];
 	}

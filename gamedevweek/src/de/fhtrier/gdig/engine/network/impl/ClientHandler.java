@@ -46,7 +46,7 @@ public class ClientHandler extends Thread {
 				INetworkCommand command = (INetworkCommand) this.in
 						.readObject();
 
-				command.setSender(clientNetworkId);				
+				command.setSender(clientNetworkId);
 				this.netComp.addCommand(command);
 			}
 			this.in.close();
@@ -58,8 +58,7 @@ public class ClientHandler extends Thread {
 			e.printStackTrace();
 		} finally {
 			this.netComp.removeClient(this);
-			Log.debug("Client " + this.s.getInetAddress()
-					+ " disconnected.");
+			Log.debug("Client " + this.s.getInetAddress() + " disconnected.");
 		}
 	}
 

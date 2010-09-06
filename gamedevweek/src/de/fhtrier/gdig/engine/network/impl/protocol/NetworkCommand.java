@@ -7,12 +7,12 @@ public class NetworkCommand implements INetworkCommand {
 	private static final long serialVersionUID = 4800886375129405469L;
 	private int sender;
 	private boolean handled;
-	
+
 	public NetworkCommand() {
 		sender = -1;
 		handled = false;
 	}
-	
+
 	@Override
 	public int getSender() {
 		return sender;

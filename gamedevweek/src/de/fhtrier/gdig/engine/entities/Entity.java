@@ -13,10 +13,9 @@ import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.helpers.Identifiable;
 
-public class Entity implements Identifiable
-{
+public class Entity implements Identifiable {
 	/**
-	 * final static index for x component in entity data 
+	 * final static index for x component in entity data
 	 */
 	public static final int X = 0; // pos
 	/**
@@ -45,9 +44,9 @@ public class Entity implements Identifiable
 	private boolean recursing;
 
 	private EntityUpdateStrategy updateStrategy;
-	
+
 	private Integer order;
-	
+
 	private EntityType type;
 
 	/**
@@ -60,23 +59,19 @@ public class Entity implements Identifiable
 	// holds a copy of internal data for network transfer
 	private NetworkData networkData;
 
-	public Entity(final int id, EntityType type)
-	{
+	public Entity(final int id, EntityType type) {
 
 		this.id = id;
 		this.type = type;
 
 		this.children = new TreeMap<Integer, Entity>();
-		this.childrenInOrder = new TreeSet<Entity>(new Comparator<Entity>()
-		{
+		this.childrenInOrder = new TreeSet<Entity>(new Comparator<Entity>() {
 
 			@Override
-			public int compare(final Entity o1, final Entity o2)
-			{
+			public int compare(final Entity o1, final Entity o2) {
 				final int result = o1.getOrder().compareTo(o2.getOrder());
 
-				if (result != 0)
-				{
+				if (result != 0) {
 					return result;
 				}
 
@@ -108,19 +103,15 @@ public class Entity implements Identifiable
 	 * 
 	 * @return
 	 */
-	protected NetworkData _createNetworkData()
-	{
+	protected NetworkData _createNetworkData() {
 		return new NetworkData(this.getId());
 	}
 
-	public Entity add(final Entity e)
-	{
-		if (!this.children.containsKey(e.getId()))
-		{
+	public Entity add(final Entity e) {
+		if (!this.children.containsKey(e.getId())) {
 			this.children.put(e.getId(), e);
 			this.childrenInOrder.add(e);
-		} else
-		{
+		} else {
 			throw new IllegalArgumentException(
 					"entity with this id was already added");
 		}
@@ -132,18 +123,15 @@ public class Entity implements Identifiable
 	 * 
 	 * @param networkData
 	 */
-	public void applyNetworkData(final NetworkData networkData)
-	{
+	public void applyNetworkData(final NetworkData networkData) {
 		this.setData(networkData.data);
 	}
 
-	public Entity get(final int id)
-	{
+	public Entity get(final int id) {
 		return this.children.get(id);
 	}
 
-	public Set<Entity> getChildren()
-	{
+	public Set<Entity> getChildren() {
 		return Collections.unmodifiableSet(this.childrenInOrder);
 	}
 
@@ -152,19 +140,16 @@ public class Entity implements Identifiable
 	 * array allows for incremental updates<br/>
 	 * posX, posY, originX, originY, focusX, focusY, scaleX, scaleY, rotation
 	 */
-	public float[] getData()
-	{
+	public float[] getData() {
 		return this.data;
 	}
 
-	public float getData(final int position)
-	{
+	public float getData(final int position) {
 		return this.data[position];
 	}
 
 	@Override
-	public Integer getId()
-	{
+	public Integer getId() {
 		return this.id;
 	}
 
@@ -173,30 +158,24 @@ public class Entity implements Identifiable
 	 * 
 	 * @return
 	 */
-	public NetworkData getNetworkData()
-	{
+	public NetworkData getNetworkData() {
 
 		this.networkData.data = this.getData();
 		return this.networkData;
 	}
 
-	public Integer getOrder()
-	{
+	public Integer getOrder() {
 		return this.order;
 	}
 
-
-	public void handleInput(final Input input)
-	{
-		if (this.recursing)
-		{
-			for (final Entity child : this.childrenInOrder)
-			{
+	public void handleInput(final Input input) {
+		if (this.recursing) {
+			for (final Entity child : this.childrenInOrder) {
 				child.handleInput(input);
 			}
 		}
 	}
-	
+
 	public boolean handleCollisions() {
 		boolean result = false;
 		if (this.recursing) {
@@ -207,28 +186,23 @@ public class Entity implements Identifiable
 		return result;
 	}
 
-	public boolean isActive()
-	{
+	public boolean isActive() {
 		return this.active;
 	}
 
-	public boolean isRecursing()
-	{
+	public boolean isRecursing() {
 		return this.recursing;
 	}
 
-	public boolean isVisible()
-	{
+	public boolean isVisible() {
 		return this.visible;
 	}
 
-	protected void postRender(final Graphics graphicContext)
-	{
+	protected void postRender(final Graphics graphicContext) {
 		graphicContext.popTransform();
 	}
 
-	protected void preRender(final Graphics graphicContext)
-	{
+	protected void preRender(final Graphics graphicContext) {
 		graphicContext.pushTransform();
 
 		graphicContext.translate(this.getData()[Entity.X],
@@ -248,14 +222,11 @@ public class Entity implements Identifiable
 				-this.getData()[Entity.CENTER_Y]); // set center of rotation
 	}
 
-	public void remove(final Entity e)
-	{
-		if (this.children.containsKey(e.getId()))
-		{
+	public void remove(final Entity e) {
+		if (this.children.containsKey(e.getId())) {
 			this.childrenInOrder.remove(e);
 			this.children.remove(e.getId());
-		} else
-		{
+		} else {
 			throw new IllegalArgumentException(
 					"entity with this id doesn't exist");
 		}
@@ -265,19 +236,15 @@ public class Entity implements Identifiable
 		this.remove(this.get(id));
 	}
 
-	public final void render(final Graphics graphicContext)
-	{
+	public final void render(final Graphics graphicContext) {
 		this.preRender(graphicContext);
 		this.renderImpl(graphicContext);
 		this.postRender(graphicContext);
 	}
 
-	protected void renderImpl(final Graphics graphicContext)
-	{
-		if (this.recursing)
-		{
-			for (final Entity child : this.childrenInOrder)
-			{
+	protected void renderImpl(final Graphics graphicContext) {
+		if (this.recursing) {
+			for (final Entity child : this.childrenInOrder) {
 				child.render(graphicContext);
 			}
 		}
@@ -286,54 +253,45 @@ public class Entity implements Identifiable
 	public EntityUpdateStrategy getUpdateStrategy() {
 		return updateStrategy;
 	}
-	
+
 	public void setUpdateStrategy(EntityUpdateStrategy updateStrategy) {
 		this.updateStrategy = updateStrategy;
 	}
-	
-	public Entity replace(final Entity e)
-	{
+
+	public Entity replace(final Entity e) {
 		this.childrenInOrder.remove(this.children.get(e.get(this.id)));
 		this.children.put(e.getId(), e);
 		this.childrenInOrder.add(e);
 		return e;
 	}
 
-	public void setActive(final boolean active)
-	{
+	public void setActive(final boolean active) {
 		this.active = active;
 	}
 
-	public void setData(final float[] data)
-	{
+	public void setData(final float[] data) {
 		this.data = data;
 	}
 
-	public void setOrder(final int order)
-	{
+	public void setOrder(final int order) {
 		this.order = order;
 	}
 
-	public void setRecursing(final boolean recursing)
-	{
+	public void setRecursing(final boolean recursing) {
 		this.recursing = recursing;
 	}
 
-	public void setVisible(final boolean visible)
-	{
+	public void setVisible(final boolean visible) {
 		this.visible = visible;
 	}
 
 	public EntityType getType() {
 		return type;
 	}
-		
-	public void update(final int deltaInMillis)
-	{
-		if (this.recursing)
-		{
-			for (final Entity child : this.childrenInOrder)
-			{
+
+	public void update(final int deltaInMillis) {
+		if (this.recursing) {
+			for (final Entity child : this.childrenInOrder) {
 				child.update(deltaInMillis);
 			}
 		}

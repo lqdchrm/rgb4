@@ -11,8 +11,7 @@ import org.newdawn.slick.geom.Transform;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.physics.CollidableEntity;
 
-public class CollisionManager
-{
+public class CollisionManager {
 
 	/**
 	 * Speichert alle {@link CollidableEntity}'s zwichen denen die Kollision
@@ -26,8 +25,7 @@ public class CollisionManager
 	 */
 	private static Map<CollidableEntity, List<CollidableEntity>> collisionmap;
 
-	static
-	{
+	static {
 		CollisionManager.entetys = new ArrayList<CollidableEntity>();
 		CollisionManager.collisionmap = new HashMap<CollidableEntity, List<CollidableEntity>>();
 	}
@@ -38,8 +36,7 @@ public class CollisionManager
 	 * @param entety
 	 *            Die Entety.
 	 */
-	public static void addEntety(final CollidableEntity entety)
-	{
+	public static void addEntety(final CollidableEntity entety) {
 		CollisionManager.entetys.add(entety);
 	}
 
@@ -53,10 +50,8 @@ public class CollisionManager
 	 * @return Ob bide sich überschneiden.
 	 */
 	private static boolean collide(final CollidableEntity e1,
-			final CollidableEntity e2)
-	{
-		if (e1.getBounds() == null || e2.getBounds() == null)
-		{
+			final CollidableEntity e2) {
+		if (e1.getBounds() == null || e2.getBounds() == null) {
 			return false;
 		}
 
@@ -71,8 +66,7 @@ public class CollisionManager
 	 * 
 	 * @return transformed Shape
 	 */
-	private static Shape getTransformedBounds(final CollidableEntity entety)
-	{
+	private static Shape getTransformedBounds(final CollidableEntity entety) {
 		return entety.getBounds().transform(
 				Transform.createTranslateTransform(entety.getData()[Entity.X],
 						entety.getData()[Entity.Y]));
@@ -87,8 +81,7 @@ public class CollisionManager
 	 * @return Die lisete der Kollisionsobjekte.
 	 */
 	public static List<CollidableEntity> iColideWith(
-			final CollidableEntity entety)
-	{
+			final CollidableEntity entety) {
 		final List<CollidableEntity> list = CollisionManager.collisionmap
 				.get(entety);
 		return list == null ? new ArrayList<CollidableEntity>() : list;
@@ -100,8 +93,7 @@ public class CollisionManager
 	 * @param entety
 	 *            Das Entety welches aus der Überwachung entfernt werden soll.
 	 */
-	public static void removeEntety(final CollidableEntity entety)
-	{
+	public static void removeEntety(final CollidableEntity entety) {
 		CollisionManager.entetys.remove(entety);
 	}
 
@@ -109,24 +101,18 @@ public class CollisionManager
 	 * Updated die Colisionen. Muss jedes Frame aufgerufen werden, sonst gibt
 	 * die Kollisionserkennung falsche werte zurück.
 	 */
-	public static void update()
-	{
+	public static void update() {
 		CollisionManager.collisionmap.clear();
-		for (int x = 0; x < CollisionManager.entetys.size(); ++x)
-		{
-			for (int y = 0; y < x; ++y)
-			{
+		for (int x = 0; x < CollisionManager.entetys.size(); ++x) {
+			for (int y = 0; y < x; ++y) {
 				final CollidableEntity e1 = CollisionManager.entetys.get(x);
 				final CollidableEntity e2 = CollisionManager.entetys.get(y);
-				if (CollisionManager.collide(e1, e2))
-				{
-					if (!CollisionManager.collisionmap.containsKey(e1))
-					{
+				if (CollisionManager.collide(e1, e2)) {
+					if (!CollisionManager.collisionmap.containsKey(e1)) {
 						CollisionManager.collisionmap.put(e1,
 								new ArrayList<CollidableEntity>());
 					}
-					if (!CollisionManager.collisionmap.containsKey(e2))
-					{
+					if (!CollisionManager.collisionmap.containsKey(e2)) {
 						CollisionManager.collisionmap.put(e2,
 								new ArrayList<CollidableEntity>());
 					}

@@ -5,7 +5,7 @@ import org.newdawn.slick.Color;
 public class Constants {
 
 	public static float EPSILON = 0.0001f;
-	
+
 	public static class GamePlayConstants {
 
 		public static float gravity = 981.0f;
@@ -14,9 +14,9 @@ public class Constants {
 		public static float walkVelo = 800.0f;
 		public static float JumpVelo = 800.0f;
 	}
-	
-	public static class Debug{
-		
+
+	public static class Debug {
+
 		public static boolean drawBounds = true;
 		public static Color boundColor = Color.green;
 		public static boolean showCollisions = true;

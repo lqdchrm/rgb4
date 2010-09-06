@@ -20,7 +20,7 @@ public class AssetEntity extends Entity {
 	public AssetMgr Assets() {
 		return this.assets;
 	}
-	
+
 	public int getAssetId() {
 		return assetId;
 	}
