@@ -1,5 +1,6 @@
 package de.fhtrier.gdig.engine.network.impl;
 
+import java.net.InterfaceAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +18,7 @@ public class NetworkComponentServer extends NetworkComponentImpl {
 
 	protected SortedMap<Integer, ClientHandler> clients;
 	private NetworkConnectionListener networkConnectionListener;
+	private NetworkBroadcastListener networkBroadcastListener;
 
 	private static int networkIds = 1;
 
@@ -29,13 +31,17 @@ public class NetworkComponentServer extends NetworkComponentImpl {
 	}
 
 	@Override
-	public void startListening(int port) {
-		this.networkConnectionListener.startNetworkConnectionListener(port);
+	public void startListening( InterfaceAddress ni, int port ) 
+	{
+		this.networkConnectionListener.startNetworkConnectionListener( ni, port );
+		this.networkBroadcastListener = new NetworkBroadcastListener( "TestServer", "Testmap", "0.01", ni, port );
+		this.networkBroadcastListener.start();
 	}
-
+	
 	@Override
 	public void stopListening() {
 		this.networkConnectionListener.stopNetworkConnectionListener();
+		this.networkBroadcastListener.finish();
 	}
 
 	@Override
