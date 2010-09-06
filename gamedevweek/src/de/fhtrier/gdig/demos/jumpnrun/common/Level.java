@@ -26,7 +26,7 @@ public class Level extends MoveableEntity {
 	private ImageEntity middlegroundImage;
 	private TiledMap groundMap;
 	private TiledMapEntity ground;
-	
+
 	private int currentPlayerId;
 
 	public Level(int id, GameFactory factory) throws SlickException {
@@ -70,13 +70,13 @@ public class Level extends MoveableEntity {
 
 		// physics
 		setData(new float[] { 0, 0, 0, 0, 1, 1, 0 });
-		
+
 		// network
 		setUpdateStrategy(EntityUpdateStrategy.Local);
 
 		// order
 		setOrder(EntityOrder.Level);
-		
+
 		// setup
 		setActive(true);
 		setVisible(true);
@@ -91,24 +91,24 @@ public class Level extends MoveableEntity {
 				+ factory.size() + " entities", 20, 50);
 
 		Entity e = this;
-		graphicContext.drawString(
-				"Level\n" +
-				"ID: " + e.getId() + "\n" + " X: " + e.getData()[X] + "  Y: "
-						+ e.getData()[Y] + "\n" + "OX: " + e.getData()[CENTER_X]
-						+ " OY: " + e.getData()[CENTER_Y] + "\n" + "FX: "
-						+ "SX: " + e.getData()[SCALE_X] + " SY: " + e.getData()[SCALE_Y]
-						+ "\n" + "ROT: " + e.getData()[ROTATION], 20, 100);
+		graphicContext.drawString("Level\n" + "ID: " + e.getId() + "\n"
+				+ " X: " + e.getData()[X] + "  Y: " + e.getData()[Y] + "\n"
+				+ "OX: " + e.getData()[CENTER_X] + " OY: "
+				+ e.getData()[CENTER_Y] + "\n" + "FX: " + "SX: "
+				+ e.getData()[SCALE_X] + " SY: " + e.getData()[SCALE_Y] + "\n"
+				+ "ROT: " + e.getData()[ROTATION], 20, 100);
 
 		e = getCurrentPlayer();
 		if (e != null) {
 			graphicContext.drawString(
-					"Player\n" +
-					"ID: " + e.getId() + "\n" + " X: " + e.getData()[X]
-							+ "  Y: " + e.getData()[Y] + "\n" + "OX: "
-							+ e.getData()[CENTER_X] + " OY: " + e.getData()[CENTER_Y]
-                        	+ "SX: " + e.getData()[SCALE_X]
-							+ " SY: " + e.getData()[SCALE_Y] + "\n" + "ROT: "
-							+ e.getData()[ROTATION] + "\n" + "STATE: " + ((Player)e).currentState, 20, 250);
+					"Player\n" + "ID: " + e.getId() + "\n" + " X: "
+							+ e.getData()[X] + "  Y: " + e.getData()[Y] + "\n"
+							+ "OX: " + e.getData()[CENTER_X] + " OY: "
+							+ e.getData()[CENTER_Y] + "SX: "
+							+ e.getData()[SCALE_X] + " SY: "
+							+ e.getData()[SCALE_Y] + "\n" + "ROT: "
+							+ e.getData()[ROTATION] + "\n" + "STATE: "
+							+ ((Player) e).currentState, 20, 250);
 		}
 	}
 
@@ -127,7 +127,7 @@ public class Level extends MoveableEntity {
 	}
 
 	/**
-	 *  scrolls background layers relative to foreground
+	 * scrolls background layers relative to foreground
 	 */
 	private void parallaxScrollingBackground() {
 		this.middlegroundImage.getData()[X] = -getData()[X] * 0.6f;
@@ -137,8 +137,8 @@ public class Level extends MoveableEntity {
 	}
 
 	/**
-	 *  Ensures, that we don't scroll across level borders
-	 *  TODO: doesn't work with scaling factor != 1
+	 * Ensures, that we don't scroll across level borders TODO: doesn't work
+	 * with scaling factor != 1
 	 */
 	private void checkLevelBordersScrolling() {
 
@@ -169,15 +169,15 @@ public class Level extends MoveableEntity {
 	}
 
 	/**
-	 *  keep our player in the middle of the screen
+	 * keep our player in the middle of the screen
 	 */
 	private void focusOnPlayer() {
 		Player player = getCurrentPlayer();
 		if (player != null) {
 
 			// Focus on Player
-			getData()[X] = JumpNRun.SCREENWIDTH/2 - player.getData()[X];
-			getData()[Y] = JumpNRun.SCREENHEIGHT/2 - player.getData()[Y];
+			getData()[X] = JumpNRun.SCREENWIDTH / 2 - player.getData()[X];
+			getData()[Y] = JumpNRun.SCREENHEIGHT / 2 - player.getData()[Y];
 		}
 	}
 

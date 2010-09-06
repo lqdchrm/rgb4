@@ -7,10 +7,10 @@ public class QueryAction extends ProtocolCommand {
 
 	private static final long serialVersionUID = -2964677085138541256L;
 	public PlayerAction action;
-	
+
 	public QueryAction(PlayerAction action) {
 		super("Query Action " + action.name());
-		
+
 		this.action = action;
 	}
 

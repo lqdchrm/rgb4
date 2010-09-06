@@ -2,8 +2,7 @@ package de.fhtrier.gdig.engine.entities.physics;
 
 import de.fhtrier.gdig.engine.entities.Entity;
 
-public class MoveableEntity extends Entity
-{
+public class MoveableEntity extends Entity {
 
 	private float prevPos[];
 	private float vel[];
@@ -13,8 +12,7 @@ public class MoveableEntity extends Entity
 	/**
 	 * @param id
 	 */
-	public MoveableEntity(int id)
-	{
+	public MoveableEntity(int id) {
 		super(id);
 
 		this.prevPos = new float[7];
@@ -27,20 +25,18 @@ public class MoveableEntity extends Entity
 	}
 
 	@Override
-	public void update(int deltaInMillis)
-	{
-		if (isActive())
-		{
+	public void update(int deltaInMillis) {
+		if (isActive()) {
 
 			float secs = deltaInMillis / 1000.0f;
 
-			for (int i = 0; i < getData().length; i++)
-			{
+			for (int i = 0; i < getData().length; i++) {
 				// simple euler integration
 				this.vel[i] += this.acc[i] * secs;
 				// reibung folgt hier
-				if (i == X || i == Y)
+				if (i == X || i == Y) {
 					vel[i] -= vel[i] * drag * secs;
+				}
 				this.getData()[i] = this.getData()[i] + this.vel[i] * secs;
 			}
 		}
@@ -48,37 +44,30 @@ public class MoveableEntity extends Entity
 		super.update(deltaInMillis);
 	}
 
-	public void initData(float[] pos)
-	{
+	public void initData(float[] pos) {
 		setData(pos);
-		for (int i = 0; i < prevPos.length; i++)
-		{
+		for (int i = 0; i < prevPos.length; i++) {
 			this.prevPos[i] = pos[i];
 		}
 	}
 
-	public float[] getVel()
-	{
+	public float[] getVel() {
 		return this.vel;
 	}
 
-	public void setVel(float[] vel)
-	{
+	public void setVel(float[] vel) {
 		this.vel = vel;
 	}
 
-	public float[] getAcc()
-	{
+	public float[] getAcc() {
 		return this.acc;
 	}
 
-	public void setAcc(float[] acc)
-	{
+	public void setAcc(float[] acc) {
 		this.acc = acc;
 	}
 
-	public float[] getPrevPos()
-	{
+	public float[] getPrevPos() {
 		return this.prevPos;
 	}
 

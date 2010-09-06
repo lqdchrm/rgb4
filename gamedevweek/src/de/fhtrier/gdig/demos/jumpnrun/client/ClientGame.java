@@ -13,7 +13,7 @@ public class ClientGame extends JumpNRunGame {
 
 	public ClientGame() {
 		NetworkComponent.createClientInstance();
-		
+
 		while (!NetworkComponent.getInstance().connect(nameOrIp, port)) {
 			try {
 				System.out.println("Waiting for Server");

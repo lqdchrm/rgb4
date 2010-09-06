@@ -16,8 +16,7 @@ import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 
 public abstract class PlayingState extends BasicGameState implements
-		INetworkCommandListener
-{
+		INetworkCommandListener {
 
 	private AssetMgr assets;
 	private GameFactory factory;
@@ -25,22 +24,18 @@ public abstract class PlayingState extends BasicGameState implements
 
 	public abstract void cleanup(GameContainer container, StateBasedGame game);
 
-	public GameFactory getFactory()
-	{
+	public GameFactory getFactory() {
 		return this.factory;
 	}
 
 	@Override
-	public int getID()
-	{
+	public int getID() {
 		return GameStates.PLAYING;
 	}
 
-	public Level getLevel()
-	{
+	public Level getLevel() {
 		final Entity level = this.factory.getEntity(this.levelId);
-		if (level instanceof Level)
-		{
+		if (level instanceof Level) {
 			return (Level) level;
 		}
 		return null;
@@ -48,8 +43,7 @@ public abstract class PlayingState extends BasicGameState implements
 
 	@Override
 	public void init(final GameContainer arg0, final StateBasedGame arg1)
-			throws SlickException
-	{
+			throws SlickException {
 
 		// create assetmgr
 		this.assets = new AssetMgr();
@@ -69,13 +63,11 @@ public abstract class PlayingState extends BasicGameState implements
 	@Override
 	public void render(final GameContainer container,
 			final StateBasedGame game, final Graphics graphicsContext)
-			throws SlickException
-	{
+			throws SlickException {
 
 		final Level level = this.getLevel();
 
-		if (level != null)
-		{
+		if (level != null) {
 			level.render(graphicsContext);
 		}
 	}
@@ -83,18 +75,14 @@ public abstract class PlayingState extends BasicGameState implements
 	@Override
 	public void update(final GameContainer container,
 			final StateBasedGame game, final int deltaInMillis)
-			throws SlickException
-	{
+			throws SlickException {
 		final Input input = container.getInput();
 
-		if (input.isKeyPressed(Input.KEY_F1))
-		{
+		if (input.isKeyPressed(Input.KEY_F1)) {
 			container.setPaused(true);
-			try
-			{
+			try {
 				container.setFullscreen(!container.isFullscreen());
-			} catch (final SlickException e)
-			{
+			} catch (final SlickException e) {
 
 			}
 			container.setVSync(true);
@@ -103,15 +91,13 @@ public abstract class PlayingState extends BasicGameState implements
 			container.setPaused(false);
 		}
 
-		if (input.isKeyPressed(Input.KEY_ESCAPE))
-		{
+		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			this.cleanup(container, game);
 		}
 
 		final Level level = this.getLevel();
 
-		if (level != null)
-		{
+		if (level != null) {
 			level.handleInput(input);
 			level.update(deltaInMillis);
 		}
@@ -119,21 +105,17 @@ public abstract class PlayingState extends BasicGameState implements
 		Player currentPlayer = level.getCurrentPlayer();
 
 		// change player color
-		if (input.isKeyPressed(Input.KEY_C))
-		{
+		if (input.isKeyPressed(Input.KEY_C)) {
 			currentPlayer.state.color = currentPlayer.state.color << 1;
-			if (currentPlayer.state.color > Constants.StateColor.BLUE)
-			{
+			if (currentPlayer.state.color > Constants.StateColor.BLUE) {
 				currentPlayer.state.color = Constants.StateColor.RED;
 			}
 		}
 
 		// change weapon color
-		if (input.isKeyPressed(Input.KEY_X))
-		{
+		if (input.isKeyPressed(Input.KEY_X)) {
 			currentPlayer.state.weaponColor = currentPlayer.state.weaponColor << 1;
-			if (currentPlayer.state.weaponColor > Constants.StateColor.BLUE)
-			{
+			if (currentPlayer.state.weaponColor > Constants.StateColor.BLUE) {
 				currentPlayer.state.weaponColor = Constants.StateColor.RED;
 			}
 		}

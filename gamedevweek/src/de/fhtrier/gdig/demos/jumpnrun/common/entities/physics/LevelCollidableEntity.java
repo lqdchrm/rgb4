@@ -10,8 +10,7 @@ import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.physics.CollidableEntity;
 import de.fhtrier.gdig.engine.entities.physics.Collisions;
 
-public class LevelCollidableEntity extends CollidableEntity
-{
+public class LevelCollidableEntity extends CollidableEntity {
 
 	private boolean onGround;
 	protected TiledMap map;
@@ -20,8 +19,7 @@ public class LevelCollidableEntity extends CollidableEntity
 	 * Custom entity class which implements level collisions (ugly ?) needs to
 	 * have TiledMap and Bounds set before you should call something
 	 */
-	public LevelCollidableEntity(final int id)
-	{
+	public LevelCollidableEntity(final int id) {
 		super(id);
 	}
 
@@ -32,8 +30,7 @@ public class LevelCollidableEntity extends CollidableEntity
 	 * 
 	 * @return transformed Shape
 	 */
-	private Shape getTransformedBounds()
-	{
+	private Shape getTransformedBounds() {
 		return this.getBounds().transform(
 				Transform.createTranslateTransform(this.getData()[Entity.X],
 						this.getData()[Entity.Y]));
@@ -47,12 +44,11 @@ public class LevelCollidableEntity extends CollidableEntity
 	@Override
 	public boolean handleCollisions() {
 		boolean result = super.handleCollisions();
-		
+
 		this.onGround = false;
 		boolean collided = false;
 
-		if (this.map != null && this.getBounds() != null)
-		{
+		if (this.map != null && this.getBounds() != null) {
 
 			Shape bbEntity = this.getTransformedBounds();
 
@@ -67,17 +63,14 @@ public class LevelCollidableEntity extends CollidableEntity
 					/ this.map.getTileHeight());
 
 			for (int y = Math.max(0, topTile); y < Math.min(
-					this.map.getHeight(), bottomTile); y++)
-			{
+					this.map.getHeight(), bottomTile); y++) {
 				for (int x = Math.max(0, leftTile); x < Math.min(
-						this.map.getWidth(), rightTile); x++)
-				{
+						this.map.getWidth(), rightTile); x++) {
 
 					// items
 					final int tileId = this.map.getTileId(x, y, 0);
 
-					if (tileId > 0)
-					{
+					if (tileId > 0) {
 						final Rectangle bbTile = new Rectangle(x
 								* this.map.getTileWidth(), y
 								* this.map.getTileHeight(),
@@ -90,30 +83,25 @@ public class LevelCollidableEntity extends CollidableEntity
 						final float absDepthX = Math.abs(depth[Entity.X]);
 						final float absDepthY = Math.abs(depth[Entity.Y]);
 
-						if (absDepthX > 0 || absDepthY > 0)
-						{
+						if (absDepthX > 0 || absDepthY > 0) {
 
-							switch (tileId)
-							{
+							switch (tileId) {
 							case 1:
 							case 13:
 								this.map.setTileId(x, y, 0, 0);
 								break;
 							default:
-								if (absDepthY < absDepthX)
-								{
+								if (absDepthY < absDepthX) {
 									this.getData()[Entity.Y] += depth[Entity.Y];
 									this.getVel()[Entity.Y] = 0.0f;
 									bbEntity = this.getTransformedBounds();
 
-									if (depth[Entity.Y] < 0)
-									{
+									if (depth[Entity.Y] < 0) {
 										this.onGround = true;
 									}
 
 									collided = true;
-								} else
-								{
+								} else {
 									this.getData()[Entity.X] += depth[Entity.X];
 									this.getVel()[Entity.X] = 0.0f;
 									bbEntity = this.getTransformedBounds();
@@ -129,8 +117,7 @@ public class LevelCollidableEntity extends CollidableEntity
 		return (collided || result);
 	}
 
-	public boolean isOnGround()
-	{
+	public boolean isOnGround() {
 		return this.onGround;
 	}
 
@@ -140,11 +127,9 @@ public class LevelCollidableEntity extends CollidableEntity
 	 * for all tiles
 	 */
 	@Deprecated
-	public void markCollisionTiles(final int offset)
-	{
+	public void markCollisionTiles(final int offset) {
 
-		if (this.map != null && this.getBounds() != null)
-		{
+		if (this.map != null && this.getBounds() != null) {
 
 			// Player BoundingBox
 			Shape bbEntity = getTransformedBounds();
@@ -160,27 +145,22 @@ public class LevelCollidableEntity extends CollidableEntity
 					/ map.getTileHeight())) - 1;
 
 			// mark Collision Tiles
-			for (int y = topTile - 1; y <= bottomTile + 1; y++)
-			{
+			for (int y = topTile - 1; y <= bottomTile + 1; y++) {
 
-				if (y < 0 || y >= this.map.getHeight())
-				{
+				if (y < 0 || y >= this.map.getHeight()) {
 					continue;
 				}
 
-				for (int x = leftTile - 1; x <= rightTile + 1; x++)
-				{
+				for (int x = leftTile - 1; x <= rightTile + 1; x++) {
 
-					if (x < 0 || x >= this.map.getWidth())
-					{
+					if (x < 0 || x >= this.map.getWidth()) {
 						continue;
 					}
 
 					// if tile is not empty
 					// TODO read from special layer
 					final int tileId = this.map.getTileId(x, y, 0);
-					if (tileId > 0)
-					{
+					if (tileId > 0) {
 
 						// Bounding box for current tile
 						Rectangle bbTile = new Rectangle(
@@ -190,15 +170,12 @@ public class LevelCollidableEntity extends CollidableEntity
 
 						if (bbEntity.intersects(bbTile)) {
 							// mark tile
-							if (tileId < offset)
-							{
+							if (tileId < offset) {
 								this.map.setTileId(x, y, 0, tileId + offset);
 							}
-						} else
-						{
+						} else {
 							// unmark tile
-							if (tileId > offset)
-							{
+							if (tileId > offset) {
 								this.map.setTileId(x, y, 0, tileId - offset);
 							}
 						}
@@ -208,13 +185,11 @@ public class LevelCollidableEntity extends CollidableEntity
 		}
 	}
 
-	public void setMap(final TiledMap map)
-	{
+	public void setMap(final TiledMap map) {
 		this.map = map;
 	}
 
-	public void setOnGround(final boolean onGround)
-	{
+	public void setOnGround(final boolean onGround) {
 		this.onGround = onGround;
 	}
 

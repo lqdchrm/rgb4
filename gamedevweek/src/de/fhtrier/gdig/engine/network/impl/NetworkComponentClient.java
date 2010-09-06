@@ -41,11 +41,11 @@ public class NetworkComponentClient extends NetworkComponentImpl {
 				askForNetworkId();
 			} catch (UnknownHostException e) {
 				System.err.println("Unknown host");
-//				e.printStackTrace();
+				// e.printStackTrace();
 				return false;
 			} catch (IOException e) {
-//				System.err.println("Fail connecting");
-//				e.printStackTrace();
+				// System.err.println("Fail connecting");
+				// e.printStackTrace();
 				return false;
 			}
 		} else {
@@ -59,9 +59,9 @@ public class NetworkComponentClient extends NetworkComponentImpl {
 
 		if (localState == LocalState.WAITINGFORNETWORKID) {
 			if (command instanceof ServerAckConnect) {
-				this.networkId = ((ServerAckConnect)command).getNetworkId();
+				this.networkId = ((ServerAckConnect) command).getNetworkId();
 				setState(LocalState.READYTOSEND);
-				
+
 				// if commands have queued up, send them
 				for (INetworkCommand cmd : queue) {
 					sendCommand(cmd);
@@ -70,7 +70,7 @@ public class NetworkComponentClient extends NetworkComponentImpl {
 				return true;
 			}
 		}
-		
+
 		if (localState == LocalState.WAITINGFORDISCONNECT) {
 			// if server tells us to disconnect, do it
 			if (command instanceof ServerAckDisconnect) {
@@ -81,16 +81,18 @@ public class NetworkComponentClient extends NetworkComponentImpl {
 		}
 		return false;
 	}
-	
+
 	void setState(LocalState state) {
 		if (state == null) {
 			throw new IllegalArgumentException("new state must not be null");
 		}
-		
-		System.out.println("NetworkComponent: Changed state from " + ((localState == null) ? "null" : localState.name()) + " to " + state.name());
+
+		System.out.println("NetworkComponent: Changed state from "
+				+ ((localState == null) ? "null" : localState.name()) + " to "
+				+ state.name());
 		localState = state;
 	}
-	
+
 	@Override
 	public void disconnect() {
 		if (localState == LocalState.READYTOSEND) {

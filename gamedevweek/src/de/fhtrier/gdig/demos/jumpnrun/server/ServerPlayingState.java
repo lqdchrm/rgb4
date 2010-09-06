@@ -48,12 +48,12 @@ public class ServerPlayingState extends PlayingState {
 		switch (actionCmd.getAction()) {
 		case DROPGEM:
 			int id = this.getFactory().createEntity(EntityType.GEM);
-			
+
 			Entity e = getFactory().getEntity(id);
-			
+
 			e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 			e.setActive(true);
-			
+
 			getLevel().add(e);
 
 			// send command to all clients to create gem

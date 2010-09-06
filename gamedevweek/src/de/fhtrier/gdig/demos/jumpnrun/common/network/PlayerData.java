@@ -9,9 +9,9 @@ public class PlayerData extends NetworkData {
 	private static final long serialVersionUID = -3776997774121122797L;
 
 	public int state;
-	
+
 	public int getState() {
 		return state;
 	}
-	
+
 }

@@ -8,13 +8,13 @@ public class QueryCreateEntity extends ProtocolCommand {
 	private static final long serialVersionUID = 4687095068613647172L;
 
 	private EntityType type;
-	
+
 	public QueryCreateEntity(EntityType type) {
 		super("QueryCreatePlayer");
-		
+
 		this.type = type;
 	}
-	
+
 	public EntityType getType() {
 		return type;
 	}

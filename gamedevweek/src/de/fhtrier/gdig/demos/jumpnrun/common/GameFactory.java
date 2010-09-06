@@ -19,10 +19,9 @@ public class GameFactory extends Factory {
 	public int createEntity(int id, EntityType type) {
 		if (id == -1) {
 			id = getNewId();
-		} else
-		{
-			if (id>=Factory.getLastId()) {
-				setLastId(id+1);
+		} else {
+			if (id >= Factory.getLastId()) {
+				setLastId(id + 1);
 			}
 		}
 

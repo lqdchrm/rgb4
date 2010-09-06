@@ -44,7 +44,7 @@ public class ClientHandler extends Thread {
 				INetworkCommand command = (INetworkCommand) this.in
 						.readObject();
 
-				command.setSender(clientNetworkId);				
+				command.setSender(clientNetworkId);
 				this.netComp.addCommand(command);
 			}
 			this.in.close();
