@@ -15,6 +15,30 @@ public class Constants {
 		public static final int MAGENTA = RED|BLUE;
 		public static final int CYAN = GREEN|BLUE;
 		public static final int WHITE = RED|GREEN|BLUE;	
+		
+		// Translates constant of color into Color-class
+		public static Color constIntoColor (int colorConst) throws IllegalArgumentException {
+			switch (colorConst) {
+				case BLACK: 
+					return Color.black;
+				case RED:
+					return Color.red;
+				case GREEN:
+					return Color.green;
+				case YELLOW:
+					return Color.yellow;
+				case BLUE:
+					return Color.blue;
+				case MAGENTA:
+					return Color.magenta;
+				case CYAN:
+					return Color.cyan;
+				case WHITE:
+					return Color.white;
+				default: 
+					throw new IllegalArgumentException ("Undefined parameter");
+			}
+		}
 	}
 	
 	public static class GamePlayConstants {

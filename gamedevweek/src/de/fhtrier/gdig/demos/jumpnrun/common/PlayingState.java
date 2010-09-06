@@ -79,6 +79,24 @@ public abstract class PlayingState extends BasicGameState implements
 			// HACK
 			level.handleCollisions();
 		}
+		
+		Player currentPlayer = level.getCurrentPlayer();
+		
+		// change player color
+		if (input.isKeyPressed(Input.KEY_C)) {
+			currentPlayer.state.color = currentPlayer.state.color << 1;
+			if (currentPlayer.state.color > Constants.StateColor.BLUE) { 
+				currentPlayer.state.color = Constants.StateColor.RED;
+			}
+		}
+		
+		// change weapon color
+		if (input.isKeyPressed(Input.KEY_X)) {
+			currentPlayer.state.weaponColor = currentPlayer.state.weaponColor << 1;
+			if (currentPlayer.state.weaponColor > Constants.StateColor.BLUE) { 
+				currentPlayer.state.weaponColor = Constants.StateColor.RED;
+			}
+		}
 	}
 
 	@Override

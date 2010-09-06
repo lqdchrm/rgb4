@@ -1,6 +1,7 @@
 package de.fhtrier.gdig.demos.jumpnrun.common;
 
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
@@ -41,6 +42,8 @@ public class Player extends LevelCollidableEntity {
 		
 		state = new PlayerState();
 		state.name = "Player";
+		state.color = Constants.StateColor.RED; // player gets default-color: red
+		state.weaponColor = Constants.StateColor.RED; // weapon of player get default-color: red
 		AssetMgr assets = factory.getAssetMgr();
 
 		// gfx
@@ -138,7 +141,10 @@ public class Player extends LevelCollidableEntity {
 		{
 			float x = playerHalfWidth - g.getFont().getWidth(state.name)/2.0f;
 			float y = -g.getFont().getHeight(state.name);
-			g.drawString(state.name, x,y);
+			g.setColor(Constants.StateColor.constIntoColor( state.color )); // colors the name of player with his color
+			
+			g.drawString(state.name + " " + state.weaponColor, x,y);
+			g.setColor(Color.white); // default-color when changed
 		}
 		
 	}
