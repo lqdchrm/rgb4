@@ -15,7 +15,7 @@ public class ClientGame extends JumpNRunGame {
 
 	public ClientGame() {
 		NetworkComponent.createClientInstance();
-		
+
 		while (!NetworkComponent.getInstance().connect(nameOrIp, port)) {
 			try {
 				Log.info("Waiting for Server");
@@ -27,7 +27,7 @@ public class ClientGame extends JumpNRunGame {
 
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
-		addState(new ClientMenuState(GameStates.MENU,container, this));
+		addState(new ClientMenuState(GameStates.MENU, container, this));
 		addState(new ClientPlayingState());
 	}
 }

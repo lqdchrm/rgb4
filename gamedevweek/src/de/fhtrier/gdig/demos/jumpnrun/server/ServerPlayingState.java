@@ -50,11 +50,10 @@ public class ServerPlayingState extends PlayingState {
 	private boolean handlePlayerActions(QueryAction actionCmd) {
 		Entity e;
 		int playerId = networkId2Player.get(actionCmd.getSender());
-		Player player = (Player) getFactory().getEntity(
-				playerId);
+		Player player = (Player) getFactory().getEntity(playerId);
 		switch (actionCmd.getAction()) {
 		case DROPGEM:
-			 e = createEntity(EntityType.GEM);
+			e = createEntity(EntityType.GEM);
 
 			// set values
 			MoveableEntity gem = (MoveableEntity) e;
@@ -68,7 +67,7 @@ public class ServerPlayingState extends PlayingState {
 			return true;
 		case SHOOT:
 			e = createEntity(EntityType.BULLET);
-			
+
 			// set values
 			Bullet bullet = (Bullet) e;
 			bullet.owner = player;
@@ -77,11 +76,12 @@ public class ServerPlayingState extends PlayingState {
 			// set player pos as gem pos
 			bullet.getData()[Entity.X] = player.getData()[Entity.X];
 			bullet.getData()[Entity.Y] = player.getData()[Entity.Y];
-			bullet.getVel()[Entity.X] = player.getVel()[Entity.X] + (state.shootDirection == PlayerActionState.RunRight ? Constants.GamePlayConstants.shotSpeed:-Constants.GamePlayConstants.shotSpeed);
-			
+			bullet.getVel()[Entity.X] = player.getVel()[Entity.X]
+					+ (state.shootDirection == PlayerActionState.RunRight ? Constants.GamePlayConstants.shotSpeed
+							: -Constants.GamePlayConstants.shotSpeed);
+
 			return true;
-			
-			
+
 		}
 
 		return false;
@@ -89,17 +89,17 @@ public class ServerPlayingState extends PlayingState {
 
 	private Entity createEntity(EntityType type) {
 		int id = this.getFactory().createEntity(type);
-		
+
 		Entity e = getFactory().getEntity(id);
-		
+
 		e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 		e.setActive(true);
-		
+
 		getLevel().add(e);
 
 		// send command to all clients to create gem
-		NetworkComponent.getInstance().sendCommand(
-				new DoCreateEntity(id, type));
+		NetworkComponent.getInstance()
+				.sendCommand(new DoCreateEntity(id, type));
 		return e;
 	}
 

@@ -109,7 +109,7 @@ public class ClientPlayingState extends PlayingState {
 					dce.getType());
 			Entity e = this.getFactory().getEntity(id);
 			e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
-			
+
 			getLevel().add(getFactory().getEntity(id));
 			return true;
 		}
@@ -143,10 +143,10 @@ public class ClientPlayingState extends PlayingState {
 			}
 			AckCreatePlayer acp = (AckCreatePlayer) cmd;
 			int playerId = acp.getPlayerId();
-			
+
 			Entity player = getFactory().getEntity(playerId);
 			player.setUpdateStrategy(EntityUpdateStrategy.ClientToServer);
-			
+
 			this.getLevel().setCurrentPlayer(acp.getPlayerId());
 
 			// we got a player, now we can start :-)
@@ -252,6 +252,7 @@ public class ClientPlayingState extends PlayingState {
 
 	@Override
 	public void onExitKey(GameContainer container, StateBasedGame game) {
-		game.enterState(GameStates.MENU,new FadeOutTransition(),new FadeInTransition());
+		game.enterState(GameStates.MENU, new FadeOutTransition(),
+				new FadeInTransition());
 	}
 }

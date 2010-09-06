@@ -93,7 +93,7 @@ public abstract class PlayingState extends BasicGameState implements
 		}
 
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-			onExitKey(container,game);
+			onExitKey(container, game);
 		}
 
 		final Level level = this.getLevel();
@@ -104,8 +104,7 @@ public abstract class PlayingState extends BasicGameState implements
 		}
 
 		Player currentPlayer = level.getCurrentPlayer();
-		if (currentPlayer != null)
-		{
+		if (currentPlayer != null) {
 			PlayerState state = currentPlayer.getState();
 			// change player color
 			if (input.isKeyPressed(Input.KEY_C)) {
@@ -114,7 +113,7 @@ public abstract class PlayingState extends BasicGameState implements
 					state.color = StateColor.RED;
 				}
 			}
-	
+
 			// change weapon color
 			if (input.isKeyPressed(Input.KEY_X)) {
 				state.weaponColor = state.weaponColor << 1;

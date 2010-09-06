@@ -22,16 +22,17 @@ public class Gem extends LevelCollidableEntity {
 
 		// gfx
 		assets.storeImage(Assets.GemImage, "sprites/items/gem.png");
-		ImageEntity gem = factory.createImageEntity(EntityOrder.Gem, Assets.GemImage);
+		ImageEntity gem = factory.createImageEntity(EntityOrder.Gem,
+				Assets.GemImage);
 		gem.setVisible(true);
 		add(gem);
-		
+
 		// physics
 		// X Y OX OY SY SY ROT
 		initData(new float[] { 200, 200, 32, 24, 1, 1, 0 }); // pos +
-																	// center +
-																	// scale +
-																	// rot
+																// center +
+																// scale +
+																// rot
 		setVel(new float[] { 0, 0, 0, 0, 0, 0, 0 }); // no speed
 		setAcc(new float[] { 0, GamePlayConstants.gravity, 0, 0, 0, 0, 0 }); // gravity
 		setBounds(new Rectangle(0, 0, 64, 48)); // bounding box
@@ -42,7 +43,7 @@ public class Gem extends LevelCollidableEntity {
 		// order
 		setOrder(EntityOrder.Gem);
 	}
-	
+
 	@Override
 	public void renderImpl(Graphics graphicContext) {
 		// TODO Auto-generated method stub

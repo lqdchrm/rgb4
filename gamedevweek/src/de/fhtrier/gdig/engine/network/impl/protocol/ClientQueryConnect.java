@@ -1,8 +1,8 @@
 package de.fhtrier.gdig.engine.network.impl.protocol;
 
 /**
- * This command is used by the client to query the server for a networkId.
- * The server should answer with a ServerAckConnect-command
+ * This command is used by the client to query the server for a networkId. The
+ * server should answer with a ServerAckConnect-command
  */
 public class ClientQueryConnect extends ProtocolCommand {
 

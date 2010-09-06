@@ -43,7 +43,8 @@ public class NetworkComponentServer extends NetworkComponentImpl {
 
 		// if client asks for networkId, tell him
 		if (command instanceof ClientQueryConnect) {
-			sendCommand(command.getSender(), new ServerAckConnect(command.getSender()));
+			sendCommand(command.getSender(),
+					new ServerAckConnect(command.getSender()));
 			return true;
 		}
 
@@ -55,8 +56,8 @@ public class NetworkComponentServer extends NetworkComponentImpl {
 			return true;
 		}
 		return false;
-	}	
-	
+	}
+
 	@Override
 	public void sendCommand(INetworkCommand command) {
 		synchronized (this.clients) {

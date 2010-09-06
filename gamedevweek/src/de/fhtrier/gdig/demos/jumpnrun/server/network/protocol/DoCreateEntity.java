@@ -9,10 +9,10 @@ public class DoCreateEntity extends ProtocolCommand {
 
 	private int entityId;
 	private EntityType type;
-	
+
 	public DoCreateEntity(int entityId, EntityType type) {
 		super("DoCreateEntity");
-		
+
 		this.entityId = entityId;
 		this.type = type;
 	}
@@ -20,7 +20,7 @@ public class DoCreateEntity extends ProtocolCommand {
 	public int getEntityId() {
 		return entityId;
 	}
-	
+
 	public EntityType getType() {
 		return type;
 	}

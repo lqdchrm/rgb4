@@ -7,13 +7,11 @@ import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 
-public class CollidableEntity extends MoveableEntity
-{
+public class CollidableEntity extends MoveableEntity {
 
 	private Shape bounds;
 
-	public CollidableEntity(int id, EntityType type)
-	{
+	public CollidableEntity(int id, EntityType type) {
 		super(id, type);
 
 		CollisionManager.addEntety(this);
@@ -21,25 +19,22 @@ public class CollidableEntity extends MoveableEntity
 		this.bounds = null;
 	}
 
-	public Shape getBounds()
-	{
+	public Shape getBounds() {
 		return this.bounds;
 	}
 
 	@Override
-	public void renderImpl(Graphics graphicContext)
-	{
+	public void renderImpl(Graphics graphicContext) {
 		super.renderImpl(graphicContext);
 
-		if (this.bounds != null && Constants.Debug.drawBounds)
-		{
+		if (this.bounds != null && Constants.Debug.drawBounds) {
 			graphicContext.setColor(Constants.Debug.boundColor);
+
 			graphicContext.draw(this.bounds);
 		}
 	}
 
-	public void setBounds(Shape bounds)
-	{
+	public void setBounds(Shape bounds) {
 		this.bounds = bounds;
 	}
 
