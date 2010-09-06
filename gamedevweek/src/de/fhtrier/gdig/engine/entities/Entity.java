@@ -15,7 +15,7 @@ import de.fhtrier.gdig.engine.helpers.Identifiable;
 public class Entity implements Identifiable
 {
 	/**
-	 * final static index for x component in entity data 
+	 * final static index for x component in entity data
 	 */
 	public static final int X = 0; // pos
 	/**
@@ -44,13 +44,13 @@ public class Entity implements Identifiable
 	private boolean recursing;
 
 	private EntityUpdateStrategy updateStrategy;
-	
+
 	private Integer order;
 
 	/**
 	 * encoding of position, scale and rotation: having all in a single float
 	 * array allows for incremental updates<br/>
-	 * posX, posY, originX, originY, focusX, focusY, scaleX, scaleY, rotation
+	 * posX, posY, originX, originY, scaleX, scaleY, rotation
 	 */
 	private float[] data;
 
@@ -181,7 +181,6 @@ public class Entity implements Identifiable
 		return this.order;
 	}
 
-
 	public void handleInput(final Input input)
 	{
 		if (this.recursing)
@@ -192,11 +191,14 @@ public class Entity implements Identifiable
 			}
 		}
 	}
-	
-	public boolean handleCollisions() {
+
+	public boolean handleCollisions()
+	{
 		boolean result = false;
-		if (this.recursing) {
-			for (Entity child : this.childrenInOrder) {
+		if (this.recursing)
+		{
+			for (Entity child : this.childrenInOrder)
+			{
 				result |= child.handleCollisions();
 			}
 		}
@@ -257,7 +259,8 @@ public class Entity implements Identifiable
 		}
 	}
 
-	public void remove(final int id) {
+	public void remove(final int id)
+	{
 		this.remove(this.get(id));
 	}
 
@@ -279,14 +282,16 @@ public class Entity implements Identifiable
 		}
 	}
 
-	public EntityUpdateStrategy getUpdateStrategy() {
+	public EntityUpdateStrategy getUpdateStrategy()
+	{
 		return updateStrategy;
 	}
-	
-	public void setUpdateStrategy(EntityUpdateStrategy updateStrategy) {
+
+	public void setUpdateStrategy(EntityUpdateStrategy updateStrategy)
+	{
 		this.updateStrategy = updateStrategy;
 	}
-	
+
 	public Entity replace(final Entity e)
 	{
 		this.childrenInOrder.remove(this.children.get(e.get(this.id)));

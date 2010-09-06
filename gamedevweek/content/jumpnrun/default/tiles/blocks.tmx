@@ -3,9 +3,17 @@
  <tileset firstgid="1" name="blocks" tilewidth="64" tileheight="48">
   <image source="blocks.png"/>
  </tileset>
+ <tileset firstgid="25" name="dungeon2" tilewidth="64" tileheight="48">
+  <image source="../../../../../../../../../Pictures/tileset/dungeon2.png" trans="ff00ff"/>
+ </tileset>
  <layer name="Level" width="40" height="33">
   <data encoding="base64" compression="gzip">
    H4sIAAAAAAAAC+WXgQqDMAxEq6hM+///OwIeCyVq015Zxg4CWu35mrZrdqSUji/G/hDyDkvwZPox+TLZb0T+IvuJVyb6RR/vv+0P8euZ3+kM7cfk69VyBuThm4wYLQ/fbESPasYKvt5vtWgpwhL41jSWsXVdgE/4RzLW5MoSfq9m1Xel07ULfGv65G/0XHtU1lm4zhft1v1u+Fn+d55Wzed5ZrXp70FlfVDjn422q/FHE5NvU9es9cvk00wvkieDD2fdYrT15vFX1p+3FpG8bKkuP8itN5fCpM+PaBKmiPOrawjNd1dbeObzSeLxuvHC85KvZ7+hL/xaxmLlx5pfT40GDvTBOYV7z5itdy2+ljyCB+cr6/8Ja3+ABzVDVD7UI2y+yPEGvynUAaAUAAA=
+  </data>
+ </layer>
+ <layer name="Kachelebene 2" width="40" height="33">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3SsQkAIAxE0cMttIr7L6kOIMHGU/gPUiXFLyLhluIOSBT90ehS57Tkxt2XNTr7Qnmj+/9Cb/ctMadvdi/0AQAAAABwagACs5OeoBQAAA==
   </data>
  </layer>
 </map>
