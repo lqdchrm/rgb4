@@ -6,6 +6,7 @@ import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.tiled.TiledMap;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.Level;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.physics.CollidableEntity;
 import de.fhtrier.gdig.engine.entities.physics.Collisions;
@@ -20,9 +21,9 @@ public class LevelCollidableEntity extends CollidableEntity
 	 * Custom entity class which implements level collisions (ugly ?) needs to
 	 * have TiledMap and Bounds set before you should call something
 	 */
-	public LevelCollidableEntity(final int id)
+	public LevelCollidableEntity(int id, EntityType type)
 	{
-		super(id);
+		super(id, type);
 	}
 
 	/**

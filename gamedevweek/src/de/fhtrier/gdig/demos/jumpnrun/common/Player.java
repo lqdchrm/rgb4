@@ -15,6 +15,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.PlayerData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerState;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.gfx.AnimationEntity;
@@ -39,9 +40,10 @@ public class Player extends LevelCollidableEntity
 
 	public PlayerState state;
 
-	public Player(final int id, final Factory factory) throws SlickException
+	public Player(int id, Factory factory) throws SlickException
 	{
-		super(id);
+		super(id, EntityType.PLAYER);
+		
 		state = new PlayerState();
 		state.name = "Player";
 		state.color = Constants.StateColor.RED; // player gets default-color: red
@@ -63,7 +65,8 @@ public class Player extends LevelCollidableEntity
 		this.jumpAnimation = factory.createAnimationEntity(
 				Assets.PlayerJumpAnim, Assets.PlayerJumpAnim);
 
-		this.playerGroup = factory.createEntity(EntityOrder.Player);
+		int groupId = factory.createEntity(EntityOrder.Player, EntityType.HELPER);
+		this.playerGroup = factory.getEntity(groupId);
 
 		this.playerGroup.getData()[Entity.CENTER_X] = 48;
 		this.playerGroup.getData()[Entity.CENTER_Y] = 48;

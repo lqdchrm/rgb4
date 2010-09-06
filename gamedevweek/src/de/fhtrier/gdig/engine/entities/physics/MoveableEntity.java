@@ -1,5 +1,6 @@
 package de.fhtrier.gdig.engine.entities.physics;
 
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.entities.Entity;
 
 public class MoveableEntity extends Entity {
@@ -12,8 +13,8 @@ public class MoveableEntity extends Entity {
 	/**
 	 * @param id
 	 */
-	public MoveableEntity(int id) {
-		super(id);
+	public MoveableEntity(int id, EntityType type) {
+		super(id, type);
 
 		this.prevPos = new float[7];
 		this.prevPos[SCALE_X] = 1;

@@ -85,9 +85,9 @@ public class ServerPlayingState extends PlayingState {
 
 			// create every (player) entity from server on client
 			for (Entity e : getFactory().getEntities()) {
-				if (e instanceof Player) {
+				if (e.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient) {
 					NetworkComponent.getInstance().sendCommand(cmd.getSender(),
-							new DoCreateEntity(e.getId(), EntityType.PLAYER));
+							new DoCreateEntity(e.getId(), e.getType()));
 				}
 			}
 			NetworkComponent.getInstance().sendCommand(cmd.getSender(),

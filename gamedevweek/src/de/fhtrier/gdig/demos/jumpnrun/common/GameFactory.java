@@ -13,10 +13,10 @@ public class GameFactory extends Factory {
 	}
 
 	public int createEntity(EntityType type) {
-		return createEntity(-1, type);
+		return createEntityById(-1, type);
 	}
 
-	public int createEntity(int id, EntityType type) {
+	public int createEntityById(int id, EntityType type) {
 		if (id == -1) {
 			id = getNewId();
 		} else

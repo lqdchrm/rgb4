@@ -10,6 +10,7 @@ import de.fhtrier.gdig.demos.jumpnrun.JumpNRun;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
@@ -30,7 +31,7 @@ public class Level extends MoveableEntity {
 	private int currentPlayerId;
 
 	public Level(int id, GameFactory factory) throws SlickException {
-		super(id);
+		super(id, EntityType.LEVEL);
 
 		this.currentPlayerId = -1;
 

@@ -9,6 +9,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
@@ -104,7 +105,7 @@ public class ClientPlayingState extends PlayingState {
 			DoCreateEntity dce = (DoCreateEntity) cmd;
 
 			// Create Entity
-			int id = this.getFactory().createEntity(dce.getEntityId(),
+			int id = this.getFactory().createEntityById(dce.getEntityId(),
 					dce.getType());
 			Entity e = this.getFactory().getEntity(id);
 			e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
@@ -236,7 +237,7 @@ public class ClientPlayingState extends PlayingState {
 			throw new IllegalArgumentException("state must not be null");
 		}
 
-		System.out.println("PlayingState: Changed state from "
+		Log.debug("PlayingState: Changed state from "
 				+ ((localState == null) ? "null" : localState.name()) + " to "
 				+ state.name());
 		localState = state;

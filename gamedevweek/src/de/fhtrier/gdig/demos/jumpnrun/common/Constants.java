@@ -43,6 +43,7 @@ public class Constants {
 	
 	public static class GamePlayConstants {
 		public static final float gravity = 981.0f;
+		
 	}
 	
 	public static class Debug{

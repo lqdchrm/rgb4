@@ -8,6 +8,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.Constants.GamePlayConstants;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
@@ -15,7 +16,7 @@ import de.fhtrier.gdig.engine.management.Factory;
 public class Gem extends LevelCollidableEntity {
 
 	public Gem(int id, Factory factory) throws SlickException {
-		super(id);
+		super(id, EntityType.GEM);
 
 		AssetMgr assets = factory.getAssetMgr();
 
