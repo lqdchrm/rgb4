@@ -52,7 +52,7 @@ public class Entity implements Identifiable {
 	/**
 	 * encoding of position, scale and rotation: having all in a single float
 	 * array allows for incremental updates<br/>
-	 * posX, posY, originX, originY, focusX, focusY, scaleX, scaleY, rotation
+	 * posX, posY, originX, originY, scaleX, scaleY, rotation
 	 */
 	private float[] data;
 

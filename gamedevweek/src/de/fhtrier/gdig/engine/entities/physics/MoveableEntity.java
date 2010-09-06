@@ -9,6 +9,8 @@ public class MoveableEntity extends Entity {
 	private float vel[];
 	private float acc[];
 
+	private float drag;
+
 	/**
 	 * @param id
 	 */
@@ -21,6 +23,7 @@ public class MoveableEntity extends Entity {
 
 		this.vel = new float[7];
 		this.acc = new float[7];
+		this.drag = 0.0f;
 	}
 
 	@Override
@@ -32,6 +35,11 @@ public class MoveableEntity extends Entity {
 			for (int i = 0; i < getData().length; i++) {
 				// simple euler integration
 				this.vel[i] += this.acc[i] * secs;
+				// reibung folgt hier
+				if (i == X || i == Y) {
+					// TODO das geht besser
+					vel[i] -= vel[i] * drag * secs;
+				}
 				this.getData()[i] = this.getData()[i] + this.vel[i] * secs;
 			}
 		}
@@ -64,6 +72,14 @@ public class MoveableEntity extends Entity {
 
 	public float[] getPrevPos() {
 		return this.prevPos;
+	}
+
+	public float getDrag() {
+		return drag;
+	}
+
+	public void setDrag(float drag) {
+		this.drag = drag;
 	}
 
 }

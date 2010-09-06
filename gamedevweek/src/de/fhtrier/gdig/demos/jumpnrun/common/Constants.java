@@ -4,7 +4,7 @@ import org.newdawn.slick.Color;
 
 public class Constants {
 
-	public static float EPSILON = 0.0001f;
+	public static final float EPSILON = 0.0001f;
 
 	public static class GamePlayConstants {
 
@@ -16,7 +16,6 @@ public class Constants {
 	}
 
 	public static class Debug {
-
 		public static boolean drawBounds = true;
 		public static Color boundColor = Color.green;
 		public static boolean showCollisions = true;

@@ -29,6 +29,7 @@ public class CollidableEntity extends MoveableEntity {
 
 		if (this.bounds != null && Constants.Debug.drawBounds) {
 			graphicContext.setColor(Constants.Debug.boundColor);
+
 			graphicContext.draw(this.bounds);
 		}
 	}
