@@ -5,6 +5,7 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.tiled.TiledMap;
 
+import de.fhtrier.gdig.demos.jumpnrun.common.PlayingState;
 import de.fhtrier.gdig.engine.entities.physics.CollidableEntity;
 import de.fhtrier.gdig.engine.entities.physics.Collisions;
 
@@ -81,6 +82,15 @@ public class LevelCollidableEntity extends CollidableEntity {
 							switch (tileId) {
 							case 1:
 							case 13:
+								/*
+								 * *************************************
+								 * Nur zum Testen für Bloom-Shader Effect
+								 * 
+								 */
+								PlayingState.factor += 0.3f;
+								/*
+								 * ****************
+								 */
 								map.setTileId(x, y, 0, 0);
 								break;
 							default:
