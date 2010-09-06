@@ -9,6 +9,9 @@ public class Assets {
 	public static final int PlayerIdleImage = 11;
 	public static final int PlayerRunAnim = 12;
 	public static final int PlayerJumpAnim = 13;
+	public static final String PlayerRunAnimImage = "sprites/player/Run_128_128_20.png";
+	public static final String PlayerIdleAnimImage = "sprites/player/Idle_128_128_100.png";
+	public static final String PlayerJumpAnimImage = "sprites/player/Idle_128_128_100.png";
 	
 	public static final int GemImage = 20;
 }

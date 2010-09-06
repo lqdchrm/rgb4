@@ -49,11 +49,9 @@ public class Player extends LevelCollidableEntity
 		AssetMgr assets = factory.getAssetMgr();
 
 		// gfx
-		assets.storeImage(Assets.PlayerIdleImage, "sprites/player/Idle.png");
-		assets.storeAnimation(Assets.PlayerRunAnim, "sprites/player/Run.png",
-				96, 96, 75);
-		this.jump = assets.storeAnimation(Assets.PlayerJumpAnim,
-				"sprites/player/Jump.png", 96, 96, 70);
+		assets.storeImage(Assets.PlayerIdleImage, Assets.PlayerIdleAnimImage);
+		assets.storeAnimation(Assets.PlayerRunAnim, Assets.PlayerRunAnimImage);
+		this.jump = assets.storeAnimation(Assets.PlayerJumpAnim, Assets.PlayerIdleAnimImage);
 		this.jump.setLooping(false);
 
 		this.idleImage = factory.createImageEntity(Assets.PlayerIdleImage,
@@ -65,8 +63,8 @@ public class Player extends LevelCollidableEntity
 
 		this.playerGroup = factory.createEntity(EntityOrder.Player);
 
-		this.playerGroup.getData()[Entity.CENTER_X] = 48;
-		this.playerGroup.getData()[Entity.CENTER_Y] = 48;
+		this.playerGroup.getData()[Entity.CENTER_X] = assets.getAnimation(Assets.PlayerIdleImage).getWidth()/2;
+		this.playerGroup.getData()[Entity.CENTER_Y] = assets.getAnimation(Assets.PlayerIdleImage).getHeight()/2;
 
 		this.playerGroup.add(this.idleImage);
 		this.playerGroup.add(this.runAnimation);
@@ -82,7 +80,12 @@ public class Player extends LevelCollidableEntity
 																	// rot
 		setVel(new float[] { 0, 0, 0, 0, 0, 0, 0 }); // no speed
 		setAcc(new float[] { 0, GamePlayConstants.gravity, 0, 0, 0, 0, 0 }); // gravity
-		setBounds(new Rectangle(30, 0, 36, 96)); // bounding box
+		
+		// set bounding box according to idle animation size
+		int x = 10;
+		int width = assets.getAnimation(Assets.PlayerIdleImage).getWidth();
+		int height = assets.getAnimation(Assets.PlayerIdleImage).getHeight();
+		setBounds(new Rectangle(x, 0, width, height)); // bounding box
 
 		setVisible(true);
 		// order
