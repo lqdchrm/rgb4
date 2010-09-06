@@ -202,6 +202,7 @@ public class ServerPlayingState extends PlayingState {
 			}
 		}
 
+		// TODO remove only handled items from queue 
 		this.queue.clear();
 
 		super.update(container, game, deltaInMillis);

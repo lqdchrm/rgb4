@@ -106,7 +106,7 @@ public class Factory {
 					"Factory already contains an entity with this id");
 		}
 		entities.put(e.getId(), e);
-		Log.debug("Factory: Entity " + e.getId() + " added");
+		Log.debug("Factory: Entity " + e.getId() + " added - Type: " + e.getType().toString());
 		return e;
 	}
 

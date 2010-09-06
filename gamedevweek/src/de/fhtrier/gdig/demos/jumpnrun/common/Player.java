@@ -119,27 +119,23 @@ public class Player extends LevelCollidableEntity {
 		switch (state) {
 		case PlayerActionState.Idle:
 			this.getAcc()[Entity.X] = 0.0f;
-			this.idleImage.setActive(true);
 			this.idleImage.setVisible(true);
 			break;
 		case PlayerActionState.RunLeft:
 			this.getAcc()[Entity.X] = -Constants.GamePlayConstants.walkVelo;
 			this.playerGroup.getData()[Entity.SCALE_X] = 1;
-			this.runAnimation.setActive(true);
 			this.runAnimation.setVisible(true);
 			this.state.shootDirection = state;
 			break;
 		case PlayerActionState.RunRight:
 			this.getAcc()[Entity.X] = Constants.GamePlayConstants.walkVelo;
 			this.playerGroup.getData()[Entity.SCALE_X] = -1;
-			this.runAnimation.setActive(true);
 			this.runAnimation.setVisible(true);
 			this.state.shootDirection = state;
 			break;
 		case PlayerActionState.Jump:
 			this.getVel()[Entity.Y] = -Constants.GamePlayConstants.JumpVelo;
 			this.jump.start();
-			this.jumpAnimation.setActive(true);
 			this.jumpAnimation.setVisible(true);
 			break;
 		}
@@ -154,7 +150,7 @@ public class Player extends LevelCollidableEntity {
 
 		boolean result = super.handleCollisions();
 
-		if (CollisionManager.iColideWith(this).size() != 0) {
+		if (CollisionManager.collidingEntities(this).size() != 0) {
 			// HACK for debug only
 			this.map.setTileId(0, 0, 0, 0);
 		} else {
@@ -214,16 +210,13 @@ public class Player extends LevelCollidableEntity {
 	private void leaveState(int state) {
 		switch (state) {
 		case PlayerActionState.Idle:
-			this.idleImage.setActive(false);
 			this.idleImage.setVisible(false);
 			break;
 		case PlayerActionState.RunLeft:
 		case PlayerActionState.RunRight:
-			this.runAnimation.setActive(false);
 			this.runAnimation.setVisible(false);
 			break;
 		case PlayerActionState.Jump:
-			this.jumpAnimation.setActive(false);
 			this.jumpAnimation.setVisible(false);
 		}
 	}

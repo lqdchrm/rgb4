@@ -29,7 +29,6 @@ public class GameFactory extends Factory {
 			switch (type) {
 			case PLAYER:
 				Player newPlayer = new Player(id, this);
-				newPlayer.setActive(false);
 				add(newPlayer);
 				return id;
 			case LEVEL:

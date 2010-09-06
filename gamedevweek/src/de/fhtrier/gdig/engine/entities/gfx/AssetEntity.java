@@ -13,7 +13,6 @@ public class AssetEntity extends Entity {
 		super(id, EntityType.ASSET);
 		this.assetId = assetId;
 		this.assets = assets;
-		this.setActive(true);
 		this.setVisible(false);
 	}
 

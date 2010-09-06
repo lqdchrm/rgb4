@@ -54,13 +54,11 @@ public class Level extends MoveableEntity {
 		this.backgroundImage = factory.createImageEntity(
 				Assets.LevelBackgroundImage, Assets.LevelBackgroundImage);
 		this.backgroundImage.setVisible(true);
-		this.backgroundImage.setActive(true);
 		add(this.backgroundImage);
 
 		this.middlegroundImage = factory.createImageEntity(
 				Assets.LevelMiddlegroundImage, Assets.LevelMiddlegroundImage);
 		this.middlegroundImage.setVisible(true);
-		this.middlegroundImage.setActive(true);
 		add(this.middlegroundImage);
 
 		this.ground = factory.createTiledMapEntity(Assets.LevelTileMap,
@@ -138,9 +136,9 @@ public class Level extends MoveableEntity {
 	}
 
 	/**
-	 * Ensures, that we don't scroll across level borders TODO: doesn't work
-	 * with scaling factor != 1
+	 * Ensures, that we don't scroll across level borders
 	 */
+	 // TODO: doesn't work with scaling factor != 1
 	private void checkLevelBordersScrolling() {
 
 		// Left

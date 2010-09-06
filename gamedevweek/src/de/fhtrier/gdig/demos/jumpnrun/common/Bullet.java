@@ -64,7 +64,7 @@ public class Bullet extends LevelCollidableEntity {
 			return result;
 		}
 
-		List<CollidableEntity> iColideWith = CollisionManager.iColideWith(this);
+		List<CollidableEntity> iColideWith = CollisionManager.collidingEntities(this);
 
 		for (CollidableEntity collidableEntity : iColideWith) {
 			if (collidableEntity instanceof Player) {

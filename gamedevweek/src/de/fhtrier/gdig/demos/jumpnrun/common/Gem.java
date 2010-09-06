@@ -43,10 +43,4 @@ public class Gem extends LevelCollidableEntity {
 		// order
 		setOrder(EntityOrder.Gem);
 	}
-
-	@Override
-	public void renderImpl(Graphics graphicContext) {
-		// TODO Auto-generated method stub
-		super.renderImpl(graphicContext);
-	}
 }

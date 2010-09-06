@@ -8,7 +8,6 @@ public class AnimationEntity extends AssetEntity {
 
 	public AnimationEntity(int id, int assetId, AssetMgr assets) {
 		super(id, assetId, assets);
-		setActive(true);
 	}
 
 	@Override

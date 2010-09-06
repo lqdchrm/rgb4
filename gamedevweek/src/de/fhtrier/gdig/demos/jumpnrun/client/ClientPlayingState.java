@@ -99,39 +99,42 @@ public class ClientPlayingState extends PlayingState {
 			return true;
 		}
 
-		// DoCreatePlayer tells us to create a player, e.g. because someone has
-		// joined
-		if (cmd instanceof DoCreateEntity) {
-			DoCreateEntity dce = (DoCreateEntity) cmd;
+		// Client must have joined
+		if (localState != LocalState.JOINING) {
+			// DoCreatePlayer tells us to create a player, e.g. because someone
+			// has
+			// joined
+			if (cmd instanceof DoCreateEntity) {
+				DoCreateEntity dce = (DoCreateEntity) cmd;
 
-			// Create Entity
-			int id = this.getFactory().createEntityById(dce.getEntityId(),
-					dce.getType());
-			Entity e = this.getFactory().getEntity(id);
-			e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+				// Create Entity
+				int id = this.getFactory().createEntityById(dce.getEntityId(),
+						dce.getType());
+				Entity e = this.getFactory().getEntity(id);
+				e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 
-			getLevel().add(getFactory().getEntity(id));
-			return true;
-		}
-
-		// DoRemovePlayer tells us to drop a Player, e.g. because someone has
-		// left
-		if (cmd instanceof DoRemoveEntity) {
-			DoRemoveEntity dre = (DoRemoveEntity) cmd;
-
-			// Remove entity if it is a player
-			int id = dre.getEntityId();
-
-			if (getLevel().getCurrentPlayer() != null
-					&& id == getLevel().getCurrentPlayer().getId()) {
-				getLevel().setCurrentPlayer(-1);
+				getLevel().add(getFactory().getEntity(id));
+				return true;
 			}
-			getLevel().remove(getFactory().getEntity(id));
 
-			// remove Entity recursively from Factory
-			getFactory().removeEntity(id, true);
+			// DoRemoveEntity tells us to drop an Entity, e.g. because someone has left
+			if (cmd instanceof DoRemoveEntity) {
+				DoRemoveEntity dre = (DoRemoveEntity) cmd;
 
-			return true;
+				// Remove entity
+				int id = dre.getEntityId();
+
+				if (getLevel().getCurrentPlayer() != null
+						&& id == getLevel().getCurrentPlayer().getId()) {
+					getLevel().setCurrentPlayer(-1);
+				}
+				getLevel().remove(getFactory().getEntity(id));
+
+				// remove Entity recursively from Factory
+				getFactory().removeEntity(id, true);
+
+				return true;
+			}
 		}
 
 		// AckCreatePlayer tells us which player is our's
@@ -171,6 +174,8 @@ public class ClientPlayingState extends PlayingState {
 				}
 			}
 		}
+		
+		// TODO remove only handled commands
 		queue.clear();
 
 		// apply game data received from server
