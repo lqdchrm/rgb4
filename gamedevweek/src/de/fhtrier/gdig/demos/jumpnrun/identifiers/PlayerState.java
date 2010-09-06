@@ -1,6 +1,5 @@
 package de.fhtrier.gdig.demos.jumpnrun.identifiers;
 
-import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
 
 public class PlayerState {
 	public static final int Idle = 0;

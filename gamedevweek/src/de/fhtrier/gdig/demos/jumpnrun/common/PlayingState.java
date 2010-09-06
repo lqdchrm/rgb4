@@ -92,7 +92,7 @@ public abstract class PlayingState extends BasicGameState implements
 		}
 
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-			this.cleanup(container, game);
+			onExitKey(container,game);
 		}
 
 		final Level level = this.getLevel();
@@ -125,4 +125,7 @@ public abstract class PlayingState extends BasicGameState implements
 		CollisionManager.update();
 		level.handleCollisions();
 	}
+
+	public abstract void onExitKey(GameContainer container, StateBasedGame game);
+
 }

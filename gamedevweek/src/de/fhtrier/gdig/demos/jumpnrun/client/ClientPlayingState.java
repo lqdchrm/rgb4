@@ -7,6 +7,8 @@ import java.util.Queue;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
@@ -15,6 +17,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.common.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreatePlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
@@ -244,5 +247,10 @@ public class ClientPlayingState extends PlayingState {
 		NetworkComponent.getInstance().sendCommand(
 				new QueryLeave(getLevel().getCurrentPlayer().getId()));
 		setState(LocalState.DISCONNECTING);
+	}
+
+	@Override
+	public void onExitKey(GameContainer container, StateBasedGame game) {
+		game.enterState(GameStates.MENU,new FadeOutTransition(),new FadeInTransition());
 	}
 }
