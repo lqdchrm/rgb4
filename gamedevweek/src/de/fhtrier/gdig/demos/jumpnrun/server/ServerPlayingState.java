@@ -14,12 +14,14 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.common.Bullet;
+import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.common.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.Player;
+import de.fhtrier.gdig.demos.jumpnrun.common.PlayerState;
 import de.fhtrier.gdig.demos.jumpnrun.common.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerState;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerActionState;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreatePlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
@@ -70,11 +72,12 @@ public class ServerPlayingState extends PlayingState {
 			// set values
 			Bullet bullet = (Bullet) e;
 			bullet.owner = player;
-			bullet.color = player.state.weaponColor;
+			PlayerState state = player.getState();
+			bullet.color = state.weaponColor;
 			// set player pos as gem pos
 			bullet.getData()[Entity.X] = player.getData()[Entity.X];
 			bullet.getData()[Entity.Y] = player.getData()[Entity.Y];
-			bullet.getVel()[Entity.X] = player.getVel()[Entity.X] + (player.state.shootDirection == PlayerState.RunRight ? +50:-50);
+			bullet.getVel()[Entity.X] = player.getVel()[Entity.X] + (state.shootDirection == PlayerActionState.RunRight ? Constants.GamePlayConstants.shotSpeed:-Constants.GamePlayConstants.shotSpeed);
 			
 			return true;
 			

@@ -6,43 +6,12 @@ public class Constants {
 
 	public static float EPSILON = 0.0001f;
 	
-	public static class StateColor{
-		public static final int BLACK = 0;
-		public static final int RED = 1;
-		public static final int GREEN = RED<<1;
-		public static final int YELLOW = RED|GREEN;
-		public static final int BLUE = RED<<2;	
-		public static final int MAGENTA = RED|BLUE;
-		public static final int CYAN = GREEN|BLUE;
-		public static final int WHITE = RED|GREEN|BLUE;	
-		
-		// Translates constant of color into Color-class
-		public static Color constIntoColor (int colorConst) throws IllegalArgumentException {
-			switch (colorConst) {
-				case BLACK: 
-					return Color.black;
-				case RED:
-					return Color.red;
-				case GREEN:
-					return Color.green;
-				case YELLOW:
-					return Color.yellow;
-				case BLUE:
-					return Color.blue;
-				case MAGENTA:
-					return Color.magenta;
-				case CYAN:
-					return Color.cyan;
-				case WHITE:
-					return Color.white;
-				default: 
-					throw new IllegalArgumentException ("Undefined parameter");
-			}
-		}
-	}
-	
 	public static class GamePlayConstants {
-		public static final float gravity = 981.0f;
+		public static float gravity = 981.0f;
+		public static float shotSpeed = 1000.0f;
+		public static float shotCooldown = 100.0f;
+		public static float walkVelo = 800.f;
+		public static float JumpVelo = 800.f;
 	}
 	
 	public static class Debug{

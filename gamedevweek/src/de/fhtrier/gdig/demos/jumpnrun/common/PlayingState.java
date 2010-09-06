@@ -10,6 +10,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.StateColor;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
@@ -103,20 +104,23 @@ public abstract class PlayingState extends BasicGameState implements
 		}
 
 		Player currentPlayer = level.getCurrentPlayer();
-
-		// change player color
-		if (input.isKeyPressed(Input.KEY_C)) {
-			currentPlayer.state.color = currentPlayer.state.color << 1;
-			if (currentPlayer.state.color > Constants.StateColor.BLUE) {
-				currentPlayer.state.color = Constants.StateColor.RED;
+		if (currentPlayer != null)
+		{
+			PlayerState state = currentPlayer.getState();
+			// change player color
+			if (input.isKeyPressed(Input.KEY_C)) {
+				state.color = state.color << 1;
+				if (state.color > StateColor.BLUE) {
+					state.color = StateColor.RED;
+				}
 			}
-		}
-
-		// change weapon color
-		if (input.isKeyPressed(Input.KEY_X)) {
-			currentPlayer.state.weaponColor = currentPlayer.state.weaponColor << 1;
-			if (currentPlayer.state.weaponColor > Constants.StateColor.BLUE) {
-				currentPlayer.state.weaponColor = Constants.StateColor.RED;
+	
+			// change weapon color
+			if (input.isKeyPressed(Input.KEY_X)) {
+				state.weaponColor = state.weaponColor << 1;
+				if (state.weaponColor > StateColor.BLUE) {
+					state.weaponColor = StateColor.RED;
+				}
 			}
 		}
 

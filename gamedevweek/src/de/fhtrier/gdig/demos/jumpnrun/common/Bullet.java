@@ -5,7 +5,6 @@ import java.util.List;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
-import de.fhtrier.gdig.demos.jumpnrun.common.Constants.GamePlayConstants;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
@@ -16,7 +15,6 @@ import de.fhtrier.gdig.engine.entities.physics.CollidableEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
-import de.fhtrier.gdig.engine.network.impl.protocol.NetworkCommand;
 
 public class Bullet extends LevelCollidableEntity{
 
@@ -61,6 +59,12 @@ public class Bullet extends LevelCollidableEntity{
 		}
 		boolean result = super.handleCollisions();
 		
+		if (result)
+		{
+			die();
+			return result;
+		}
+		
 		List<CollidableEntity> iColideWith = CollisionManager.iColideWith(this);
 		
 		for (CollidableEntity collidableEntity : iColideWith) {
@@ -70,15 +74,19 @@ public class Bullet extends LevelCollidableEntity{
 				if (otherPlayer != owner)
 				{
 					//TODO: damage player
-					
-					NetworkComponent.getInstance().sendCommand(new DoRemoveEntity(this.getId()));
-					level.remove(this);
-					level.factory.removeEntity(this.getId(), true);
+					otherPlayer.getState().health -= 0.1f;
+					die();
 				}
 			}
 		}
 		
 		return result;
+	}
+
+	private void die() {
+		NetworkComponent.getInstance().sendCommand(new DoRemoveEntity(this.getId()));
+		level.remove(this);
+		level.factory.removeEntity(this.getId(), true);
 	}
 	
 	@Override
