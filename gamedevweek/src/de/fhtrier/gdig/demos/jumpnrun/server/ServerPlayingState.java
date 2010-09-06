@@ -175,4 +175,9 @@ public class ServerPlayingState extends PlayingState {
 	public void cleanup(GameContainer container, StateBasedGame game) {
 		container.exit();
 	}
+
+	@Override
+	public void onExitKey(GameContainer container, StateBasedGame game) {
+		cleanup(container, game);
+	}
 }

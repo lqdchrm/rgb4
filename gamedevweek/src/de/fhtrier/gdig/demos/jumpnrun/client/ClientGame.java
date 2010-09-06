@@ -4,6 +4,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.JumpNRunGame;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 
 public class ClientGame extends JumpNRunGame {
@@ -25,6 +26,7 @@ public class ClientGame extends JumpNRunGame {
 
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
+		addState(new ClientMenuState(GameStates.MENU,container, this));
 		addState(new ClientPlayingState());
 	}
 }

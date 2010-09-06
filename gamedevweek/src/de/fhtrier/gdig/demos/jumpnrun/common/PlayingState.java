@@ -67,7 +67,7 @@ public abstract class PlayingState extends BasicGameState implements
 		}
 
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-			cleanup(container, game);
+			onExitKey(container,game);
 		}
 
 		Level level = getLevel();
@@ -88,6 +88,8 @@ public abstract class PlayingState extends BasicGameState implements
 	
 	public abstract void cleanup(GameContainer container, StateBasedGame game);
 
+	public abstract void onExitKey(GameContainer container, StateBasedGame game);
+	
 	public Level getLevel() {
 		Entity level = factory.getEntity(this.levelId);
 		if (level instanceof Level) {
