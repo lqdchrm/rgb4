@@ -80,7 +80,7 @@ public abstract class PlayingState extends BasicGameState implements
 			screen1Graphics.flush();
 			graphicsContext.drawImage(screenBuffer, 0, 0);
 			
-			if (factor > 0) factor -= 0.02;
+			//if (factor > 0) factor -= 0.01;
 			
 			Shader.setActiveShader(blur1D);
 			blur1D.initialize(JumpNRun.SCREENWIDTH, JumpNRun.SCREENHEIGHT);

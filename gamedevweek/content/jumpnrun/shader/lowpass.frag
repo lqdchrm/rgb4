@@ -14,8 +14,8 @@ void main(void)
 	brightness = brightness * fact; 
 	
 	color.r = brightness;
-	color.g = brightness;
-	color.b = brightness;
+	color.g = 0.0;
+	color.b = 0.0;
 	
 	gl_FragColor = color;
 }
