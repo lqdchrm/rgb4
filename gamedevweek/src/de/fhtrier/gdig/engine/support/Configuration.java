@@ -193,7 +193,7 @@ public abstract class Configuration
 		}
 	}
 
-	public void pharsCommandLine(String[] args)
+	public void parseCommandLine(String[] args)
 	{
 		try
 		{
@@ -255,12 +255,12 @@ public abstract class Configuration
 		}
 	}
 
-	public void showEditor()
+	public void showEditor(String strTitle)
 	{
 
 		try
 		{
-			JFrame f = new JFrame();
+			JFrame f = new JFrame(strTitle);
 
 			f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			JPanel panel = new JPanel();

@@ -12,6 +12,8 @@ public abstract class JumpNRunGame extends StateBasedGame implements
 		INetworkCommandListener {
 	public JumpNRunGame() {
 		super("Jump'n'Run");
+
+		
 	}
 
 	@Override
