@@ -1,7 +1,5 @@
 package de.fhtrier.gdig.engine.graphics;
 
-import org.newdawn.slick.Color;
-
 import de.fhtrier.gdig.engine.support.Configuration;
 
 public class ShaderParams extends Configuration

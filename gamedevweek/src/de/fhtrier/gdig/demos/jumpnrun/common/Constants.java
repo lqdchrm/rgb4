@@ -24,5 +24,7 @@ public class Constants {
 		public static boolean drawBounds = true;
 		public static Color boundColor = Color.green;
 		public static boolean showCollisions = false;
+		public static boolean shadersActive = true;
+		public static boolean shadersAutoDisable = true;
 	}
 }

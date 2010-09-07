@@ -111,10 +111,12 @@ public class Player extends LevelCollidableEntity {
 		int height = assets.getAnimation(Assets.PlayerIdleAnim).getHeight();
 		setBounds(new Rectangle(x, 0, width, height)); // bounding box
 
-		if (playerShader == null)
+		if (playerShader == null && Constants.Debug.shadersActive)
+		{
 			playerShader = new Shader("content/jumpnrun/shader/simple.vert",
-					"content/jumpnrun/shader/playercolor.frag");
-
+			"content/jumpnrun/shader/playercolor.frag");
+		}
+			
 		setVisible(true);
 		weapon.setVisible(true);
 		// order
@@ -268,12 +270,19 @@ public class Player extends LevelCollidableEntity {
 			throw new RuntimeException("Wrong Initialization: no Client ID set");
 		}
 		
-		Shader oldShader = Shader.getActiveShader();
-		Shader.setActiveShader(playerShader);
-		playerShader.setValue("playercolor", StateColor.constIntoColor(this.getState().color));
+		if (Constants.Debug.shadersActive)
+		{
+			Shader.setActiveShader(playerShader);
+			playerShader.setValue("playercolor", StateColor.constIntoColor(this.getState().color));
+		}
+		
 		super.renderImpl(g, frameBuffer);
 		
-
+		if (Constants.Debug.shadersActive)
+		{
+			Shader.setActiveShader(null);
+		}
+		
 		if (this.state.name != null) {
 			float x = playerHalfWidth - g.getFont().getWidth(state.name) / 2.0f;
 			float y = -g.getFont().getHeight(state.name);
@@ -285,7 +294,6 @@ public class Player extends LevelCollidableEntity {
 			g.setColor(StateColor.constIntoColor(state.weaponColor));
 			g.drawString("Weapon", x, y + 80);
 
-			Shader.setActiveShader(oldShader);
 			g.setColor(Color.white);
 		}
 

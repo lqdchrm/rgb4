@@ -92,17 +92,15 @@ public class Level extends MoveableEntity {
 		setOrder(EntityOrder.Level);
 		
 		// Shader Setup
-		if (textureBuffer == null)
+		if (textureBuffer == null && Constants.Debug.shadersActive)
 		{
 			textureBuffer = new Image(JumpNRun.SCREENWIDTH, JumpNRun.SCREENHEIGHT);
 			fbGraphics = textureBuffer.getGraphics();
 			blur1D = new BlurShader();
 			glowshader = new Shader("content/jumpnrun/shader/simple.vert", "content/jumpnrun/shader/glow.frag");
 			glowshader2 = new Shader("content/jumpnrun/shader/simple.vert", "content/jumpnrun/shader/glow.frag");
-		}
-		
-		if (params == null)
-		{
+			
+			// For testing
 			params = new ShaderParams();
 			params.showEditor("Shader-Einstellungen!!!");
 		}
@@ -122,7 +120,7 @@ public class Level extends MoveableEntity {
 		// Player-Glow Post Processing Effect
 		Player player = this.getCurrentPlayer();
 		
-		if (player != null)
+		if (player != null && Constants.Debug.shadersActive)
 		{
 			// Get Player Position on Screen relative to LOWER left corner
 			float px = player.getData()[Player.X]
@@ -278,7 +276,7 @@ public class Level extends MoveableEntity {
 	@Override
 	public void handleInput(Input input) {
 		if (isActive()) {
-
+			
 			// Left / Right
 			if (!input.isKeyDown(Input.KEY_A) && !input.isKeyDown(Input.KEY_D)) {
 				getVel()[X] = 0.0f;

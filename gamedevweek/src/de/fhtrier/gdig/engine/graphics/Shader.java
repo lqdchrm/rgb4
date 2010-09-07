@@ -17,6 +17,8 @@ import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.Log;
 
+import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
+
 public class Shader
 {
     /**
@@ -41,15 +43,13 @@ public class Shader
         vertexShaderId = ARBShaderObjects.glCreateShaderObjectARB(ARBVertexShader.GL_VERTEX_SHADER_ARB);
         ARBShaderObjects.glShaderSourceARB(vertexShaderId, createProgramCode(vertShaderFilename));
         ARBShaderObjects.glCompileShaderARB(vertexShaderId);
-        Log.debug("Vertex Shader "+vertShaderFilename+" compiled:");
-        printLogInfo(vertexShaderId);
+        printLogInfo(vertexShaderId, "Vertex Shader "+vertShaderFilename);
         
         // Create Fragment Shader
         fragmentShaderId = ARBShaderObjects.glCreateShaderObjectARB(ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
         ARBShaderObjects.glShaderSourceARB(fragmentShaderId, createProgramCode(fragShaderFilename));
         ARBShaderObjects.glCompileShaderARB(fragmentShaderId);
-        Log.debug("Fragment Shader "+fragShaderFilename+" compiled:");
-        printLogInfo(fragmentShaderId);
+        printLogInfo(fragmentShaderId, "Fragment Shader "+fragShaderFilename);
         
         // Combine Shader
         shaderId = ARBShaderObjects.glCreateProgramObjectARB();
@@ -250,8 +250,9 @@ public class Shader
      * Retrieves the Log-Info about a certain OpenGL-Object from the GPU and
      * prints it to Log.debug.
      * @param glObjectId The interal OpenGL-ID  of the Object.
+     * @param string Additional Info for tracing the error
      */
-    public static void printLogInfo(int glObjectId)
+    public static void printLogInfo(int glObjectId, String string)
     {
         IntBuffer iVal = BufferUtils.createIntBuffer(1);
         ARBShaderObjects.glGetObjectParameterARB(glObjectId, ARBShaderObjects.GL_OBJECT_INFO_LOG_LENGTH_ARB, iVal);
@@ -266,12 +267,16 @@ public class Shader
             byte[] infoBytes = new byte[length-1];
             infoLog.get(infoBytes);
             String out = new String(infoBytes);
-            
-            Log.debug("OpenGL Info ("+glObjectId+"): " + out);
-        }
-        else
-        {
-        	Log.debug("No OpenGL Info for ("+glObjectId+")");
+            if (!out.toLowerCase().contains("no errors"))
+            {
+            	Log.debug(string+"("+glObjectId+") -- OpenGL ERROR:\r\n" + out);
+            	
+            	if (Constants.Debug.shadersAutoDisable)
+            	{
+            		Log.debug("OpenGL compiling encountered an ERROR and Constants.Debug.shadersAutoDisable is active.\n" +
+            				">>>>>>>>>> ALL SHADERS ARE DISABLED <<<<<<<<<");
+            	}
+            }
         }
         
         Util.checkGLError();
