@@ -140,13 +140,13 @@ public abstract class PlayingState extends BasicGameState implements
 						state.weaponColor = StateColor.RED;
 					}
 				}
-
-				// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2.
-				// Zeile
-				// Den Objekten gesagt wird die Kollision zu behandeln.
-				CollisionManager.update();
-				level.handleCollisions();
 			}
+
+			// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2.
+			// Zeile
+			// Den Objekten gesagt wird die Kollision zu behandeln.
+			CollisionManager.update();
+			level.handleCollisions();
 		}
 	}
 

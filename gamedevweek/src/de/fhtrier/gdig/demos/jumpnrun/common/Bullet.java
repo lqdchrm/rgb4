@@ -100,6 +100,7 @@ public class Bullet extends LevelCollidableEntity
 	{
 		NetworkComponent.getInstance().sendCommand(
 				new DoRemoveEntity(this.getId()));
+		CollisionManager.removeEntity(this);
 		level.remove(this);
 		level.factory.removeEntity(this.getId(), true);
 	}
