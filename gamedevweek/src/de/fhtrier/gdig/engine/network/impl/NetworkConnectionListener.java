@@ -1,13 +1,17 @@
 package de.fhtrier.gdig.engine.network.impl;
 
 import java.io.IOException;
+import java.net.InterfaceAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import org.newdawn.slick.util.Log;
+
 public class NetworkConnectionListener extends Thread {
 
 	private int port;
+	private InterfaceAddress networkInterface;
 	private NetworkComponentImpl networkComponent;
 	private ServerSocket ss;
 
@@ -17,20 +21,20 @@ public class NetworkConnectionListener extends Thread {
 
 	@Override
 	public void run() {
-		this.ss = initializeSocket(this.port);
+		this.ss = initializeSocket( this.networkInterface, this.port);
 		while (true) {
 			Socket s = acceptClients(this.ss);
 			this.networkComponent.addClient(s);
-			System.out.println("Client " + s.getInetAddress() + " connected.");
+			Log.info("Client " + s.getInetAddress() + " connected.");
 		}
 	}
 
-	private ServerSocket initializeSocket(int port) {
+	private ServerSocket initializeSocket(InterfaceAddress ni, int port) {
 		ServerSocket serverSocket = null;
 		try {
-			serverSocket = new ServerSocket(port);
+			serverSocket = new ServerSocket(port, 0, ni.getAddress());
 		} catch (IOException e) {
-			System.err.println("Could not listen on port: " + port + ".");
+			Log.error("Could not listen on port: " + port + ".");
 			System.exit(1);
 		}
 		return serverSocket;
@@ -43,7 +47,7 @@ public class NetworkConnectionListener extends Thread {
 		} catch (SocketException e) {
 			// exited normally
 		} catch (IOException e) {
-			System.err.println("Accept failed.");
+			Log.error("Accept failed.");
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -54,13 +58,14 @@ public class NetworkConnectionListener extends Thread {
 		try {
 			this.ss.close();
 		} catch (IOException e) {
-			System.err.println("Closing serverSocket failed.");
+			Log.error("Closing serverSocket failed.");
 			e.printStackTrace();
 		}
 	}
 
-	public void startNetworkConnectionListener(int port) {
+	public void startNetworkConnectionListener(InterfaceAddress ni, int port) {
 		this.port = port;
+		this.networkInterface = ni;
 		start();
 	}
 
