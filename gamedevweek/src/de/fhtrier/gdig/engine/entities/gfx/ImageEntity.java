@@ -13,7 +13,7 @@ public class ImageEntity extends AssetEntity {
 	@Override
 	public void renderImpl(Graphics graphicContext) {
 		if (isVisible()) {
-			graphicContext.drawImage(Assets().getImage(getAssetId()), 0, 0);
+			graphicContext.drawImage(Assets().getImage(getAssetId()), 0, 0);	// 0 0
 		}
 		super.renderImpl(graphicContext);
 	}

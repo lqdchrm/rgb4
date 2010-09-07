@@ -30,7 +30,7 @@ public class Gem extends LevelCollidableEntity {
 
 		// physics
 		// X Y OX OY SY SY ROT
-		initData(new float[] { 200, 200, 32, 24, 1, 1, 0 }); // pos +
+		initData(new float[] { 200, 200, 32, 24, 1, 1, 0 }); // pos +		200 200 32 24 1 1 0
 																// center +
 																// scale +
 																// rot
