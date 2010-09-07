@@ -38,7 +38,8 @@ public class Lobby extends JDialog {
 
 	public static JumpNRunGame createGameByArgs(String[] args) {
 
-		switch (args.length - 1) {
+		switch (args.length - 1) 
+		{
 		case SERVER:
 			
 			INetworkLobby networkLobby = new NetworkLobby();
@@ -51,19 +52,20 @@ public class Lobby extends JDialog {
 			  serverListe[x] = interfaces.get( x ).getAddress().getHostAddress();
 			}
 			
-			String Interface = (String) JOptionPane
-			.showInputDialog(
-					null,
-					"Please select interface to host on",
-					"You are Server", JOptionPane.PLAIN_MESSAGE, null,
-					serverListe, null );
-			
-			InterfaceAddress ni = null;
+    		InterfaceAddress ni = null;
 			
 			for ( int x = 0; x < interfaces.size(); x++ )
 			{
-				if ( Interface.contains( interfaces.get( x ).getAddress().getHostAddress() ) )
-					ni = interfaces.get( x );
+				try
+				{
+					if ( interfaces.get( x ).getAddress() == InetAddress.getByName( "127.0.0.1" ) )
+						ni = interfaces.get( x );
+				}
+				catch( UnknownHostException e )
+				{
+					if ( interfaces.size() > 0 )
+                       ni = interfaces.get( 0 );
+				}
 			}
 			
 			return createServer(ni,Integer.parseInt(args[0])); // assume port give

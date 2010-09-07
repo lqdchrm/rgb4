@@ -77,6 +77,11 @@ public class NetworkBroadcastListener extends Thread
             finish();
             System.out.println( e.getLocalizedMessage() );
          }
+         catch( NullPointerException e )
+         {
+            finish();
+            System.out.println( e.getLocalizedMessage() );
+         }
          catch( IOException e )
          {
         	finish();
