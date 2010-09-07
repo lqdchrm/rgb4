@@ -1,6 +1,7 @@
 package de.fhtrier.gdig.engine.network.impl;
 
 import java.io.IOException;
+import java.net.InterfaceAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
@@ -129,10 +130,10 @@ public class NetworkComponentClient extends NetworkComponentImpl {
 	}
 
 	@Override
-	public void startListening(int port) {
+	public void startListening( InterfaceAddress ni, int port ) {
 		throw new RuntimeException("startListening is not possible on a client");
 	}
-
+	
 	@Override
 	public void stopListening() {
 		throw new RuntimeException("stopListening is not possible on a client");
