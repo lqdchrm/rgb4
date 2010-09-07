@@ -1,17 +1,22 @@
 package de.fhtrier.gdig.demos.jumpnrun.common;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import de.fhtrier.gdig.demos.jumpnrun.JumpNRun;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.StateColor;
 import de.fhtrier.gdig.engine.entities.Entity;
+import de.fhtrier.gdig.engine.graphics.BlurShader;
+import de.fhtrier.gdig.engine.graphics.Shader;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
@@ -23,7 +28,8 @@ public abstract class PlayingState extends BasicGameState implements
 	private AssetMgr assets;
 	private GameFactory factory;
 	private int levelId;
-
+	private static Image frameBuffer;
+		
 	public abstract void cleanup(GameContainer container, StateBasedGame game);
 
 	public GameFactory getFactory()
@@ -61,25 +67,28 @@ public abstract class PlayingState extends BasicGameState implements
 		this.factory = new GameFactory(this.assets);
 
 		// Level
-		this.levelId = this.factory.createEntity(EntityType.LEVEL);
+		this.levelId = factory.createEntity(EntityType.LEVEL);
+		
+		// FrameBuffer
+		frameBuffer = new Image(JumpNRun.SCREENWIDTH, JumpNRun.SCREENHEIGHT);
 	}
-
-	@Override
-	public abstract void notify(INetworkCommand cmd);
 
 	@Override
 	public void render(final GameContainer container,
-			final StateBasedGame game, final Graphics graphicsContext)
+			final StateBasedGame game, final Graphics graphicContext)
 			throws SlickException
-	{
-
-		final Level level = this.getLevel();
-
+	{		
+		Level level = getLevel();
+		
 		if (level != null)
 		{
-			level.render(graphicsContext);
+			level.render(frameBuffer.getGraphics(), frameBuffer);
+			
+			graphicContext.drawImage(frameBuffer, 0, 0);
 		}
 	}
+	
+	public abstract void notify(INetworkCommand cmd);
 
 	@Override
 	public void update(final GameContainer container,
@@ -115,35 +124,8 @@ public abstract class PlayingState extends BasicGameState implements
 		{
 			level.handleInput(input);
 			level.update(deltaInMillis);
-
-			Player currentPlayer = level.getCurrentPlayer();
-			if (currentPlayer != null)
-			{
-				PlayerState state = currentPlayer.getState();
-				// change player color
-				if (input.isKeyPressed(Input.KEY_C))
-				{
-					state.color = state.color << 1;
-					if (state.color > StateColor.BLUE)
-					{
-						state.color = StateColor.RED;
-					}
-				}
-
-				// change weapon color
-
-				if (input.isKeyPressed(Input.KEY_X))
-				{
-					state.weaponColor = state.weaponColor << 1;
-					if (state.weaponColor > StateColor.BLUE)
-					{
-						state.weaponColor = StateColor.RED;
-					}
-				}
-			}
-
-			// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2.
-			// Zeile
+			
+			// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2. Zeile
 			// Den Objekten gesagt wird die Kollision zu behandeln.
 			CollisionManager.update();
 			level.handleCollisions();

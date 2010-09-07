@@ -5,13 +5,13 @@ import java.util.Map.Entry;
 import java.util.Queue;
 
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.Log;
 
+import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
@@ -61,6 +61,9 @@ public class ClientPlayingState extends PlayingState {
 		// ask server to join game
 		NetworkComponent.getInstance().sendCommand(new QueryJoin());
 		setState(LocalState.JOINING);
+		
+		// InputControl initialisieren
+		InputControl.loadKeyMapping();
 
 		// Load SoundManager
 		smgr = new SoundManager(this.getFactory().getAssetMgr());
@@ -197,12 +200,13 @@ public class ClientPlayingState extends PlayingState {
 					}
 				}
 			}
-			
-			if(container.getInput().isKeyDown(Input.KEY_SPACE))
-			{
-				this.smgr.playSound(10);
-			}
-	}
+		}
+		
+		// nur zu DEBUG-Zwecken
+		InputControl.loadKeyMapping();
+		
+		// update InputControl
+		InputControl.updateInputControl(container.getInput());
 
 		// update local data
 		super.update(container, game, deltaInMillis);
