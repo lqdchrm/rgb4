@@ -38,6 +38,7 @@ public class Player extends LevelCollidableEntity {
 	private final float playerHalfWidth = 48;
 
 	private PlayerState state;
+	private AnimationEntity weapon; // has to be an own class-object!
 
 	public Player(int id, Factory factory) throws SlickException {
 		super(id, EntityType.PLAYER);
@@ -53,6 +54,7 @@ public class Player extends LevelCollidableEntity {
 		// gfx
 		assets.storeAnimation(Assets.PlayerIdleAnim, Assets.PlayerIdleAnimImage);
 		assets.storeAnimation(Assets.PlayerRunAnim, Assets.PlayerRunAnimImage);
+		assets.storeAnimation(Assets.WeaponImage, Assets.BulletAnimImage); //TODO: change weapon dummy
 		this.jump = assets.storeAnimation(Assets.PlayerJumpAnim, Assets.PlayerIdleAnimImage);
 		this.jump.setLooping(false);
 
@@ -62,6 +64,7 @@ public class Player extends LevelCollidableEntity {
 				Assets.PlayerRunAnim);
 		this.jumpAnimation = factory.createAnimationEntity(
 				Assets.PlayerJumpAnim, Assets.PlayerJumpAnim);
+		this.weapon = factory.createAnimationEntity(Assets.WeaponImage, Assets.WeaponImage);
 
 		int groupId = factory.createEntity(EntityOrder.Player,
 				EntityType.HELPER);
@@ -74,6 +77,12 @@ public class Player extends LevelCollidableEntity {
 		this.playerGroup.add(this.idleImage);
 		this.playerGroup.add(this.runAnimation);
 		this.playerGroup.add(this.jumpAnimation);
+		
+		this.playerGroup.add(this.weapon);
+		
+		// Position correction for weapon
+		weapon.getData()[Entity.X] += 20;
+		weapon.getData()[Entity.Y] += 95;
 
 		this.add(this.playerGroup);
 
@@ -96,6 +105,7 @@ public class Player extends LevelCollidableEntity {
 
 
 		setVisible(true);
+		weapon.setVisible(true);
 		// order
 		this.setOrder(EntityOrder.Player);
 
