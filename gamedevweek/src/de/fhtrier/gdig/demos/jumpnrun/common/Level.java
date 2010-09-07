@@ -7,9 +7,12 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
 
 import de.fhtrier.gdig.demos.jumpnrun.JumpNRun;
+import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.entities.Entity;
+import de.fhtrier.gdig.engine.entities.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
 import de.fhtrier.gdig.engine.entities.gfx.TiledMapEntity;
 import de.fhtrier.gdig.engine.entities.physics.MoveableEntity;
@@ -18,17 +21,17 @@ import de.fhtrier.gdig.engine.network.NetworkComponent;
 
 public class Level extends MoveableEntity {
 
-	private GameFactory factory;
+	public GameFactory factory;
 
 	private ImageEntity backgroundImage;
 	private ImageEntity middlegroundImage;
 	private TiledMap groundMap;
 	private TiledMapEntity ground;
-	
+
 	private int currentPlayerId;
 
 	public Level(int id, GameFactory factory) throws SlickException {
-		super(id);
+		super(id, EntityType.LEVEL);
 
 		this.currentPlayerId = -1;
 
@@ -51,13 +54,11 @@ public class Level extends MoveableEntity {
 		this.backgroundImage = factory.createImageEntity(
 				Assets.LevelBackgroundImage, Assets.LevelBackgroundImage);
 		this.backgroundImage.setVisible(true);
-		this.backgroundImage.setActive(true);
 		add(this.backgroundImage);
 
 		this.middlegroundImage = factory.createImageEntity(
 				Assets.LevelMiddlegroundImage, Assets.LevelMiddlegroundImage);
 		this.middlegroundImage.setVisible(true);
-		this.middlegroundImage.setActive(true);
 		add(this.middlegroundImage);
 
 		this.ground = factory.createTiledMapEntity(Assets.LevelTileMap,
@@ -69,8 +70,15 @@ public class Level extends MoveableEntity {
 		// physics
 		setData(new float[] { 0, 0, 0, 0, 1, 1, 0 });
 
+		// network
+		setUpdateStrategy(EntityUpdateStrategy.Local);
+
 		// order
 		setOrder(EntityOrder.Level);
+
+		// setup
+		setActive(true);
+		setVisible(true);
 	}
 
 	@Override
@@ -82,24 +90,24 @@ public class Level extends MoveableEntity {
 				+ factory.size() + " entities", 20, 50);
 
 		Entity e = this;
-		graphicContext.drawString(
-				"Level\n" +
-				"ID: " + e.getId() + "\n" + " X: " + e.getData()[X] + "  Y: "
-						+ e.getData()[Y] + "\n" + "OX: " + e.getData()[CENTER_X]
-						+ " OY: " + e.getData()[CENTER_Y] + "\n" + "FX: "
-						+ "SX: " + e.getData()[SCALE_X] + " SY: " + e.getData()[SCALE_Y]
-						+ "\n" + "ROT: " + e.getData()[ROTATION], 20, 100);
+		graphicContext.drawString("Level\n" + "ID: " + e.getId() + "\n"
+				+ " X: " + e.getData()[X] + "  Y: " + e.getData()[Y] + "\n"
+				+ "OX: " + e.getData()[CENTER_X] + " OY: "
+				+ e.getData()[CENTER_Y] + "\n" + "FX: " + "SX: "
+				+ e.getData()[SCALE_X] + " SY: " + e.getData()[SCALE_Y] + "\n"
+				+ "ROT: " + e.getData()[ROTATION], 20, 100);
 
 		e = getCurrentPlayer();
 		if (e != null) {
 			graphicContext.drawString(
-					"Player\n" +
-					"ID: " + e.getId() + "\n" + " X: " + e.getData()[X]
-							+ "  Y: " + e.getData()[Y] + "\n" + "OX: "
-							+ e.getData()[CENTER_X] + " OY: " + e.getData()[CENTER_Y]
-                        	+ "SX: " + e.getData()[SCALE_X]
-							+ " SY: " + e.getData()[SCALE_Y] + "\n" + "ROT: "
-							+ e.getData()[ROTATION] + "\n" + "STATE: " + ((Player)e).currentState, 20, 250);
+					"Player\n" + "ID: " + e.getId() + "\n" + " X: "
+							+ e.getData()[X] + "  Y: " + e.getData()[Y] + "\n"
+							+ "OX: " + e.getData()[CENTER_X] + " OY: "
+							+ e.getData()[CENTER_Y] + "SX: "
+							+ e.getData()[SCALE_X] + " SY: "
+							+ e.getData()[SCALE_Y] + "\n" + "ROT: "
+							+ e.getData()[ROTATION] + "\n" + "STATE: "
+							+ ((Player) e).currentState, 20, 250);
 		}
 	}
 
@@ -118,7 +126,7 @@ public class Level extends MoveableEntity {
 	}
 
 	/**
-	 *  scrolls background layers relative to foreground
+	 * scrolls background layers relative to foreground
 	 */
 	private void parallaxScrollingBackground() {
 		this.middlegroundImage.getData()[X] = -getData()[X] * 0.6f;
@@ -128,9 +136,9 @@ public class Level extends MoveableEntity {
 	}
 
 	/**
-	 *  Ensures, that we don't scroll across level borders
-	 *  TODO: doesn't work with scaling factor != 1
+	 * Ensures, that we don't scroll across level borders
 	 */
+	 // TODO: doesn't work with scaling factor != 1
 	private void checkLevelBordersScrolling() {
 
 		// Left
@@ -160,15 +168,15 @@ public class Level extends MoveableEntity {
 	}
 
 	/**
-	 *  keep our player in the middle of the screen
+	 * keep our player in the middle of the screen
 	 */
 	private void focusOnPlayer() {
 		Player player = getCurrentPlayer();
 		if (player != null) {
 
 			// Focus on Player
-			getData()[X] = JumpNRun.SCREENWIDTH/2 - player.getData()[X];
-			getData()[Y] = JumpNRun.SCREENHEIGHT/2 - player.getData()[Y];
+			getData()[X] = JumpNRun.SCREENWIDTH / 2 - player.getData()[X];
+			getData()[Y] = JumpNRun.SCREENHEIGHT / 2 - player.getData()[Y];
 		}
 	}
 
@@ -267,8 +275,8 @@ public class Level extends MoveableEntity {
 		Entity result = super.add(e);
 
 		// tell player that he belongs to level
-		if (e instanceof Player) {
-			((Player) e).setLevel(this);
+		if (e instanceof LevelCollidableEntity) {
+			((LevelCollidableEntity) e).setLevel(this);
 		}
 
 		return result;

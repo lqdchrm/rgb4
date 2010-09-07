@@ -17,12 +17,11 @@ public abstract class JumpNRunGame extends StateBasedGame implements
 	@Override
 	public abstract void initStatesList(GameContainer container)
 			throws SlickException;
-	
 
 	// network commands are passed through to the active gamestate
 	@Override
-	public void notify(INetworkCommand cmd) {
-		GameState currentState = this.getCurrentState();
+	public void notify(final INetworkCommand cmd) {
+		final GameState currentState = this.getCurrentState();
 		if (currentState != null) {
 			((PlayingState) currentState).notify(cmd);
 		}

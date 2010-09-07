@@ -2,6 +2,7 @@ package de.fhtrier.gdig.engine.management;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
@@ -128,6 +129,23 @@ public class AssetMgr {
 		Animation anim = new Animation(sheet, duration);
 		storeAnimation(id, anim);
 		return anim;
+	}
+	
+	public Animation storeAnimation(int id, String src) throws SlickException {
+		StringTokenizer tok = new StringTokenizer(src, "_");
+		int cellWidth = 0;
+		int cellHeight = 0;
+		int duration = 0;
+		try {
+		tok.nextToken();
+			cellWidth = Integer.parseInt(tok.nextToken());
+			cellHeight = Integer.parseInt(tok.nextToken());
+			StringTokenizer tok2 = new StringTokenizer(tok.nextToken(), ".");
+			duration = Integer.parseInt(tok2.nextToken());
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Trying to load file in incorrect format? filename_96_96_75.png");
+		}
+		return storeAnimation(id, src, cellWidth, cellHeight, duration);
 	}
 
 	public void storeAnimation(int id, Animation anim) {

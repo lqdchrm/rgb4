@@ -18,19 +18,17 @@ public class JumpNRun {
 		// create game
 		JumpNRunGame game = Lobby.createGameByArgs(args);
 
-		
 		// initialize (gfx) settings depending on game type
 		if (game != null) {
-			
+
 			// make game network aware
 			NetworkComponent.getInstance().addListener(game);
 
 			try {
-				
 
 				AppGameContainer gc = new AppGameContainer(game);
 				gc.setDisplayMode(SCREENWIDTH, SCREENHEIGHT, false);
-				
+
 				if (game instanceof ClientGame) {
 					gc.setVSync(true);
 					gc.setSmoothDeltas(true);
@@ -41,10 +39,10 @@ public class JumpNRun {
 				} else {
 					gc.setVSync(false);
 					gc.setSmoothDeltas(false);
-					gc.setAlwaysRender(false);
+					gc.setAlwaysRender(true);
 					gc.setUpdateOnlyWhenVisible(false);
 				}
-				
+
 				gc.start();
 			} catch (SlickException e) {
 				e.printStackTrace();
@@ -52,4 +50,3 @@ public class JumpNRun {
 		}
 	}
 }
-

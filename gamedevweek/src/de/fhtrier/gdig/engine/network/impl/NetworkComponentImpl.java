@@ -35,7 +35,7 @@ public abstract class NetworkComponentImpl extends NetworkComponent {
 						}
 					}
 				}
-				
+
 				for (INetworkCommandListener l : this.listeners) {
 					l.notify(command);
 				}
@@ -43,6 +43,6 @@ public abstract class NetworkComponentImpl extends NetworkComponent {
 			this.commands.clear();
 		}
 	}
-	
+
 	abstract boolean handleProtocolCommand(INetworkCommand command);
 }
