@@ -5,18 +5,20 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Vector2f;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
+import de.fhtrier.gdig.demos.jumpnrun.common.Constants.GamePlayConstants;
+import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.PlayerData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerState;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerActionState;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.StateColor;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.gfx.AnimationEntity;
-import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
@@ -25,152 +27,168 @@ public class Player extends LevelCollidableEntity {
 
 	// HACK make it private
 	public int currentState = -1;
-	private ImageEntity idleImage;
-	private Entity playerGroup;
-	private AnimationEntity runAnimation;
-	private AnimationEntity jumpAnimation;
-	private Animation jump;
+	private final AnimationEntity idleImage;
+	private final Entity playerGroup;
+	private final AnimationEntity runAnimation;
+	private final AnimationEntity jumpAnimation;
+	private final Animation jump;
 
-	private float maxPlayerSpeed = 1000.0f;
-	private float playerHalfWidth = 48;
-	
-    public PlayerState state;
+	private final float maxPlayerSpeed = 1000.0f;
+	private final float playerHalfWidth = 48;
+
+	private PlayerState state;
 
 	public Player(int id, Factory factory) throws SlickException {
-		super(id);
+		super(id, EntityType.PLAYER);
 
 		state = new PlayerState();
 		state.name = "Player";
+		state.color = StateColor.RED; // player gets default-color: red
+		state.weaponColor = StateColor.RED; // weapon of player get
+											// default-color: red
+
 		AssetMgr assets = factory.getAssetMgr();
 
 		// gfx
-		assets.storeImage(Assets.PlayerIdleImage, "sprites/player/Idle.png");
-		assets.storeAnimation(Assets.PlayerRunAnim, "sprites/player/Run.png",
-				96, 96, 75);
-		this.jump = assets.storeAnimation(Assets.PlayerJumpAnim,
-				"sprites/player/Jump.png", 96, 96, 70);
+		assets.storeAnimation(Assets.PlayerIdleAnim, Assets.PlayerIdleAnimImage);
+		assets.storeAnimation(Assets.PlayerRunAnim, Assets.PlayerRunAnimImage);
+		this.jump = assets.storeAnimation(Assets.PlayerJumpAnim, Assets.PlayerIdleAnimImage);
 		this.jump.setLooping(false);
 
-		this.idleImage = factory.createImageEntity(Assets.PlayerIdleImage,
-				Assets.PlayerIdleImage);
+		this.idleImage = factory.createAnimationEntity(Assets.PlayerIdleAnim,
+				Assets.PlayerIdleAnim);
 		this.runAnimation = factory.createAnimationEntity(Assets.PlayerRunAnim,
 				Assets.PlayerRunAnim);
 		this.jumpAnimation = factory.createAnimationEntity(
 				Assets.PlayerJumpAnim, Assets.PlayerJumpAnim);
-		
-		playerGroup = factory.createEntity(EntityOrder.Player);
-		
-		playerGroup.getData()[CENTER_X] = 48;
-		playerGroup.getData()[CENTER_Y] = 48;
-		
-		playerGroup.add(this.idleImage);
-		playerGroup.add(this.runAnimation);
-		playerGroup.add(this.jumpAnimation);
 
-		add(playerGroup);
+		int groupId = factory.createEntity(EntityOrder.Player,
+				EntityType.HELPER);
+
+		this.playerGroup = factory.getEntity(groupId);
 		
+		this.playerGroup.getData()[Entity.CENTER_X] = assets.getAnimation(Assets.PlayerIdleAnim).getWidth()/2;
+		this.playerGroup.getData()[Entity.CENTER_Y] = assets.getAnimation(Assets.PlayerIdleAnim).getHeight()/2;
+
+		this.playerGroup.add(this.idleImage);
+		this.playerGroup.add(this.runAnimation);
+		this.playerGroup.add(this.jumpAnimation);
+
+		this.add(this.playerGroup);
+
 		// physics
 		// X Y OX OY SY SY ROT
+		
 		initData(new float[] { 200, 200, 48, 48, 1, 1, 0 }); // pos +
-																	// center of rotation +
-																	// scale +
-																	// rot
+															// center of
+															// rotation +
+															// scale +
+															// rot
 		setVel(new float[] { 0, 0, 0, 0, 0, 0, 0 }); // no speed
-		setAcc(new float[] { 0, 981, 0, 0, 0, 0, 0 }); // gravity
-		setBounds(new Rectangle(30, 0, 36, 96)); // bounding box
+		setAcc(new float[] { 0, GamePlayConstants.gravity, 0, 0, 0, 0, 0 }); // gravity
 		
+		// set bounding box according to idle animation size
+		int x = 35;
+		int width = assets.getAnimation(Assets.PlayerIdleAnim).getWidth()-70;
+		int height = assets.getAnimation(Assets.PlayerIdleAnim).getHeight();
+		setDrag(0.95f);
+		setBounds(new Rectangle(x, 0, width, height)); // bounding box
+
+
 		setVisible(true);
-		setActive(true);
-		
 		// order
-		setOrder(EntityOrder.Player);
+		this.setOrder(EntityOrder.Player);
 
 		// startup
-		setState(PlayerState.Idle);
-	}
-	
-	// update
-	@Override
-	public void update(int deltaInMillis) {
-
-		if (isActive()) {
-
-			super.update(deltaInMillis); // calc physics
-
-			if (getVel()[X] > this.maxPlayerSpeed) {
-				getVel()[X] = this.maxPlayerSpeed;
-			}
-
-			if (getVel()[Y] > this.maxPlayerSpeed) {
-				getVel()[Y] = this.maxPlayerSpeed;
-			}
-
-			if (getVel()[X] < -this.maxPlayerSpeed) {
-				getVel()[X] = -this.maxPlayerSpeed;
-			}
-
-			if (getVel()[Y] < -this.maxPlayerSpeed) {
-				getVel()[Y] = -this.maxPlayerSpeed;
-			}
-
-			markCollisionTiles(12);
-			handleCollisions();
-
-			if ((this.currentState == PlayerState.Idle)
-					&& (Math.abs(getData()[X] - getPrevPos()[X]) < Constants.EPSILON)
-					&& (Math.abs(getData()[Y] - getPrevPos()[Y]) < Constants.EPSILON)) {
-				getVel()[X] = getVel()[Y] = 0.0f;
-			}
-		}
+		setState(PlayerActionState.Idle);
 	}
 
-	
-	// render
 	@Override
-	public void renderImpl(Graphics g) {
+	public void applyNetworkData(final NetworkData networkData) {
+		super.applyNetworkData(networkData);
 
-		if (getId() == -1) {
-			throw new RuntimeException("Wrong Initialization: no Client ID set");
+		if ((this.currentState == PlayerActionState.Idle)
+				&& (Math.abs(getData()[X] - getPrevPos()[X]) < Constants.EPSILON)
+				&& (Math.abs(getData()[Y] - getPrevPos()[Y]) < Constants.EPSILON)) {
+			getVel()[X] = getVel()[Y] = 0.0f;
 		}
-		
-		
-		super.renderImpl(g);
+		this.setState(((PlayerData) networkData).getState());
+	}
 
-		if (state.name != null)
-		{
-			float x = playerHalfWidth - g.getFont().getWidth(state.name)/2.0f;
-			float y = -g.getFont().getHeight(state.name);
-			g.drawString(state.name, x,y);
+	private void enterState(final int state) {
+		this.currentState = state;
+		switch (state) {
+		case PlayerActionState.Idle:
+			this.getAcc()[Entity.X] = 0.0f;
+			this.idleImage.setVisible(true);
+			break;
+		case PlayerActionState.RunLeft:
+			this.getAcc()[Entity.X] = -Constants.GamePlayConstants.walkVelo;
+			this.playerGroup.getData()[Entity.SCALE_X] = 1;
+			this.runAnimation.setVisible(true);
+			this.state.shootDirection = state;
+			break;
+		case PlayerActionState.RunRight:
+			this.getAcc()[Entity.X] = Constants.GamePlayConstants.walkVelo;
+			this.playerGroup.getData()[Entity.SCALE_X] = -1;
+			this.runAnimation.setVisible(true);
+			this.state.shootDirection = state;
+			break;
+		case PlayerActionState.Jump:
+			this.getVel()[Entity.Y] = -Constants.GamePlayConstants.JumpVelo;
+			this.jump.start();
+			this.jumpAnimation.setVisible(true);
+			break;
 		}
-		
+	}
+
+	// Nur zum testen der Kollision
+	@Override
+	public boolean handleCollisions() {
+		if (!isActive()) {
+			return false;
+		}
+
+		boolean result = super.handleCollisions();
+
+		if (CollisionManager.collidingEntities(this).size() != 0) {
+			// HACK for debug only
+			this.map.setTileId(0, 0, 0, 0);
+		} else {
+			// HACK for debug only
+			this.map.setTileId(0, 0, 0, 13);
+		}
+
+		return result;
 	}
 
 	// input
 	@Override
-	public void handleInput(Input input) {
-		if (isActive()) {
+	public void handleInput(final Input input) {
+		if (this.isActive()) {
 			if (!input.isKeyDown(Input.KEY_LEFT)
 					&& !input.isKeyDown(Input.KEY_RIGHT)
 					&& !input.isKeyDown(Input.KEY_SPACE)) {
-				setState(PlayerState.Idle);
+				this.setState(PlayerActionState.Idle);
 			}
 
 			if (input.isKeyDown(Input.KEY_LEFT)) {
-				setState(PlayerState.RunLeft);
+				this.setState(PlayerActionState.RunLeft);
 			}
 
 			if (input.isKeyDown(Input.KEY_RIGHT)) {
-				setState(PlayerState.RunRight);
+				this.setState(PlayerActionState.RunRight);
 			}
 
 			if (input.isKeyDown(Input.KEY_UP)) {
-				if (isOnGround()) {
-					setState(PlayerState.Jump);
+				if (this.isOnGround()) {
+					this.setState(PlayerActionState.Jump);
 				}
 			}
-			
+
 			if (input.isKeyPressed(Input.KEY_SPACE)) {
-				NetworkComponent.getInstance().sendCommand(new QueryAction(PlayerAction.DROPGEM));
+				NetworkComponent.getInstance().sendCommand(
+						new QueryAction(PlayerAction.SHOOT));
 			}
 		}
 		super.handleInput(input);
@@ -181,79 +199,100 @@ public class Player extends LevelCollidableEntity {
 	protected NetworkData _createNetworkData() {
 		return new PlayerData(getId());
 	}
-	
+
 	@Override
 	public NetworkData getNetworkData() {
-		PlayerData result = (PlayerData)super.getNetworkData();
+		PlayerData result = (PlayerData) super.getNetworkData();
 		result.state = this.currentState;
-		
+
 		return result;
-	}
-
-	@Override
-	public void applyNetworkData(NetworkData networkData) {
-		super.applyNetworkData(networkData);
-		
-		this.setState(((PlayerData)networkData).getState());
-	}
-
-	
-	
-	// game logic
-	public void setState(int state) {
-		if (state != this.currentState) {
-			leaveState(this.currentState);
-			enterState(state);
-		}
 	}
 
 	private void leaveState(int state) {
 		switch (state) {
-		case PlayerState.Idle:
-			this.idleImage.setActive(false);
+		case PlayerActionState.Idle:
 			this.idleImage.setVisible(false);
 			break;
-		case PlayerState.RunLeft:
-		case PlayerState.RunRight:
-			this.runAnimation.setActive(false);
+		case PlayerActionState.RunLeft:
+		case PlayerActionState.RunRight:
 			this.runAnimation.setVisible(false);
 			break;
-		case PlayerState.Jump:
-			this.jumpAnimation.setActive(false);
+		case PlayerActionState.Jump:
 			this.jumpAnimation.setVisible(false);
 		}
 	}
 
-	private void enterState(int state) {
-		this.currentState = state;
-		switch (state) {
-		case PlayerState.Idle:
-			getAcc()[X] = 0.0f;
-			this.idleImage.setActive(true);
-			this.idleImage.setVisible(true);
-			break;
-		case PlayerState.RunLeft:
-			getAcc()[X] = -2000.0f;
-			playerGroup.getData()[SCALE_X] = 1;
-			this.runAnimation.setActive(true);
-			this.runAnimation.setVisible(true);
-			break;
-		case PlayerState.RunRight:
-			getAcc()[X] = 2000.0f;
-			playerGroup.getData()[SCALE_X] = -1;
-			this.runAnimation.setActive(true);
-			this.runAnimation.setVisible(true);
-			break;
-		case PlayerState.Jump:
-			getVel()[Y] = -800;
-			this.jump.start();
-			this.jumpAnimation.setActive(true);
-			this.jumpAnimation.setVisible(true);
-			break;
+	// render
+	@Override
+	public void renderImpl(final Graphics g) {
+
+		if (this.getId() == -1) {
+			throw new RuntimeException("Wrong Initialization: no Client ID set");
+		}
+
+		super.renderImpl(g);
+
+		if (this.state.name != null) {
+			float x = playerHalfWidth - g.getFont().getWidth(state.name) / 2.0f;
+			float y = -g.getFont().getHeight(state.name);
+			g.setColor(StateColor.constIntoColor(state.color)); // colors the
+																// name of
+																// player with
+																// his color
+			g.drawString(state.name + " " + getId(), x, y);
+			g.setColor(StateColor.constIntoColor(state.weaponColor));
+			g.drawString("Weapon", x, y + 80);
+		}
+
+	}
+
+	public void setLevel(final Level level) {
+		this.setMap(level.getMap());
+	}
+
+	// game logic
+	public void setState(final int state) {
+		if (state != this.currentState) {
+			this.leaveState(this.currentState);
+			this.enterState(state);
 		}
 	}
 
-	public void setLevel(Level level) {
-		this.setMap(level.getMap());
+	// update
+	@Override
+	public void update(final int deltaInMillis) {
+
+		if (this.isActive()) {
+
+			super.update(deltaInMillis); // calc physics
+
+			if (this.getVel()[Entity.X] > this.maxPlayerSpeed) {
+				this.getVel()[Entity.X] = this.maxPlayerSpeed;
+			}
+
+			if (this.getVel()[Entity.Y] > this.maxPlayerSpeed) {
+				this.getVel()[Entity.Y] = this.maxPlayerSpeed;
+			}
+
+			if (this.getVel()[Entity.X] < -this.maxPlayerSpeed) {
+				this.getVel()[Entity.X] = -this.maxPlayerSpeed;
+			}
+
+			if (this.getVel()[Entity.Y] < -this.maxPlayerSpeed) {
+				this.getVel()[Entity.Y] = -this.maxPlayerSpeed;
+			}
+
+			if (this.currentState == PlayerActionState.Idle
+					&& Math.abs(this.getData()[Entity.X]
+							- this.getPrevPos()[Entity.X]) < Constants.EPSILON
+					&& Math.abs(this.getData()[Entity.Y]
+							- this.getPrevPos()[Entity.Y]) < Constants.EPSILON) {
+				this.getVel()[Entity.X] = this.getVel()[Entity.Y] = 0.0f;
+			}
+		}
+	}
+
+	public PlayerState getState() {
+		return state;
 	}
 }

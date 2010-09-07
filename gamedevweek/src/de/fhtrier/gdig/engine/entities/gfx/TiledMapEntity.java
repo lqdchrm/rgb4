@@ -12,7 +12,7 @@ public class TiledMapEntity extends AssetEntity {
 	@Override
 	public void renderImpl(Graphics graphicContext) {
 		if (isVisible()) {
-			Assets().getTiledMap(getAssetId()).render(0, 0);
+			Assets().getTiledMap(getAssetId()).render(0, 0, 0);
 		}
 		super.renderImpl(graphicContext);
 	}

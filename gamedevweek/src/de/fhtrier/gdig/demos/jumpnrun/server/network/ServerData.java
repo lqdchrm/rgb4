@@ -12,7 +12,7 @@ public class ServerData extends TreeMap<Integer, NetworkData> implements
 	private static final long serialVersionUID = 5621266482979265456L;
 	private int sender;
 	private boolean handled;
-	
+
 	public ServerData() {
 		this.sender = NetworkComponent.getInstance().getNetworkId();
 	}
@@ -34,7 +34,7 @@ public class ServerData extends TreeMap<Integer, NetworkData> implements
 
 	@Override
 	public void setHandled(boolean handled) {
-		this.handled = handled; 
+		this.handled = handled;
 	}
 
 }

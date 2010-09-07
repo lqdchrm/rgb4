@@ -10,8 +10,10 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import de.fhtrier.gdig.demos.jumpnrun.JumpNRun;
+import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.StateColor;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.graphics.BlurShader;
 import de.fhtrier.gdig.engine.graphics.Shader;
@@ -37,8 +39,27 @@ public abstract class PlayingState extends BasicGameState implements
 	private Player player;
 	public static float factor = 2;
 	
+	public abstract void cleanup(GameContainer container, StateBasedGame game);
+
+	public GameFactory getFactory() {
+		return this.factory;
+	}
+
 	@Override
-	public void init(GameContainer arg0, StateBasedGame arg1)
+	public int getID() {
+		return GameStates.PLAYING;
+	}
+
+	public Level getLevel() {
+		final Entity level = this.factory.getEntity(this.levelId);
+		if (level instanceof Level) {
+			return (Level) level;
+		}
+		return null;
+	}
+
+	@Override
+	public void init(final GameContainer arg0, final StateBasedGame arg1)
 			throws SlickException {
 
 		// create assetmgr
@@ -47,7 +68,7 @@ public abstract class PlayingState extends BasicGameState implements
 		this.assets.setAssetFallbackPathPrefix("content/jumpnrun/default/");
 
 		// Factory
-		this.factory = new GameFactory(assets);
+		this.factory = new GameFactory(this.assets);
 
 		// Level
 		this.levelId = factory.createEntity(EntityType.LEVEL);
@@ -106,16 +127,20 @@ public abstract class PlayingState extends BasicGameState implements
 	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame game,
-			int deltaInMillis) throws SlickException {
-		Input input = container.getInput();
+	public abstract void notify(INetworkCommand cmd);
+
+	@Override
+	public void update(final GameContainer container,
+			final StateBasedGame game, final int deltaInMillis)
+			throws SlickException {
+		final Input input = container.getInput();
 
 		if (input.isKeyPressed(Input.KEY_F1)) {
 			container.setPaused(true);
 			try {
-			container.setFullscreen(!container.isFullscreen());
-			} catch(SlickException e) {
-				
+				container.setFullscreen(!container.isFullscreen());
+			} catch (final SlickException e) {
+
 			}
 			container.setVSync(true);
 			container.setSmoothDeltas(true);
@@ -124,36 +149,42 @@ public abstract class PlayingState extends BasicGameState implements
 		}
 
 		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
-			cleanup(container, game);
+			onExitKey(container, game);
 		}
 
-		Level level = getLevel();
+		final Level level = this.getLevel();
 
 		if (level != null) {
 			level.handleInput(input);
 			level.update(deltaInMillis);
 		}
-	}
 
-	@Override
-	public int getID() {
-		return GameStates.PLAYING;
-	}
+		Player currentPlayer = level.getCurrentPlayer();
+		if (currentPlayer != null) {
+			PlayerState state = currentPlayer.getState();
+			// change player color
+			if (input.isKeyPressed(Input.KEY_C)) {
+				state.color = state.color << 1;
+				if (state.color > StateColor.BLUE) {
+					state.color = StateColor.RED;
+				}
+			}
 
-	@Override
-	public abstract void notify(INetworkCommand cmd);
-	
-	public abstract void cleanup(GameContainer container, StateBasedGame game);
-
-	public Level getLevel() {
-		Entity level = factory.getEntity(this.levelId);
-		if (level instanceof Level) {
-			return (Level)level;
+			// change weapon color
+			if (input.isKeyPressed(Input.KEY_X)) {
+				state.weaponColor = state.weaponColor << 1;
+				if (state.weaponColor > StateColor.BLUE) {
+					state.weaponColor = StateColor.RED;
+				}
+			}
 		}
-		return null;
+
+		// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2. Zeile
+		// Den Objekten gesagt wird die Kollision zu behandeln.
+		CollisionManager.update();
+		level.handleCollisions();
 	}
-	
-	public GameFactory getFactory() {
-		return factory;
-	}
+
+	public abstract void onExitKey(GameContainer container, StateBasedGame game);
+
 }

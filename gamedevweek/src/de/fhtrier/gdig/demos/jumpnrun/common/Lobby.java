@@ -31,7 +31,7 @@ public class Lobby extends JDialog {
 
 	public static JumpNRunGame createGameByArgs(String[] args) {
 
-		switch (args.length-1) {
+		switch (args.length - 1) {
 		case SERVER:
 			return createServer(Integer.parseInt(args[0])); // assume port give
 															// -> server

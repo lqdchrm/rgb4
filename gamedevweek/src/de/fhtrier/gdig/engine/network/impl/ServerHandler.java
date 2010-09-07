@@ -5,10 +5,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import org.newdawn.slick.util.Log;
+
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 
 /**
- * This class is used by clients to listen for commands coming from the server. 
+ * This class is used by clients to listen for commands coming from the server.
  */
 public class ServerHandler extends Thread {
 
@@ -17,8 +19,11 @@ public class ServerHandler extends Thread {
 	private ObjectOutputStream out;
 	private NetworkComponentImpl netComp;
 	private boolean doClose;
-	
-	/** The virtual id by which the client is identified if connected to the server  */
+
+	/**
+	 * The virtual id by which the client is identified if connected to the
+	 * server
+	 */
 	private int networkId;
 
 	public ServerHandler(Socket s, NetworkComponentImpl netComp) {
@@ -29,7 +34,7 @@ public class ServerHandler extends Thread {
 			this.out = new ObjectOutputStream(s.getOutputStream());
 			this.in = new ObjectInputStream(s.getInputStream());
 		} catch (IOException e) {
-			System.err.println("Erstellen der Streams zum Server fehlgeschlagen.");
+			Log.error("Erstellen der Streams zum Server fehlgeschlagen.");
 			e.printStackTrace();
 		}
 		this.doClose = false;
@@ -39,7 +44,8 @@ public class ServerHandler extends Thread {
 	public void run() {
 		try {
 			while (!doClose) {
-				INetworkCommand command = (INetworkCommand) this.in.readObject();			
+				INetworkCommand command = (INetworkCommand) this.in
+						.readObject();
 				this.netComp.addCommand(command);
 			}
 			this.in.close();
@@ -58,7 +64,7 @@ public class ServerHandler extends Thread {
 			this.out.flush();
 			this.out.reset();
 		} catch (IOException e) {
-			System.err.println("Sending to server failed.");
+			Log.error("Sending to server failed.");
 			e.printStackTrace();
 		}
 	}
@@ -66,7 +72,7 @@ public class ServerHandler extends Thread {
 	public void close() {
 		this.doClose = true;
 	}
-	
+
 	public int getNetworkId() {
 		return networkId;
 	}

@@ -5,6 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 
+import org.newdawn.slick.util.Log;
+
 public class NetworkConnectionListener extends Thread {
 
 	private int port;
@@ -21,7 +23,7 @@ public class NetworkConnectionListener extends Thread {
 		while (true) {
 			Socket s = acceptClients(this.ss);
 			this.networkComponent.addClient(s);
-			System.out.println("Client " + s.getInetAddress() + " connected.");
+			Log.info("Client " + s.getInetAddress() + " connected.");
 		}
 	}
 
@@ -30,7 +32,7 @@ public class NetworkConnectionListener extends Thread {
 		try {
 			serverSocket = new ServerSocket(port);
 		} catch (IOException e) {
-			System.err.println("Could not listen on port: " + port + ".");
+			Log.error("Could not listen on port: " + port + ".");
 			System.exit(1);
 		}
 		return serverSocket;
@@ -43,7 +45,7 @@ public class NetworkConnectionListener extends Thread {
 		} catch (SocketException e) {
 			// exited normally
 		} catch (IOException e) {
-			System.err.println("Accept failed.");
+			Log.error("Accept failed.");
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -54,7 +56,7 @@ public class NetworkConnectionListener extends Thread {
 		try {
 			this.ss.close();
 		} catch (IOException e) {
-			System.err.println("Closing serverSocket failed.");
+			Log.error("Closing serverSocket failed.");
 			e.printStackTrace();
 		}
 	}
