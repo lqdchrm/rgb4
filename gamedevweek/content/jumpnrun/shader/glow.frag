@@ -16,7 +16,7 @@ void main(void)
 	
 	for (int i=0; i< num; ++i)
 	{
-		float dist = distance(target[i], noise2(gl_FragCoord.xy));
+		float dist = distance(target[i], gl_FragCoord.xy);
 		//if (dist < range/4.0) dist = range-dist*4.0;
 		float dfactor = clamp(0.25+(range-dist)/range, 0.0, 1.0);
 		color += playercolor[i] * brightness * dfactor * strength[i];
