@@ -23,7 +23,7 @@ public class MoveableEntity extends Entity
 
 		this.vel = new float[7];
 		this.acc = new float[7];
-		this.drag = 2.0f;
+		this.drag = 0.5f;
 	}
 
 	@Override
@@ -39,8 +39,13 @@ public class MoveableEntity extends Entity
 				// simple euler integration
 				this.vel[i] += this.acc[i] * secs;
 				// reibung folgt hier
+				// -1/(x+1)+1 Sollte besser skalieren bei schwankender framrate,
+				// und kann nicht durch zu große werte merkwürdige effekte
+				// hintersich her ziehen
 				if (i == X || i == Y)
-					vel[i] -= vel[i] * drag * secs;
+				{
+					vel[i] *= (-1.0f / (drag + secs) + (1.0f / secs)) * secs;
+				}
 				this.getData()[i] = this.getData()[i] + this.vel[i] * secs;
 			}
 		}

@@ -114,33 +114,33 @@ public abstract class PlayingState extends BasicGameState implements
 		{
 			level.handleInput(input);
 			level.update(deltaInMillis);
-		}
 
-		Player currentPlayer = level.getCurrentPlayer();
+			Player currentPlayer = level.getCurrentPlayer();
 
-		// change player color
-		if (input.isKeyPressed(Input.KEY_C))
-		{
-			currentPlayer.state.color = currentPlayer.state.color << 1;
-			if (currentPlayer.state.color > Constants.StateColor.BLUE)
+			// change player color
+			if (input.isKeyPressed(Input.KEY_C))
 			{
-				currentPlayer.state.color = Constants.StateColor.RED;
+				currentPlayer.state.color = currentPlayer.state.color << 1;
+				if (currentPlayer.state.color > Constants.StateColor.BLUE)
+				{
+					currentPlayer.state.color = Constants.StateColor.RED;
+				}
 			}
-		}
 
-		// change weapon color
-		if (input.isKeyPressed(Input.KEY_X))
-		{
-			currentPlayer.state.weaponColor = currentPlayer.state.weaponColor << 1;
-			if (currentPlayer.state.weaponColor > Constants.StateColor.BLUE)
+			// change weapon color
+			if (input.isKeyPressed(Input.KEY_X))
 			{
-				currentPlayer.state.weaponColor = Constants.StateColor.RED;
+				currentPlayer.state.weaponColor = currentPlayer.state.weaponColor << 1;
+				if (currentPlayer.state.weaponColor > Constants.StateColor.BLUE)
+				{
+					currentPlayer.state.weaponColor = Constants.StateColor.RED;
+				}
 			}
-		}
 
-		// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2. Zeile
-		// Den Objekten gesagt wird die Kollision zu behandeln.
-		CollisionManager.update();
-		level.handleCollisions();
+			// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2. Zeile
+			// Den Objekten gesagt wird die Kollision zu behandeln.
+			CollisionManager.update();
+			level.handleCollisions();
+		}
 	}
 }
