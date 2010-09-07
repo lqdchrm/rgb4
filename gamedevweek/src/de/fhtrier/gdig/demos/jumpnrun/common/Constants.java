@@ -28,12 +28,12 @@ public class Constants {
 	
 	public static class ControlConfig extends Configuration {
 		
-		public static String REFWALKLEFT = "BUTTON1";
-		public static String REFWALKRIGHT = "BUTTON2";
+		public static String REFWALKLEFT = "KEY_LEFT";
+		public static String REFWALKRIGHT = "KEY_RIGHT";
 		public static String REFJUMP = "KEY_UP";
-		public static String REFFIRE = "KEY_ENTER";
-		public static String REFCHANGEWEAPON = "KEY_N";
-		public static String REFCHANGECOLOR = "KEY_M";
+		public static String REFFIRE = "KEY_SPACE";
+		public static String REFCHANGEWEAPON = "KEY_X";
+		public static String REFCHANGECOLOR = "KEY_Y";
 		public static String REFMENU = "KEY_ESCAPE";
 		
 	}
