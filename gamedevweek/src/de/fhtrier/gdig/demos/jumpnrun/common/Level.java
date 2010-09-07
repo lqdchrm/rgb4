@@ -137,7 +137,7 @@ public class Level extends MoveableEntity {
 			Shader.activateAdditiveBlending();
 			
 			Shader.setActiveShader(glowshader);
-			glowshader.setValue("range", 500);
+			glowshader.setValue("range", 300);
 			glowshader.setValue("target", px, py);
 			glowshader.setValue("strength", health);
 			glowshader.setValue("playercolor", playercol);

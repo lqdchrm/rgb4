@@ -28,7 +28,7 @@ public class StateColor {
 		case RED:
 			return new Color(Color.red);
 		case GREEN:
-			return new Color(0.191f, 0.922f, 0.109f);
+			return new Color(0.2f, 0.8f, 0.1f);
 		case YELLOW:
 			return new Color(Color.yellow);
 		case BLUE:
