@@ -1,9 +1,11 @@
 package de.fhtrier.gdig.engine.network.impl;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 import org.newdawn.slick.util.Log;
 
@@ -52,6 +54,10 @@ public class ClientHandler extends Thread {
 			this.in.close();
 			this.out.close();
 			this.s.close();
+		} catch (SocketException e) {
+		    System.out.println( "Client disconnected unexpectedly" );
+		} catch (EOFException e) {
+			//??WTF??
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
