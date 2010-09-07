@@ -21,6 +21,6 @@ public class Constants {
 	public static class Debug {
 		public static boolean drawBounds = true;
 		public static Color boundColor = Color.green;
-		public static boolean showCollisions = true;
+		public static boolean showCollisions = false;
 	}
 }

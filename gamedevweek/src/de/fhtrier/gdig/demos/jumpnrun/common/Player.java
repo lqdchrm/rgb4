@@ -268,7 +268,7 @@ public class Player extends LevelCollidableEntity {
 			if (isOnGround() && currentState == PlayerActionState.Idle)
 				setDrag(0.005f);
 			else
-				setDrag(0.0f);
+				setDrag(0.0000001f);
 
 			super.update(deltaInMillis); // calc physics
 
