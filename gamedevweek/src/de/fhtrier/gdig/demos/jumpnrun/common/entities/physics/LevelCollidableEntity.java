@@ -15,6 +15,10 @@ public class LevelCollidableEntity extends CollidableEntity
 
 	private boolean onGround;
 	protected TiledMap map;
+	private boolean leftCollusion = false;
+	private boolean rightCollusion = false;
+	private boolean topCollusion = false;
+	private boolean bottomCollusion = false;
 
 	/**
 	 * Custom entity class which implements level collisions (ugly ?) needs to
@@ -45,9 +49,10 @@ public class LevelCollidableEntity extends CollidableEntity
 	 * @return hasCollided
 	 */
 	@Override
-	public boolean handleCollisions() {
+	public boolean handleCollisions()
+	{
 		boolean result = super.handleCollisions();
-		
+
 		this.onGround = false;
 		boolean collided = false;
 
@@ -56,14 +61,23 @@ public class LevelCollidableEntity extends CollidableEntity
 
 			Shape bbEntity = this.getTransformedBounds();
 
+			// Die Distance zur Boundingbox fürden LEFT TOP BOTTOM und RIGHT
+			// Collisions punkt
+			float distanceToBoundingBox = 5.0f;
+
+			leftCollusion = false;
+			rightCollusion = false;
+			topCollusion = false;
+			bottomCollusion = false;
+
 			// determine tiles to check for collisions
 			final int leftTile = (int) Math.floor(bbEntity.getMinX()
 					/ this.map.getTileWidth());
-			final int rightTile = (int) Math.ceil(bbEntity.getMaxX()
+			final int rightTile = (int) Math.ceil(bbEntity.getMaxX() + 1
 					/ this.map.getTileWidth());
 			final int topTile = (int) Math.floor(bbEntity.getMinY()
 					/ this.map.getTileHeight());
-			final int bottomTile = (int) Math.ceil(bbEntity.getMaxY()
+			final int bottomTile = (int) Math.ceil(bbEntity.getMaxY() + 1
 					/ this.map.getTileHeight());
 
 			for (int y = Math.max(0, topTile); y < Math.min(
@@ -83,6 +97,16 @@ public class LevelCollidableEntity extends CollidableEntity
 								* this.map.getTileHeight(),
 								this.map.getTileWidth(),
 								this.map.getTileHeight());
+
+						leftCollusion |= bbTile.contains(bbEntity.getMinX()
+								- distanceToBoundingBox, bbEntity.getCenterY());
+						rightCollusion |= bbTile.contains(bbEntity.getMaxX()
+								+ distanceToBoundingBox, bbEntity.getCenterY());
+						topCollusion |= bbTile.contains(bbEntity.getCenterX(),
+								bbEntity.getMinY() - distanceToBoundingBox);
+						bottomCollusion |= bbTile.contains(
+								bbEntity.getCenterX(), bbEntity.getMaxY()
+										+ distanceToBoundingBox);
 
 						final float[] depth = Collisions.getIntersectionDepth(
 								bbEntity, bbTile);
@@ -127,6 +151,26 @@ public class LevelCollidableEntity extends CollidableEntity
 			}
 		}
 		return (collided || result);
+	}
+
+	public boolean isLeftCollusion()
+	{
+		return leftCollusion;
+	}
+
+	public boolean isRightCollusion()
+	{
+		return rightCollusion;
+	}
+
+	public boolean isTopCollusion()
+	{
+		return topCollusion;
+	}
+
+	public boolean isBottomCollusion()
+	{
+		return bottomCollusion;
 	}
 
 	public boolean isOnGround()
@@ -188,7 +232,8 @@ public class LevelCollidableEntity extends CollidableEntity
 								y * map.getTileHeight(), map.getTileWidth(),
 								map.getTileHeight());
 
-						if (bbEntity.intersects(bbTile)) {
+						if (bbEntity.intersects(bbTile))
+						{
 							// mark tile
 							if (tileId < offset)
 							{
@@ -218,7 +263,8 @@ public class LevelCollidableEntity extends CollidableEntity
 		this.onGround = onGround;
 	}
 
-	public void setLevel(Level level) {
+	public void setLevel(Level level)
+	{
 		this.map = level.getMap();
 	}
 }
