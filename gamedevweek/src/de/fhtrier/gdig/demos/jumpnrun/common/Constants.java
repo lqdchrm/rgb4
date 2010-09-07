@@ -25,4 +25,17 @@ public class Constants {
 		public static Color boundColor = Color.green;
 		public static boolean showCollisions = true;
 	}
+	
+	public static class ControlConfig extends Configuration {
+		
+		public static String REFWALKLEFT = "KEY_LEFT";
+		public static String REFWALKRIGHT = "KEY_RIGHT";
+		public static String REFJUMP = "KEY_UP";
+		public static String REFFIRE = "KEY_ENTER";
+		public static String REFCHANGEWEAPON = "KEY_N";
+		public static String REFCHANGECOLOR = "KEY_M";
+		public static String REFMENU = "KEY_ESCAPE";
+		
+	}
+	
 }

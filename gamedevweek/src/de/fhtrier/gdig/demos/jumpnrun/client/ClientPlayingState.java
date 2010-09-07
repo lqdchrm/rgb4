@@ -11,6 +11,7 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.Log;
 
+import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
@@ -57,6 +58,9 @@ public class ClientPlayingState extends PlayingState {
 		// ask server to join game
 		NetworkComponent.getInstance().sendCommand(new QueryJoin());
 		setState(LocalState.JOINING);
+		
+		// InputControl initialisieren
+		InputControl.loadKeyMapping();
 
 		// HACK load and play sound
 		// getFactory().getAssetMgr().storeSound(Assets.LevelSoundtrack,
@@ -193,6 +197,12 @@ public class ClientPlayingState extends PlayingState {
 				}
 			}
 		}
+		
+		// nur zu DEBUG-Zwecken
+		InputControl.loadKeyMapping();
+		
+		// update InputControl
+		InputControl.updateInputControl(container.getInput());
 
 		// update local data
 		super.update(container, game, deltaInMillis);
