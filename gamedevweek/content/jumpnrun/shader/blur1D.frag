@@ -3,7 +3,7 @@
 uniform vec2[blursize] blurparam;
 uniform vec2 direction;
 
-uniform sampler2D myTexturee;
+uniform sampler2D myTexture;
 
 void main(void)
 {

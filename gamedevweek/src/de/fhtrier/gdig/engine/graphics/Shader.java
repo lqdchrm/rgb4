@@ -11,6 +11,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.ARBFragmentShader;
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.ARBVertexShader;
+import org.lwjgl.opengl.OpenGLException;
 import org.lwjgl.opengl.Util;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.renderer.Renderer;
@@ -273,12 +274,28 @@ public class Shader
             	
             	if (Constants.Debug.shadersAutoDisable)
             	{
-            		Log.debug("OpenGL compiling encountered an ERROR and Constants.Debug.shadersAutoDisable is active.\n" +
+            		Log.debug("OpenGL compiling encountered an ERROR and shadersAutoDisable is active.\n" +
             				">>>>>>>>>> ALL SHADERS ARE DISABLED <<<<<<<<<");
+            		Constants.Debug.shadersActive = false;
             	}
             }
         }
         
-        Util.checkGLError();
+        try
+        {
+        	Util.checkGLError();
+        }
+        catch (OpenGLException e)
+        {
+        	if (Constants.Debug.shadersAutoDisable)
+        	{
+        		Log.debug(string+"("+glObjectId+") -- OpenGL ERROR:\r\n");
+        		e.printStackTrace();
+        		Log.debug("OpenGL CRITCAL ERROR and shadersAutoDisable is active.\n" +
+        				">>>>>>>>>> ALL SHADERS ARE DISABLED <<<<<<<<<");
+        		Constants.Debug.shadersActive = false;
+        	}
+        }
+        
     }
 }
