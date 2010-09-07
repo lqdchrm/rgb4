@@ -87,8 +87,8 @@ public class Player extends LevelCollidableEntity {
 		setAcc(new float[] { 0, GamePlayConstants.gravity, 0, 0, 0, 0, 0 }); // gravity
 		
 		// set bounding box according to idle animation size
-		int x = 10;
-		int width = assets.getAnimation(Assets.PlayerIdleAnim).getWidth();
+		int x = 35;
+		int width = assets.getAnimation(Assets.PlayerIdleAnim).getWidth()-70;
 		int height = assets.getAnimation(Assets.PlayerIdleAnim).getHeight();
 		setDrag(0.95f);
 		setBounds(new Rectangle(x, 0, width, height)); // bounding box
