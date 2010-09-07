@@ -39,30 +39,30 @@ public class Level extends MoveableEntity {
 		AssetMgr assets = factory.getAssetMgr();
 
 		// Load Images
-		Image tmp = assets.storeImage(Assets.LevelBackgroundImage,
+		Image tmp = assets.storeImage(Assets.LevelBackgroundImageId,
 				"backgrounds/background.png");
-		assets.storeImage(Assets.LevelBackgroundImage,
+		assets.storeImage(Assets.LevelBackgroundImageId,
 				tmp.getScaledCopy(1350, 800));
-		tmp = assets.storeImage(Assets.LevelMiddlegroundImage,
+		tmp = assets.storeImage(Assets.LevelMiddlegroundImageId,
 				"backgrounds/middleground.png");
-		assets.storeImage(Assets.LevelMiddlegroundImage,
+		assets.storeImage(Assets.LevelMiddlegroundImageId,
 				tmp.getScaledCopy(1850, 800));
-		this.groundMap = assets.storeTiledMap(Assets.LevelTileMap,
+		this.groundMap = assets.storeTiledMap(Assets.LevelTileMapId,
 				"tiles/blocks.tmx");
 
 		// gfx
 		this.backgroundImage = factory.createImageEntity(
-				Assets.LevelBackgroundImage, Assets.LevelBackgroundImage);
+				Assets.LevelBackgroundImageId, Assets.LevelBackgroundImageId);
 		this.backgroundImage.setVisible(true);
 		add(this.backgroundImage);
 
 		this.middlegroundImage = factory.createImageEntity(
-				Assets.LevelMiddlegroundImage, Assets.LevelMiddlegroundImage);
+				Assets.LevelMiddlegroundImageId, Assets.LevelMiddlegroundImageId);
 		this.middlegroundImage.setVisible(true);
 		add(this.middlegroundImage);
 
-		this.ground = factory.createTiledMapEntity(Assets.LevelTileMap,
-				Assets.LevelTileMap);
+		this.ground = factory.createTiledMapEntity(Assets.LevelTileMapId,
+				Assets.LevelTileMapId);
 		this.ground.setVisible(true);
 		this.ground.setActive(true);
 		add(this.ground);

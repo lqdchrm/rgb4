@@ -103,11 +103,17 @@ public class LevelCollidableEntity extends CollidableEntity
 
 					// items
 					final int tileId = this.map.getTileId(x, y, 0);
-					final int actionTileId = this.map.getTileId(x, y, 1);
-
-					if(actionTileId > 0)
+					if (this.map.getLayerCount() >= 2)
 					{
-						Log.debug("Colission with: " + actionTileId);
+						final int actionTileId = this.map.getTileId(x, y, 1);
+
+						if(actionTileId > 0)
+						{
+							Log.debug("Colission with: " + actionTileId);
+						}
+					}
+					else{
+						Log.debug("Level has no logic layer");
 					}
 					if (tileId > 0)
 					{
@@ -133,7 +139,7 @@ public class LevelCollidableEntity extends CollidableEntity
 						final float absDepthX = Math.abs(depth[Entity.X]);
 						final float absDepthY = Math.abs(depth[Entity.Y]);
 
-						if (absDepthX > 0 || absDepthY > 0)
+						if (absDepthX > 1 || absDepthY > 1)
 						{
 							switch (tileId)
 							{
