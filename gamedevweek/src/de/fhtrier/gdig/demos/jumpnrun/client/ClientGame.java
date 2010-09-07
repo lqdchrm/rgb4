@@ -36,7 +36,7 @@ public class ClientGame extends JumpNRunGame
 		Constants.GamePlayConstants c = new Constants.GamePlayConstants();
 		// c.showEditor("ClientSettings");
 		Constants.Debug d = new Debug();
-		d.showEditor("all",
+		d.showEditor("Client",
 				new JPanel[] { d.getEdittingPanel(), c.getEdittingPanel() });
 	}
 
