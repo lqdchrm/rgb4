@@ -8,14 +8,14 @@ public class Constants {
 
 	public static class GamePlayConstants {
 
-		public static float gravity = 981.0f;
+		public static float gravity = 2000.0f;//981.0f==Erdbeschleunigung
 		
 		public static float shotSpeed = 1000.0f;
 		public static float shotCooldown = 100.0f;
 		
-		public static float playerWalkVel = 800.0f;
-		public static float playerJumpVel = 800.0f;
-		public static float playerMaxSpeed = 1000.0f;
+		public static float playerWalkVel = 4000.0f;
+		public static float playerJumpVel = 3500.0f;
+		public static float playerMaxSpeed = 850.0f;
 	}
 
 	public static class Debug {
