@@ -15,7 +15,6 @@ public class CollidableEntity extends MoveableEntity
 	public CollidableEntity(int id, EntityType type)
 	{
 		super(id, type);
-		CollisionManager.addEntity(this);
 		this.bounds = null;
 	}
 

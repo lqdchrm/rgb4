@@ -17,10 +17,11 @@ public class LevelCollidableEntity extends CollidableEntity
 
 	private boolean onGround;
 	protected TiledMap map;
-	private boolean leftCollusion = false;
-	private boolean rightCollusion = false;
-	private boolean topCollusion = false;
-	private boolean bottomCollusion = false;
+	
+	private boolean leftCollision = false;
+	private boolean rightCollision = false;
+	private boolean topCollision = false;
+	private boolean bottomCollision = false;
 
 	/**
 	 * Custom entity class which implements level collisions (ugly ?) needs to
@@ -77,10 +78,10 @@ public class LevelCollidableEntity extends CollidableEntity
 			// Collisions punkt
 			float distanceToBoundingBox = 5.0f;
 
-			leftCollusion = false;
-			rightCollusion = false;
-			topCollusion = false;
-			bottomCollusion = false;
+			leftCollision = false;
+			rightCollision = false;
+			topCollision = false;
+			bottomCollision = false;
 
 			// determine tiles to check for collisions
 			final int leftTile = (int) Math.floor(bbEntity.getMinX()
@@ -110,13 +111,13 @@ public class LevelCollidableEntity extends CollidableEntity
 								this.map.getTileWidth(),
 								this.map.getTileHeight());
 
-						leftCollusion |= bbTile.contains(bbEntity.getMinX()
+						leftCollision |= bbTile.contains(bbEntity.getMinX()
 								- distanceToBoundingBox, bbEntity.getCenterY());
-						rightCollusion |= bbTile.contains(bbEntity.getMaxX()
+						rightCollision |= bbTile.contains(bbEntity.getMaxX()
 								+ distanceToBoundingBox, bbEntity.getCenterY());
-						topCollusion |= bbTile.contains(bbEntity.getCenterX(),
+						topCollision |= bbTile.contains(bbEntity.getCenterX(),
 								bbEntity.getMinY() - distanceToBoundingBox);
-						bottomCollusion |= bbTile.contains(
+						bottomCollision |= bbTile.contains(
 								bbEntity.getCenterX(), bbEntity.getMaxY()
 										+ distanceToBoundingBox);
 
@@ -165,24 +166,24 @@ public class LevelCollidableEntity extends CollidableEntity
 		return (collided || result);
 	}
 
-	public boolean isLeftCollusion()
+	public boolean isLeftCollision()
 	{
-		return leftCollusion;
+		return leftCollision;
 	}
 
-	public boolean isRightCollusion()
+	public boolean isRightCollision()
 	{
-		return rightCollusion;
+		return rightCollision;
 	}
 
-	public boolean isTopCollusion()
+	public boolean isTopCollision()
 	{
-		return topCollusion;
+		return topCollision;
 	}
 
-	public boolean isBottomCollusion()
+	public boolean isBottomCollision()
 	{
-		return bottomCollusion;
+		return bottomCollision;
 	}
 
 	public boolean isOnGround()

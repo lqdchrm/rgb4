@@ -32,8 +32,10 @@ public class CollisionManager {
 	/**
 	 * checks if entities collide
 	 * 
-	 * @param e1 entity 1
-	 * @param e2 entity 2
+	 * @param e1
+	 *            entity 1
+	 * @param e2
+	 *            entity 2
 	 * @return returns if entities collide
 	 */
 	private static boolean doCollide(final CollidableEntity e1,
@@ -47,8 +49,10 @@ public class CollisionManager {
 	}
 
 	/**
-	 * @param r1 Shape 1
-	 * @param r2 Shape 2
+	 * @param r1
+	 *            Shape 1
+	 * @param r2
+	 *            Shape 2
 	 * @return returns extruded shape from shape1 to shape2
 	 */
 	private static Shape generateSweepShape(final Shape r1, final Shape r2) {
@@ -108,7 +112,6 @@ public class CollisionManager {
 						entety.getPrevPos()[Entity.X],
 						entety.getPrevPos()[Entity.Y]));
 
-
 		// TODO erg currently not used
 		Shape erg = generateSweepShape(rec1, rec2);
 
@@ -116,12 +119,13 @@ public class CollisionManager {
 	}
 
 	/**
-	 * @param entity, for which we want to get colliding entities
+	 * @param entity
+	 *            , for which we want to get colliding entities
 	 * @return returns a list with colliding entities
 	 */
 	public static List<CollidableEntity> collidingEntities(
 			final CollidableEntity entity) {
-		
+
 		final List<CollidableEntity> list = CollisionManager.collisionmap
 				.get(entity);
 		return list == null ? new ArrayList<CollidableEntity>() : list;
@@ -132,32 +136,31 @@ public class CollisionManager {
 		CollisionManager.entities.remove(entity);
 	}
 
-
 	/**
 	 * recreates collision map for all registered entities
 	 */
 	public static void update() {
 		CollisionManager.collisionmap.clear();
-		
+
 		for (int x = 0; x < CollisionManager.entities.size(); ++x) {
-			
-			for (int y = x+1; y < CollisionManager.entities.size(); ++y) {
-				
+
+			for (int y = x + 1; y < CollisionManager.entities.size(); ++y) {
+
 				final CollidableEntity e1 = CollisionManager.entities.get(x);
 				final CollidableEntity e2 = CollisionManager.entities.get(y);
-				
+
 				if (CollisionManager.doCollide(e1, e2)) {
-					
+
 					if (!CollisionManager.collisionmap.containsKey(e1)) {
 						CollisionManager.collisionmap.put(e1,
 								new ArrayList<CollidableEntity>());
 					}
-					
+
 					if (!CollisionManager.collisionmap.containsKey(e2)) {
 						CollisionManager.collisionmap.put(e2,
 								new ArrayList<CollidableEntity>());
 					}
-					
+
 					CollisionManager.collisionmap.get(e1).add(e2);
 					CollisionManager.collisionmap.get(e2).add(e1);
 				}

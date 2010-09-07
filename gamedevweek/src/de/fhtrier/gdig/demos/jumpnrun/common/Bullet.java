@@ -47,6 +47,8 @@ public class Bullet extends LevelCollidableEntity
 		setAcc(new float[] { 0, 0, 0, 0, 0, 0, 0 }); // gravity
 		setBounds(new Rectangle(0, 0, 64, 48)); // bounding box
 
+		CollisionManager.addEntity(this);
+		
 		// setup
 		setVisible(true);
 
