@@ -29,6 +29,9 @@ public class NetworkBroadcastListener extends Thread
 		      
 	  try
 	  {
+		if ( ni.getBroadcast() == null )
+			throw new IOException();
+		
 	    socket = new DatagramSocket( 50000, ni.getBroadcast() );
 	  }
 	  catch( IOException e )
