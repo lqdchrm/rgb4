@@ -85,6 +85,7 @@ public class Level extends MoveableEntity {
 	protected void postRender(Graphics graphicContext) {
 		super.postRender(graphicContext);
 
+		graphicContext.setColor(Constants.Debug.overlayColor);
 		graphicContext.drawString("NetworkID: "
 				+ NetworkComponent.getInstance().getNetworkId() + "\n"
 				+ factory.size() + " entities", 20, 50);
