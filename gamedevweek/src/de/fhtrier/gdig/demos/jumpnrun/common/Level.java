@@ -21,6 +21,7 @@ import de.fhtrier.gdig.engine.entities.gfx.TiledMapEntity;
 import de.fhtrier.gdig.engine.entities.physics.MoveableEntity;
 import de.fhtrier.gdig.engine.graphics.BlurShader;
 import de.fhtrier.gdig.engine.graphics.Shader;
+import de.fhtrier.gdig.engine.graphics.ShaderParams;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 
@@ -41,6 +42,8 @@ public class Level extends MoveableEntity {
 	private static Graphics fbGraphics;
 	private static BlurShader blur1D;
 	private static Shader glowshader;
+	
+	private static ShaderParams params;
 
 	public Level(int id, GameFactory factory) throws SlickException {
 		super(id, EntityType.LEVEL);
@@ -98,6 +101,12 @@ public class Level extends MoveableEntity {
 			glowshader2 = new Shader("content/jumpnrun/shader/simple.vert", "content/jumpnrun/shader/glow.frag");
 		}
 		
+		if (params == null)
+		{
+			params = new ShaderParams();
+			params.showEditor("Shader-Einstellungen!!!");
+		}
+		
 		// setup
 		setActive(true);
 		setVisible(true);
@@ -122,8 +131,8 @@ public class Level extends MoveableEntity {
 					+ player.getData()[Player.CENTER_Y] + getData(Y);
 			Color playercol = StateColor.constIntoColor(player.getState().color);
 			Color weaponcol = StateColor.constIntoColor(player.getState().weaponColor);
-			float health = player.getState().health * 3;
-			float ammo = player.getState().ammo * 3;
+			float health = player.getState().health * params.spielerLeuchtstaerke/10.0f;
+			float ammo = player.getState().ammo * params.waffenLeuchtstaerke/10.0f;
 			int playerlook = 1;
 			if (player.getState().shootDirection == PlayerActionState.RunLeft) playerlook = -1;
 			
@@ -140,19 +149,21 @@ public class Level extends MoveableEntity {
 			
 			// Draw Glow effects
 			graphicContext.setColor(Color.white);
-			Shader.activateAdditiveBlending();
+			
+			if (params.additiveBlending == true)
+				Shader.activateAdditiveBlending();
 			
 			Shader.setActiveShader(glowshader);
-			glowshader.setValue("range", 300);
+			glowshader.setValue("range", params.waffenLeuchtWeite*10);
 			glowshader.setValue("target", px+5*playerlook, py+40);
 			glowshader.setValue("strength", ammo);
 			glowshader.setValue("playercolor", weaponcol);
-			glowshader.setValue("focus", playerlook*0.3f);
+			glowshader.setValue("focus", playerlook*10.0f/params.waffenLeuchtFocus);
 			
 			graphicContext.drawImage(frameBuffer, 0, 0);
 			
 			Shader.setActiveShader(glowshader2);
-			glowshader2.setValue("range", 250);
+			glowshader2.setValue("range", params.spielerLeuchtWeite*10);
 			glowshader2.setValue("target", px, py);
 			glowshader2.setValue("strength", health);
 			glowshader2.setValue("playercolor", playercol);
