@@ -257,16 +257,41 @@ public abstract class Configuration
 
 	public void showEditor(String strTitle)
 	{
+		JFrame f = new JFrame(strTitle);
+		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		f.add(new JScrollPane(getEdittingPanel()));
+		f.pack();
+		f.setVisible(true);
+
+	}
+
+	public void showEditor(String strTitle, JPanel[] panels)
+	{
+		JFrame f = new JFrame(strTitle);
+		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		JPanel p = new JPanel();
+
+		BoxLayout boxLayout = new BoxLayout(p, BoxLayout.X_AXIS);
+		p.setLayout(boxLayout);
+
+		for (JPanel jPanel : panels)
+		{
+			p.add(jPanel);
+		}
+		f.add(new JScrollPane(p));
+		f.pack();
+		f.setVisible(true);
+
+	}
+
+	public JPanel getEdittingPanel()
+	{
 
 		try
 		{
-			JFrame f = new JFrame(strTitle);
-
-			f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			JPanel panel = new JPanel();
 			BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
 			panel.setLayout(boxLayout);
-			f.add(new JScrollPane(panel));
 
 			for (final Field field : getClass().getDeclaredFields())
 			{
@@ -301,8 +326,7 @@ public abstract class Configuration
 						}
 					});
 					panel.add(jTextField);
-				}
-				if (filedType == int.class)
+				} else if (filedType == int.class)
 				{
 					SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(
 							((Integer) value).intValue(), Integer.MIN_VALUE,
@@ -334,8 +358,7 @@ public abstract class Configuration
 
 						}
 					});
-				}
-				if (filedType == float.class)
+				} else if (filedType == float.class)
 				{
 					SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(
 							(double) ((Float) value).floatValue(),
@@ -367,12 +390,12 @@ public abstract class Configuration
 
 						}
 					});
-				}
-				if (filedType == boolean.class)
+				} else if (filedType == boolean.class)
 				{
 					final JCheckBox jCheckBox = new JCheckBox();
 					Boolean b = (Boolean) field.get(this);
 					jCheckBox.setSelected(b);
+					panel.add(jCheckBox);
 					jCheckBox.addActionListener(new ActionListener()
 					{
 
@@ -394,6 +417,9 @@ public abstract class Configuration
 							}
 						}
 					});
+				} else
+				{
+					panel.remove(jLabel);
 				}
 				// if (filedType == InetSocketAddress.class)
 				// {
@@ -404,9 +430,7 @@ public abstract class Configuration
 				// value = field.get(this).toString();
 				// }
 			}
-
-			f.pack();
-			f.setVisible(true);
+			return panel;
 		} catch (Exception e)
 		{
 			throw new RuntimeException(e);
