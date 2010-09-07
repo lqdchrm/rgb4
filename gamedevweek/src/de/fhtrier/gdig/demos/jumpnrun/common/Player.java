@@ -1,6 +1,7 @@
 package de.fhtrier.gdig.demos.jumpnrun.common;
 
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
@@ -189,6 +190,23 @@ public class Player extends LevelCollidableEntity {
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerAction.SHOOT));
 			}
+
+			PlayerState state = this.getState();
+			// change player color
+			if (input.isKeyPressed(Input.KEY_C)) {
+				state.color = state.color << 1;
+				if (state.color > StateColor.BLUE) {
+					state.color = StateColor.RED;
+				}
+			}
+
+			// change weapon color
+			if (input.isKeyPressed(Input.KEY_X)) {
+				state.weaponColor = state.weaponColor << 1;
+				if (state.weaponColor > StateColor.BLUE) {
+					state.weaponColor = StateColor.RED;
+				}
+			}
 		}
 		super.handleInput(input);
 	}
@@ -241,6 +259,7 @@ public class Player extends LevelCollidableEntity {
 			g.drawString(state.name + " " + getId(), x, y);
 			g.setColor(StateColor.constIntoColor(state.weaponColor));
 			g.drawString("Weapon", x, y + 80);
+			g.setColor(Color.white);
 		}
 
 	}
