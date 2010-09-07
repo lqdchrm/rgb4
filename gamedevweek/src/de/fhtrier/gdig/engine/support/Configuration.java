@@ -7,8 +7,10 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.InetSocketAddress;
@@ -22,6 +24,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
@@ -36,22 +39,35 @@ public abstract class Configuration
 	 * 
 	 * @return Den namen
 	 */
+	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
-	protected @interface MappingName
+	protected @interface CommandlineParameter
 	{
 
 		String value();
+	}
+
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	protected @interface ShowAsSlider
+	{
+
+		int getMaxValue();
+
+		int getMinValue();
 	}
 
 	private Map<String, Field> commandMap;
 
 	public Configuration()
 	{
+
 		commandMap = new HashMap<String, Field>();
 		Field[] declaredFields = getClass().getDeclaredFields();
 		for (Field field : declaredFields)
 		{
-			MappingName nameAnnotation = field.getAnnotation(MappingName.class);
+			CommandlineParameter nameAnnotation = field
+					.getAnnotation(CommandlineParameter.class);
 			if (nameAnnotation != null)
 			{
 				if (!checkFeasabel(field.getType()))
@@ -330,68 +346,151 @@ public abstract class Configuration
 					panel.add(jTextField);
 				} else if (filedType == int.class)
 				{
-					SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(
-							((Integer) value).intValue(), Integer.MIN_VALUE,
-							Integer.MAX_VALUE, 1);
-					final JSpinner jSpinner = new JSpinner(spinnerNumberModel);
-					panel.add(jSpinner);
-					jSpinner.setPreferredSize(new Dimension(60, jSpinner
-							.getPreferredSize().height));
-					jSpinner.addChangeListener(new ChangeListener()
+					ShowAsSlider showSlider = field
+							.getAnnotation(ShowAsSlider.class);
+					if (showSlider != null)
 					{
-
-						@Override
-						public void stateChanged(ChangeEvent e)
+						int maxValue = showSlider.getMaxValue();
+						int minValue = showSlider.getMinValue();
+						final JSlider jSlider = new JSlider(minValue, maxValue,
+								((Integer) value).intValue());
+						panel.add(jSlider);
+						final JLabel anzeige = new JLabel(Integer.valueOf(
+								jSlider.getValue()).toString());
+						panel.add(anzeige);
+						jSlider.addChangeListener(new ChangeListener()
 						{
-							try
-							{
-								field.set(Configuration.this,
-										((Integer) jSpinner.getValue())
-												.intValue());
-							} catch (IllegalArgumentException e1)
-							{
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							} catch (IllegalAccessException e1)
-							{
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
 
-						}
-					});
+							@Override
+							public void stateChanged(ChangeEvent arg0)
+							{
+								try
+								{
+									anzeige.setText(Integer.valueOf(
+											jSlider.getValue()).toString());
+									field.set(Configuration.this,
+											jSlider.getValue());
+								} catch (IllegalArgumentException e)
+								{
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} catch (IllegalAccessException e)
+								{
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+
+							}
+						});
+
+					} else
+					{
+						SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(
+								((Integer) value).intValue(),
+								Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
+						final JSpinner jSpinner = new JSpinner(
+								spinnerNumberModel);
+						panel.add(jSpinner);
+						jSpinner.setPreferredSize(new Dimension(60, jSpinner
+								.getPreferredSize().height));
+						jSpinner.addChangeListener(new ChangeListener()
+						{
+
+							@Override
+							public void stateChanged(ChangeEvent e)
+							{
+								try
+								{
+									field.set(Configuration.this,
+											((Integer) jSpinner.getValue())
+													.intValue());
+								} catch (IllegalArgumentException e1)
+								{
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								} catch (IllegalAccessException e1)
+								{
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+
+							}
+						});
+					}
 				} else if (filedType == float.class)
 				{
-					SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(
-							(double) ((Float) value).floatValue(),
-							-Double.MAX_VALUE, Double.MAX_VALUE, 1);
-					final JSpinner jSpinner = new JSpinner(spinnerNumberModel);
-					panel.add(jSpinner);
-					jSpinner.setPreferredSize(new Dimension(60, jSpinner
-							.getPreferredSize().height));
-					jSpinner.addChangeListener(new ChangeListener()
+					ShowAsSlider showSlider = field
+							.getAnnotation(ShowAsSlider.class);
+					if (showSlider != null)
 					{
-
-						@Override
-						public void stateChanged(ChangeEvent e)
+						int maxValue = showSlider.getMaxValue();
+						int minValue = showSlider.getMinValue();
+						final JSlider jSlider = new JSlider(minValue, maxValue,
+								((Float) value).intValue());
+						panel.add(jSlider);
+						final JLabel anzeige = new JLabel(Integer.valueOf(
+								jSlider.getValue()).toString());
+						panel.add(anzeige);
+						jSlider.addChangeListener(new ChangeListener()
 						{
-							try
-							{
-								field.set(Configuration.this,
-										((Double) jSpinner.getValue())
-												.floatValue());
-							} catch (IllegalArgumentException e1)
-							{
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							} catch (IllegalAccessException e1)
-							{
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
 
-						}
-					});
+							@Override
+							public void stateChanged(ChangeEvent arg0)
+							{
+								try
+								{
+									field.set(Configuration.this, Integer
+											.valueOf(jSlider.getValue())
+											.floatValue());
+									anzeige.setText(Integer.valueOf(
+											jSlider.getValue()).toString());
+								} catch (IllegalArgumentException e)
+								{
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} catch (IllegalAccessException e)
+								{
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+
+							}
+						});
+
+					} else
+					{
+						SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(
+								(double) ((Float) value).floatValue(),
+								-Double.MAX_VALUE, Double.MAX_VALUE, 1);
+						final JSpinner jSpinner = new JSpinner(
+								spinnerNumberModel);
+						panel.add(jSpinner);
+						jSpinner.setPreferredSize(new Dimension(60, jSpinner
+								.getPreferredSize().height));
+						jSpinner.addChangeListener(new ChangeListener()
+						{
+
+							@Override
+							public void stateChanged(ChangeEvent e)
+							{
+								try
+								{
+									field.set(Configuration.this,
+											((Double) jSpinner.getValue())
+													.floatValue());
+								} catch (IllegalArgumentException e1)
+								{
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								} catch (IllegalAccessException e1)
+								{
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+
+							}
+						});
+					}
 				} else if (filedType == boolean.class)
 				{
 					final JCheckBox jCheckBox = new JCheckBox();

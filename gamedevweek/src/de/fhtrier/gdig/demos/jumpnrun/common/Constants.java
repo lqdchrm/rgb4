@@ -14,6 +14,7 @@ public class Constants
 
 		public static float gravity = 2000.0f;// 981.0f==Erdbeschleunigung
 
+		@ShowAsSlider(getMaxValue = 10000, getMinValue = 10)
 		public static float shotSpeed = 1000.0f;
 		public static float shotCooldown = 100.0f;
 
