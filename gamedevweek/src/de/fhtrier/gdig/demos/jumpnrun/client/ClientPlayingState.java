@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import java.util.Queue;
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
@@ -30,6 +31,7 @@ import de.fhtrier.gdig.engine.entities.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 
 enum LocalState {
 	JOINING, CREATINGPLAYER, PLAYING, DISCONNECTING, EXITING
@@ -43,6 +45,8 @@ public class ClientPlayingState extends PlayingState {
 
 	private ServerData recv;
 	private ClientData send;
+	
+	private SoundManager smgr;
 
 	public ClientPlayingState() {
 		this.queue = new LinkedList<INetworkCommand>();
@@ -58,9 +62,8 @@ public class ClientPlayingState extends PlayingState {
 		NetworkComponent.getInstance().sendCommand(new QueryJoin());
 		setState(LocalState.JOINING);
 
-		// HACK load and play sound
-		// getFactory().getAssetMgr().storeSound(Assets.LevelSoundtrack,
-		// "sounds/kaliba.ogg").loop();
+		// Load SoundManager
+		smgr = new SoundManager(this.getFactory().getAssetMgr());
 	}
 
 	private boolean handleProtocolCommands(INetworkCommand cmd) {
@@ -164,6 +167,8 @@ public class ClientPlayingState extends PlayingState {
 	public void update(GameContainer container, StateBasedGame game,
 			int deltaInMillis) throws SlickException {
 
+		
+		
 		// apply protocol commands
 		for (INetworkCommand cmd : queue) {
 			if (!cmd.isHandled()) {
@@ -192,7 +197,12 @@ public class ClientPlayingState extends PlayingState {
 					}
 				}
 			}
-		}
+			
+			if(container.getInput().isKeyDown(Input.KEY_SPACE))
+			{
+				this.smgr.playSound(10);
+			}
+	}
 
 		// update local data
 		super.update(container, game, deltaInMillis);
