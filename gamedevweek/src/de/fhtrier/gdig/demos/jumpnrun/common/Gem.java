@@ -22,9 +22,9 @@ public class Gem extends LevelCollidableEntity {
 		AssetMgr assets = factory.getAssetMgr();
 
 		// gfx
-		assets.storeImage(Assets.GemImage, "sprites/items/gem.png");
+		assets.storeImage(Assets.GemImageId, "sprites/items/gem.png");
 		ImageEntity gem = factory.createImageEntity(EntityOrder.Gem,
-				Assets.GemImage);
+				Assets.GemImageId);
 		gem.setVisible(true);
 		add(gem);
 

@@ -57,19 +57,19 @@ public class Player extends LevelCollidableEntity {
 		AssetMgr assets = factory.getAssetMgr();
 
 		// gfx
-		assets.storeAnimation(Assets.PlayerIdleAnim, Assets.PlayerIdleAnimImage);
-		assets.storeAnimation(Assets.PlayerRunAnim, Assets.PlayerRunAnimImage);
-		assets.storeAnimation(Assets.WeaponImage, Assets.BulletAnimImage); //TODO: change weapon dummy
+		assets.storeAnimation(Assets.PlayerIdleAnimId, Assets.PlayerIdleAnimImagePath);
+		assets.storeAnimation(Assets.PlayerRunAnimId, Assets.PlayerRunAnimImagePath);
+		assets.storeAnimation(Assets.WeaponImageId, Assets.BulletAnimImagePath); //TODO: change weapon dummy
 		
-		this.jump = assets.storeAnimation(Assets.PlayerJumpAnim, Assets.PlayerIdleAnimImage);
+		this.jump = assets.storeAnimation(Assets.PlayerJumpAnimId, Assets.PlayerIdleAnimImagePath);
 		this.jump.setLooping(false);
 
-		this.idleImage = factory.createAnimationEntity(Assets.PlayerIdleAnim, Assets.PlayerIdleAnim);
-		this.runAnimation = factory.createAnimationEntity(Assets.PlayerRunAnim,
-				Assets.PlayerRunAnim);
+		this.idleImage = factory.createAnimationEntity(Assets.PlayerIdleAnimId, Assets.PlayerIdleAnimId);
+		this.runAnimation = factory.createAnimationEntity(Assets.PlayerRunAnimId,
+				Assets.PlayerRunAnimId);
 		this.jumpAnimation = factory.createAnimationEntity(
-				Assets.PlayerJumpAnim, Assets.PlayerJumpAnim);
-		this.weapon = factory.createAnimationEntity(Assets.WeaponImage, Assets.WeaponImage);
+				Assets.PlayerJumpAnimId, Assets.PlayerJumpAnimId);
+		this.weapon = factory.createAnimationEntity(Assets.WeaponImageId, Assets.WeaponImageId);
 
 		int groupId = factory.createEntity(EntityOrder.Player,
 				EntityType.HELPER);
@@ -77,9 +77,9 @@ public class Player extends LevelCollidableEntity {
 		this.playerGroup = factory.getEntity(groupId);
 
 		this.playerGroup.getData()[Entity.CENTER_X] = assets.getAnimation(
-				Assets.PlayerIdleAnim).getWidth() / 2;
+				Assets.PlayerIdleAnimId).getWidth() / 2;
 		this.playerGroup.getData()[Entity.CENTER_Y] = assets.getAnimation(
-				Assets.PlayerIdleAnim).getHeight() / 2;
+				Assets.PlayerIdleAnimId).getHeight() / 2;
 
 		this.playerGroup.add(this.idleImage);
 		this.playerGroup.add(this.runAnimation);
@@ -107,8 +107,8 @@ public class Player extends LevelCollidableEntity {
 
 		// set bounding box according to idle animation size
 		int x = 35;
-		int width = assets.getAnimation(Assets.PlayerIdleAnim).getWidth() - 70;
-		int height = assets.getAnimation(Assets.PlayerIdleAnim).getHeight();
+		int width = assets.getAnimation(Assets.PlayerIdleAnimId).getWidth() - 70;
+		int height = assets.getAnimation(Assets.PlayerIdleAnimId).getHeight();
 		setBounds(new Rectangle(x, 0, width, height)); // bounding box
 
 		if (playerShader == null && Constants.Debug.shadersActive)
