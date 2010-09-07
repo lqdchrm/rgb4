@@ -3,6 +3,7 @@ package de.fhtrier.gdig.demos.jumpnrun.common;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
@@ -21,6 +22,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerActionState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.StateColor;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.gfx.AnimationEntity;
+import de.fhtrier.gdig.engine.graphics.Shader;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
@@ -38,6 +40,7 @@ public class Player extends LevelCollidableEntity {
 	private final float playerHalfWidth = 48;
 
 	private PlayerState state;
+	private static Shader playerShader = null;
 	private AnimationEntity weapon; // has to be an own class-object!
 
 	public Player(int id, Factory factory) throws SlickException {
@@ -45,6 +48,9 @@ public class Player extends LevelCollidableEntity {
 
 		state = new PlayerState();
 		state.name = "Player";
+		state.health = 1;
+		state.ammo = 1;
+		state.shootDirection = PlayerActionState.RunLeft;
 		state.color = StateColor.RED; // player gets default-color: red
 		state.weaponColor = StateColor.RED; // weapon of player get
 											// default-color: red
@@ -90,11 +96,13 @@ public class Player extends LevelCollidableEntity {
 
 		// physics
 		// X Y OX OY SY SY ROT
-		initData(new float[] { 32, 32, 0, 0, 1, 1, 0 }); // pos +
-															// center of
-															// rotation +
-															// scale +
-															// rot
+
+		initData(new float[] { 200, 200, 65, 70, 1, 1, 0 }); // pos +
+																// center of
+																// rotation +
+																// scale +
+																// rot
+		
 		setVel(new float[] { 0, 0, 0, 0, 0, 0, 0 }); // no speed
 		setAcc(new float[] { 0, GamePlayConstants.gravity, 0, 0, 0, 0, 0 }); // gravity
 
@@ -106,6 +114,12 @@ public class Player extends LevelCollidableEntity {
 		int height = assets.getAnimation(Assets.PlayerIdleAnimId).getHeight();
 		setBounds(new Rectangle(x, 0, width, height)); // bounding box
 
+		if (playerShader == null && Constants.Debug.shadersActive)
+		{
+			playerShader = new Shader("content/jumpnrun/shader/simple.vert",
+			"content/jumpnrun/shader/playercolor.frag");
+		}
+			
 		setVisible(true);
 		weapon.setVisible(true);
 		// order
@@ -253,14 +267,25 @@ public class Player extends LevelCollidableEntity {
 
 	// render
 	@Override
-	public void renderImpl(final Graphics g) {
+	public void renderImpl(final Graphics g, Image frameBuffer) {
 
 		if (this.getId() == -1) {
 			throw new RuntimeException("Wrong Initialization: no Client ID set");
 		}
-
-		super.renderImpl(g);
-
+		
+		if (Constants.Debug.shadersActive)
+		{
+			Shader.setActiveShader(playerShader);
+			playerShader.setValue("playercolor", StateColor.constIntoColor(this.getState().color));
+		}
+		
+		super.renderImpl(g, frameBuffer);
+		
+		if (Constants.Debug.shadersActive)
+		{
+			Shader.setActiveShader(null);
+		}
+		
 		if (this.state.name != null) {
 			float x = playerHalfWidth - g.getFont().getWidth(state.name) / 2.0f;
 			float y = -g.getFont().getHeight(state.name);
@@ -271,6 +296,7 @@ public class Player extends LevelCollidableEntity {
 			g.drawString(state.name + " " + getId(), x, y);
 			g.setColor(StateColor.constIntoColor(state.weaponColor));
 			g.drawString("Weapon", x, y + 80);
+
 			g.setColor(Color.white);
 		}
 

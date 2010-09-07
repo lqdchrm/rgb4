@@ -22,9 +22,16 @@ public class Constants {
 
 	public static class Debug extends Configuration {
 		public static boolean drawBounds = true;
+		
 		public static Color boundColor = Color.green;
 		public static Color overlayColor = Color.white;
+		
 		public static boolean showCollisions = false;
+		
+		public static boolean shadersActive = true;
+		public static boolean shadersAutoDisable = true;
+		
+		public static boolean tileMapLogicDebug = false;
 	}
 	
 	public static class ControlConfig extends Configuration {
