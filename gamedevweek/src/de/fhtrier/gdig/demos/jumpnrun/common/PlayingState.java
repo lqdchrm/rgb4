@@ -115,35 +115,8 @@ public abstract class PlayingState extends BasicGameState implements
 		{
 			level.handleInput(input);
 			level.update(deltaInMillis);
-
-			Player currentPlayer = level.getCurrentPlayer();
-			if (currentPlayer != null)
-			{
-				PlayerState state = currentPlayer.getState();
-				// change player color
-				if (input.isKeyPressed(Input.KEY_C))
-				{
-					state.color = state.color << 1;
-					if (state.color > StateColor.BLUE)
-					{
-						state.color = StateColor.RED;
-					}
-				}
-
-				// change weapon color
-
-				if (input.isKeyPressed(Input.KEY_X))
-				{
-					state.weaponColor = state.weaponColor << 1;
-					if (state.weaponColor > StateColor.BLUE)
-					{
-						state.weaponColor = StateColor.RED;
-					}
-				}
-			}
-
-			// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2.
-			// Zeile
+			
+			// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2. Zeile
 			// Den Objekten gesagt wird die Kollision zu behandeln.
 			CollisionManager.update();
 			level.handleCollisions();

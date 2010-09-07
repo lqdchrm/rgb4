@@ -1,6 +1,7 @@
 package de.fhtrier.gdig.demos.jumpnrun.common;
 
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
@@ -36,6 +37,7 @@ public class Player extends LevelCollidableEntity {
 	private final float playerHalfWidth = 48;
 
 	private PlayerState state;
+	private AnimationEntity weapon; // has to be an own class-object!
 
 	public Player(int id, Factory factory) throws SlickException {
 		super(id, EntityType.PLAYER);
@@ -51,16 +53,17 @@ public class Player extends LevelCollidableEntity {
 		// gfx
 		assets.storeAnimation(Assets.PlayerIdleAnim, Assets.PlayerIdleAnimImage);
 		assets.storeAnimation(Assets.PlayerRunAnim, Assets.PlayerRunAnimImage);
-		this.jump = assets.storeAnimation(Assets.PlayerJumpAnim,
-				Assets.PlayerIdleAnimImage);
+		assets.storeAnimation(Assets.WeaponImage, Assets.BulletAnimImage); //TODO: change weapon dummy
+		
+		this.jump = assets.storeAnimation(Assets.PlayerJumpAnim, Assets.PlayerIdleAnimImage);
 		this.jump.setLooping(false);
 
-		this.idleImage = factory.createAnimationEntity(Assets.PlayerIdleAnim,
-				Assets.PlayerIdleAnim);
+		this.idleImage = factory.createAnimationEntity(Assets.PlayerIdleAnim, Assets.PlayerIdleAnim);
 		this.runAnimation = factory.createAnimationEntity(Assets.PlayerRunAnim,
 				Assets.PlayerRunAnim);
 		this.jumpAnimation = factory.createAnimationEntity(
 				Assets.PlayerJumpAnim, Assets.PlayerJumpAnim);
+		this.weapon = factory.createAnimationEntity(Assets.WeaponImage, Assets.WeaponImage);
 
 		int groupId = factory.createEntity(EntityOrder.Player,
 				EntityType.HELPER);
@@ -75,6 +78,12 @@ public class Player extends LevelCollidableEntity {
 		this.playerGroup.add(this.idleImage);
 		this.playerGroup.add(this.runAnimation);
 		this.playerGroup.add(this.jumpAnimation);
+		
+		this.playerGroup.add(this.weapon);
+		
+		// Position correction for weapon
+		weapon.getData()[Entity.X] += 20;
+		weapon.getData()[Entity.Y] += 95;
 
 		this.add(this.playerGroup);
 
@@ -97,6 +106,7 @@ public class Player extends LevelCollidableEntity {
 		setBounds(new Rectangle(x, 0, width, height)); // bounding box
 
 		setVisible(true);
+		weapon.setVisible(true);
 		// order
 		this.setOrder(EntityOrder.Player);
 
@@ -191,6 +201,23 @@ public class Player extends LevelCollidableEntity {
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerAction.SHOOT));
 			}
+
+			PlayerState state = this.getState();
+			// change player color
+			if (input.isKeyPressed(Input.KEY_C)) {
+				state.color = state.color << 1;
+				if (state.color > StateColor.BLUE) {
+					state.color = StateColor.RED;
+				}
+			}
+
+			// change weapon color
+			if (input.isKeyPressed(Input.KEY_X)) {
+				state.weaponColor = state.weaponColor << 1;
+				if (state.weaponColor > StateColor.BLUE) {
+					state.weaponColor = StateColor.RED;
+				}
+			}
 		}
 		super.handleInput(input);
 	}
@@ -243,6 +270,7 @@ public class Player extends LevelCollidableEntity {
 			g.drawString(state.name + " " + getId(), x, y);
 			g.setColor(StateColor.constIntoColor(state.weaponColor));
 			g.drawString("Weapon", x, y + 80);
+			g.setColor(Color.white);
 		}
 
 	}

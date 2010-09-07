@@ -2,6 +2,7 @@ package de.fhtrier.gdig.engine.network.impl;
 
 import java.io.IOException;
 
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -45,7 +46,7 @@ public class NetworkLobby implements INetworkLobby
 				
 			 for (InterfaceAddress address : ni.getInterfaceAddresses()) 
 			 {
-			    if ( address.getBroadcast() != null )
+			    if ( !address.getAddress().getHostAddress().contains(":") )
 				   result.add( address );
 		     }
 	      }

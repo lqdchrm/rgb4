@@ -6,6 +6,7 @@ import java.util.List;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 
+import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.common.JumpNRunGame;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.NetworkLobby;
@@ -34,6 +35,9 @@ public class ServerGame extends JumpNRunGame {
 		
        NetworkComponent.createServerInstance();
        NetworkComponent.getInstance().startListening( networkInterface, port );
+       
+		Constants.GamePlayConstants c = new Constants.GamePlayConstants();
+		c.showEditor("ServerSettings");	
 	}
 
 	@Override

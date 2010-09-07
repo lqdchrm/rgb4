@@ -13,7 +13,9 @@ public class Assets {
 	public static final String PlayerRunAnimImage = "sprites/player/Run_128_128_20.png";
 	public static final String PlayerIdleAnimImage = "sprites/player/stehen_128_128_75.png";
 	public static final String PlayerJumpAnimImage = "sprites/player/schuss_128_128_75.png";
+	public static final String BulletAnimImage = "sprites/player/projektil_100_35_10.png";
 
 	public static final int GemImage = 20;
 	public static final int BulletImage = 21;
+	public static final int WeaponImage = 22;
 }
