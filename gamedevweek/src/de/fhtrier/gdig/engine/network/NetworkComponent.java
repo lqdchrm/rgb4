@@ -1,5 +1,6 @@
 package de.fhtrier.gdig.engine.network;
 
+import java.net.InterfaceAddress;
 import java.net.Socket;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public abstract class NetworkComponent {
 
 	/* server */
 
-	public abstract void startListening(int port);
+	public abstract void startListening( InterfaceAddress ni, int port);
 
 	public abstract void stopListening();
 

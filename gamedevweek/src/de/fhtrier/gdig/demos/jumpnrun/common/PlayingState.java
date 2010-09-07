@@ -22,7 +22,8 @@ import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 
 public abstract class PlayingState extends BasicGameState implements
-		INetworkCommandListener {
+		INetworkCommandListener
+{
 
 	private AssetMgr assets;
 	private GameFactory factory;
@@ -31,18 +32,22 @@ public abstract class PlayingState extends BasicGameState implements
 		
 	public abstract void cleanup(GameContainer container, StateBasedGame game);
 
-	public GameFactory getFactory() {
+	public GameFactory getFactory()
+	{
 		return this.factory;
 	}
 
 	@Override
-	public int getID() {
+	public int getID()
+	{
 		return GameStates.PLAYING;
 	}
 
-	public Level getLevel() {
+	public Level getLevel()
+	{
 		final Entity level = this.factory.getEntity(this.levelId);
-		if (level instanceof Level) {
+		if (level instanceof Level)
+		{
 			return (Level) level;
 		}
 		return null;
@@ -50,7 +55,8 @@ public abstract class PlayingState extends BasicGameState implements
 
 	@Override
 	public void init(final GameContainer arg0, final StateBasedGame arg1)
-			throws SlickException {
+			throws SlickException
+	{
 
 		// create assetmgr
 		this.assets = new AssetMgr();
@@ -68,9 +74,10 @@ public abstract class PlayingState extends BasicGameState implements
 	}
 
 	@Override
-	public void render(GameContainer container, StateBasedGame game,
-			Graphics graphicContext) throws SlickException {
-		
+	public void render(final GameContainer container,
+			final StateBasedGame game, final Graphics graphicContext)
+			throws SlickException
+	{		
 		Level level = getLevel();
 		
 		if (level != null)
@@ -80,21 +87,24 @@ public abstract class PlayingState extends BasicGameState implements
 			graphicContext.drawImage(frameBuffer, 0, 0);
 		}
 	}
-
-	@Override
+	
 	public abstract void notify(INetworkCommand cmd);
 
 	@Override
 	public void update(final GameContainer container,
 			final StateBasedGame game, final int deltaInMillis)
-			throws SlickException {
+			throws SlickException
+	{
 		final Input input = container.getInput();
 
-		if (input.isKeyPressed(Input.KEY_F1)) {
+		if (input.isKeyPressed(Input.KEY_F1))
+		{
 			container.setPaused(true);
-			try {
+			try
+			{
 				container.setFullscreen(!container.isFullscreen());
-			} catch (final SlickException e) {
+			} catch (final SlickException e)
+			{
 
 			}
 			container.setVSync(true);
@@ -103,41 +113,23 @@ public abstract class PlayingState extends BasicGameState implements
 			container.setPaused(false);
 		}
 
-		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
+		if (input.isKeyPressed(Input.KEY_ESCAPE))
+		{
 			onExitKey(container, game);
 		}
 
 		final Level level = this.getLevel();
 
-		if (level != null) {
+		if (level != null)
+		{
 			level.handleInput(input);
 			level.update(deltaInMillis);
+			
+			// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2. Zeile
+			// Den Objekten gesagt wird die Kollision zu behandeln.
+			CollisionManager.update();
+			level.handleCollisions();
 		}
-
-		Player currentPlayer = level.getCurrentPlayer();
-		if (currentPlayer != null) {
-			PlayerState state = currentPlayer.getState();
-			// change player color
-			if (input.isKeyPressed(Input.KEY_C)) {
-				state.color = state.color << 1;
-				if (state.color > StateColor.BLUE) {
-					state.color = StateColor.RED;
-				}
-			}
-
-			// change weapon color
-			if (input.isKeyPressed(Input.KEY_X)) {
-				state.weaponColor = state.weaponColor << 1;
-				if (state.weaponColor > StateColor.BLUE) {
-					state.weaponColor = StateColor.RED;
-				}
-			}
-		}
-
-		// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2. Zeile
-		// Den Objekten gesagt wird die Kollision zu behandeln.
-		CollisionManager.update();
-		level.handleCollisions();
 	}
 
 	public abstract void onExitKey(GameContainer container, StateBasedGame game);

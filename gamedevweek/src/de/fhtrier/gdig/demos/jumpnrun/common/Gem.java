@@ -5,6 +5,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.Constants.GamePlayConstants;
+import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
@@ -29,14 +30,16 @@ public class Gem extends LevelCollidableEntity {
 
 		// physics
 		// X Y OX OY SY SY ROT
-		initData(new float[] { 200, 200, 32, 24, 1, 1, 0 }); // pos +
+		initData(new float[] { 200, 200, 32, 24, 1, 1, 0 }); // pos +		200 200 32 24 1 1 0
 																// center +
 																// scale +
 																// rot
 		setVel(new float[] { 0, 0, 0, 0, 0, 0, 0 }); // no speed
 		setAcc(new float[] { 0, GamePlayConstants.gravity, 0, 0, 0, 0, 0 }); // gravity
-		setBounds(new Rectangle(0, 0, 64, 48)); // bounding box
+		setBounds(new Rectangle(10, 5, 44, 38)); // bounding box
 
+		CollisionManager.addEntity(this);
+		
 		// setup
 		setVisible(true);
 
