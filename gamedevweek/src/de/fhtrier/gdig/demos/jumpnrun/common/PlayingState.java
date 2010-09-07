@@ -65,40 +65,43 @@ public abstract class PlayingState extends BasicGameState implements
 		
 		Level level = getLevel();
 		
-		if (level != null && player == null)
+		if (level != null)
 		{
-			player = ((Level)this.factory.getEntity(this.levelId)).getCurrentPlayer();
-		}
-		
-		if (player != null)
-		{
-			float px = player.getData()[Player.X] + player.getData()[Player.CENTER_X] + level.getData(Level.X);
-			float py = JumpNRun.SCREENHEIGHT - player.getData()[Player.Y] - player.getData()[Player.CENTER_Y] - level.getData(Level.Y);
-			
 			screen1Graphics.clear();
 			level.render(screen1Graphics);
 			screen1Graphics.flush();
 			graphicsContext.drawImage(screenBuffer, 0, 0);
 			
-			//if (factor > 0) factor -= 0.01;
+			if (player == null)
+			{
+				player = ((Level)this.factory.getEntity(this.levelId)).getCurrentPlayer();
+			}
 			
-			Shader.setActiveShader(blur1D);
-			blur1D.initialize(JumpNRun.SCREENWIDTH, JumpNRun.SCREENHEIGHT);
-			screen1Graphics.drawImage(screenBuffer, 0, 0);
-			screen1Graphics.flush();
-			
-			blur1D.setVertical();
-			screen1Graphics.drawImage(screenBuffer, 0, 0);
-			
-			Shader.setActiveShader(lowpass);
-			lowpass.setValue("factor", factor);
-			lowpass.setValue("target", px, py);
-			graphicsContext.setColor(Color.white);
-			Shader.activateAdditiveBlending();
-			graphicsContext.drawImage(screenBuffer, 0, 0);
-			
-			Shader.activateDefaultBlending();
-			Shader.setActiveShader(null);
+			if (player != null)
+			{
+				float px = player.getData()[Player.X] + player.getData()[Player.CENTER_X] + level.getData(Level.X);
+				float py = JumpNRun.SCREENHEIGHT - player.getData()[Player.Y] - player.getData()[Player.CENTER_Y] - level.getData(Level.Y);
+				
+				if (factor > 0) factor -= 0.01;
+				
+				Shader.setActiveShader(blur1D);
+				blur1D.initialize(JumpNRun.SCREENWIDTH, JumpNRun.SCREENHEIGHT);
+				screen1Graphics.drawImage(screenBuffer, 0, 0);
+				screen1Graphics.flush();
+				
+				blur1D.setVertical();
+				screen1Graphics.drawImage(screenBuffer, 0, 0);
+				
+				Shader.setActiveShader(lowpass);
+				lowpass.setValue("factor", factor);
+				lowpass.setValue("target", px, py);
+				graphicsContext.setColor(Color.white);
+				Shader.activateAdditiveBlending();
+				graphicsContext.drawImage(screenBuffer, 0, 0);
+				
+				Shader.activateDefaultBlending();
+				Shader.setActiveShader(null);
+			}
 		}
 	}
 
