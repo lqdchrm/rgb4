@@ -36,16 +36,16 @@ public class Bullet extends LevelCollidableEntity
 		AssetMgr assets = factory.getAssetMgr();
 
 		// gfx
-		//schüsse als bild
+		//schï¿½sse als bild
 			/*assets.storeImage(Assets.BulletAnim, "sprites/items/stern.png");					
 			ImageEntity bullet = factory.createImageEntity(EntityOrder.Bullet,
 					Assets.BulletAnim);
 			*/
 		
-		//schüsse als animation
-		Animation animation = assets.storeAnimation(Assets.BulletAnim, Assets.BulletAnimPath);
-		bullet = factory.createAnimationEntity(Assets.BulletAnim,
-				Assets.BulletAnim);
+		//schï¿½sse als animation
+		Animation animation = assets.storeAnimation(Assets.BulletAnimId, Assets.BulletAnimPath);
+		bullet = factory.createAnimationEntity(Assets.BulletAnimId,
+				Assets.BulletAnimId);
 		
 		bullet.setVisible(true);
 		add(bullet);
