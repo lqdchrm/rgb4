@@ -48,6 +48,7 @@ public class Player extends LevelCollidableEntity {
 		state.name = "Player";
 		state.health = 1;
 		state.ammo = 1;
+		state.shootDirection = PlayerActionState.RunLeft;
 		state.color = StateColor.RED; // player gets default-color: red
 		state.weaponColor = StateColor.RED; // weapon of player get
 											// default-color: red
