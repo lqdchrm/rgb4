@@ -20,6 +20,7 @@ import java.util.Properties;
 
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -52,9 +53,9 @@ public abstract class Configuration
 	protected @interface ShowAsSlider
 	{
 
-		int getMaxValue();
+		int maxValue();
 
-		int getMinValue();
+		int minValue();
 	}
 
 	private Map<String, Field> commandMap;
@@ -118,28 +119,26 @@ public abstract class Configuration
 				if (filedType == String.class)
 				{
 					value = (String) field.get(this);
-				}
-				if (filedType == int.class)
+				} else if (filedType == int.class)
 				{
 					value = field.get(this).toString();
-				}
-				if (filedType == float.class)
+				} else if (filedType == float.class)
 				{
 					value = field.get(this).toString();
-				}
-				if (filedType == boolean.class)
+				} else if (filedType == boolean.class)
 				{
 					value = field.get(this).toString();
-				}
-				if (filedType == InetSocketAddress.class)
+				} else if (filedType == InetSocketAddress.class)
 				{
 					value = field.get(this).toString();
-				}
-				if (filedType == File.class)
+				} else if (filedType == File.class)
 				{
 					value = field.get(this).toString();
-				}
-				if (value != null)
+				} else if (filedType.isEnum())
+				{
+					Enum string = (Enum) field.get(this);
+					value = string.name();
+				} else if (value != null)
 					p.setProperty(field.getName(), value);
 			}
 			p.store(out, "");
@@ -167,20 +166,16 @@ public abstract class Configuration
 				if (filedType == String.class)
 				{
 					field.set(this, value);
-				}
-				if (filedType == int.class)
+				} else if (filedType == int.class)
 				{
 					field.set(this, Integer.parseInt(value));
-				}
-				if (filedType == float.class)
+				} else if (filedType == float.class)
 				{
 					field.set(this, Float.parseFloat(value));
-				}
-				if (filedType == boolean.class)
+				} else if (filedType == boolean.class)
 				{
 					field.set(this, Boolean.parseBoolean(value));
-				}
-				if (filedType == InetSocketAddress.class)
+				} else if (filedType == InetSocketAddress.class)
 				{
 					if (value.contains(":"))
 					{
@@ -198,10 +193,15 @@ public abstract class Configuration
 						field.set(this, inetSocketAddress);
 					}
 
-				}
-				if (filedType == File.class)
+				} else if (filedType == File.class)
 				{
 					field.set(this, new File(value));
+				} else if (filedType.isEnum())
+				{
+					Class<? extends Enum> type = (Class<? extends Enum>) field
+							.getType();
+					Enum selectedEnum = Enum.valueOf(type, value);
+					field.set(Configuration.this, selectedEnum);
 				}
 			}
 		} catch (Exception e)
@@ -227,21 +227,17 @@ public abstract class Configuration
 					if (filedType == String.class)
 					{
 						field.set(this, args[i]);
-					}
-					if (filedType == int.class)
+					} else if (filedType == int.class)
 					{
 						field.set(this, Integer.parseInt(args[i]));
-					}
-					if (filedType == float.class)
+					} else if (filedType == float.class)
 					{
 						field.set(this, Float.parseFloat(args[i]));
-					}
-					if (filedType == boolean.class)
+					} else if (filedType == boolean.class)
 					{
 						--i;
 						field.set(this, true);
-					}
-					if (filedType == InetSocketAddress.class)
+					} else if (filedType == InetSocketAddress.class)
 					{
 						if (args[i].contains(":"))
 						{
@@ -258,10 +254,15 @@ public abstract class Configuration
 									args[i], 0);
 							field.set(this, inetSocketAddress);
 						}
-					}
-					if (filedType == File.class)
+					} else if (filedType == File.class)
 					{
 						field.set(this, new File(args[i]));
+					} else if (filedType.isEnum())
+					{
+						Class<? extends Enum> type = (Class<? extends Enum>) field
+								.getType();
+						Enum selectedEnum = Enum.valueOf(type, args[i]);
+						field.set(Configuration.this, selectedEnum);
 					}
 				}
 
@@ -344,14 +345,45 @@ public abstract class Configuration
 						}
 					});
 					panel.add(jTextField);
+				} else if (field.getType().isEnum())
+				{
+					Object[] enumConstants = field.getType().getEnumConstants();
+					final JComboBox combo = new JComboBox(enumConstants);
+					panel.add(combo);
+					// Todo
+					combo.addActionListener(new ActionListener()
+					{
+
+						@Override
+						public void actionPerformed(ActionEvent e)
+						{
+							Class<? extends Enum> type = (Class<? extends Enum>) field
+									.getType();
+							Enum selectedEnum = Enum.valueOf(type, combo
+									.getSelectedItem().toString());
+							try
+							{
+								field.set(Configuration.this, selectedEnum);
+							} catch (IllegalArgumentException e1)
+							{
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							} catch (IllegalAccessException e1)
+							{
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+
+						}
+					});
 				} else if (filedType == int.class)
 				{
 					ShowAsSlider showSlider = field
 							.getAnnotation(ShowAsSlider.class);
 					if (showSlider != null)
 					{
-						int maxValue = showSlider.getMaxValue();
-						int minValue = showSlider.getMinValue();
+						int maxValue = showSlider.maxValue();
+						int minValue = showSlider.minValue();
 						final JSlider jSlider = new JSlider(minValue, maxValue,
 								((Integer) value).intValue());
 						panel.add(jSlider);
@@ -423,8 +455,8 @@ public abstract class Configuration
 							.getAnnotation(ShowAsSlider.class);
 					if (showSlider != null)
 					{
-						int maxValue = showSlider.getMaxValue();
-						int minValue = showSlider.getMinValue();
+						int maxValue = showSlider.maxValue();
+						int minValue = showSlider.minValue();
 						final JSlider jSlider = new JSlider(minValue, maxValue,
 								((Float) value).intValue());
 						panel.add(jSlider);
