@@ -1,5 +1,6 @@
 package de.fhtrier.gdig.engine.entities.physics;
 
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.entities.Entity;
 
 public class MoveableEntity extends Entity
@@ -8,14 +9,15 @@ public class MoveableEntity extends Entity
 	private float prevPos[];
 	private float vel[];
 	private float acc[];
+
 	private float drag;
 
 	/**
 	 * @param id
 	 */
-	public MoveableEntity(int id)
+	public MoveableEntity(int id, EntityType type)
 	{
-		super(id);
+		super(id, type);
 
 		this.prevPos = new float[7];
 		this.prevPos[SCALE_X] = 1;
@@ -23,7 +25,8 @@ public class MoveableEntity extends Entity
 
 		this.vel = new float[7];
 		this.acc = new float[7];
-		this.drag = 0.5f;
+
+		this.drag = 0.0f;
 	}
 
 	@Override
@@ -51,7 +54,10 @@ public class MoveableEntity extends Entity
 					// vel[i] *= (-1.0f / (drag + secs) + (1.0f / secs)) * secs;
 					// Dies ist eine alternative formel der oberen davon
 					// ausgehend das nur Positive Werte benutzt werden.
-					vel[i] *= drag / (drag + secs);
+					if (secs + drag != 0)
+					{
+						vel[i] *= (secs / (drag + secs));
+					}
 				}
 				this.getData()[i] = this.getData()[i] + this.vel[i] * secs;
 			}
@@ -92,6 +98,16 @@ public class MoveableEntity extends Entity
 	public float[] getPrevPos()
 	{
 		return this.prevPos;
+	}
+
+	public float getDrag()
+	{
+		return drag;
+	}
+
+	public void setDrag(float drag)
+	{
+		this.drag = drag;
 	}
 
 }

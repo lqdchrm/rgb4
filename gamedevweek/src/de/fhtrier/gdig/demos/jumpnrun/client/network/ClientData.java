@@ -10,7 +10,7 @@ public class ClientData extends NetworkCommand implements Serializable {
 	private static final long serialVersionUID = 6507211207331141555L;
 
 	private NetworkData networkData;
-	
+
 	public void setNetworkData(NetworkData data) {
 		this.networkData = data;
 	}

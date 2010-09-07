@@ -13,52 +13,32 @@ import org.newdawn.slick.geom.Transform;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.physics.CollidableEntity;
 
-public class CollisionManager
-{
+public class CollisionManager {
 
-	/**
-	 * Speichert alle {@link CollidableEntity}'s zwichen denen die Kollision
-	 * geprüft werden soll.
-	 */
-	private static List<CollidableEntity> entetys;
+	private static List<CollidableEntity> entities;
 
-	/**
-	 * speichert in einer Map die daten der untereinander collidierenden
-	 * {@link CollidableEntity}'s.
-	 */
 	private static Map<CollidableEntity, List<CollidableEntity>> collisionmap;
 
-	static
-	{
-		CollisionManager.entetys = new ArrayList<CollidableEntity>();
+	static {
+		CollisionManager.entities = new ArrayList<CollidableEntity>();
 		CollisionManager.collisionmap = new HashMap<CollidableEntity, List<CollidableEntity>>();
 	}
 
-	/**
-	 * fügt eine Entety der Überwachung hinzu.
-	 * 
-	 * @param entety
-	 *            Die Entety.
-	 */
-	public static void addEntety(final CollidableEntity entety)
-	{
-		CollisionManager.entetys.add(entety);
+	// TODO is never used
+	public static void addEntity(final CollidableEntity entity) {
+		CollisionManager.entities.add(entity);
 	}
 
 	/**
-	 * Überprüft ob zwei Entetys Collidieren.
+	 * checks if entities collide
 	 * 
-	 * @param e1
-	 *            Entety 1
-	 * @param e2
-	 *            Entety 2
-	 * @return Ob bide sich überschneiden.
+	 * @param e1 entity 1
+	 * @param e2 entity 2
+	 * @return returns if entities collide
 	 */
-	private static boolean collide(final CollidableEntity e1,
-			final CollidableEntity e2)
-	{
-		if (e1.getBounds() == null || e2.getBounds() == null)
-		{
+	private static boolean doCollide(final CollidableEntity e1,
+			final CollidableEntity e2) {
+		if (e1.getBounds() == null || e2.getBounds() == null) {
 			return false;
 		}
 
@@ -66,8 +46,12 @@ public class CollisionManager
 				CollisionManager.getTransformedBounds(e2));
 	}
 
-	private static Shape generateMovmentshape(final Shape r1, final Shape r2)
-	{
+	/**
+	 * @param r1 Shape 1
+	 * @param r2 Shape 2
+	 * @return returns extruded shape from shape1 to shape2
+	 */
+	private static Shape generateSweepShape(final Shape r1, final Shape r2) {
 
 		final float maxLeft = Math.min(r1.getMinX(), r2.getMinX());
 		final float maxRight = Math.max(r1.getMaxX(), r2.getMaxX());
@@ -80,23 +64,19 @@ public class CollisionManager
 		final float[] r2Points = r2.getPoints();
 		int pointIndex = 0;
 
-		for (int i = 0; i < r1Points.length; i += 2)
-		{
+		for (int i = 0; i < r1Points.length; i += 2) {
 			if (r1Points[i] == maxLeft || r1Points[i] == maxRight
 					|| r1Points[i + 1] == maxBottom
-					|| r1Points[i + 1] == maxTop)
-			{
+					|| r1Points[i + 1] == maxTop) {
 				points[pointIndex] = r1Points[i];
 				points[pointIndex + 1] = r1Points[i + 1];
 				pointIndex += 2;
 			}
 		}
-		for (int i = 0; i < r2Points.length; i += 2)
-		{
+		for (int i = 0; i < r2Points.length; i += 2) {
 			if (r2Points[i] == maxLeft || r2Points[i] == maxRight
 					|| r2Points[i + 1] == maxBottom
-					|| r2Points[i + 1] == maxTop)
-			{
+					|| r2Points[i + 1] == maxTop) {
 				points[pointIndex] = r2Points[i];
 				points[pointIndex + 1] = r2Points[i + 1];
 				pointIndex += 2;
@@ -118,74 +98,66 @@ public class CollisionManager
 	 * 
 	 * @return transformed Shape
 	 */
-	private static Shape getTransformedBounds(final CollidableEntity entety)
-	{
+	private static Shape getTransformedBounds(final CollidableEntity entety) {
 		Shape rec1 = entety.getBounds().transform(
 				Transform.createTranslateTransform(entety.getData()[Entity.X],
 						entety.getData()[Entity.Y]));
+
 		Shape rec2 = entety.getBounds().transform(
 				Transform.createTranslateTransform(
 						entety.getPrevPos()[Entity.X],
 						entety.getPrevPos()[Entity.Y]));
 
-		Shape erg = generateMovmentshape(rec1, rec2);
-		// gebe nicht erg zurüc da die erwieterte Kollisionbehanlung bei
-		// bewegung noch nicht funktioniert.
+
+		// TODO erg currently not used
+		Shape erg = generateSweepShape(rec1, rec2);
+
 		return rec1;
 	}
 
 	/**
-	 * Liefert zurück mit welchen entetys das Übergebene Entety collidiert.
-	 * 
-	 * @param entety
-	 *            Die entety welcer die Kollisionsobjekte übergeben werden
-	 *            sollen.
-	 * @return Die lisete der Kollisionsobjekte.
+	 * @param entity, for which we want to get colliding entities
+	 * @return returns a list with colliding entities
 	 */
-	public static List<CollidableEntity> iColideWith(
-			final CollidableEntity entety)
-	{
+	public static List<CollidableEntity> collidingEntities(
+			final CollidableEntity entity) {
+		
 		final List<CollidableEntity> list = CollisionManager.collisionmap
-				.get(entety);
+				.get(entity);
 		return list == null ? new ArrayList<CollidableEntity>() : list;
 	}
 
-	/**
-	 * Entfernt ein {@link CollidableEntity} aus der Überwachung.
-	 * 
-	 * @param entety
-	 *            Das Entety welches aus der Überwachung entfernt werden soll.
-	 */
-	public static void removeEntety(final CollidableEntity entety)
-	{
-		CollisionManager.entetys.remove(entety);
+	// TODO is never used
+	public static void removeEntity(final CollidableEntity entity) {
+		CollisionManager.entities.remove(entity);
 	}
 
+
 	/**
-	 * Updated die Colisionen. Muss jedes Frame aufgerufen werden, sonst gibt
-	 * die Kollisionserkennung falsche werte zurück.
+	 * recreates collision map for all registered entities
 	 */
-	public static void update()
-	{
+	public static void update() {
 		CollisionManager.collisionmap.clear();
-		for (int x = 0; x < CollisionManager.entetys.size(); ++x)
-		{
-			for (int y = 0; y < x; ++y)
-			{
-				final CollidableEntity e1 = CollisionManager.entetys.get(x);
-				final CollidableEntity e2 = CollisionManager.entetys.get(y);
-				if (CollisionManager.collide(e1, e2))
-				{
-					if (!CollisionManager.collisionmap.containsKey(e1))
-					{
+		
+		for (int x = 0; x < CollisionManager.entities.size(); ++x) {
+			
+			for (int y = x+1; y < CollisionManager.entities.size(); ++y) {
+				
+				final CollidableEntity e1 = CollisionManager.entities.get(x);
+				final CollidableEntity e2 = CollisionManager.entities.get(y);
+				
+				if (CollisionManager.doCollide(e1, e2)) {
+					
+					if (!CollisionManager.collisionmap.containsKey(e1)) {
 						CollisionManager.collisionmap.put(e1,
 								new ArrayList<CollidableEntity>());
 					}
-					if (!CollisionManager.collisionmap.containsKey(e2))
-					{
+					
+					if (!CollisionManager.collisionmap.containsKey(e2)) {
 						CollisionManager.collisionmap.put(e2,
 								new ArrayList<CollidableEntity>());
 					}
+					
 					CollisionManager.collisionmap.get(e1).add(e2);
 					CollisionManager.collisionmap.get(e2).add(e1);
 				}
@@ -193,5 +165,4 @@ public class CollisionManager
 		}
 
 	}
-
 }

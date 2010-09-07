@@ -7,6 +7,9 @@ import java.util.Queue;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
@@ -15,6 +18,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.common.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreatePlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
@@ -95,39 +99,42 @@ public class ClientPlayingState extends PlayingState {
 			return true;
 		}
 
-		// DoCreatePlayer tells us to create a player, e.g. because someone has
-		// joined
-		if (cmd instanceof DoCreateEntity) {
-			DoCreateEntity dce = (DoCreateEntity) cmd;
+		// Client must have joined
+		if (localState != LocalState.JOINING) {
+			// DoCreatePlayer tells us to create a player, e.g. because someone
+			// has
+			// joined
+			if (cmd instanceof DoCreateEntity) {
+				DoCreateEntity dce = (DoCreateEntity) cmd;
 
-			// Create Entity
-			int id = this.getFactory().createEntity(dce.getEntityId(),
-					dce.getType());
-			Entity e = this.getFactory().getEntity(id);
-			e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
-			
-			getLevel().add(getFactory().getEntity(id));
-			return true;
-		}
+				// Create Entity
+				int id = this.getFactory().createEntityById(dce.getEntityId(),
+						dce.getType());
+				Entity e = this.getFactory().getEntity(id);
+				e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 
-		// DoRemovePlayer tells us to drop a Player, e.g. because someone has
-		// left
-		if (cmd instanceof DoRemoveEntity) {
-			DoRemoveEntity dre = (DoRemoveEntity) cmd;
-
-			// Remove entity if it is a player
-			int id = dre.getEntityId();
-
-			if (getLevel().getCurrentPlayer() != null
-					&& id == getLevel().getCurrentPlayer().getId()) {
-				getLevel().setCurrentPlayer(-1);
+				getLevel().add(getFactory().getEntity(id));
+				return true;
 			}
-			getLevel().remove(getFactory().getEntity(id));
 
-			// remove Entity recursively from Factory
-			getFactory().removeEntity(id, true);
+			// DoRemoveEntity tells us to drop an Entity, e.g. because someone has left
+			if (cmd instanceof DoRemoveEntity) {
+				DoRemoveEntity dre = (DoRemoveEntity) cmd;
 
-			return true;
+				// Remove entity
+				int id = dre.getEntityId();
+
+				if (getLevel().getCurrentPlayer() != null
+						&& id == getLevel().getCurrentPlayer().getId()) {
+					getLevel().setCurrentPlayer(-1);
+				}
+				getLevel().remove(getFactory().getEntity(id));
+
+				// remove Entity recursively from Factory
+				getFactory().removeEntity(id, true);
+
+				return true;
+			}
 		}
 
 		// AckCreatePlayer tells us which player is our's
@@ -139,10 +146,10 @@ public class ClientPlayingState extends PlayingState {
 			}
 			AckCreatePlayer acp = (AckCreatePlayer) cmd;
 			int playerId = acp.getPlayerId();
-			
+
 			Entity player = getFactory().getEntity(playerId);
 			player.setUpdateStrategy(EntityUpdateStrategy.ClientToServer);
-			
+
 			this.getLevel().setCurrentPlayer(acp.getPlayerId());
 
 			// we got a player, now we can start :-)
@@ -167,6 +174,8 @@ public class ClientPlayingState extends PlayingState {
 				}
 			}
 		}
+		
+		// TODO remove only handled commands
 		queue.clear();
 
 		// apply game data received from server
@@ -233,7 +242,7 @@ public class ClientPlayingState extends PlayingState {
 			throw new IllegalArgumentException("state must not be null");
 		}
 
-		System.out.println("PlayingState: Changed state from "
+		Log.debug("PlayingState: Changed state from "
 				+ ((localState == null) ? "null" : localState.name()) + " to "
 				+ state.name());
 		localState = state;
@@ -244,5 +253,11 @@ public class ClientPlayingState extends PlayingState {
 		NetworkComponent.getInstance().sendCommand(
 				new QueryLeave(getLevel().getCurrentPlayer().getId()));
 		setState(LocalState.DISCONNECTING);
+	}
+
+	@Override
+	public void onExitKey(GameContainer container, StateBasedGame game) {
+		game.enterState(GameStates.MENU, new FadeOutTransition(),
+				new FadeInTransition());
 	}
 }

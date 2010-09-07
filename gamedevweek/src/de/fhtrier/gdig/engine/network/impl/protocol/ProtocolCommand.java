@@ -1,6 +1,5 @@
 package de.fhtrier.gdig.engine.network.impl.protocol;
 
-
 public abstract class ProtocolCommand extends NetworkCommand {
 
 	private static final long serialVersionUID = 4379151712801009842L;
@@ -9,7 +8,7 @@ public abstract class ProtocolCommand extends NetworkCommand {
 	public ProtocolCommand(String description) {
 		this.description = description;
 	}
-	
+
 	@Override
 	public String toString() {
 		return description + " from " + getSender();

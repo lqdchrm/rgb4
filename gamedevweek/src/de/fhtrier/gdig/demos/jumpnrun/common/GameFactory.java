@@ -13,16 +13,15 @@ public class GameFactory extends Factory {
 	}
 
 	public int createEntity(EntityType type) {
-		return createEntity(-1, type);
+		return createEntityById(-1, type);
 	}
 
-	public int createEntity(int id, EntityType type) {
+	public int createEntityById(int id, EntityType type) {
 		if (id == -1) {
 			id = getNewId();
-		} else
-		{
-			if (id>=Factory.getLastId()) {
-				setLastId(id+1);
+		} else {
+			if (id >= Factory.getLastId()) {
+				setLastId(id + 1);
 			}
 		}
 
@@ -30,7 +29,6 @@ public class GameFactory extends Factory {
 			switch (type) {
 			case PLAYER:
 				Player newPlayer = new Player(id, this);
-				newPlayer.setActive(false);
 				add(newPlayer);
 				return id;
 			case LEVEL:
@@ -40,6 +38,10 @@ public class GameFactory extends Factory {
 			case GEM:
 				Gem newGem = new Gem(id, this);
 				add(newGem);
+				return id;
+			case BULLET:
+				Bullet newBullet = new Bullet(id, this);
+				add(newBullet);
 				return id;
 			}
 		} catch (SlickException e) {
