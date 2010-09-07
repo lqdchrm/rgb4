@@ -37,44 +37,53 @@ public class Lobby extends JDialog {
 	}
 
 	public static JumpNRunGame createGameByArgs(String[] args) {
+		
+		String address = "";
 
+		INetworkLobby networkLobby = new NetworkLobby();
+		List<InterfaceAddress> interfaces = networkLobby.getInterfaces();
+		InterfaceAddress ni = null;
+		
 		switch (args.length - 1) 
 		{
 		case SERVER:
 			
-			INetworkLobby networkLobby = new NetworkLobby();
-			List<InterfaceAddress> interfaces = networkLobby.getInterfaces();
-			
-			Object[] serverListe = new Object[interfaces.size()];
-			
 			for ( int x = 0; x < interfaces.size(); x++ )
 			{
-			  serverListe[x] = interfaces.get( x ).getAddress().getHostAddress();
+			    if ( interfaces.get( x ).getAddress().getHostAddress().contains( "127.0.0.1" ) )
+				   ni = interfaces.get( x );
 			}
 			
-    		InterfaceAddress ni = null;
-			
-			for ( int x = 0; x < interfaces.size(); x++ )
+			if ( ( interfaces.size() > 0 ) && ( ( ni == null ) ) )
 			{
-				try
-				{
-					if ( interfaces.get( x ).getAddress() == InetAddress.getByName( "127.0.0.1" ) )
-						ni = interfaces.get( x );
-				}
-				catch( UnknownHostException e )
-				{
-					if ( interfaces.size() > 0 )
-                       ni = interfaces.get( 0 );
-				}
+			   System.out.println( "Localhost not available falling back to " + interfaces.get( 0 ).getAddress().getHostAddress() );
+               ni = interfaces.get( 0 );
 			}
 			
-			return createServer(ni,Integer.parseInt(args[0])); // assume port give
+			return createServer( ni, Integer.parseInt(args[0]) ); // assume port give
 															// -> server
 		case SPECTATOR:
 			ClientGame.isSpectator = true; // assume we are client in spectator
 											// mode
 		case CLIENT:
-			return createClient(args[0], Integer.parseInt(args[1])); // assume
+			
+			try
+			{
+			   address = InetAddress.getByName( args[0] ).getHostAddress();
+			}
+			catch( UnknownHostException e )
+			{
+			   try
+			   {
+                  address = InetAddress.getLocalHost().getHostAddress();
+			   }
+			   catch( UnknownHostException e2 )
+			   {
+			      address = "localhost";
+			   }
+			}
+			
+			return createClient( address, Integer.parseInt(args[1])); // assume
 																		// ip
 																		// and
 																		// port
