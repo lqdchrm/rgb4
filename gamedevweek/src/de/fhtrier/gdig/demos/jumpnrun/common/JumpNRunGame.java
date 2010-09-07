@@ -23,7 +23,8 @@ public abstract class JumpNRunGame extends StateBasedGame implements
 	public void notify(final INetworkCommand cmd) {
 		final GameState currentState = this.getCurrentState();
 		if (currentState != null) {
-			((PlayingState) currentState).notify(cmd);
+			if (currentState instanceof INetworkCommandListener)
+				((INetworkCommandListener) currentState).notify(cmd);
 		}
 	}
 }

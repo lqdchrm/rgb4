@@ -2,7 +2,6 @@ package de.fhtrier.gdig.demos.jumpnrun.client;
 
 import java.io.File;
 
-import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
@@ -21,20 +20,16 @@ import de.lessvoid.nifty.tools.resourceloader.ResourceLoader;
 
 public class ClientMenuState extends NiftyGameState implements ScreenController {
 
+	private static final String CROSSHAIR_PNG = "crosshair.png";
 	public static String menuNiftyXMLFile = "mainmenu.xml";
 	public static String menuAssetPath = "content/jumpnrun/default/gui";
 
 	private StateBasedGame game;
-	private GameContainer container;
 	private Screen screen;
 
-	public ClientMenuState(int id, final GameContainer newContainer,
-			final StateBasedGame newGame) throws SlickException {
-		super(id);
-
-		this.id = id;
+	public ClientMenuState(final StateBasedGame newGame) throws SlickException {
+		super(GameStates.MENU);
 		game = newGame;
-		container = newContainer;
 		// add asset-folder to the ResourceLocators of nifty and slick2d
 		ResourceLoader.addResourceLocation(new FileSystemLocation(new File(
 				menuAssetPath)));
@@ -46,8 +41,8 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
 		// show the mouse
 		enableMouseImage(new Image(
-				ResourceLoader.getResourceAsStream("crosshair.png"),
-				"crosshair.png", false));
+				ResourceLoader.getResourceAsStream(CROSSHAIR_PNG),
+				CROSSHAIR_PNG, false));
 
 	}
 
@@ -66,17 +61,21 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 
 	public void onEndScreen() {
 	}
-
-	public void newGame() {
-		Log.debug("mouseX: " + mouseX + ", mouseY: " + mouseY);
-		game.enterState(GameStates.PLAYING, new FadeOutTransition(),
+	
+	public void hostGame() {
+		game.enterState(GameStates.SERVER_SETTINGS, new FadeOutTransition(),
+				new FadeInTransition());
+	}
+	
+	public void joinGame() {
+		game.enterState(GameStates.SERVER_SELECTION, new FadeOutTransition(),
 				new FadeInTransition());
 	}
 
 	public void exit() {
 		screen.endScreen(new EndNotify() {
 			public void perform() {
-				container.exit();
+				game.getContainer().exit();
 			}
 		});
 	}

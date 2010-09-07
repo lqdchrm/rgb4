@@ -6,12 +6,10 @@ import org.newdawn.slick.SlickException;
 import de.fhtrier.gdig.demos.jumpnrun.client.ClientGame;
 import de.fhtrier.gdig.demos.jumpnrun.common.JumpNRunGame;
 import de.fhtrier.gdig.demos.jumpnrun.common.Lobby;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 
 public class JumpNRun {
-
-	public static final int SCREENWIDTH = 1024;
-	public static final int SCREENHEIGHT = 768;
 
 	public static void main(String[] args) {
 
@@ -27,7 +25,7 @@ public class JumpNRun {
 			try {
 
 				AppGameContainer gc = new AppGameContainer(game);
-				gc.setDisplayMode(SCREENWIDTH, SCREENHEIGHT, false);
+				gc.setDisplayMode(Settings.SCREENWIDTH, Settings.SCREENHEIGHT, false);
 
 				if (game instanceof ClientGame) {
 					gc.setVSync(true);

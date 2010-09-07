@@ -18,8 +18,8 @@ public class Lobby extends JDialog {
 	private static final long serialVersionUID = -8056874862301688643L;
 
 	public static ServerGame createServer(int port) {
-		ServerGame.port = port;
-		return new ServerGame();
+		//ServerGame.port = port;
+		return new ServerGame("My Server", port);
 	}
 
 	public static ClientGame createClient(String serverIP, int port) {
@@ -63,7 +63,7 @@ public class Lobby extends JDialog {
 			// if server ask for port number only
 			String strPort = (String) JOptionPane.showInputDialog(null,
 					"Please enter port number", "You are Server",
-					JOptionPane.PLAIN_MESSAGE, null, null, ServerGame.port);
+					JOptionPane.PLAIN_MESSAGE, null, null, 49999);
 
 			return createServer(Integer.parseInt(strPort));
 		}

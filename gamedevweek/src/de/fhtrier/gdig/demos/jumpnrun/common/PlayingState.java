@@ -49,8 +49,15 @@ public abstract class PlayingState extends BasicGameState implements
 
 	@Override
 	public void init(final GameContainer arg0, final StateBasedGame arg1)
-			throws SlickException
-	{
+			throws SlickException {
+
+	}
+	
+	@Override
+	public void enter(GameContainer container, StateBasedGame game)
+			throws SlickException {
+		// TODO Auto-generated method stub
+		super.enter(container, game);
 
 		// create assetmgr
 		this.assets = new AssetMgr();

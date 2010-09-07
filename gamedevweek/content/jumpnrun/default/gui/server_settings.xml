@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.sourceforge.net/nifty.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty.xsd http://nifty-gui.sourceforge.net/nifty.xsd">
+
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<!-- load default styles and controls -->
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<useStyles filename="nifty-default-styles.xml" />
+	<useStyles filename="rgb-styles.xml" />
+	<useControls filename="nifty-default-controls.xml" />
+
+	<controlDefinition name="playerControl"
+		controller="de.fhtrier.gdig.demos.jumpnrun.server.gui.PlayerControl">
+		<panel width="100%" height="100%" childLayout="horizontal">
+			<panel width="60%" height="100%" childLayout="horizontal">
+				<label id="playername" style="lobby-text" text="playername" />
+			</panel>
+			<panel width="20%" height="100%" childLayout="horizontal">
+				<label id="team" style="lobby-text" text="team:red" />
+			</panel>
+			<panel width="20%" height="100%" childLayout="horizontal">
+				<label id="latency" style="lobby-text" text="100ms" />
+			</panel>
+		</panel>
+	</controlDefinition>
+
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<!-- start screen -->
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	
+
+	<!--  #############  HOST SCREEN ############ -->
+
+
+	<screen id="start"
+		controller="de.fhtrier.gdig.demos.jumpnrun.client.ServerSettingsState">
+		<layer id="back" childLayout="center">
+			<panel id="panel" height="100%" width="100%" backgroundImage="menu-background.png" />
+		</layer>
+
+		<layer id="host_layer" childLayout="vertical">
+
+
+			<panel id="top" height="10%" width="100%" childLayout="center" />
+
+			<panel id="overview" width="90%" height="80%" align="center"
+				valign="top" childLayout="vertical">
+				<panel id="mainMenu" style="menu" childLayout="vertical"
+					backgroundColor="#aaaa" width="100%" height="100%">
+					<panel width="100%" height="10%" childLayout="vertical"
+						backgroundColor="#aaaa">
+						<label width="100%" height="100%" id="hostGame" text="Server settings"
+							style="lobby-header" align="center" />
+					</panel>
+
+					<panel id="main_panel" childLayout="vertical" width="100%"
+						height="80%" backgroundColor="#333a">
+						<panel height="10%" width="100%" childLayout="vertical">
+							<panel id="namePanel" childLayout="horizontal" width="60%">
+								<label style="lobby-text" id="labelName" text="Servername: "
+									height="50px" width="250px" valign="center" align="left" textVAlign="center"
+									textHAlign="left" />
+								<label style="lobby-text"  text="Port:"
+									height="50px" width="150px" valign="center" align="left" textVAlign="center"
+									textHAlign="left" />
+							</panel>
+
+							<panel id="portPanel" childLayout="horizontal">
+								<control width="250px" id="servername" name="textfield" text="RGB-Server"
+									height="50px" valign="center" textVAlign="bottom" />
+								<control width="150px" id="portnumber" name="textfield" text="49998"
+									height="50px" valign="center" textVAlign="bottom" />
+							</panel>
+						</panel>
+
+						<panel height="5%" />
+
+					</panel>
+
+					<panel height="10%" id="bottom_panel" childLayout="horizontal"
+						backgroundColor="#000a">
+						<panel height="100%" width="100%" childLayout="horizontal">
+							<label id="startstop_server" text="Create server" style="lobby-button"
+								hintText="Create Server">
+								<interact onClick="createServer()" />
+							</label>
+							<panel width="50px" />						
+							<label id="exit" text="Back" style="lobby-button" hintText="Exit the Game">
+								<interact onClick="back()" />
+							</label>
+						</panel>
+					</panel>
+				</panel>
+
+
+
+			</panel>
+
+		</layer>
+
+	</screen>
+
+
+
+
+</nifty>

@@ -6,11 +6,11 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
 
-import de.fhtrier.gdig.demos.jumpnrun.JumpNRun;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
@@ -153,16 +153,16 @@ public class Level extends MoveableEntity {
 		}
 		// Right
 		if (getData()[X] < -this.groundMap.getWidth()
-				* this.groundMap.getTileWidth() + JumpNRun.SCREENWIDTH) {
+				* this.groundMap.getTileWidth() + Settings.SCREENWIDTH) {
 			getData()[X] = -this.groundMap.getWidth()
-					* this.groundMap.getTileWidth() + JumpNRun.SCREENWIDTH;
+					* this.groundMap.getTileWidth() + Settings.SCREENWIDTH;
 			getVel()[X] = 0.0f;
 		}
 		// Bottom
 		if (getData()[Y] < -this.groundMap.getHeight()
-				* this.groundMap.getTileHeight() + JumpNRun.SCREENHEIGHT) {
+				* this.groundMap.getTileHeight() + Settings.SCREENHEIGHT) {
 			getData()[Y] = -this.groundMap.getHeight()
-					* this.groundMap.getTileHeight() + JumpNRun.SCREENHEIGHT;
+					* this.groundMap.getTileHeight() + Settings.SCREENHEIGHT;
 			getVel()[Y] = 0.0f;
 		}
 	}
@@ -175,8 +175,8 @@ public class Level extends MoveableEntity {
 		if (player != null) {
 
 			// Focus on Player
-			getData()[X] = JumpNRun.SCREENWIDTH / 2 - player.getData()[X];
-			getData()[Y] = JumpNRun.SCREENHEIGHT / 2 - player.getData()[Y];
+			getData()[X] = Settings.SCREENWIDTH / 2 - player.getData()[X];
+			getData()[Y] = Settings.SCREENHEIGHT / 2 - player.getData()[Y];
 		}
 	}
 

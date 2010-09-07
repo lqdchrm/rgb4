@@ -50,19 +50,16 @@ public class ClientPlayingState extends PlayingState {
 	}
 
 	@Override
-	public void init(GameContainer arg0, StateBasedGame arg1)
+	public void enter(GameContainer container, StateBasedGame game)
 			throws SlickException {
-		super.init(arg0, arg1);
+		// TODO Auto-generated method stub
+		super.enter(container, game);
 
 		// ask server to join game
 		NetworkComponent.getInstance().sendCommand(new QueryJoin());
 		setState(LocalState.JOINING);
-
-		// HACK load and play sound
-		// getFactory().getAssetMgr().storeSound(Assets.LevelSoundtrack,
-		// "sounds/kaliba.ogg").loop();
 	}
-
+	
 	private boolean handleProtocolCommands(INetworkCommand cmd) {
 
 		// AckJoin tells us, we have successfully joined the game

@@ -139,7 +139,7 @@ public class NetworkComponentClient extends NetworkComponentImpl {
 	}
 
 	@Override
-	public List<Socket> getClients() {
+	public List<ClientHandler> getClients() {
 		throw new RuntimeException("getClients is not possible on a client");
 	}
 

@@ -88,11 +88,11 @@ public class NetworkComponentServer extends NetworkComponentImpl {
 	}
 
 	@Override
-	public List<Socket> getClients() {
-		List<Socket> l = new ArrayList<Socket>();
+	public List<ClientHandler> getClients() {
+		List<ClientHandler> l = new ArrayList<ClientHandler>();
 		synchronized (this.clients) {
 			for (ClientHandler ch : this.clients.values()) {
-				l.add(ch.getSocket());
+				l.add(ch);
 			}
 		}
 		return l;
