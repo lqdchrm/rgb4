@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -309,6 +310,8 @@ public abstract class Configuration
 		try
 		{
 			JPanel panel = new JPanel();
+			panel.setBorder(BorderFactory.createTitledBorder(getClass()
+					.getSimpleName()));
 			BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
 			panel.setLayout(boxLayout);
 
