@@ -42,9 +42,16 @@ public class MoveableEntity extends Entity
 				// -1/(x+1)+1 Sollte besser skalieren bei schwankender framrate,
 				// und kann nicht durch zu große werte merkwürdige effekte
 				// hintersich her ziehen
+				// Diese Formel nimmt werte zwichen 0 und 1 an.
+				// die implementierte formel nimmt werte zwichen 0 und dem
+				// kehrwert von secs an multipliziert mit secs ergibt dies einen
+				// wert zwichen 0 und 1.
 				if (i == X || i == Y)
 				{
-					vel[i] *= (-1.0f / (drag + secs) + (1.0f / secs)) * secs;
+					// vel[i] *= (-1.0f / (drag + secs) + (1.0f / secs)) * secs;
+					// Dies ist eine alternative formel der oberen davon
+					// ausgehend das nur Positive Werte benutzt werden.
+					vel[i] *= drag / (drag + secs);
 				}
 				this.getData()[i] = this.getData()[i] + this.vel[i] * secs;
 			}
