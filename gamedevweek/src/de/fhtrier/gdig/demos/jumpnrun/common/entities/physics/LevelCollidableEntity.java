@@ -127,7 +127,7 @@ public class LevelCollidableEntity extends CollidableEntity
 						final float absDepthX = Math.abs(depth[Entity.X]);
 						final float absDepthY = Math.abs(depth[Entity.Y]);
 
-						if (absDepthX > 0 || absDepthY > 0)
+						if (absDepthX > 1 || absDepthY > 1)
 						{
 
 							switch (tileId)
