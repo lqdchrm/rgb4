@@ -1,6 +1,7 @@
 package de.fhtrier.gdig.engine.support;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -257,17 +258,19 @@ public abstract class Configuration
 
 	public void showEditor(String strTitle)
 	{
-		JFrame f = new JFrame(strTitle);
-		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		f.add(new JScrollPane(getEdittingPanel()));
-		f.pack();
-		f.setVisible(true);
-
+		showEditor(strTitle, new JPanel[] { getEdittingPanel() });
 	}
 
 	public void showEditor(String strTitle, JPanel[] panels)
 	{
+		showEditor(strTitle, panels, null);
+	}
+
+	public void showEditor(String strTitle, JPanel[] panels, Point location)
+	{
 		JFrame f = new JFrame(strTitle);
+		if (location != null)
+			f.setLocation(location);
 		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		JPanel p = new JPanel();
 
@@ -281,7 +284,6 @@ public abstract class Configuration
 		f.add(new JScrollPane(p));
 		f.pack();
 		f.setVisible(true);
-
 	}
 
 	public JPanel getEdittingPanel()
