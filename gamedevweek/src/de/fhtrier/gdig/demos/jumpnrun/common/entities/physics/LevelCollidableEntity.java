@@ -4,6 +4,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.tiled.TiledMap;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.common.Level;
@@ -86,12 +87,12 @@ public class LevelCollidableEntity extends CollidableEntity
 			// determine tiles to check for collisions
 			final int leftTile = (int) Math.floor(bbEntity.getMinX()
 					/ this.map.getTileWidth());
-			final int rightTile = (int) Math.ceil(bbEntity.getMaxX() + 1
-					/ this.map.getTileWidth());
+			final int rightTile = (int) Math.ceil(bbEntity.getMaxX()
+					/ this.map.getTileWidth() +1);
 			final int topTile = (int) Math.floor(bbEntity.getMinY()
 					/ this.map.getTileHeight());
-			final int bottomTile = (int) Math.ceil(bbEntity.getMaxY() + 1
-					/ this.map.getTileHeight());
+			final int bottomTile = (int) Math.ceil(bbEntity.getMaxY()
+					/ this.map.getTileHeight() +1);
 
 			for (int y = Math.max(0, topTile); y < Math.min(
 					this.map.getHeight(), bottomTile); y++)
@@ -102,7 +103,12 @@ public class LevelCollidableEntity extends CollidableEntity
 
 					// items
 					final int tileId = this.map.getTileId(x, y, 0);
+					final int actionTileId = this.map.getTileId(x, y, 1);
 
+					if(actionTileId > 0)
+					{
+						Log.debug("Colission with: " + actionTileId);
+					}
 					if (tileId > 0)
 					{
 						final Rectangle bbTile = new Rectangle(x
@@ -129,7 +135,6 @@ public class LevelCollidableEntity extends CollidableEntity
 
 						if (absDepthX > 0 || absDepthY > 0)
 						{
-
 							switch (tileId)
 							{
 							case 1:
