@@ -1,5 +1,6 @@
 package de.fhtrier.gdig.demos.jumpnrun.common;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -11,11 +12,14 @@ import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEnt
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.StateColor;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
 import de.fhtrier.gdig.engine.entities.gfx.TiledMapEntity;
 import de.fhtrier.gdig.engine.entities.physics.MoveableEntity;
+import de.fhtrier.gdig.engine.graphics.BlurShader;
+import de.fhtrier.gdig.engine.graphics.Shader;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 
@@ -29,6 +33,11 @@ public class Level extends MoveableEntity {
 	private TiledMapEntity ground;
 
 	private int currentPlayerId;
+	
+	private static Image textureBuffer;
+	private static Graphics fbGraphics;
+	private static BlurShader blur1D;
+	private static Shader glowshader;
 
 	public Level(int id, GameFactory factory) throws SlickException {
 		super(id, EntityType.LEVEL);
@@ -75,10 +84,78 @@ public class Level extends MoveableEntity {
 
 		// order
 		setOrder(EntityOrder.Level);
-
+		
+		// Shader Setup
+		if (textureBuffer == null)
+		{
+			textureBuffer = new Image(JumpNRun.SCREENWIDTH, JumpNRun.SCREENHEIGHT);
+			fbGraphics = textureBuffer.getGraphics();
+			blur1D = new BlurShader();
+			glowshader = new Shader("content/jumpnrun/shader/simple.vert", "content/jumpnrun/shader/glow.frag");
+		}
+		
 		// setup
 		setActive(true);
 		setVisible(true);
+	}
+	
+	@Override
+	protected void renderImpl(Graphics graphicContext, Image frameBuffer)
+	{
+		super.renderImpl(graphicContext, frameBuffer);
+		fbGraphics.clear();
+		fbGraphics.drawImage(frameBuffer, 0, 0);
+		
+		// Player-Glow Post Processing Effect
+		Player player = this.getCurrentPlayer();
+		
+		if (player != null)
+		{
+			// Get Player Position on Screen relative to LOWER left corner
+			float px = player.getData()[Player.X]
+					+ player.getData()[Player.CENTER_X] + getData(X);
+			float py = player.getData()[Player.Y]
+					+ player.getData()[Player.CENTER_Y] + getData(Y);
+			Color playercol = StateColor.constIntoColor(player.getState().color);
+			Color weaponcol = StateColor.constIntoColor(player.getState().weaponColor);
+			float health = player.getState().health * 3;
+			float ammo = player.getState().ammo * 3;
+			
+			// Horizontal Blur
+			Shader.setActiveShader(blur1D);
+			blur1D.initialize(JumpNRun.SCREENWIDTH, JumpNRun.SCREENHEIGHT);
+			fbGraphics.drawImage(frameBuffer, 0, 0);
+			fbGraphics.flush();
+			
+			// Vertical Blur
+			blur1D.setVertical();
+			fbGraphics.drawImage(frameBuffer, 0, 0);
+			fbGraphics.flush();
+			
+			// Draw Glow effects
+			graphicContext.setColor(Color.white);
+			Shader.activateAdditiveBlending();
+			
+			Shader.setActiveShader(glowshader);
+			glowshader.setValue("range", 500);
+			glowshader.setValue("target", px, py);
+			glowshader.setValue("strength", health);
+			glowshader.setValue("playercolor", playercol);
+			
+			graphicContext.drawImage(frameBuffer, 0, 0);
+			
+			/* Weapon Color Shader - comming soon
+			glowshader.setValue("range", 50);
+			glowshader.setValue("target", px+20, py+20);
+			glowshader.setValue("strength", ammo);
+			glowshader.setValue("playercolor", weaponcol);
+			
+			graphicContext.drawImage(frameBuffer, 0, 0);
+			*/
+			
+			Shader.activateDefaultBlending();
+			Shader.setActiveShader(null);
+		}
 	}
 
 	@Override

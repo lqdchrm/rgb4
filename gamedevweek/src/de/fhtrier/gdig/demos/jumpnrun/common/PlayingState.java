@@ -27,18 +27,8 @@ public abstract class PlayingState extends BasicGameState implements
 	private AssetMgr assets;
 	private GameFactory factory;
 	private int levelId;
-	
-	/*
-	 * Nur zum Testen von Bloom
-	 * 
-	 */
-	private Image screenBuffer;
-	private Graphics screen1Graphics;
-	private BlurShader blur1D;
-	private Shader lowpass;
-	private Player player;
-	public static float factor = 2;
-	
+	private static Image frameBuffer;
+		
 	public abstract void cleanup(GameContainer container, StateBasedGame game);
 
 	public GameFactory getFactory() {
@@ -73,56 +63,21 @@ public abstract class PlayingState extends BasicGameState implements
 		// Level
 		this.levelId = factory.createEntity(EntityType.LEVEL);
 		
-		screenBuffer = new Image(JumpNRun.SCREENWIDTH, JumpNRun.SCREENHEIGHT);
-		screen1Graphics = screenBuffer.getGraphics();
-		
-		blur1D = new BlurShader();
-		lowpass = new Shader("content/jumpnrun/shader/simple.vert", "content/jumpnrun/shader/lowpass.frag");
+		// FrameBuffer
+		frameBuffer = new Image(JumpNRun.SCREENWIDTH, JumpNRun.SCREENHEIGHT);
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game,
-			Graphics graphicsContext) throws SlickException {
+			Graphics graphicContext) throws SlickException {
 		
 		Level level = getLevel();
 		
 		if (level != null)
 		{
-			screen1Graphics.clear();
-			level.render(screen1Graphics);
-			screen1Graphics.flush();
-			graphicsContext.drawImage(screenBuffer, 0, 0);
+			level.render(frameBuffer.getGraphics(), frameBuffer);
 			
-			if (player == null)
-			{
-				player = ((Level)this.factory.getEntity(this.levelId)).getCurrentPlayer();
-			}
-			
-			if (player != null)
-			{
-				float px = player.getData()[Player.X] + player.getData()[Player.CENTER_X] + level.getData(Level.X);
-				float py = JumpNRun.SCREENHEIGHT - player.getData()[Player.Y] - player.getData()[Player.CENTER_Y] - level.getData(Level.Y);
-				
-				if (factor > 0) factor -= 0.01;
-				
-				Shader.setActiveShader(blur1D);
-				blur1D.initialize(JumpNRun.SCREENWIDTH, JumpNRun.SCREENHEIGHT);
-				screen1Graphics.drawImage(screenBuffer, 0, 0);
-				screen1Graphics.flush();
-				
-				blur1D.setVertical();
-				screen1Graphics.drawImage(screenBuffer, 0, 0);
-				
-				Shader.setActiveShader(lowpass);
-				lowpass.setValue("factor", factor);
-				lowpass.setValue("target", px, py);
-				graphicsContext.setColor(Color.white);
-				Shader.activateAdditiveBlending();
-				graphicsContext.drawImage(screenBuffer, 0, 0);
-				
-				Shader.activateDefaultBlending();
-				Shader.setActiveShader(null);
-			}
+			graphicContext.drawImage(frameBuffer, 0, 0);
 		}
 	}
 

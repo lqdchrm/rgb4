@@ -12,6 +12,7 @@ import org.lwjgl.opengl.ARBFragmentShader;
 import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.ARBVertexShader;
 import org.lwjgl.opengl.Util;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.Log;
@@ -24,6 +25,7 @@ public class Shader
     private int shaderId = -1;
     private int vertexShaderId = -1;
     private int fragmentShaderId = -1;
+    private static Shader activeShader = null;
     
     /**
      * Creates a new Shader, combining the code of the provided files
@@ -90,6 +92,11 @@ public class Shader
         ARBShaderObjects.glUniform4fARB(variableId, x, y, z, w);
     }
     
+    public void setValue(String name, Color col) {
+    	int variableId = ARBShaderObjects.glGetUniformLocationARB(shaderId, toByteString(name));
+        ARBShaderObjects.glUniform4fARB(variableId, col.r, col.g, col.b, col.a);
+	}
+    
     /**
      * Sets the Value for an uniform float-Array with the given name. An array of vectors
      * can be set by providing the right width value. I.e. if the Shader contains an array
@@ -134,8 +141,23 @@ public class Shader
      */
     public static void setActiveShader(Shader shader)
     {
+    	if (shader == activeShader) return;
+    		
         if (shader == null) ARBShaderObjects.glUseProgramObjectARB(0);
         else ARBShaderObjects.glUseProgramObjectARB(shader.shaderId);
+        
+        activeShader = shader;
+    }
+    
+    /**
+     * Retrieves the currently active Shader, but only if it was set using this
+     * class or one of it's subclasses.
+     * 
+     * @return The last argument which was set with setActiveShader(Shader s)
+     */
+    public static Shader getActiveShader()
+    {
+    	return activeShader;
     }
     
     /**

@@ -1,6 +1,7 @@
 package de.fhtrier.gdig.engine.entities.physics;
 
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Shape;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
@@ -22,8 +23,8 @@ public class CollidableEntity extends MoveableEntity {
 	}
 
 	@Override
-	public void renderImpl(Graphics graphicContext) {
-		super.renderImpl(graphicContext);
+	public void renderImpl(Graphics graphicContext, Image frameBuffer) {
+		super.renderImpl(graphicContext, frameBuffer);
 
 		if (this.bounds != null && Constants.Debug.drawBounds) {
 			graphicContext.setColor(Constants.Debug.boundColor);

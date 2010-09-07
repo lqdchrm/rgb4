@@ -7,6 +7,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
@@ -236,16 +237,16 @@ public class Entity implements Identifiable {
 		this.remove(this.get(id));
 	}
 
-	public final void render(final Graphics graphicContext) {
+	public final void render(final Graphics graphicContext, Image frameBuffer) {
 		this.preRender(graphicContext);
-		this.renderImpl(graphicContext);
+		this.renderImpl(graphicContext, frameBuffer);
 		this.postRender(graphicContext);
 	}
 
-	protected void renderImpl(final Graphics graphicContext) {
+	protected void renderImpl(final Graphics graphicContext, Image frameBuffer) {
 		if (this.recursing) {
 			for (final Entity child : this.childrenInOrder) {
-				child.render(graphicContext);
+				child.render(graphicContext, frameBuffer);
 			}
 		}
 	}
