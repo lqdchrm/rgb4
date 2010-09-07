@@ -3,7 +3,8 @@ package de.fhtrier.gdig.engine.entities.physics;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.entities.Entity;
 
-public class MoveableEntity extends Entity {
+public class MoveableEntity extends Entity
+{
 
 	private float prevPos[];
 	private float vel[];
@@ -14,7 +15,8 @@ public class MoveableEntity extends Entity {
 	/**
 	 * @param id
 	 */
-	public MoveableEntity(int id, EntityType type) {
+	public MoveableEntity(int id, EntityType type)
+	{
 		super(id, type);
 
 		this.prevPos = new float[7];
@@ -23,22 +25,39 @@ public class MoveableEntity extends Entity {
 
 		this.vel = new float[7];
 		this.acc = new float[7];
+
 		this.drag = 0.0f;
 	}
 
 	@Override
-	public void update(int deltaInMillis) {
-		if (isActive()) {
+	public void update(int deltaInMillis)
+	{
+		if (isActive())
+		{
 
 			float secs = deltaInMillis / 1000.0f;
 
-			for (int i = 0; i < getData().length; i++) {
+			for (int i = 0; i < getData().length; i++)
+			{
 				// simple euler integration
 				this.vel[i] += this.acc[i] * secs;
 				// reibung folgt hier
-				if (i == X || i == Y) {
-					// TODO das geht besser
-					vel[i] -= vel[i] * drag * secs;
+				// -1/(x+1)+1 Sollte besser skalieren bei schwankender framrate,
+				// und kann nicht durch zu große werte merkwürdige effekte
+				// hintersich her ziehen
+				// Diese Formel nimmt werte zwichen 0 und 1 an.
+				// die implementierte formel nimmt werte zwichen 0 und dem
+				// kehrwert von secs an multipliziert mit secs ergibt dies einen
+				// wert zwichen 0 und 1.
+				if (i == X || i == Y)
+				{
+					// vel[i] *= (-1.0f / (drag + secs) + (1.0f / secs)) * secs;
+					// Dies ist eine alternative formel der oberen davon
+					// ausgehend das nur Positive Werte benutzt werden.
+					if (secs + drag != 0)
+					{
+						vel[i] *= (secs / (drag + secs));
+					}
 				}
 				this.getData()[i] = this.getData()[i] + this.vel[i] * secs;
 			}
@@ -47,38 +66,47 @@ public class MoveableEntity extends Entity {
 		super.update(deltaInMillis);
 	}
 
-	public void initData(float[] pos) {
+	public void initData(float[] pos)
+	{
 		setData(pos);
-		for (int i = 0; i < prevPos.length; i++) {
+		for (int i = 0; i < prevPos.length; i++)
+		{
 			this.prevPos[i] = pos[i];
 		}
 	}
 
-	public float[] getVel() {
+	public float[] getVel()
+	{
 		return this.vel;
 	}
 
-	public void setVel(float[] vel) {
+	public void setVel(float[] vel)
+	{
 		this.vel = vel;
 	}
 
-	public float[] getAcc() {
+	public float[] getAcc()
+	{
 		return this.acc;
 	}
 
-	public void setAcc(float[] acc) {
+	public void setAcc(float[] acc)
+	{
 		this.acc = acc;
 	}
 
-	public float[] getPrevPos() {
+	public float[] getPrevPos()
+	{
 		return this.prevPos;
 	}
 
-	public float getDrag() {
+	public float getDrag()
+	{
 		return drag;
 	}
 
-	public void setDrag(float drag) {
+	public void setDrag(float drag)
+	{
 		this.drag = drag;
 	}
 

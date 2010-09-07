@@ -34,7 +34,6 @@ public class Player extends LevelCollidableEntity {
 	private final AnimationEntity jumpAnimation;
 	private final Animation jump;
 
-	private final float maxPlayerSpeed = 1000.0f;
 	private final float playerHalfWidth = 48;
 
 	private PlayerState state;
@@ -55,11 +54,11 @@ public class Player extends LevelCollidableEntity {
 		assets.storeAnimation(Assets.PlayerIdleAnim, Assets.PlayerIdleAnimImage);
 		assets.storeAnimation(Assets.PlayerRunAnim, Assets.PlayerRunAnimImage);
 		assets.storeAnimation(Assets.WeaponImage, Assets.BulletAnimImage); //TODO: change weapon dummy
+		
 		this.jump = assets.storeAnimation(Assets.PlayerJumpAnim, Assets.PlayerIdleAnimImage);
 		this.jump.setLooping(false);
 
-		this.idleImage = factory.createAnimationEntity(Assets.PlayerIdleAnim,
-				Assets.PlayerIdleAnim);
+		this.idleImage = factory.createAnimationEntity(Assets.PlayerIdleAnim, Assets.PlayerIdleAnim);
 		this.runAnimation = factory.createAnimationEntity(Assets.PlayerRunAnim,
 				Assets.PlayerRunAnim);
 		this.jumpAnimation = factory.createAnimationEntity(
@@ -70,9 +69,11 @@ public class Player extends LevelCollidableEntity {
 				EntityType.HELPER);
 
 		this.playerGroup = factory.getEntity(groupId);
-		
-		this.playerGroup.getData()[Entity.CENTER_X] = assets.getAnimation(Assets.PlayerIdleAnim).getWidth()/2;
-		this.playerGroup.getData()[Entity.CENTER_Y] = assets.getAnimation(Assets.PlayerIdleAnim).getHeight()/2;
+
+		this.playerGroup.getData()[Entity.CENTER_X] = assets.getAnimation(
+				Assets.PlayerIdleAnim).getWidth() / 2;
+		this.playerGroup.getData()[Entity.CENTER_Y] = assets.getAnimation(
+				Assets.PlayerIdleAnim).getHeight() / 2;
 
 		this.playerGroup.add(this.idleImage);
 		this.playerGroup.add(this.runAnimation);
@@ -95,14 +96,14 @@ public class Player extends LevelCollidableEntity {
 															// rot
 		setVel(new float[] { 0, 0, 0, 0, 0, 0, 0 }); // no speed
 		setAcc(new float[] { 0, GamePlayConstants.gravity, 0, 0, 0, 0, 0 }); // gravity
-		
+
+		CollisionManager.addEntity(this);
+
 		// set bounding box according to idle animation size
 		int x = 35;
-		int width = assets.getAnimation(Assets.PlayerIdleAnim).getWidth()-70;
+		int width = assets.getAnimation(Assets.PlayerIdleAnim).getWidth() - 70;
 		int height = assets.getAnimation(Assets.PlayerIdleAnim).getHeight();
-		setDrag(0.95f);
 		setBounds(new Rectangle(x, 0, width, height)); // bounding box
-
 
 		setVisible(true);
 		weapon.setVisible(true);
@@ -133,26 +134,25 @@ public class Player extends LevelCollidableEntity {
 			this.idleImage.setVisible(true);
 			break;
 		case PlayerActionState.RunLeft:
-			this.getAcc()[Entity.X] = -Constants.GamePlayConstants.walkVelo;
+			this.getAcc()[Entity.X] = -Constants.GamePlayConstants.playerWalkVel;
 			this.playerGroup.getData()[Entity.SCALE_X] = 1;
 			this.runAnimation.setVisible(true);
 			this.state.shootDirection = state;
 			break;
 		case PlayerActionState.RunRight:
-			this.getAcc()[Entity.X] = Constants.GamePlayConstants.walkVelo;
+			this.getAcc()[Entity.X] = Constants.GamePlayConstants.playerWalkVel;
 			this.playerGroup.getData()[Entity.SCALE_X] = -1;
 			this.runAnimation.setVisible(true);
 			this.state.shootDirection = state;
 			break;
 		case PlayerActionState.Jump:
-			this.getVel()[Entity.Y] = -Constants.GamePlayConstants.JumpVelo;
+			this.getVel()[Entity.Y] = -Constants.GamePlayConstants.playerJumpVel;
 			this.jump.start();
 			this.jumpAnimation.setVisible(true);
 			break;
 		}
 	}
 
-	// Nur zum testen der Kollision
 	@Override
 	public boolean handleCollisions() {
 		if (!isActive()) {
@@ -161,12 +161,13 @@ public class Player extends LevelCollidableEntity {
 
 		boolean result = super.handleCollisions();
 
-		if (CollisionManager.collidingEntities(this).size() != 0) {
-			// HACK for debug only
-			this.map.setTileId(0, 0, 0, 0);
-		} else {
-			// HACK for debug only
-			this.map.setTileId(0, 0, 0, 13);
+		// HACK for debug only
+		if (Constants.Debug.showCollisions) {
+			if (CollisionManager.collidingEntities(this).size() != 0) {
+				this.map.setTileId(0, 0, 0, 0);
+			} else {
+				this.map.setTileId(0, 0, 0, 13);
+			}
 		}
 
 		return result;
@@ -292,22 +293,27 @@ public class Player extends LevelCollidableEntity {
 
 		if (this.isActive()) {
 
+			if (isOnGround() && currentState == PlayerActionState.Idle)
+				setDrag(0.005f);
+			else
+				setDrag(0.0f);
+
 			super.update(deltaInMillis); // calc physics
 
-			if (this.getVel()[Entity.X] > this.maxPlayerSpeed) {
-				this.getVel()[Entity.X] = this.maxPlayerSpeed;
+			if (this.getVel()[Entity.X] > Constants.GamePlayConstants.playerMaxSpeed) {
+				this.getVel()[Entity.X] = Constants.GamePlayConstants.playerMaxSpeed;
 			}
 
-			if (this.getVel()[Entity.Y] > this.maxPlayerSpeed) {
-				this.getVel()[Entity.Y] = this.maxPlayerSpeed;
+			if (this.getVel()[Entity.Y] > Constants.GamePlayConstants.playerMaxSpeed) {
+				this.getVel()[Entity.Y] = Constants.GamePlayConstants.playerMaxSpeed;
 			}
 
-			if (this.getVel()[Entity.X] < -this.maxPlayerSpeed) {
-				this.getVel()[Entity.X] = -this.maxPlayerSpeed;
+			if (this.getVel()[Entity.X] < -Constants.GamePlayConstants.playerMaxSpeed) {
+				this.getVel()[Entity.X] = -Constants.GamePlayConstants.playerMaxSpeed;
 			}
 
-			if (this.getVel()[Entity.Y] < -this.maxPlayerSpeed) {
-				this.getVel()[Entity.Y] = -this.maxPlayerSpeed;
+			if (this.getVel()[Entity.Y] < -Constants.GamePlayConstants.playerMaxSpeed) {
+				this.getVel()[Entity.Y] = -Constants.GamePlayConstants.playerMaxSpeed;
 			}
 
 			if (this.currentState == PlayerActionState.Idle
