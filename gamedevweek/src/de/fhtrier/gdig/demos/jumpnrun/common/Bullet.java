@@ -20,7 +20,8 @@ import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 
-public class Bullet extends LevelCollidableEntity {
+public class Bullet extends LevelCollidableEntity
+{
 
 	public Player owner;
 	public int color;
@@ -28,7 +29,8 @@ public class Bullet extends LevelCollidableEntity {
 	public AnimationEntity bullet;
 	
 
-	public Bullet(int id, Factory factory) throws SlickException {
+	public Bullet(int id, Factory factory) throws SlickException
+	{
 		super(id, EntityType.BULLET);
 
 		AssetMgr assets = factory.getAssetMgr();
@@ -62,6 +64,8 @@ public class Bullet extends LevelCollidableEntity {
 		setBounds(new Rectangle(0, 0, 48, 48)); // bounding box  				
 				
 
+		CollisionManager.addEntity(this);
+		
 		// setup
 		setVisible(true);
 
@@ -70,23 +74,30 @@ public class Bullet extends LevelCollidableEntity {
 	}
 
 	@Override
-	public boolean handleCollisions() {
-		if (!isActive()) {
+	public boolean handleCollisions()
+	{
+		if (!isActive())
+		{
 			return false;
 		}
 		boolean result = super.handleCollisions();
 
-		if (result) {
+		if (result)
+		{
 			die();
 			return result;
 		}
 
-		List<CollidableEntity> iColideWith = CollisionManager.collidingEntities(this);
+		List<CollidableEntity> iColideWith = CollisionManager
+				.collidingEntities(this);
 
-		for (CollidableEntity collidableEntity : iColideWith) {
-			if (collidableEntity instanceof Player) {
+		for (CollidableEntity collidableEntity : iColideWith)
+		{
+			if (collidableEntity instanceof Player)
+			{
 				Player otherPlayer = (Player) collidableEntity;
-				if (otherPlayer != owner) {
+				if (otherPlayer != owner)
+				{
 					// TODO: damage player
 					otherPlayer.getState().health -= 0.1f;
 					die();
@@ -97,15 +108,25 @@ public class Bullet extends LevelCollidableEntity {
 		return result;
 	}
 
-	private void die() {
+	@Override
+	public void update(int deltaInMillis)
+	{
+		// TODO Auto-generated method stub
+		super.update(deltaInMillis);
+	}
+
+	private void die()
+	{
 		NetworkComponent.getInstance().sendCommand(
 				new DoRemoveEntity(this.getId()));
+		CollisionManager.removeEntity(this);
 		level.remove(this);
 		level.factory.removeEntity(this.getId(), true);
 	}
 
 	@Override
-	public void setLevel(Level level) {
+	public void setLevel(Level level)
+	{
 		super.setLevel(level);
 		this.level = level;
 	}
