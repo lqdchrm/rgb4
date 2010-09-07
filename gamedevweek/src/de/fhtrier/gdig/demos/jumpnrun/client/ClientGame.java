@@ -25,8 +25,11 @@ public class ClientGame extends JumpNRunGame {
 			}
 		}
 		
-		Constants.GamePlayConstants c = new Constants.GamePlayConstants();
-		c.showEditor("ClientSettings");		
+		Constants.GamePlayConstants c1 = new Constants.GamePlayConstants();
+		c1.showEditor("ClientSettings");		
+		
+		Constants.ControlConfig c2 = new Constants.ControlConfig();
+		c2.showEditor("ControlConfig");	
 	}
 
 	@Override
