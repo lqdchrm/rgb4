@@ -10,9 +10,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 
-import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.helpers.Identifiable;
+import de.fhtrier.gdig.rgb4.common.network.NetworkData;
+import de.fhtrier.gdig.rgb4.identifiers.EntityType;
 
 public class Entity implements Identifiable {
 	/**

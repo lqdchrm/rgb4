@@ -4,9 +4,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Shape;
 
-import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.rgb4.common.entities.physics.CollisionManager;
+import de.fhtrier.gdig.rgb4.identifiers.Constants;
+import de.fhtrier.gdig.rgb4.identifiers.EntityType;
 
 public class CollidableEntity extends MoveableEntity
 {

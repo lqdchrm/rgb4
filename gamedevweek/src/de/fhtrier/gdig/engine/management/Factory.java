@@ -8,11 +8,11 @@ import java.util.TreeMap;
 
 import org.newdawn.slick.util.Log;
 
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.gfx.AnimationEntity;
 import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
 import de.fhtrier.gdig.engine.entities.gfx.TiledMapEntity;
+import de.fhtrier.gdig.rgb4.identifiers.EntityType;
 
 public class Factory {
 

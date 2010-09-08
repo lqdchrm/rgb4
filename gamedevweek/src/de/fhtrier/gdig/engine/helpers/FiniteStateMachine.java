@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.newdawn.slick.util.Log;
 
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
+import de.fhtrier.gdig.rgb4.identifiers.Constants;
 
 public class FiniteStateMachine<STATETYPE, INPUTTYPE> {
 
