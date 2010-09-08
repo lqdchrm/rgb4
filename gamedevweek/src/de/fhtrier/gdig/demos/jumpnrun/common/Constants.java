@@ -40,6 +40,8 @@ public class Constants
 		public static boolean shadersAutoDisable = true;
 		
 		public static boolean tileMapLogicDebug = false;
+
+		public static boolean forceNoFBO = false;
 	}
 	
 	public static class ControlConfig extends Configuration {
