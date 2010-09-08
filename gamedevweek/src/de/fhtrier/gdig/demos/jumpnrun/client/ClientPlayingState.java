@@ -28,6 +28,8 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeColor;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeWeaponColor;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.EntityUpdateStrategy;
@@ -168,6 +170,22 @@ public class ClientPlayingState extends PlayingState {
 			Player player = getLevel().getPlayer(killCommand.getPlayerId());
 
 			player.die();
+		}
+		
+		if (cmd instanceof SendChangeColor)
+		{
+		   SendChangeColor colorChange = (SendChangeColor) cmd;
+		   
+		   Player player = getLevel().getPlayer(colorChange.getPlayerId());
+		   player.nextColor();
+		}
+		
+		if (cmd instanceof SendChangeWeaponColor)
+		{
+		   SendChangeWeaponColor colorChange = (SendChangeWeaponColor) cmd;
+		   
+		   Player player = getLevel().getPlayer(colorChange.getPlayerId());
+		   player.nextWeaponColor();
 		}
 
 		return false;

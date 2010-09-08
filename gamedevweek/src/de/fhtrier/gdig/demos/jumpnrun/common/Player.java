@@ -242,17 +242,12 @@ public class Player extends LevelCollidableEntity {
 
 			// change player color
 			if (InputControl.isRefKeyPressed(InputControl.REFCHANGECOLOR)) {
-				nextColor();
-				
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerAction.PLAYERCOLOR));
 			}
 
 			// change weapon color
 			if (InputControl.isRefKeyPressed(InputControl.REFCHANGEWEAPON)) {
-
-				nextWeaponColor ();
-				
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerAction.WEAPONCOLOR));
 				
@@ -427,10 +422,12 @@ public class Player extends LevelCollidableEntity {
 	}
 	
 	public void die () {
-		this.respawn();
+		//TODO: Implement dying animation etc.
+		this.respawn(); //FIXME: Do we want to respawn immediately?
 	}
 	
 	public void respawn () {
+		//TODO: Implement correct action
 		state.health = 1.0f;
 		state.ammo = 1.0f;
 		state.damage = 0.2f;
