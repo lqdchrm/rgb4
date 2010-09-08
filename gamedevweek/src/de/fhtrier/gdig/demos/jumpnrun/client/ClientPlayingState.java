@@ -18,6 +18,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.common.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
@@ -45,7 +46,7 @@ public class ClientPlayingState extends PlayingState {
 
 	private ServerData recv;
 	private ClientData send;
-	
+
 	private SoundManager smgr;
 
 	public ClientPlayingState() {
@@ -61,7 +62,7 @@ public class ClientPlayingState extends PlayingState {
 		// ask server to join game
 		NetworkComponent.getInstance().sendCommand(new QueryJoin());
 		setState(LocalState.JOINING);
-		
+
 		// InputControl initialisieren
 		InputControl.loadKeyMapping();
 
@@ -123,7 +124,8 @@ public class ClientPlayingState extends PlayingState {
 				return true;
 			}
 
-			// DoRemoveEntity tells us to drop an Entity, e.g. because someone has left
+			// DoRemoveEntity tells us to drop an Entity, e.g. because someone
+			// has left
 			if (cmd instanceof DoRemoveEntity) {
 				DoRemoveEntity dre = (DoRemoveEntity) cmd;
 
@@ -170,8 +172,6 @@ public class ClientPlayingState extends PlayingState {
 	public void update(GameContainer container, StateBasedGame game,
 			int deltaInMillis) throws SlickException {
 
-		
-		
 		// apply protocol commands
 		for (INetworkCommand cmd : queue) {
 			if (!cmd.isHandled()) {
@@ -182,7 +182,7 @@ public class ClientPlayingState extends PlayingState {
 				}
 			}
 		}
-		
+
 		// TODO remove only handled commands
 		queue.clear();
 
@@ -200,11 +200,15 @@ public class ClientPlayingState extends PlayingState {
 					}
 				}
 			}
+
+			if (InputControl.isRefKeyDown(InputControl.REFJUMP)) {
+				smgr.playMusic(Assets.PlayerJumpSoundId);
+			}
 		}
-		
+
 		// nur zu DEBUG-Zwecken
 		InputControl.loadKeyMapping();
-		
+
 		// update InputControl
 		InputControl.updateInputControl(container.getInput());
 
