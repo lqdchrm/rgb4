@@ -16,6 +16,8 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
+import de.fhtrier.gdig.demos.jumpnrun.common.Level;
+import de.fhtrier.gdig.demos.jumpnrun.common.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
@@ -26,6 +28,7 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
@@ -159,6 +162,14 @@ public class ClientPlayingState extends PlayingState {
 			// we got a player, now we can start :-)
 			setState(LocalState.PLAYING);
 			return true;
+		}
+		
+		if (cmd instanceof SendKill) {
+			SendKill killCommand = (SendKill) cmd;
+			
+			Player player = getLevel().getPlayer(killCommand.getPlayerId());
+			
+			player.die();
 		}
 
 		return false;

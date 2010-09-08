@@ -370,4 +370,23 @@ public class Player extends LevelCollidableEntity {
 	public PlayerState getState() {
 		return state;
 	}
+	
+	public void die () {
+		this.respawn();
+	}
+	
+	public void respawn () {
+		state.health = 1;
+		state.ammo = 1;
+		state.damage = 0.2f;
+		state.shootDirection = PlayerActionState.RunLeft;
+		state.color = StateColor.RED; // player gets default-color: red
+		state.weaponColor = StateColor.RED; // weapon of player get
+											// default-color: red
+		
+		initData(new float[] { 200, 200, 65, 70, 1, 1, 0 });
+		
+		setState(PlayerActionState.RunRight);
+		setState(PlayerActionState.Idle);
+	}
 }

@@ -109,11 +109,13 @@ public class Bullet extends LevelCollidableEntity
 							System.out.println("Player died!!!!!!!!!!!!!!!");
 							Event dieEvent = new PlayerDiedEvent (otherPlayer);
 							EventManager.addEvent(dieEvent);
+							Event respawnEvent = new PlayerRespawnEvent (otherPlayer);
+							EventManager.addEvent(respawnEvent);
 						}
 					}
 					else
 					{
-						//otherPlayer.getState().health += owner.getState().damage; 
+						otherPlayer.getState().health += owner.getState().damage; 
 						// player becomes stronger when hit by bullet of the same color!
 					}
 					die();
