@@ -33,6 +33,33 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.sun.org.apache.xpath.internal.compiler.Keywords;
+
+import de.fhtrier.gdig.engine.support.Configuration.CommandlineParameter;
+import de.fhtrier.gdig.engine.support.Configuration.DefaultTrue;
+
+/**
+ * This abstract class allows you to easaly configurate your Program. To use its
+ * functunalety extends from this Class. Every {@link Keywords int},
+ * {@link Keywords boolean}, {@link String}, {@link Keywords float},
+ * {@link Enum} decleared in your class kan be used.
+ * 
+ * Call save to save the configuration to a Stream or load to load your
+ * configuration to a stream. you can also pars commandline Arguments to set
+ * your parameters. To do this you must use the {@link CommandlineParameter}
+ * Annotation. you can now use the argument with --ArgumentName value, which is
+ * specified in the Annotation.
+ * 
+ * Boolean attributes automaticly get set to true when the argument is submitted
+ * without a parameter. To set it to false when the parameter is called, use the
+ * {@link DefaultTrue} annotation.
+ * 
+ * 
+ * 
+ * 
+ * @author Loki
+ * 
+ */
 public abstract class Configuration
 {
 
@@ -75,7 +102,7 @@ public abstract class Configuration
 
 	private Map<String, Field> commandMap;
 
-	public Configuration()
+	protected Configuration()
 	{
 
 		commandMap = new HashMap<String, Field>();
