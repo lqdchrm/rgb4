@@ -7,6 +7,9 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.particles.ConfigurableEmitter;
+import org.newdawn.slick.particles.ConfigurableEmitter.ColorRecord;
+import org.newdawn.slick.particles.ParticleSystem;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
@@ -22,6 +25,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerActionState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.StateColor;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.gfx.AnimationEntity;
+import de.fhtrier.gdig.engine.entities.gfx.ParticleEntity;
 import de.fhtrier.gdig.engine.graphics.Shader;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
@@ -36,6 +40,7 @@ public class Player extends LevelCollidableEntity {
 	private final AnimationEntity runAnimation;
 	private final AnimationEntity jumpAnimation;
 	private final Animation jump;
+	private final ParticleEntity weaponParticles;
 
 	private final float playerHalfWidth = 48;
 
@@ -65,6 +70,9 @@ public class Player extends LevelCollidableEntity {
 		assets.storeAnimation(Assets.PlayerRunAnimId, Assets.PlayerRunAnimImagePath);
 		assets.storeAnimation(Assets.WeaponImageId, Assets.WeaponAnimImagePath); //TODO: change weapon dummy
 		
+		// Particle
+		assets.storeParticleSystem(Assets.WeaponParticleEffect, Assets.WeaponParticleEffectImgPath, Assets.WeaponParticleEffectCfgPath);
+		
 		this.jump = assets.storeAnimation(Assets.PlayerJumpAnimId, Assets.PlayerIdleAnimImagePath);
 		this.jump.setLooping(false);
 
@@ -74,6 +82,8 @@ public class Player extends LevelCollidableEntity {
 		this.jumpAnimation = factory.createAnimationEntity(
 				Assets.PlayerJumpAnimId, Assets.PlayerJumpAnimId);
 		this.weapon = factory.createAnimationEntity(Assets.WeaponImageId, Assets.WeaponImageId);
+		
+		this.weaponParticles = factory.createParticleEntity(Assets.WeaponParticleEffect, Assets.WeaponParticleEffect);
 
 		int groupId = factory.createEntity(EntityOrder.Player,
 				EntityType.HELPER);
@@ -90,6 +100,16 @@ public class Player extends LevelCollidableEntity {
 		this.playerGroup.add(this.jumpAnimation);
 		
 		this.playerGroup.add(this.weapon);
+
+		this.playerGroup.add(this.weaponParticles);
+		
+		// Position correction for weapon
+//		weapon.getData()[Entity.X] = 20;
+//		weapon.getData()[Entity.Y] = 95;
+		
+		// Position correction for particleEffects
+		this.weaponParticles.getData()[Entity.X] = 40;
+		this.weaponParticles.getData()[Entity.Y] = 110;
 
 		this.add(this.playerGroup);
 
@@ -124,6 +144,7 @@ public class Player extends LevelCollidableEntity {
 			
 		setVisible(true);
 		weapon.setVisible(true);
+		weaponParticles.setVisible(true);
 		// order
 		this.setOrder(EntityOrder.Player);
 
@@ -229,10 +250,17 @@ public class Player extends LevelCollidableEntity {
 
 			// change weapon color
 			if (InputControl.isRefKeyPressed(InputControl.REFCHANGEWEAPON)) {
+
 				nextWeaponColor ();
 				
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerAction.WEAPONCOLOR));
+				
+				ParticleSystem particleSystem = weaponParticles.Assets().getParticleSystem(Assets.WeaponParticleEffect);
+				ConfigurableEmitter emitter = (ConfigurableEmitter) particleSystem.getEmitter(0);
+				ColorRecord cr = (ColorRecord) emitter.colors.get(2);
+				
+				cr.col = StateColor.constIntoColor(state.weaponColor);
 			}
 		}
 		super.handleInput(input);

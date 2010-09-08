@@ -12,6 +12,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.gfx.AnimationEntity;
 import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
+import de.fhtrier.gdig.engine.entities.gfx.ParticleEntity;
 import de.fhtrier.gdig.engine.entities.gfx.TiledMapEntity;
 
 public class Factory {
@@ -44,6 +45,13 @@ public class Factory {
 
 	public ImageEntity createImageEntity(int order, int assetId) {
 		ImageEntity result = new ImageEntity(getNewId(), assetId, assets);
+		result.setOrder(order);
+		add(result);
+		return result;
+	}
+	
+	public ParticleEntity createParticleEntity(int order, int assetId) {
+		ParticleEntity result = new ParticleEntity(getNewId(), assetId, assets);
 		result.setOrder(order);
 		add(result);
 		return result;

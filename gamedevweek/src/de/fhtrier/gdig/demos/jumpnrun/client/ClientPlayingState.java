@@ -61,7 +61,7 @@ public class ClientPlayingState extends PlayingState {
 		// ask server to join game
 		NetworkComponent.getInstance().sendCommand(new QueryJoin());
 		setState(LocalState.JOINING);
-		
+
 		// InputControl initialisieren
 		InputControl.loadKeyMapping();
 
@@ -106,42 +106,40 @@ public class ClientPlayingState extends PlayingState {
 			return true;
 		}
 
-		// Client must have joined
-		if (localState != LocalState.JOINING) {
-			// DoCreatePlayer tells us to create a player, e.g. because someone
-			// has
-			// joined
-			if (cmd instanceof DoCreateEntity) {
-				DoCreateEntity dce = (DoCreateEntity) cmd;
+		// DoCreatePlayer tells us to create a player, e.g. because someone
+		// has
+		// joined
+		if (cmd instanceof DoCreateEntity) {
+			DoCreateEntity dce = (DoCreateEntity) cmd;
 
-				// Create Entity
-				int id = this.getFactory().createEntityById(dce.getEntityId(),
-						dce.getType());
-				Entity e = this.getFactory().getEntity(id);
-				e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+			// Create Entity
+			int id = this.getFactory().createEntityById(dce.getEntityId(),
+					dce.getType());
+			Entity e = this.getFactory().getEntity(id);
+			e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 
-				getLevel().add(getFactory().getEntity(id));
-				return true;
+			getLevel().add(getFactory().getEntity(id));
+			return true;
+		}
+
+		// DoRemoveEntity tells us to drop an Entity, e.g. because someone has
+		// left
+		if (cmd instanceof DoRemoveEntity) {
+			DoRemoveEntity dre = (DoRemoveEntity) cmd;
+
+			// Remove entity
+			int id = dre.getEntityId();
+
+			if (getLevel().getCurrentPlayer() != null
+					&& id == getLevel().getCurrentPlayer().getId()) {
+				getLevel().setCurrentPlayer(-1);
 			}
+			getLevel().remove(getFactory().getEntity(id));
 
-			// DoRemoveEntity tells us to drop an Entity, e.g. because someone has left
-			if (cmd instanceof DoRemoveEntity) {
-				DoRemoveEntity dre = (DoRemoveEntity) cmd;
+			// remove Entity recursively from Factory
+			getFactory().removeEntity(id, true);
 
-				// Remove entity
-				int id = dre.getEntityId();
-
-				if (getLevel().getCurrentPlayer() != null
-						&& id == getLevel().getCurrentPlayer().getId()) {
-					getLevel().setCurrentPlayer(-1);
-				}
-				getLevel().remove(getFactory().getEntity(id));
-
-				// remove Entity recursively from Factory
-				getFactory().removeEntity(id, true);
-
-				return true;
-			}
+			return true;
 		}
 
 		// AckCreatePlayer tells us which player is our's
@@ -163,12 +161,12 @@ public class ClientPlayingState extends PlayingState {
 			setState(LocalState.PLAYING);
 			return true;
 		}
-		
+
 		if (cmd instanceof SendKill) {
 			SendKill killCommand = (SendKill) cmd;
-			
+
 			Player player = getLevel().getPlayer(killCommand.getPlayerId());
-			
+
 			player.die();
 		}
 
@@ -189,7 +187,7 @@ public class ClientPlayingState extends PlayingState {
 				}
 			}
 		}
-		
+
 		// TODO remove only handled commands
 		queue.clear();
 
@@ -208,10 +206,10 @@ public class ClientPlayingState extends PlayingState {
 				}
 			}
 		}
-		
+
 		// nur zu DEBUG-Zwecken
 		InputControl.loadKeyMapping();
-		
+
 		// update InputControl
 		InputControl.updateInputControl(container.getInput());
 

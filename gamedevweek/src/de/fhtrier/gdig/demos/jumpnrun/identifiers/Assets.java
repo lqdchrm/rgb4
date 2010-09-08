@@ -22,5 +22,10 @@ public class Assets
 	public static final int BulletAnimId = 21;
 	public static final int WeaponImageId = 22;
 
-	public static final String BulletAnimPath = "sprites/items/Bullet2_64_64_100.png";
+	public static final String BulletAnimPath = "sprites/items/bullet2_64_64_100.png";
+	
+	// Particle Effects
+	public static final int WeaponParticleEffect = 200;
+	public static final String WeaponParticleEffectImgPath = "sprites/player/weaponparticle.png";
+	public static final String WeaponParticleEffectCfgPath = "sprites/player/weaponparticleemitter3.xml";
 }
