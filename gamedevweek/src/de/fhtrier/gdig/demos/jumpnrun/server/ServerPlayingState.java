@@ -88,7 +88,14 @@ public class ServerPlayingState extends PlayingState {
 			bullet.getData()[Entity.SCALE_X] = 1; 
 
 			return true;
-
+		case PLAYERCOLOR:
+			player.nextColor();
+			
+			return true;
+		case WEAPONCOLOR:
+			player.nextWeaponColor();
+			
+			return true;
 		}
 
 		return false;

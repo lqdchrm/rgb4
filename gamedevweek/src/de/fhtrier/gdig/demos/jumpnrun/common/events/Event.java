@@ -5,9 +5,18 @@ public abstract class Event {
 	
 	public Event () {
 	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public long getId() {
+		return id;
+	}
 	
-	
+	/**
+	 * is executed in EventManager of each event
+	 */
 	public void update() {
-		
 	}
 }

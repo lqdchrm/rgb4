@@ -8,6 +8,7 @@ import org.newdawn.slick.geom.Rectangle;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.*;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
@@ -101,11 +102,18 @@ public class Bullet extends LevelCollidableEntity
 					if (otherPlayer.getState().color != this.color)
 					{
 						otherPlayer.getState().health -= owner.getState().damage;
-						// TODO: player dies
+						
+						System.out.println(otherPlayer.getState().health);
+						
+						if (otherPlayer.getState().health <= 0.0f) {
+							System.out.println("Player died!!!!!!!!!!!!!!!");
+							Event dieEvent = new PlayerDiedEvent (otherPlayer);
+							EventManager.addEvent(dieEvent);
+						}
 					}
 					else
 					{
-						otherPlayer.getState().health += owner.getState().damage; 
+						//otherPlayer.getState().health += owner.getState().damage; 
 						// player becomes stronger when hit by bullet of the same color!
 					}
 					die();
