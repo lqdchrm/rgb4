@@ -4,7 +4,7 @@ import de.fhtrier.gdig.engine.helpers.FiniteStateMachine;
 import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.identifiers.PlayerActionState;
 import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.identifiers.PlayerActions;
 
-public class PlayerOrientationFSM extends FiniteStateMachine<Integer, PlayerActions> {
+public class PlayerOrientationFSM extends FiniteStateMachine<PlayerActionState, PlayerActions> {
 
 	public PlayerOrientationFSM() {
 		super(PlayerActionState.Right);

@@ -10,12 +10,11 @@ import de.fhtrier.gdig.rgb4.identifiers.Assets;
 import de.fhtrier.gdig.rgb4.identifiers.Constants;
 import de.fhtrier.gdig.rgb4.identifiers.EntityOrder;
 
-public class PlayerShootRunningState extends PlayerAssetState {
-
-	public PlayerShootRunningState(Player player, Factory factory)
+public class PlayerLandingState extends PlayerAssetState {
+	
+	public PlayerLandingState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.PlayerShootRunningAnimId,
-				Assets.PlayerShootRunningImagePath, EntityOrder.Player, factory);
+		super(player, Assets.PlayerLandAnimId, Assets.PlayerLandAnimImagePath, EntityOrder.Player, factory);
 	}
 
 	@Override
@@ -27,11 +26,9 @@ public class PlayerShootRunningState extends PlayerAssetState {
 	}
 
 	@Override
-	public void update() {
-	
-		// check if vel < threshold --> stop running
-		if (Math.abs(getPlayer().getVel()[Entity.X]) < Constants.GamePlayConstants.playerIdleTriggerSpeed) {
-			getPlayer().applyAction(PlayerActions.StopRunning);
-		}
+	public void update() {	
+		if (getPlayer().getVel()[Entity.Y] < Constants.GamePlayConstants.playerFallTriggerSpeed) {
+			getPlayer().applyAction(PlayerActions.Land);
+		}	
 	}
 }

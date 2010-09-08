@@ -5,6 +5,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.graphics.Shader;
@@ -17,9 +18,11 @@ import de.fhtrier.gdig.rgb4.common.Level;
 import de.fhtrier.gdig.rgb4.common.entities.physics.CollisionManager;
 import de.fhtrier.gdig.rgb4.common.entities.physics.LevelCollidableEntity;
 import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.PlayerAssetState;
-import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.PlayerJumpDownState;
-import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.PlayerJumpUpState;
+import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.PlayerJumpingState;
 import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.PlayerRunningState;
+import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.PlayerShootJumpingState;
+import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.PlayerShootRunningState;
+import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.PlayerShootStandingState;
 import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.PlayerStandingState;
 import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.identifiers.PlayerActionState;
 import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.identifiers.PlayerActions;
@@ -27,13 +30,13 @@ import de.fhtrier.gdig.rgb4.common.network.NetworkData;
 import de.fhtrier.gdig.rgb4.common.network.PlayerData;
 import de.fhtrier.gdig.rgb4.identifiers.Assets;
 import de.fhtrier.gdig.rgb4.identifiers.Constants;
+import de.fhtrier.gdig.rgb4.identifiers.Constants.GamePlayConstants;
 import de.fhtrier.gdig.rgb4.identifiers.EntityOrder;
 import de.fhtrier.gdig.rgb4.identifiers.EntityType;
 import de.fhtrier.gdig.rgb4.identifiers.StateColor;
-import de.fhtrier.gdig.rgb4.identifiers.Constants.GamePlayConstants;
 
 public class Player extends LevelCollidableEntity implements
-		IFiniteStateMachineListener<Integer> {
+		IFiniteStateMachineListener<PlayerActionState> {
 
 	// helpers
 	private static Shader playerShader = null;
@@ -47,10 +50,12 @@ public class Player extends LevelCollidableEntity implements
 
 	// some states for gfx and a statemachine for logic
 	private PlayerStandingState stateStanding;
-	private PlayerJumpUpState stateJumpUp;
-	private PlayerJumpDownState stateJumpDown;
+	private PlayerShootStandingState stateShootStanding;
 	private PlayerRunningState stateRunning;
-
+	private PlayerShootRunningState stateShootRunning;
+	private PlayerJumpingState stateJumping;
+	private PlayerShootJumpingState stateShootJumping;
+	
 	private PlayerActionFSM fsmAction;
 	private PlayerOrientationFSM fsmOrientation;
 
@@ -94,9 +99,11 @@ public class Player extends LevelCollidableEntity implements
 
 		// some states
 		stateStanding = new PlayerStandingState(this, factory);
-		stateJumpUp = new PlayerJumpUpState(this, factory);
-		stateJumpDown = new PlayerJumpDownState(this, factory);
+		stateShootStanding = new PlayerShootStandingState(this, factory);
 		stateRunning = new PlayerRunningState(this, factory);
+		stateShootRunning = new PlayerShootRunningState(this, factory);
+		stateJumping = new PlayerJumpingState(this, factory);
+		stateShootJumping = new PlayerShootJumpingState(this, factory);
 	}
 
 	private void initGraphics() throws SlickException {
@@ -151,7 +158,7 @@ public class Player extends LevelCollidableEntity implements
 		super.applyNetworkData(networkData);
 
 		// HACK we assume we're getting PlayerData
-		this.setState(((PlayerData) networkData).getState());
+//		this.setState(((PlayerData) networkData).getState());
 	}
 
 	@Override
@@ -219,14 +226,14 @@ public class Player extends LevelCollidableEntity implements
 		return currentState;
 	}
 
-	public void setState(int stateId) {
-		switch (stateId) {
-		case PlayerActionState.Standing:
-			setState(stateStanding);
-			break;
-		// TODO !!!!
-		}
-	}
+//	public void setState(PlayerActionState stateId) {
+//		switch (stateId) {
+//		case Standing:
+//			setState(stateStanding);
+//			break;
+//		// TODO !!!!
+//		}
+//	}
 
 	public void setState(PlayerAssetState state) {
 		if (currentState != null) {
@@ -283,18 +290,24 @@ public class Player extends LevelCollidableEntity implements
 
 			if (InputControl.isRefKeyPressed(InputControl.REFJUMP)) {
 				if (this.isOnGround()) {
-					this.fsmAction.apply(PlayerActions.Jump);
+					// applyAction(PlayerActions.Jump);
 				}
 			}
 
-			if (InputControl.isRefKeyPressed(InputControl.REFFIRE)) {
-				NetworkComponent.getInstance().sendCommand(
-						new QueryAction(PlayerActions.StartShooting));
+			if (InputControl.isRefKeyDown(InputControl.REFFIRE)) {
+				
+				// TODO tell server to create bullet
+//				NetworkComponent.getInstance().sendCommand(
+//						new QueryAction(PlayerActions.StartShooting));
+				
+				applyAction(PlayerActions.StartShooting);
 			}
 
-			if (!InputControl.isRefKeyPressed(InputControl.REFFIRE)) {
+			if (!InputControl.isRefKeyDown(InputControl.REFFIRE)) {
+
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerActions.StopShooting));
+				applyAction(PlayerActions.StopShooting);
 			}
 
 			PlayerCondition state = this.getPlayerCondition();
@@ -419,36 +432,46 @@ public class Player extends LevelCollidableEntity implements
 	}
 
 	@Override
-	public void leavingState(Integer state) {
+	public void leavingState(PlayerActionState state) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void enteringState(Integer state) {
+	public void enteringState(PlayerActionState state) {
 		switch (state) {
-		case PlayerActionState.Left:
-			getAcc()[Entity.X] = -Constants.GamePlayConstants.playerWalkVel;
-			getState().getGfxEntity().getData()[Entity.SCALE_X] = 1.0f;
-			setState(stateRunning);
+		case Left:
+			getAcc()[Entity.X] = -Constants.GamePlayConstants.playerWalkSpeed;
+			getData()[Entity.SCALE_X] = 1.0f;
+			applyAction(PlayerActions.StartRunning);
 			break;
-		case PlayerActionState.Right:
-			getAcc()[Entity.X] = Constants.GamePlayConstants.playerWalkVel;
-			getState().getGfxEntity().getData()[Entity.SCALE_X] = -1.0f;
-			setState(stateRunning);
+		case Right:
+			getAcc()[Entity.X] = Constants.GamePlayConstants.playerWalkSpeed;
+			getData()[Entity.SCALE_X] = -1.0f;
+			applyAction(PlayerActions.StartRunning);
 			break;
-		case PlayerActionState.Standing:
+		case Standing:
 			setState(stateStanding);
 			break;
-		case PlayerActionState.Running:
+		case Running:
 			setState(stateRunning);
 			break;
-		case PlayerActionState.Jumping:
-			setState(stateJumpUp);
+		case ShootStanding:
+			setState(stateShootStanding);
 			break;
-		case PlayerActionState.Falling:
-			setState(stateJumpDown);
+		case ShootRunning:
+			setState(stateShootRunning);
 			break;
+		case Jumping:
+			setState(stateJumping);
+			break;
+		case ShootJumping:
+			setState(stateShootJumping);
+			break;
+		default:
+			if (Constants.Debug.finiteStateMachineDebug) {
+				Log.error("FSM: state " + state + "unhandled");
+			}
 		}
 	}
 }

@@ -28,7 +28,9 @@ public class PlayerRunningState extends PlayerAssetState {
 
 	@Override
 	public void update() {	
-		if (Math.abs(getPlayer().getVel()[Entity.X]) < Constants.EPSILON) {
+		
+		// check if vel < threshold --> stop running
+		if (Math.abs(getPlayer().getVel()[Entity.X]) < Constants.GamePlayConstants.playerIdleTriggerSpeed) {
 			getPlayer().applyAction(PlayerActions.StopRunning);
 		}
 	}

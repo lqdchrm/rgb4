@@ -78,13 +78,13 @@ public class ServerPlayingState extends PlayingState {
 			bullet.getData()[Entity.X] = player.getData()[Entity.X]+40;
 			bullet.getData()[Entity.Y] = player.getData()[Entity.Y]+80;
 			bullet.getVel()[Entity.X] = player.getVel()[Entity.X]
-					+ (state.shootDirection == PlayerActionState.Right ? Constants.GamePlayConstants.shotSpeed
+					+ (state.shootDirection == PlayerActionState.Right.ordinal() ? Constants.GamePlayConstants.shotSpeed
 							: -Constants.GamePlayConstants.shotSpeed);
 			
-			if(player.getPlayerCondition().shootDirection==PlayerActionState.Right)
+			if(player.getPlayerCondition().shootDirection==PlayerActionState.Right.ordinal())
 			bullet.getData()[Entity.SCALE_X] = -1;
 			
-			else if(player.getPlayerCondition().shootDirection==PlayerActionState.Right)
+			else if(player.getPlayerCondition().shootDirection==PlayerActionState.Right.ordinal())
 			bullet.getData()[Entity.SCALE_X] = 1; 
 
 			return true;

@@ -134,7 +134,7 @@ public class Level extends MoveableEntity {
 			float health = player.getPlayerCondition().health * params.spielerLeuchtstaerke/10.0f;
 			float ammo = player.getPlayerCondition().ammo * params.waffenLeuchtstaerke/10.0f;
 			int playerlook = 1;
-			if (player.getPlayerCondition().shootDirection == PlayerActionState.Left) playerlook = -1;
+			if (player.getPlayerCondition().shootDirection == PlayerActionState.Left.ordinal()) playerlook = -1;
 			
 			// Horizontal Blur
 			Shader.setActiveShader(blur1D);

@@ -5,21 +5,22 @@ import org.newdawn.slick.SlickException;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.management.Factory;
 import de.fhtrier.gdig.rgb4.common.gamelogic.player.Player;
+import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.identifiers.PlayerActions;
 import de.fhtrier.gdig.rgb4.identifiers.Assets;
 import de.fhtrier.gdig.rgb4.identifiers.Constants;
 import de.fhtrier.gdig.rgb4.identifiers.EntityOrder;
 
-public class PlayerJumpUpState extends PlayerAssetState {
+public class PlayerJumpingState extends PlayerAssetState {
 
-	public PlayerJumpUpState(Player player, Factory factory)
+	public PlayerJumpingState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.PlayerJumpUpAnimId,
-				Assets.PlayerJumpUpAnimImagePath, EntityOrder.Player, factory);
+		super(player, Assets.PlayerJumpAnimId,
+				Assets.PlayerJumpAnimImagePath, EntityOrder.Player, factory);
 	}
 
 	@Override
 	public void enter() {
-		getPlayer().getVel()[Entity.Y] = -Constants.GamePlayConstants.playerJumpVel;
+		getPlayer().getVel()[Entity.Y] = -Constants.GamePlayConstants.playerJumpSpeed;
 	}
 
 	@Override
@@ -30,6 +31,10 @@ public class PlayerJumpUpState extends PlayerAssetState {
 	@Override
 	public void update() {
 
+		// check if falling
+		if (getPlayer().getVel()[Entity.Y] < Constants.GamePlayConstants.playerFallTriggerSpeed) {
+			getPlayer().applyAction(PlayerActions.Fall);
+		}
 	}
 
 }

@@ -17,11 +17,11 @@ public class Assets {
 	public static final int PlayerStandingAnimId = 111;
 	public static final String PlayerStandingAnimImagePath = "sprites/player/stehen_128_128_20.png";
 
-	public static final int PlayerJumpDownAnimId = 112;
-	public static final String PlayerJumpDownAnimImagePath = "sprites/player/springenrunter_128_128_20.png";
+	public static final int PlayerLandAnimId = 112;
+	public static final String PlayerLandAnimImagePath = "sprites/player/springenrunter_128_128_20.png";
 	
-	public static final int PlayerJumpUpAnimId = 113;
-	public static final String PlayerJumpUpAnimImagePath = "sprites/player/springenhoch_128_128_20.png";
+	public static final int PlayerJumpAnimId = 113;
+	public static final String PlayerJumpAnimImagePath = "sprites/player/springenhoch_128_128_20.png";
 	
 	public static final int PlayerShootStandingAnimId = 114;
 	public static final String PlayerShootStandingImagePath = "sprites/player/schussstehen_128_128_20.png";

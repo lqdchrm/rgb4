@@ -15,9 +15,12 @@ public class Constants {
 		public static float shotSpeed = 1000.0f;
 		public static float shotCooldown = 100.0f;
 		
-		public static float playerWalkVel = 4000.0f;
-		public static float playerJumpVel = 3500.0f;
+		public static float playerWalkSpeed = 4000.0f;
+		public static float playerJumpSpeed = 3500.0f;
 		public static float playerMaxSpeed = 850.0f;
+		
+		public static final float playerIdleTriggerSpeed = 10.0f;
+		public static final float playerFallTriggerSpeed = 5.0f;
 	}
 
 	public static class Debug extends Configuration {
