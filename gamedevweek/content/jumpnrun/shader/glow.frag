@@ -28,7 +28,7 @@ void main(void)
 			dist *= 10.0;
 		
 		float dfactor = clamp(0.25+(range-dist)*invrange, 0.0, 1.0);
-		color += playercolor[i] * brightness * dfactor * strength[i];
+		color += playercolor[i] * brightness * dfactor[i] * strength[i];
 	}
 	
 	gl_FragColor = color;

@@ -114,14 +114,15 @@ public class Level extends MoveableEntity {
 	protected void renderImpl(Graphics graphicContext, Image frameBuffer)
 	{
 		super.renderImpl(graphicContext, frameBuffer);
-		fbGraphics.clear();
-		fbGraphics.drawImage(frameBuffer, 0, 0);
 		
 		// Player-Glow Post Processing Effect
 		Player player = this.getCurrentPlayer();
 		
-		if (player != null && Constants.Debug.shadersActive)
+		if (player != null && Constants.Debug.shadersActive && frameBuffer != null)
 		{
+			fbGraphics.clear();
+			fbGraphics.drawImage(frameBuffer, 0, 0);
+			
 			// Get Player Position on Screen relative to LOWER left corner
 			float px = player.getData()[Player.X]
 					+ player.getData()[Player.CENTER_X] + getData(X);
