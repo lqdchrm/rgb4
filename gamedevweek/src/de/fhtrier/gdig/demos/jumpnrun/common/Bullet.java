@@ -9,6 +9,7 @@ import org.newdawn.slick.geom.Rectangle;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.*;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.*;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
@@ -103,9 +104,7 @@ public class Bullet extends LevelCollidableEntity
 					{
 						otherPlayer.getState().health -= owner.getState().damage;
 						
-						System.out.println(otherPlayer.getState().health);
-						
-						if (otherPlayer.getState().health <= 0.0f) {
+						if (otherPlayer.getState().health <= 0.01f) {
 							Event dieEvent = new PlayerDiedEvent (otherPlayer);
 							EventManager.addEvent(dieEvent);
 						}

@@ -14,8 +14,8 @@ public class PlayerDiedEvent extends Event {
 	}
 	
 	public void update () {
+		player.respawn();
 		NetworkComponent.getInstance().sendCommand(new SendKill(player.getId()));
-		System.out.println("Player: " + player.getId());
 	}
 
 }
