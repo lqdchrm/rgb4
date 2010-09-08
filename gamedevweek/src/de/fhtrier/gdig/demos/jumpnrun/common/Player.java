@@ -7,6 +7,9 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.particles.ConfigurableEmitter;
+import org.newdawn.slick.particles.ConfigurableEmitter.ColorRecord;
+import org.newdawn.slick.particles.ParticleSystem;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
@@ -244,6 +247,22 @@ public class Player extends LevelCollidableEntity {
 				state.weaponColor = state.weaponColor << 1;
 				if (state.weaponColor > StateColor.BLUE) {
 					state.weaponColor = StateColor.RED;
+				}
+				
+				ParticleSystem particleSystem = weaponParticles.Assets().getParticleSystem(Assets.WeaponParticleEffect);
+				ConfigurableEmitter emitter = (ConfigurableEmitter) particleSystem.getEmitter(0);
+				ColorRecord cr = (ColorRecord) emitter.colors.get(2);
+				
+				if (state.weaponColor == StateColor.BLUE) {
+					cr.col = new Color(0.0f, 0.0f, 1.0f);
+				}
+				
+				if (state.weaponColor == StateColor.RED) {
+					cr.col = new Color(1.0f, 0.0f, 0.0f);
+				}
+				
+				if (state.weaponColor == StateColor.GREEN) {
+					cr.col = new Color(0.0f, 1.0f, 0.0f);
 				}
 			}
 		}
