@@ -52,6 +52,7 @@ public class Player extends LevelCollidableEntity {
 		state.name = "Player";
 		state.health = 1;
 		state.ammo = 1;
+		state.damage = 0.2f;
 		state.shootDirection = PlayerActionState.RunLeft;
 		state.color = StateColor.RED; // player gets default-color: red
 		state.weaponColor = StateColor.RED; // weapon of player get
@@ -62,7 +63,7 @@ public class Player extends LevelCollidableEntity {
 		// gfx
 		assets.storeAnimation(Assets.PlayerIdleAnimId, Assets.PlayerIdleAnimImagePath);
 		assets.storeAnimation(Assets.PlayerRunAnimId, Assets.PlayerRunAnimImagePath);
-		assets.storeAnimation(Assets.WeaponImageId, Assets.BulletAnimImagePath); //TODO: change weapon dummy
+		assets.storeAnimation(Assets.WeaponImageId, Assets.WeaponAnimImagePath); //TODO: change weapon dummy
 		
 		this.jump = assets.storeAnimation(Assets.PlayerJumpAnimId, Assets.PlayerIdleAnimImagePath);
 		this.jump.setLooping(false);
@@ -89,10 +90,6 @@ public class Player extends LevelCollidableEntity {
 		this.playerGroup.add(this.jumpAnimation);
 		
 		this.playerGroup.add(this.weapon);
-		
-		// Position correction for weapon
-		weapon.getData()[Entity.X] += 20;
-		weapon.getData()[Entity.Y] += 95;
 
 		this.add(this.playerGroup);
 
@@ -222,24 +219,41 @@ public class Player extends LevelCollidableEntity {
 						new QueryAction(PlayerAction.SHOOT));
 			}
 
-			PlayerState state = this.getState();
 			// change player color
 			if (InputControl.isRefKeyPressed(InputControl.REFCHANGECOLOR)) {
-				state.color = state.color << 1;
-				if (state.color > StateColor.BLUE) {
-					state.color = StateColor.RED;
-				}
+				nextColor();
+				
+				NetworkComponent.getInstance().sendCommand(
+						new QueryAction(PlayerAction.PLAYERCOLOR));
 			}
 
 			// change weapon color
 			if (InputControl.isRefKeyPressed(InputControl.REFCHANGEWEAPON)) {
-				state.weaponColor = state.weaponColor << 1;
-				if (state.weaponColor > StateColor.BLUE) {
-					state.weaponColor = StateColor.RED;
-				}
+				nextWeaponColor ();
+				
+				NetworkComponent.getInstance().sendCommand(
+						new QueryAction(PlayerAction.WEAPONCOLOR));
 			}
 		}
 		super.handleInput(input);
+	}
+	
+	public void nextColor () {
+		PlayerState state = this.getState();
+		
+		state.color = state.color << 1;
+		if (state.color > StateColor.BLUE) {
+			state.color = StateColor.RED;
+		}
+	}
+	
+	public void nextWeaponColor () {
+		PlayerState state = this.getState();
+		
+		state.weaponColor = state.weaponColor << 1;
+		if (state.weaponColor > StateColor.BLUE) {
+			state.weaponColor = StateColor.RED;
+		}
 	}
 
 	// network
@@ -382,5 +396,24 @@ public class Player extends LevelCollidableEntity {
 
 	public PlayerState getState() {
 		return state;
+	}
+	
+	public void die () {
+		this.respawn();
+	}
+	
+	public void respawn () {
+		state.health = 1.0f;
+		state.ammo = 1.0f;
+		state.damage = 0.2f;
+		state.shootDirection = PlayerActionState.RunLeft;
+		state.color = StateColor.RED; // player gets default-color: red
+		state.weaponColor = StateColor.RED; // weapon of player get
+											// default-color: red
+		
+		initData(new float[] { 200, 200, 65, 70, 1, 1, 0 });
+		
+		setState(PlayerActionState.RunRight);
+		setState(PlayerActionState.Idle);
 	}
 }

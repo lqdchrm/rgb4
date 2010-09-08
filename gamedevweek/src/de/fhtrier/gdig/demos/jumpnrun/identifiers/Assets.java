@@ -14,8 +14,9 @@ public class Assets
 	public static final String PlayerRunAnimImagePath = "sprites/player/laufen_128_128_20.png";
 	public static final String PlayerIdleAnimImagePath = "sprites/player/stehen_128_128_20.png";
 	public static final String PlayerJumpAnimImagePath = "sprites/player/springenhoch_128_128_20.png";
-
-	public static final String BulletAnimImagePath = "sprites/player/projektil_100_35_10.png";
+	
+	public static final String WeaponAnimImagePath = "sprites/items/waffestehen_128_128_20.png";
+	//public static final String BulletAnimImagePath = "sprites/player/projektil_100_35_10.png";
 
 	public static final int GemImageId = 20;
 	public static final int BulletAnimId = 21;
