@@ -201,8 +201,8 @@ public class ClientPlayingState extends PlayingState {
 				}
 			}
 
-			if (InputControl.isRefKeyDown(InputControl.REFJUMP)) {
-				smgr.playMusic(Assets.PlayerJumpSoundId);
+			if (InputControl.isRefKeyPressed(InputControl.REFJUMP)) {
+				smgr.playSound(Assets.PlayerJumpSoundId);
 			}
 		}
 

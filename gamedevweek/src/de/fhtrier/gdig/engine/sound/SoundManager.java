@@ -18,7 +18,7 @@ public class SoundManager {
 		this.assets.storeSound(Assets.PlayerJumpSoundId, Assets.PlayerJumpSoundPath);
 //		this.assets.storeSound(Assets.PlayerLandSoundId, Assets.PlayerLandSoundPath);
 //		this.assets.storeSound(Assets.PlayerIdleSoundId, Assets.PlayerIdleSoundPath);
-		this.assets.storeSound(Assets.PlayerDyingSoundId, Assets.PlayerDyingSoundPath);
+//		this.assets.storeSound(Assets.PlayerDyingSoundId, Assets.PlayerDyingSoundPath);
 //		this.assets.storeSound(Assets.PlayerShootSoundId, Assets.PlayerShootSoundPath);
 		
 //		this.assets.storeSound(Assets.BulletSoundId, Assets.BulletSoundPath);
