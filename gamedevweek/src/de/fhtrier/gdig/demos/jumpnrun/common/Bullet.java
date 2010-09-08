@@ -106,7 +106,6 @@ public class Bullet extends LevelCollidableEntity
 						System.out.println(otherPlayer.getState().health);
 						
 						if (otherPlayer.getState().health <= 0.0f) {
-							System.out.println("Player died!!!!!!!!!!!!!!!");
 							Event dieEvent = new PlayerDiedEvent (otherPlayer);
 							EventManager.addEvent(dieEvent);
 						}
