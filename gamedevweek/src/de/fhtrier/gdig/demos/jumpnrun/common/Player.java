@@ -41,6 +41,7 @@ public class Player extends LevelCollidableEntity {
 
 	private PlayerState state;
 	private static Shader playerShader = null;
+	private static Image playerGlow = null;
 	private AnimationEntity weapon; // has to be an own class-object!
 
 	public Player(int id, Factory factory) throws SlickException {
@@ -118,6 +119,7 @@ public class Player extends LevelCollidableEntity {
 		{
 			playerShader = new Shader("content/jumpnrun/shader/simple.vert",
 			"content/jumpnrun/shader/playercolor.frag");
+			//playerGlow = new Image("content/jumpnrun/shader/playerGlow.png");
 		}
 			
 		setVisible(true);

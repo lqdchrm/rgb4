@@ -1,4 +1,4 @@
-#define num 8
+#define num 16
 
 uniform sampler2D tex;
 
