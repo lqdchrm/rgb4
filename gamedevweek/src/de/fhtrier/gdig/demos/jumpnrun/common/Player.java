@@ -97,7 +97,7 @@ public class Player extends LevelCollidableEntity {
 		// physics
 		// X Y OX OY SY SY ROT
 
-		initData(new float[] { 200, 200, 65, 70, 1, 1, 0 }); // pos +
+		initData(new float[] { 94, 92, 65, 70, 1, 1, 0 }); // pos +
 																// center of
 																// rotation +
 																// scale +

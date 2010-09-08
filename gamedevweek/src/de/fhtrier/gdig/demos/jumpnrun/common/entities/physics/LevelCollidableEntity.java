@@ -18,11 +18,6 @@ public class LevelCollidableEntity extends CollidableEntity {
 	private boolean onGround;
 	protected TiledMap map;
 
-	private boolean leftCollision = false;
-	private boolean rightCollision = false;
-	private boolean topCollision = false;
-	private boolean bottomCollision = false;
-
 	/**
 	 * Custom entity class which implements level collisions (ugly ?) needs to
 	 * have TiledMap and Bounds set before you should call something
@@ -68,15 +63,6 @@ public class LevelCollidableEntity extends CollidableEntity {
 
 			Shape bbEntity = this.getTransformedBounds();
 
-			// Die Distance zur Boundingbox fürden LEFT TOP BOTTOM und RIGHT
-			// Collisions punkt
-			float distanceToBoundingBox = 5.0f;
-
-			leftCollision = false;
-			rightCollision = false;
-			topCollision = false;
-			bottomCollision = false;
-
 			// determine tiles to check for collisions
 			final int leftTile = (int) Math.floor(bbEntity.getMinX()
 					/ this.map.getTileWidth());
@@ -94,7 +80,13 @@ public class LevelCollidableEntity extends CollidableEntity {
 
 					// items
 					final int tileId = this.map.getTileId(x, y, 0);
-
+					
+					final Rectangle bbTile = new Rectangle(x
+							* this.map.getTileWidth(), y
+							* this.map.getTileHeight(),
+							this.map.getTileWidth(),
+							this.map.getTileHeight());
+					
 					// TODO GameLogic from Tiles
 					if (Constants.Debug.tileMapLogicDebug) {
 						if (this.map.getLayerCount() >= 2) {
@@ -102,7 +94,10 @@ public class LevelCollidableEntity extends CollidableEntity {
 									.getTileId(x, y, 1);
 
 							if (actionTileId > 0) {
-								Log.debug("Colission with: " + actionTileId);
+								if (collisionWithTile(bbTile))
+								{
+									Log.debug("Colission with: " + actionTileId);
+								}
 							}
 						} else {
 							Log.debug("Level has no logic layer");
@@ -110,54 +105,8 @@ public class LevelCollidableEntity extends CollidableEntity {
 					}
 
 					if (tileId > 0) {
-						final Rectangle bbTile = new Rectangle(x
-								* this.map.getTileWidth(), y
-								* this.map.getTileHeight(),
-								this.map.getTileWidth(),
-								this.map.getTileHeight());
-
-						leftCollision |= bbTile.contains(bbEntity.getMinX()
-								- distanceToBoundingBox, bbEntity.getCenterY());
-						rightCollision |= bbTile.contains(bbEntity.getMaxX()
-								+ distanceToBoundingBox, bbEntity.getCenterY());
-						topCollision |= bbTile.contains(bbEntity.getCenterX(),
-								bbEntity.getMinY() - distanceToBoundingBox);
-						bottomCollision |= bbTile.contains(
-								bbEntity.getCenterX(), bbEntity.getMaxY()
-										+ distanceToBoundingBox);
-
-						final float[] depth = Collisions.getIntersectionDepth(
-								bbEntity, bbTile);
-
-						final float absDepthX = Math.abs(depth[Entity.X]);
-						final float absDepthY = Math.abs(depth[Entity.Y]);
-
-						if (absDepthX > 1 || absDepthY > 1) {
-							switch (tileId) {
-							case 1:
-							case 13:
-								this.map.setTileId(x, y, 0, 0);
-								break;
-							default:
-								if (absDepthY < absDepthX) {
-									this.getData()[Entity.Y] += depth[Entity.Y];
-									this.getVel()[Entity.Y] = 0.0f;
-									bbEntity = this.getTransformedBounds();
-
-									if (depth[Entity.Y] < 0) {
-										this.onGround = true;
-									}
-
-									collided = true;
-								} else {
-									this.getData()[Entity.X] += depth[Entity.X];
-									this.getVel()[Entity.X] = 0.0f;
-									bbEntity = this.getTransformedBounds();
-									collided = true;
-								}
-								break;
-							}
-						}
+						collided = collisionWithTile(bbTile);
+						handleCollisionWithTile(bbTile);
 					}
 				}
 			}
@@ -165,20 +114,53 @@ public class LevelCollidableEntity extends CollidableEntity {
 		return (collided || result);
 	}
 
-	public boolean isLeftCollision() {
-		return leftCollision;
+	/**
+	 * Returns true if Entity collides with bbTile
+	 * 
+	 * @param bbTile The Tile to check collision with
+	 * @return Returns if Entity collides with bbTile
+	 */
+	private boolean collisionWithTile(Shape bbTile) {
+		
+		Shape bbEntity = this.getTransformedBounds();
+		
+		boolean collided = false;
+
+		final float[] depth = Collisions.getIntersectionDepth(
+				bbEntity, bbTile);
+
+		final float absDepthX = Math.abs(depth[Entity.X]);
+		final float absDepthY = Math.abs(depth[Entity.Y]);
+
+		if (absDepthX > 1 || absDepthY > 1) {
+			collided = true;
+		}
+		return collided;
 	}
 
-	public boolean isRightCollision() {
-		return rightCollision;
-	}
+	/**
+	 * Corrects the Position of the entity
+	 * @param bbTile The Tile with which the Entity has collided
+	 */
+	private void handleCollisionWithTile(Shape bbTile) {
+		
+		Shape bbEntity = this.getTransformedBounds();
+		final float[] depth = Collisions.getIntersectionDepth(
+				bbEntity, bbTile);
+		final float absDepthX = Math.abs(depth[Entity.X]);
+		final float absDepthY = Math.abs(depth[Entity.Y]);
+		if (absDepthY < absDepthX) {
+			this.getData()[Entity.Y] += depth[Entity.Y];
+			this.getVel()[Entity.Y] = 0.0f;
 
-	public boolean isTopCollision() {
-		return topCollision;
-	}
+			if (depth[Entity.Y] < 0) {
+				this.onGround = true;
+			}
 
-	public boolean isBottomCollision() {
-		return bottomCollision;
+		} else {
+			this.getData()[Entity.X] += depth[Entity.X];
+			this.getVel()[Entity.X] = 0.0f;
+		}
 	}
 
 	public boolean isOnGround() {
