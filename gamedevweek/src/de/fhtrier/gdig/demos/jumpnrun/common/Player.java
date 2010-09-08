@@ -282,18 +282,26 @@ public class Player extends LevelCollidableEntity {
 		{
 			Shader.pushShader(playerShader);
 			Shader.activateAdditiveBlending();
+			float weaponGlowSize = 0.2f+this.getState().ammo*0.8f;
+			float glowSize = 0.2f+this.getState().health*0.8f;
+			
 			float weaponX = this.getData(CENTER_X);
-			float weaponY = this.getData(CENTER_Y)-weaponGlow.getHeight()/2+40;
+			float weaponY = this.getData(CENTER_Y)-weaponGlow.getHeight()*weaponGlowSize/2+40;
+			
 			int lookDirection = 1;
 			if (this.getState().shootDirection == PlayerActionState.RunLeft) lookDirection = -1;
 			
 			playerShader.setValue("playercolor", StateColor.constIntoColor(this.getState().weaponColor));
+			
 			g.drawImage(weaponGlow, weaponX, weaponY, weaponX + weaponGlow.getWidth()*lookDirection,
-					weaponY+weaponGlow.getHeight(), 0, 0, weaponGlow.getWidth(), weaponGlow.getHeight());
+					weaponY+weaponGlow.getHeight()*weaponGlowSize, 0, 0, weaponGlow.getWidth(), weaponGlow.getHeight());
 			
 			playerShader.setValue("playercolor", StateColor.constIntoColor(this.getState().color));
-			g.drawImage(playerGlow, this.getData(CENTER_X)-playerGlow.getWidth()/2,
-					this.getData(CENTER_Y)-playerGlow.getHeight()/2);
+			g.drawImage(playerGlow, this.getData(CENTER_X)-playerGlow.getWidth()*glowSize/2,
+					this.getData(CENTER_Y)-playerGlow.getHeight()*glowSize/2, 
+					this.getData(CENTER_X)+playerGlow.getWidth()*glowSize/2,
+					this.getData(CENTER_Y)+playerGlow.getHeight()*glowSize/2,0,0,
+					playerGlow.getWidth(), playerGlow.getHeight());
 			
 			Shader.activateDefaultBlending();
 		}
