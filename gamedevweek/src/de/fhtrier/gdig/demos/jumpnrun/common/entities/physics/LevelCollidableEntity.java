@@ -17,7 +17,12 @@ public class LevelCollidableEntity extends CollidableEntity {
 
 	private boolean onGround;
 	protected TiledMap map;
-
+	
+	private boolean leftCollision = false;
+	private boolean rightCollision = false;
+	private boolean topCollision = false;
+	private boolean bottomCollision = false;
+	
 	/**
 	 * Custom entity class which implements level collisions (ugly ?) needs to
 	 * have TiledMap and Bounds set before you should call something
@@ -63,6 +68,11 @@ public class LevelCollidableEntity extends CollidableEntity {
 
 			Shape bbEntity = this.getTransformedBounds();
 
+			leftCollision = false;
+			rightCollision = false;
+			topCollision = false;
+			bottomCollision = false;
+			
 			// determine tiles to check for collisions
 			final int leftTile = (int) Math.floor(bbEntity.getMinX()
 					/ this.map.getTileWidth());
@@ -126,13 +136,23 @@ public class LevelCollidableEntity extends CollidableEntity {
 		
 		boolean collided = false;
 
+		leftCollision |= bbTile.contains(bbEntity.getMinX()
+				- Constants.GamePlayConstants.colissionPointDistance, bbEntity.getCenterY());
+		rightCollision |= bbTile.contains(bbEntity.getMaxX()
+				+ Constants.GamePlayConstants.colissionPointDistance, bbEntity.getCenterY());
+		topCollision |= bbTile.contains(bbEntity.getCenterX(),
+				bbEntity.getMinY() - Constants.GamePlayConstants.colissionPointDistance);
+		bottomCollision |= bbTile.contains(
+				bbEntity.getCenterX(), bbEntity.getMaxY()
+						+ Constants.GamePlayConstants.colissionPointDistance);
+		
 		final float[] depth = Collisions.getIntersectionDepth(
 				bbEntity, bbTile);
 
 		final float absDepthX = Math.abs(depth[Entity.X]);
 		final float absDepthY = Math.abs(depth[Entity.Y]);
 
-		if (absDepthX > 1 || absDepthY > 1) {
+		if (absDepthX > 0 || absDepthY > 0) {
 			collided = true;
 		}
 		return collided;
@@ -149,20 +169,42 @@ public class LevelCollidableEntity extends CollidableEntity {
 				bbEntity, bbTile);
 		final float absDepthX = Math.abs(depth[Entity.X]);
 		final float absDepthY = Math.abs(depth[Entity.Y]);
-		if (absDepthY < absDepthX) {
+		if (absDepthY < absDepthX && ((topCollision && depth[Entity.Y] > 0) || (bottomCollision && depth[Entity.Y] < 0))) {			
 			this.getData()[Entity.Y] += depth[Entity.Y];
 			this.getVel()[Entity.Y] = 0.0f;
+			Log.debug("top: " + topCollision +", bottom: " + bottomCollision);
 
 			if (depth[Entity.Y] < 0) {
 				this.onGround = true;
 			}
 
-		} else {
+		} else if((leftCollision && depth[Entity.X] > 0)|| (rightCollision && depth[Entity.X] <0)){
+			Log.debug("left: " + leftCollision +", right: " + rightCollision);
 			this.getData()[Entity.X] += depth[Entity.X];
 			this.getVel()[Entity.X] = 0.0f;
 		}
 	}
 
+	public boolean isLeftCollision()
+	{
+		return leftCollision;
+	}
+
+	public boolean isRightCollision()
+	{
+		return rightCollision;
+	}
+
+	public boolean isTopCollision()
+	{
+		return topCollision;
+	}
+
+	public boolean isBottomCollision()
+	{
+		return bottomCollision;
+	}
+	
 	public boolean isOnGround() {
 		return this.onGround;
 	}

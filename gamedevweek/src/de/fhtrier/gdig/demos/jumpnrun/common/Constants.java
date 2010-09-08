@@ -19,7 +19,7 @@ public class Constants {
 		public static float playerJumpVel = 3500.0f;
 		public static float playerMaxSpeed = 850.0f;
 		
-		public static float colissionPointDistance = 5.0f;
+		public static float colissionPointDistance = 0.0f;
 	}
 
 	public static class Debug extends Configuration {
