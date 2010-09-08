@@ -337,11 +337,16 @@ public abstract class Configuration
 				}
 				if (filedType == float.class)
 				{
+					System.err.println(value);
+					System.err.println(((Float) value).doubleValue());
 					SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(
-							(double) ((Float) value).floatValue(),
+							 ((Float) value).doubleValue(),
 							-Double.MAX_VALUE, Double.MAX_VALUE, 1);
 					final JSpinner jSpinner = new JSpinner(spinnerNumberModel);
 					panel.add(jSpinner);
+				    final JSpinner.NumberEditor editor =
+				          new JSpinner.NumberEditor(jSpinner, "0.##########");
+				    jSpinner.setEditor(editor);
 					jSpinner.setPreferredSize(new Dimension(60, jSpinner
 							.getPreferredSize().height));
 					jSpinner.addChangeListener(new ChangeListener()

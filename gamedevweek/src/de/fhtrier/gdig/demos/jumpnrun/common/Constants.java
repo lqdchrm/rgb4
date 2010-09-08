@@ -18,8 +18,11 @@ public class Constants {
 		public static float playerWalkVel = 4000.0f;
 		public static float playerJumpVel = 3500.0f;
 		public static float playerMaxSpeed = 850.0f;
+		public static float playerGroundDrag = 0.005f;
+		public static float playerAirDrag = 0.000000001f;
 		
-		public static float colissionPointDistance = 0.0f;
+		
+		public static float colissionPointDistance = 2.0f;
 	}
 
 	public static class Debug extends Configuration {
@@ -33,7 +36,7 @@ public class Constants {
 		public static boolean shadersActive = true;
 		public static boolean shadersAutoDisable = true;
 		
-		public static boolean tileMapLogicDebug = true;
+		public static boolean tileMapLogicDebug = false;
 	}
 	
 	public static class ControlConfig extends Configuration {
