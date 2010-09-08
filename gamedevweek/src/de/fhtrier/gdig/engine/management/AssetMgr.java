@@ -1,6 +1,7 @@
 package de.fhtrier.gdig.engine.management;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -9,6 +10,9 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.particles.ConfigurableEmitter;
+import org.newdawn.slick.particles.ParticleIO;
+import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.tiled.TiledMap;
 
 public class AssetMgr {
@@ -19,6 +23,7 @@ public class AssetMgr {
 	private HashMap<Integer, Sound> sounds;
 	private HashMap<Integer, TiledMap> tiledMaps;
 	private HashMap<Integer, Animation> animations;
+	private HashMap<Integer, ParticleSystem> particleSystems;
 
 	public AssetMgr() {
 
@@ -26,6 +31,7 @@ public class AssetMgr {
 		this.sounds = new HashMap<Integer, Sound>();
 		this.tiledMaps = new HashMap<Integer, TiledMap>();
 		this.animations = new HashMap<Integer, Animation>();
+		this.particleSystems = new HashMap<Integer, ParticleSystem>();
 		this.assetPathPrefix = "";
 		this.assetFallbackPathPrefix = "";
 	}
@@ -154,5 +160,44 @@ public class AssetMgr {
 
 	public Animation getAnimation(int id) {
 		return this.animations.get(id);
+	}
+	
+	public ParticleSystem storeParticleSystem (int id, String imgPath, String emitterCfgPath) throws SlickException {
+		
+		Image image = null;
+		try {
+			image = new Image(combinePathStrings(this.assetPathPrefix, imgPath), false);
+		} catch (Exception e1) {
+			image = new Image(combinePathStrings(this.assetFallbackPathPrefix, imgPath), false);
+		}  
+		
+        ParticleSystem system = new ParticleSystem(image);  
+          
+        ConfigurableEmitter emitter1 = null;
+        try {
+			File xmlFile = new File(combinePathStrings(this.assetPathPrefix, emitterCfgPath));
+			emitter1 = ParticleIO.loadEmitter(xmlFile);			
+		} catch (Exception e) {
+			File xmlFile = new File(combinePathStrings(this.assetFallbackPathPrefix, emitterCfgPath));
+			try {
+				emitter1 = ParticleIO.loadEmitter(xmlFile);
+			} catch (IOException e1) {
+				throw new IllegalArgumentException("Wrong cfg file or incorrect path?");
+			}
+		}
+ 
+		system.addEmitter(emitter1);
+		
+		storeParticleSystem(id, system);
+		
+		return system;
+	}
+	
+	public void storeParticleSystem (int id, ParticleSystem system) {
+		this.particleSystems.put(id, system);
+	}
+	
+	public ParticleSystem getParticleSystem (int id) {
+		return this.particleSystems.get(id);
 	}
 }
