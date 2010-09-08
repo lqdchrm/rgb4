@@ -166,7 +166,7 @@ public class Shader
      */
     public static void activateAdditiveBlending()
     {
-    	Renderer.get().glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_ONE);
+    	Renderer.get().glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_DST_ALPHA);
     }
     
     /**
@@ -277,6 +277,7 @@ public class Shader
             		Log.debug("OpenGL compiling encountered an ERROR and shadersAutoDisable is active.\n" +
             				">>>>>>>>>> ALL SHADERS ARE DISABLED <<<<<<<<<");
             		Constants.Debug.shadersActive = false;
+            		setActiveShader(null);
             	}
             }
         }
@@ -294,6 +295,7 @@ public class Shader
         		Log.debug("OpenGL CRITCAL ERROR and shadersAutoDisable is active.\n" +
         				">>>>>>>>>> ALL SHADERS ARE DISABLED <<<<<<<<<");
         		Constants.Debug.shadersActive = false;
+        		setActiveShader(null);
         	}
         }
         
