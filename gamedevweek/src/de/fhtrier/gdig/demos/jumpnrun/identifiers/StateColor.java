@@ -12,26 +12,33 @@ public class StateColor {
 	public static final int CYAN = GREEN | BLUE;
 	public static final int WHITE = RED | GREEN | BLUE;
 
-	// Translates constant of color into Color-class
+	/**
+	 * Creates a new Color Object matching the Color for the specified
+	 * Color-Index.
+	 * 
+	 * @param colorConst The ColorIndex (e.g. StateColor.BLACK)
+	 * @return A new Color Object 
+	 * @throws IllegalArgumentException If an invalid Index is specified
+	 */
 	public static Color constIntoColor(int colorConst)
 			throws IllegalArgumentException {
 		switch (colorConst) {
 		case BLACK:
-			return Color.black;
+			return new Color(Color.black);
 		case RED:
-			return Color.red;
+			return new Color(Color.red);
 		case GREEN:
-			return Color.green;
+			return new Color(0.2f, 0.8f, 0.1f);
 		case YELLOW:
-			return Color.yellow;
+			return new Color(Color.yellow);
 		case BLUE:
-			return Color.blue;
+			return new Color(Color.blue);
 		case MAGENTA:
-			return Color.magenta;
+			return new Color(Color.magenta);
 		case CYAN:
-			return Color.cyan;
+			return new Color(Color.cyan);
 		case WHITE:
-			return Color.white;
+			return new Color(Color.white);
 		default:
 			throw new IllegalArgumentException("Undefined parameter");
 		}

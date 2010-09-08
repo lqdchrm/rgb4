@@ -75,11 +75,17 @@ public class ServerPlayingState extends PlayingState {
 			
 			bullet.color = state.weaponColor;
 			// set player pos as gem pos
-			bullet.getData()[Entity.X] = player.getData()[Entity.X];
-			bullet.getData()[Entity.Y] = player.getData()[Entity.Y];
+			bullet.getData()[Entity.X] = player.getData()[Entity.X]+40;
+			bullet.getData()[Entity.Y] = player.getData()[Entity.Y]+80;
 			bullet.getVel()[Entity.X] = player.getVel()[Entity.X]
 					+ (state.shootDirection == PlayerActionState.RunRight ? Constants.GamePlayConstants.shotSpeed
 							: -Constants.GamePlayConstants.shotSpeed);
+			
+			if(player.getState().shootDirection==PlayerActionState.RunRight)
+			bullet.getData()[Entity.SCALE_X] = -1;
+			
+			else if(player.getState().shootDirection==PlayerActionState.RunRight)
+			bullet.getData()[Entity.SCALE_X] = 1; 
 
 			return true;
 

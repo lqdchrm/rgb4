@@ -1,10 +1,36 @@
 package de.fhtrier.gdig.demos.jumpnrun.common;
 
-public class PlayerState {
+public class PlayerState
+{
+	/**
+	 * 
+	 */
 	public String name;
-	public float health; // between 0.0f and 1.0f
+	
+	/**
+	 * The Player Health-Level between 0.0f and 1.0f
+	 * 1.0f representing 100% health
+	 */
+	public float health;
+	
+	/**
+	 * Current Ammunition between 0.0f and 1.0f
+	 * 1.0f indicating max. Ammunition
+	 */
 	public float ammo; // between 0.0f and 1.0f
-	public int color; // has to be one of Constants.Color
-	public int weaponColor; // has to be one of Constants.Color
-	public int shootDirection; // has to be RunLeft or RunRight
+	
+	/**
+	 * has to be one of Constants.Color
+	 */
+	public int color;
+	
+	/**
+	 * has to be one of Constants.Color
+	 */
+	public int weaponColor;
+	
+	/**
+	 * has to be RunLeft or RunRight
+	 */
+	public int shootDirection;
 }
