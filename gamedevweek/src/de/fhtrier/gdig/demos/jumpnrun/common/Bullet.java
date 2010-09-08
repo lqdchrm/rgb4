@@ -98,8 +98,16 @@ public class Bullet extends LevelCollidableEntity
 				Player otherPlayer = (Player) collidableEntity;
 				if (otherPlayer != owner)
 				{
-					// TODO: damage player
-					otherPlayer.getState().health -= 0.1f;
+					if (otherPlayer.getState().color != this.color)
+					{
+						otherPlayer.getState().health -= 0.1f;
+						// TODO: player dies
+					}
+					else
+					{
+						otherPlayer.getState().health += 0.1f; 
+						// player becomes stronger when hit by bullet of the same color!
+					}
 					die();
 				}
 			}

@@ -60,7 +60,7 @@ public class Player extends LevelCollidableEntity {
 		// gfx
 		assets.storeAnimation(Assets.PlayerIdleAnimId, Assets.PlayerIdleAnimImagePath);
 		assets.storeAnimation(Assets.PlayerRunAnimId, Assets.PlayerRunAnimImagePath);
-		assets.storeAnimation(Assets.WeaponImageId, Assets.BulletAnimImagePath); //TODO: change weapon dummy
+		assets.storeAnimation(Assets.WeaponImageId, Assets.WeaponAnimImagePath); //TODO: change weapon dummy
 		
 		this.jump = assets.storeAnimation(Assets.PlayerJumpAnimId, Assets.PlayerIdleAnimImagePath);
 		this.jump.setLooping(false);
