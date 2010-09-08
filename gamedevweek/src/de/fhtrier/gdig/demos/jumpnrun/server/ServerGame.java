@@ -9,10 +9,13 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
+import de.fhtrier.gdig.demos.jumpnrun.common.Constants.ControlConfig;
 import de.fhtrier.gdig.demos.jumpnrun.common.Constants.Debug;
+import de.fhtrier.gdig.demos.jumpnrun.common.Constants.GamePlayConstants;
 import de.fhtrier.gdig.demos.jumpnrun.common.JumpNRunGame;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.NetworkLobby;
+import de.fhtrier.gdig.engine.support.Configuration;
 
 public class ServerGame extends JumpNRunGame
 {
@@ -39,10 +42,14 @@ public class ServerGame extends JumpNRunGame
 		NetworkComponent.createServerInstance();
 		NetworkComponent.getInstance().startListening(networkInterface, port);
 
-		Constants.GamePlayConstants c = new Constants.GamePlayConstants();
-		Constants.Debug d = new Debug();
-		d.showEditor("Server",
-				new JPanel[] { d.getEdittingPanel(), c.getEdittingPanel() });
+		GamePlayConstants gamePlayConstants = new Constants.GamePlayConstants();
+		Debug debug = new Constants.Debug();
+		ControlConfig controlConfig = new Constants.ControlConfig();
+		Configuration.showEditor(
+				"Server",
+				new JPanel[] { gamePlayConstants.getEdittingPanel(),
+						debug.getEdittingPanel(),
+						controlConfig.getEdittingPanel() });
 	}
 
 	@Override

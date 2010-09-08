@@ -295,12 +295,13 @@ public abstract class Configuration
 		showEditor(strTitle, new JPanel[] { getEdittingPanel() });
 	}
 
-	public void showEditor(String strTitle, JPanel[] panels)
+	public static void showEditor(String strTitle, JPanel[] panels)
 	{
 		showEditor(strTitle, panels, null);
 	}
 
-	public void showEditor(String strTitle, JPanel[] panels, Point location)
+	public static void showEditor(String strTitle, JPanel[] panels,
+			Point location)
 	{
 		JFrame f = new JFrame(strTitle);
 		if (location != null)
