@@ -20,6 +20,11 @@ public class PlayerState
 	public float ammo; // between 0.0f and 1.0f
 	
 	/**
+	 * Damage of player dealt to other players 0.0f and 1.0f
+	 */
+	public float damage; // between 0.0f and 1.0f
+	
+	/**
 	 * has to be one of Constants.Color
 	 */
 	public int color;

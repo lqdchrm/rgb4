@@ -72,6 +72,7 @@ public class ServerPlayingState extends PlayingState {
 			Bullet bullet = (Bullet) e;
 			bullet.owner = player;
 			PlayerState state = player.getState();
+			
 			bullet.color = state.weaponColor;
 			// set player pos as gem pos
 			bullet.getData()[Entity.X] = player.getData()[Entity.X]+40;
@@ -87,7 +88,14 @@ public class ServerPlayingState extends PlayingState {
 			bullet.getData()[Entity.SCALE_X] = 1; 
 
 			return true;
-
+		case PLAYERCOLOR:
+			player.nextColor();
+			
+			return true;
+		case WEAPONCOLOR:
+			player.nextWeaponColor();
+			
+			return true;
 		}
 
 		return false;
