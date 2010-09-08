@@ -11,6 +11,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import de.fhtrier.gdig.demos.jumpnrun.JumpNRun;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.StateColor;
@@ -129,6 +131,8 @@ public abstract class PlayingState extends BasicGameState implements
 			// Den Objekten gesagt wird die Kollision zu behandeln.
 			CollisionManager.update();
 			level.handleCollisions();
+			
+			EventManager.update();
 		}
 	}
 
