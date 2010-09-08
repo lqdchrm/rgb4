@@ -100,12 +100,12 @@ public class Bullet extends LevelCollidableEntity
 				{
 					if (otherPlayer.getState().color != this.color)
 					{
-						otherPlayer.getState().health -= 0.1f;
+						otherPlayer.getState().health -= owner.getState().damage;
 						// TODO: player dies
 					}
 					else
 					{
-						otherPlayer.getState().health += 0.1f; 
+						otherPlayer.getState().health += owner.getState().damage; 
 						// player becomes stronger when hit by bullet of the same color!
 					}
 					die();

@@ -87,10 +87,6 @@ public class Player extends LevelCollidableEntity {
 		this.playerGroup.add(this.jumpAnimation);
 		
 		this.playerGroup.add(this.weapon);
-		
-		// Position correction for weapon
-		weapon.getData()[Entity.X] += 20;
-		weapon.getData()[Entity.Y] += 95;
 
 		this.add(this.playerGroup);
 
