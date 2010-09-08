@@ -88,55 +88,6 @@ public class Lobby extends JDialog
 			return createGameViaDialog(); // via Dialog
 		}
 
-		// switch (args.length - 1)
-		// {
-		// case SERVER:
-		//
-		// for (int x = 0; x < interfaces.size(); x++)
-		// {
-		// if (interfaces.get(x).getAddress().getHostAddress()
-		// .contains("127.0.0.1"))
-		// ni = interfaces.get(x);
-		// }
-		//
-		// if ((interfaces.size() > 0) && ((ni == null)))
-		// {
-		// System.out.println("Localhost not available falling back to "
-		// + interfaces.get(0).getAddress().getHostAddress());
-		// ni = interfaces.get(0);
-		// }
-		//
-		// return createServer(ni, Integer.parseInt(args[0])); // assume port
-		// // give
-		// // -> server
-		// case SPECTATOR:
-		// ClientGame.isSpectator = true; // assume we are client in spectator
-		// // mode
-		// case CLIENT:
-		//
-		// try
-		// {
-		// address = InetAddress.getByName(args[0]).getHostAddress();
-		// } catch (UnknownHostException e)
-		// {
-		// try
-		// {
-		// address = InetAddress.getLocalHost().getHostAddress();
-		// } catch (UnknownHostException e2)
-		// {
-		// address = "localhost";
-		// }
-		// }
-		//
-		// return createClient(address, Integer.parseInt(args[1])); // assume
-		// // ip
-		// // and
-		// // port
-		// // ->
-		// // client
-		// default:
-		// return createGameViaDialog(); // via Dialog
-		// }
 	}
 
 	public static JumpNRunGame createGameViaDialog()
