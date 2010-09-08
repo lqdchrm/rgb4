@@ -9,10 +9,12 @@ import org.newdawn.slick.tiled.TiledMap;
 
 import de.fhtrier.gdig.demos.jumpnrun.JumpNRun;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActionState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerActionState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.StateColor;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.EntityUpdateStrategy;
@@ -127,12 +129,12 @@ public class Level extends MoveableEntity {
 					+ player.getData()[Player.CENTER_X] + getData(X);
 			float py = player.getData()[Player.Y]
 					+ player.getData()[Player.CENTER_Y] + getData(Y);
-			Color playercol = StateColor.constIntoColor(player.getState().color);
-			Color weaponcol = StateColor.constIntoColor(player.getState().weaponColor);
-			float health = player.getState().health * params.spielerLeuchtstaerke/10.0f;
-			float ammo = player.getState().ammo * params.waffenLeuchtstaerke/10.0f;
+			Color playercol = StateColor.constIntoColor(player.getPlayerCondition().color);
+			Color weaponcol = StateColor.constIntoColor(player.getPlayerCondition().weaponColor);
+			float health = player.getPlayerCondition().health * params.spielerLeuchtstaerke/10.0f;
+			float ammo = player.getPlayerCondition().ammo * params.waffenLeuchtstaerke/10.0f;
 			int playerlook = 1;
-			if (player.getState().shootDirection == PlayerActionState.RunLeft) playerlook = -1;
+			if (player.getPlayerCondition().shootDirection == PlayerActionState.Left) playerlook = -1;
 			
 			// Horizontal Blur
 			Shader.setActiveShader(blur1D);
@@ -201,7 +203,7 @@ public class Level extends MoveableEntity {
 							+ e.getData()[SCALE_X] + " SY: "
 							+ e.getData()[SCALE_Y] + "\n" + "ROT: "
 							+ e.getData()[ROTATION] + "\n" + "STATE: "
-							+ ((Player) e).currentState, 20, 250);
+							+ ((Player) e).getState().toString(), 20, 250);
 		}
 	}
 

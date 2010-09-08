@@ -6,8 +6,8 @@ import org.newdawn.slick.geom.Transform;
 import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.Log;
 
-import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.common.Level;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.physics.CollidableEntity;

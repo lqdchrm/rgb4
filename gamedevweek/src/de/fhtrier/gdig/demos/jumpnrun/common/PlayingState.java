@@ -1,6 +1,5 @@
 package de.fhtrier.gdig.demos.jumpnrun.common;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -11,12 +10,10 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import de.fhtrier.gdig.demos.jumpnrun.JumpNRun;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.StateColor;
 import de.fhtrier.gdig.engine.entities.Entity;
-import de.fhtrier.gdig.engine.graphics.BlurShader;
-import de.fhtrier.gdig.engine.graphics.Shader;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
@@ -60,8 +57,8 @@ public abstract class PlayingState extends BasicGameState implements
 
 		// create assetmgr
 		this.assets = new AssetMgr();
-		this.assets.setAssetPathPrefix("content/jumpnrun/test/");
-		this.assets.setAssetFallbackPathPrefix("content/jumpnrun/default/");
+		this.assets.setAssetPathPrefix(Assets.AssetManagerPath);
+		this.assets.setAssetFallbackPathPrefix(Assets.AssetManagerFallbackPath);
 
 		// Factory
 		this.factory = new GameFactory(this.assets);

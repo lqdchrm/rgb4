@@ -14,14 +14,15 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.common.Bullet;
-import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.common.Level;
-import de.fhtrier.gdig.demos.jumpnrun.common.Player;
-import de.fhtrier.gdig.demos.jumpnrun.common.PlayerState;
 import de.fhtrier.gdig.demos.jumpnrun.common.PlayingState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.PlayerCondition;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActionState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActions;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerActionState;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreatePlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
@@ -52,38 +53,38 @@ public class ServerPlayingState extends PlayingState {
 		int playerId = networkId2Player.get(actionCmd.getSender());
 		Player player = (Player) getFactory().getEntity(playerId);
 		switch (actionCmd.getAction()) {
-		case DROPGEM:
-			e = createEntity(EntityType.GEM);
-
-			// set values
-			MoveableEntity gem = (MoveableEntity) e;
-
-			// set player pos as gem pos
-			gem.getData()[Entity.X] = player.getData()[Entity.X];
-			gem.getData()[Entity.Y] = player.getData()[Entity.Y];
-			gem.getVel()[Entity.X] = player.getVel()[Entity.X];
-			gem.getVel()[Entity.Y] = player.getVel()[Entity.Y] - 50.0f;
-
-			return true;
-		case SHOOT:
+//		case DROPGEM:
+//			e = createEntity(EntityType.GEM);
+//
+//			// set values
+//			MoveableEntity gem = (MoveableEntity) e;
+//
+//			// set player pos as gem pos
+//			gem.getData()[Entity.X] = player.getData()[Entity.X];
+//			gem.getData()[Entity.Y] = player.getData()[Entity.Y];
+//			gem.getVel()[Entity.X] = player.getVel()[Entity.X];
+//			gem.getVel()[Entity.Y] = player.getVel()[Entity.Y] - 50.0f;
+//
+//			return true;
+		case StartShooting:
 			e = createEntity(EntityType.BULLET);
 
 			// set values
 			Bullet bullet = (Bullet) e;
 			bullet.owner = player;
-			PlayerState state = player.getState();
+			PlayerCondition state = player.getPlayerCondition();
 			bullet.color = state.weaponColor;
 			// set player pos as gem pos
 			bullet.getData()[Entity.X] = player.getData()[Entity.X]+40;
 			bullet.getData()[Entity.Y] = player.getData()[Entity.Y]+80;
 			bullet.getVel()[Entity.X] = player.getVel()[Entity.X]
-					+ (state.shootDirection == PlayerActionState.RunRight ? Constants.GamePlayConstants.shotSpeed
+					+ (state.shootDirection == PlayerActionState.Right ? Constants.GamePlayConstants.shotSpeed
 							: -Constants.GamePlayConstants.shotSpeed);
 			
-			if(player.getState().shootDirection==PlayerActionState.RunRight)
+			if(player.getPlayerCondition().shootDirection==PlayerActionState.Right)
 			bullet.getData()[Entity.SCALE_X] = -1;
 			
-			else if(player.getState().shootDirection==PlayerActionState.RunRight)
+			else if(player.getPlayerCondition().shootDirection==PlayerActionState.Right)
 			bullet.getData()[Entity.SCALE_X] = 1; 
 
 			return true;

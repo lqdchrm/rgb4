@@ -18,7 +18,7 @@ import org.newdawn.slick.opengl.renderer.Renderer;
 import org.newdawn.slick.opengl.renderer.SGL;
 import org.newdawn.slick.util.Log;
 
-import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 
 public class Shader
 {

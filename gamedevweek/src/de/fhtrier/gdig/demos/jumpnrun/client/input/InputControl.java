@@ -7,7 +7,7 @@ import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 import org.newdawn.slick.Input;
 
-import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 
 public class InputControl {
 

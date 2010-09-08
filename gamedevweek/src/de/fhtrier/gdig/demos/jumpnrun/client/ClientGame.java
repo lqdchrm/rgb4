@@ -4,8 +4,8 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.Log;
 
-import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.common.JumpNRunGame;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 

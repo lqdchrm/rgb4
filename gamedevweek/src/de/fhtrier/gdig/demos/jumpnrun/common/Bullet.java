@@ -8,13 +8,12 @@ import org.newdawn.slick.geom.Rectangle;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.LevelCollidableEntity;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerActionState;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.engine.entities.gfx.AnimationEntity;
-import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
 import de.fhtrier.gdig.engine.entities.physics.CollidableEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
@@ -99,7 +98,7 @@ public class Bullet extends LevelCollidableEntity
 				if (otherPlayer != owner)
 				{
 					// TODO: damage player
-					otherPlayer.getState().health -= 0.1f;
+					otherPlayer.getPlayerCondition().health -= 0.1f;
 					die();
 				}
 			}
