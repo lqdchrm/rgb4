@@ -8,6 +8,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
+import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.common.Constants.GamePlayConstants;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
@@ -95,11 +96,13 @@ public class Player extends LevelCollidableEntity {
 
 		// physics
 		// X Y OX OY SY SY ROT
+
 		initData(new float[] { 200, 200, 65, 70, 1, 1, 0 }); // pos +
 																// center of
 																// rotation +
 																// scale +
 																// rot
+		
 		setVel(new float[] { 0, 0, 0, 0, 0, 0, 0 }); // no speed
 		setAcc(new float[] { 0, GamePlayConstants.gravity, 0, 0, 0, 0, 0 }); // gravity
 
@@ -189,34 +192,34 @@ public class Player extends LevelCollidableEntity {
 	@Override
 	public void handleInput(final Input input) {
 		if (this.isActive()) {
-			if (!input.isKeyDown(Input.KEY_LEFT)
-					&& !input.isKeyDown(Input.KEY_RIGHT)
-					&& !input.isKeyDown(Input.KEY_SPACE)) {
+			if (!InputControl.isRefKeyDown(InputControl.REFWALKLEFT)
+					&& !InputControl.isRefKeyDown(InputControl.REFWALKRIGHT)
+					&& !InputControl.isRefKeyDown(InputControl.REFJUMP)) {
 				this.setState(PlayerActionState.Idle);
 			}
 
-			if (input.isKeyDown(Input.KEY_LEFT)) {
+			if (InputControl.isRefKeyDown(InputControl.REFWALKLEFT)) {
 				this.setState(PlayerActionState.RunLeft);
 			}
 
-			if (input.isKeyDown(Input.KEY_RIGHT)) {
+			if (InputControl.isRefKeyDown(InputControl.REFWALKRIGHT)) {
 				this.setState(PlayerActionState.RunRight);
 			}
 
-			if (input.isKeyDown(Input.KEY_UP)) {
+			if (InputControl.isRefKeyPressed(InputControl.REFJUMP)) {
 				if (this.isOnGround()) {
 					this.setState(PlayerActionState.Jump);
 				}
 			}
 
-			if (input.isKeyPressed(Input.KEY_SPACE)) {
+			if (InputControl.isRefKeyPressed(InputControl.REFFIRE)) {
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerAction.SHOOT));
 			}
 
 			PlayerState state = this.getState();
 			// change player color
-			if (input.isKeyPressed(Input.KEY_C)) {
+			if (InputControl.isRefKeyPressed(InputControl.REFCHANGECOLOR)) {
 				state.color = state.color << 1;
 				if (state.color > StateColor.BLUE) {
 					state.color = StateColor.RED;
@@ -224,7 +227,7 @@ public class Player extends LevelCollidableEntity {
 			}
 
 			// change weapon color
-			if (input.isKeyPressed(Input.KEY_X)) {
+			if (InputControl.isRefKeyPressed(InputControl.REFCHANGEWEAPON)) {
 				state.weaponColor = state.weaponColor << 1;
 				if (state.weaponColor > StateColor.BLUE) {
 					state.weaponColor = StateColor.RED;
