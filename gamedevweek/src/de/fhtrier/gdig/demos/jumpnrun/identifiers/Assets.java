@@ -1,6 +1,7 @@
 package de.fhtrier.gdig.demos.jumpnrun.identifiers;
 
-public class Assets {
+public class Assets
+{
 	public static final int LevelBackgroundImageId = 1;
 	public static final int LevelMiddlegroundImageId = 2;
 	public static final int LevelTileMapId = 3;
