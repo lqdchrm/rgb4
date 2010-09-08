@@ -1,8 +1,8 @@
 package de.fhtrier.gdig.engine.entities.gfx;
 
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
-import de.fhtrier.gdig.rgb4.identifiers.EntityType;
 
 public class AssetEntity extends Entity {
 

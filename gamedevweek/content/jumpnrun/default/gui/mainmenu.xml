@@ -15,7 +15,7 @@
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 
 
-	<screen id="start" controller="de.fhtrier.gdig.rgb4.client.ClientMenuState">
+	<screen id="start" controller="de.fhtrier.gdig.demos.jumpnrun.client.ClientMenuState">
 		<layer id="back" childLayout="center">
 			<panel id="panel" height="100%" width="100%"
 				backgroundImage="menu-background.png">
@@ -65,7 +65,7 @@
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 	<!-- start screen -->
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
-	<screen id="mainMenu" controller="de.fhtrier.gdig.rgb4.client.ClientMenuState">
+	<screen id="mainMenu" controller="de.fhtrier.gdig.demos.jumpnrun.client.ClientMenuState">
 		<layer id="back" childLayout="center">
 			<panel id="panel" height="100%" width="100%"
 				backgroundImage="menu-background.png" />
