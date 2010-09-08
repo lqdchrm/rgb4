@@ -42,8 +42,9 @@ public class Player extends LevelCollidableEntity {
 	private PlayerState state;
 	private static Shader playerShader = null;
 	private static Image playerGlow = null;
+	private static Image weaponGlow = null;
 	private AnimationEntity weapon; // has to be an own class-object!
-
+	
 	public Player(int id, Factory factory) throws SlickException {
 		super(id, EntityType.PLAYER);
 
@@ -119,7 +120,8 @@ public class Player extends LevelCollidableEntity {
 		{
 			playerShader = new Shader("content/jumpnrun/shader/simple.vert",
 			"content/jumpnrun/shader/playercolor.frag");
-			//playerGlow = new Image("content/jumpnrun/shader/playerGlow.png");
+			playerGlow = new Image("content/jumpnrun/shader/playerGlow.png");
+			weaponGlow = new Image("content/jumpnrun/shader/weaponGlow.png");
 		}
 			
 		setVisible(true);
@@ -278,7 +280,21 @@ public class Player extends LevelCollidableEntity {
 		if (Constants.Debug.shadersActive)
 		{
 			Shader.setActiveShader(playerShader);
+			Shader.activateAdditiveBlending();
+			float weaponX = this.getData(CENTER_X);
+			float weaponY = this.getData(CENTER_Y)-weaponGlow.getHeight()/2+40;
+			int lookDirection = 1;
+			if (this.getState().shootDirection == PlayerActionState.RunLeft) lookDirection = -1;
+			
+			playerShader.setValue("playercolor", StateColor.constIntoColor(this.getState().weaponColor));
+			g.drawImage(weaponGlow, weaponX, weaponY, weaponX + weaponGlow.getWidth()*lookDirection,
+					weaponY+weaponGlow.getHeight(), 0, 0, weaponGlow.getWidth(), weaponGlow.getHeight());
+			
 			playerShader.setValue("playercolor", StateColor.constIntoColor(this.getState().color));
+			g.drawImage(playerGlow, this.getData(CENTER_X)-playerGlow.getWidth()/2,
+					this.getData(CENTER_Y)-playerGlow.getHeight()/2);
+			
+			Shader.activateDefaultBlending();
 		}
 		
 		super.renderImpl(g, frameBuffer);
