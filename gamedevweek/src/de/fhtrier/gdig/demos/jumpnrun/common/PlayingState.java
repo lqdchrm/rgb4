@@ -84,9 +84,15 @@ public abstract class PlayingState extends BasicGameState implements
 		
 		if (level != null)
 		{
-			level.render(frameBuffer.getGraphics(), frameBuffer);
-			
-			graphicContext.drawImage(frameBuffer, 0, 0);
+			if (Constants.Debug.shadersActive)
+			{
+				level.render(frameBuffer.getGraphics(), frameBuffer);
+				graphicContext.drawImage(frameBuffer, 0, 0);
+			}
+			else
+			{
+				level.render(graphicContext, null);
+			}
 		}
 	}
 	
