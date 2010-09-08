@@ -1,12 +1,10 @@
 package de.fhtrier.gdig.demos.jumpnrun.common;
 
-import java.net.InetAddress;
-import java.net.InterfaceAddress;
-import java.net.UnknownHostException;
-import java.util.List;
-
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+
+import java.net.*;
+import java.util.List;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.ClientGame;
 import de.fhtrier.gdig.demos.jumpnrun.server.ServerGame;
@@ -38,7 +36,7 @@ public class Lobby extends JDialog {
 		return new ClientGame();
 	}
 
-	public static RGB4Game createGameByArgs(String[] args) {
+	public static JumpNRunGame createGameByArgs(String[] args) {
 		
 		String address = "";
 
@@ -96,7 +94,7 @@ public class Lobby extends JDialog {
 		}
 	}
 
-	public static RGB4Game createGameViaDialog() {
+	public static JumpNRunGame createGameViaDialog() {
 
 		// Ask whether we want to be server
 		Object[] options = { "Server", "Client", "Spectator" };

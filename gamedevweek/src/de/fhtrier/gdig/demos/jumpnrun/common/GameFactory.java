@@ -2,10 +2,6 @@ package de.fhtrier.gdig.demos.jumpnrun.common;
 
 import org.newdawn.slick.SlickException;
 
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Bullet;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Gem;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;

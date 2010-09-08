@@ -200,8 +200,4 @@ public class AssetMgr {
 	public ParticleSystem getParticleSystem (int id) {
 		return this.particleSystems.get(id);
 	}
-	
-	public String makePathRelativeToAssetPath(String path) {
-		return AssetMgr.combinePathStrings(assetPathPrefix, path);
-	}
 }

@@ -9,11 +9,11 @@ import java.util.TreeMap;
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
-import de.fhtrier.gdig.engine.gamelogic.Entity;
-import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
-import de.fhtrier.gdig.engine.graphics.entities.ImageEntity;
-import de.fhtrier.gdig.engine.graphics.entities.ParticleEntity;
-import de.fhtrier.gdig.engine.graphics.entities.TiledMapEntity;
+import de.fhtrier.gdig.engine.entities.Entity;
+import de.fhtrier.gdig.engine.entities.gfx.AnimationEntity;
+import de.fhtrier.gdig.engine.entities.gfx.ImageEntity;
+import de.fhtrier.gdig.engine.entities.gfx.ParticleEntity;
+import de.fhtrier.gdig.engine.entities.gfx.TiledMapEntity;
 
 public class Factory {
 

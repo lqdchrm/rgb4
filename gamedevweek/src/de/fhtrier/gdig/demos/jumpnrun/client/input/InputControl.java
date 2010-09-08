@@ -1,11 +1,13 @@
 package de.fhtrier.gdig.demos.jumpnrun.client.input;
 
+import java.io.File;
 import java.lang.reflect.Field;
 
+import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
 import org.newdawn.slick.Input;
 
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
+import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
 
 public class InputControl {
 

@@ -13,15 +13,15 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
+import de.fhtrier.gdig.demos.jumpnrun.common.Bullet;
+import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
+import de.fhtrier.gdig.demos.jumpnrun.common.Level;
+import de.fhtrier.gdig.demos.jumpnrun.common.Player;
+import de.fhtrier.gdig.demos.jumpnrun.common.PlayerState;
 import de.fhtrier.gdig.demos.jumpnrun.common.PlayingState;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Bullet;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.PlayerCondition;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActionState;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.PlayerActionState;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreatePlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
@@ -30,8 +30,9 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeColor;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeWeaponColor;
-import de.fhtrier.gdig.engine.gamelogic.Entity;
-import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
+import de.fhtrier.gdig.engine.entities.Entity;
+import de.fhtrier.gdig.engine.entities.EntityUpdateStrategy;
+import de.fhtrier.gdig.engine.entities.physics.MoveableEntity;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
@@ -53,40 +54,39 @@ public class ServerPlayingState extends PlayingState {
 		int playerId = networkId2Player.get(actionCmd.getSender());
 		Player player = (Player) getFactory().getEntity(playerId);
 		switch (actionCmd.getAction()) {
-//		case DROPGEM:
-//			e = createEntity(EntityType.GEM);
-//
-//			// set values
-//			MoveableEntity gem = (MoveableEntity) e;
-//
-//			// set player pos as gem pos
-//			gem.getData()[Entity.X] = player.getData()[Entity.X];
-//			gem.getData()[Entity.Y] = player.getData()[Entity.Y];
-//			gem.getVel()[Entity.X] = player.getVel()[Entity.X];
-//			gem.getVel()[Entity.Y] = player.getVel()[Entity.Y] - 50.0f;
-//
-//			return true;
+		case DROPGEM:
+			e = createEntity(EntityType.GEM);
+
+			// set values
+			MoveableEntity gem = (MoveableEntity) e;
+
+			// set player pos as gem pos
+			gem.getData()[Entity.X] = player.getData()[Entity.X];
+			gem.getData()[Entity.Y] = player.getData()[Entity.Y];
+			gem.getVel()[Entity.X] = player.getVel()[Entity.X];
+			gem.getVel()[Entity.Y] = player.getVel()[Entity.Y] - 50.0f;
+
+			return true;
 		case SHOOT:
 			e = createEntity(EntityType.BULLET);
 
 			// set values
 			Bullet bullet = (Bullet) e;
 			bullet.owner = player;
-
-			PlayerCondition state = player.getPlayerCondition();
-
+			PlayerState state = player.getState();
+			
 			bullet.color = state.weaponColor;
 			// set player pos as gem pos
 			bullet.getData()[Entity.X] = player.getData()[Entity.X]+40;
 			bullet.getData()[Entity.Y] = player.getData()[Entity.Y]+80;
 			bullet.getVel()[Entity.X] = player.getVel()[Entity.X]
-					+ (state.shootDirection == PlayerActionState.Right.ordinal() ? Constants.GamePlayConstants.shotSpeed
+					+ (state.shootDirection == PlayerActionState.RunRight ? Constants.GamePlayConstants.shotSpeed
 							: -Constants.GamePlayConstants.shotSpeed);
 			
-			if(player.getPlayerCondition().shootDirection==PlayerActionState.Right.ordinal())
+			if(player.getState().shootDirection==PlayerActionState.RunRight)
 			bullet.getData()[Entity.SCALE_X] = -1;
 			
-			else if(player.getPlayerCondition().shootDirection==PlayerActionState.Right.ordinal())
+			else if(player.getState().shootDirection==PlayerActionState.RunRight)
 			bullet.getData()[Entity.SCALE_X] = 1; 
 
 			return true;
