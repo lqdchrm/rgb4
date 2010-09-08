@@ -28,6 +28,8 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeColor;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeWeaponColor;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.entities.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.entities.physics.MoveableEntity;
@@ -90,10 +92,12 @@ public class ServerPlayingState extends PlayingState {
 			return true;
 		case PLAYERCOLOR:
 			player.nextColor();
+			NetworkComponent.getInstance().sendCommand(new SendChangeColor(player.getId()));
 			
 			return true;
 		case WEAPONCOLOR:
 			player.nextWeaponColor();
+			NetworkComponent.getInstance().sendCommand(new SendChangeWeaponColor(player.getId()));
 			
 			return true;
 		}
