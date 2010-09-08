@@ -11,10 +11,12 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryConnect;
+import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryStartGame;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkPlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckConnect;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckNewPlayerList;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckStartGame;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
@@ -41,11 +43,11 @@ public class ServerLobbyState extends BasicGameState  implements
 	@Override
 	public void render(GameContainer arg0, StateBasedGame arg1, Graphics g)
 			throws SlickException {
-		float offset = 30;
-		g.drawString("Currently connected: ", 10.0f, offset);
+		float offset = 50;
+		g.drawString("Server Currently connected: ", 10.0f, 30.0f);
 		for (NetworkPlayer player : players) {
-			g.drawString(player.getPlayerName(), 10.0f, 20.0f + offset);
-			offset += 10.0f;
+			g.drawString(player.getPlayerName(), 10.0f, offset);
+			offset += 20.0f;
 		}
 	}
 

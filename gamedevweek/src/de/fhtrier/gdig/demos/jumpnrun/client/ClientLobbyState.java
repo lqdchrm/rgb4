@@ -11,12 +11,12 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
+import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryStartGame;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
-import de.fhtrier.gdig.demos.jumpnrun.server.AckStartGame;
-import de.fhtrier.gdig.demos.jumpnrun.server.QueryStartGame;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkPlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckConnect;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckNewPlayerList;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckStartGame;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
@@ -28,7 +28,16 @@ public class ClientLobbyState extends NiftyGameState implements INetworkCommandL
 	private Queue<INetworkCommand> queue;
 	private ArrayList<NetworkPlayer> players;
 	private StateBasedGame game;
+	private boolean isGameCreator = false;
 	
+	public boolean isGameCreator() {
+		return isGameCreator;
+	}
+
+	public void setGameCreator(boolean isGameCreator) {
+		this.isGameCreator = isGameCreator;
+	}
+
 	public ClientLobbyState() {
 		super(GameStates.CLIENT_LOBBY);
 		queue = new LinkedList<INetworkCommand>();
@@ -53,6 +62,7 @@ public class ClientLobbyState extends NiftyGameState implements INetworkCommandL
 			g.drawString(player.getPlayerName(), 10.0f, 20.0f + offset);
 			offset += 10.0f;
 		}
+		g.drawString("PRESS ENTER TO START", 200, 400);
 	}
 	
 	@Override
@@ -74,8 +84,12 @@ public class ClientLobbyState extends NiftyGameState implements INetworkCommandL
 		}
 		
 		if(container.getInput().isKeyPressed(Input.KEY_ENTER)) {
-			Log.debug("trying to start game");
-			NetworkComponent.getInstance().sendCommand(new QueryStartGame());
+			if(isGameCreator) {
+				Log.debug("trying to start game");
+				NetworkComponent.getInstance().sendCommand(new QueryStartGame());
+			} else {
+				Log.debug("You tried to start the game but you are not the GameCreator.");
+			}
 		}
 		// clear all commands even if not handled
 		queue.clear();

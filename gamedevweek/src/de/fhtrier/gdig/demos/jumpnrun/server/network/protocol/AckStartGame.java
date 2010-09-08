@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.server;
+package de.fhtrier.gdig.demos.jumpnrun.server.network.protocol;
 
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
 
