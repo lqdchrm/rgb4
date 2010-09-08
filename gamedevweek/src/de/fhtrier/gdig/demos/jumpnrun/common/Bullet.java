@@ -109,8 +109,6 @@ public class Bullet extends LevelCollidableEntity
 							System.out.println("Player died!!!!!!!!!!!!!!!");
 							Event dieEvent = new PlayerDiedEvent (otherPlayer);
 							EventManager.addEvent(dieEvent);
-							Event respawnEvent = new PlayerRespawnEvent (otherPlayer);
-							EventManager.addEvent(respawnEvent);
 						}
 					}
 					else
