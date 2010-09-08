@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="120" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="template" tilewidth="32" tileheight="32">
+  <image source="templatetiles.png" trans="ff00ff"/>
+ </tileset>
+ <tileset firstgid="257" name="elemente_level_compact" tilewidth="32" tileheight="32">
+  <image source="elemente_level_compact.png" trans="ff00ff"/>
+ </tileset>
+ <layer name="Kachelebene 1" width="120" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+2c207DMAyGCYc77jisZRrSOJaNowQCdsPp/d+JVLI1KyStV5J0c/1Lv7q2WbP6a1w3RRyYra1D6yOPQ9vVmxGvY+sTa5VMVZbtrfIVK+UrWyPlK1o130vlK1bKV7Y0P8uW1leypXxlS/nKlt5/ZUvHr2xV+nwkWly+xrbZtt4hS2p3365eMysrRYxvdPyKlvKVLeUrW8pXtrR+lq2a76v1OfgiA+s728d9g582/Hrr+/ywDq+9sH7JHM8P29+n9Zf1Nyzp+s+G812n83vW/CxaWl/JltZXsjVRvqLF5avzz+lF614aT982box1/MqW/v2kbOn4lS3lK1vKV7YmMP/8Ds4x97sHfdXz3VMw1uFTZ5vv8zTTPLlP7nNEqNZ1nylqv4H3E/92Ov/9YF1aF7A8zRC3EfSXe967bz1nivEE+kHPyeccuboCvkO7L4x65IuMXyGHvHsc2r6qFwPlW0GMH63PzPKdbEzTnIyeQbzRB2b5fySOPetlpDZD5NsWE078uYzQBTBGznXcr6yvzfL9A12fM9qUjDZD5NsWE078OW0oW+Q7hyXN0QvP+jxSmy5890yeGjRF/xUjJgWjDYcR3ndpXkbGtcfm75gfO+1CbWhuaGrThe8Ivp+jzo/dP469ttjOWtoULcdBhoXHlLEvL7j25W5aj/vy9H9q9RuT7zkudv8Yw1nH2HLalM5+d50y9uUO1768jMdF+3JHW63eVHs3XRu+95j0fWZo/sHdF3r3Rmtg7m93c6svv7pxbYobJ7ZufRXLdK4k5Lb9HPdVm4XG0X/PJ6Vj8uWcrwS+btz6ZhiTb9sxQgxjxqJPvnj/2jS+MY/pzpngfX0mgG/XvJVqHJZmWde6tW0q47M0dcz+15XvKnkul1PxDTnG8ek7zRx+M83PEetmOq5y8cUxnKK/nO6bHZcvZzx1zflNffbNZwh8abx/AXsCFGXAXQAA
+  </data>
+ </layer>
+</map>
