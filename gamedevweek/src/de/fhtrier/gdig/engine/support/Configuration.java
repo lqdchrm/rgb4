@@ -235,9 +235,9 @@ public abstract class Configuration
 					continue;
 
 				Field field = this.commandMap.get(args[i].substring(2));
-				++i;
 				if (field != null)
 				{
+					++i;
 					Class<?> filedType = field.getType();
 					if (filedType == String.class)
 					{
