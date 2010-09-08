@@ -7,6 +7,7 @@ import org.newdawn.slick.geom.Shape;
 import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.engine.graphics.Shader;
 
 public class CollidableEntity extends MoveableEntity
 {
@@ -31,9 +32,19 @@ public class CollidableEntity extends MoveableEntity
 
 		if (this.bounds != null && Constants.Debug.drawBounds)
 		{
+			if (Constants.Debug.shadersActive)
+			{
+				Shader.pushShader(null);
+			}
+			
 			graphicContext.setColor(Constants.Debug.boundColor);
 
 			graphicContext.draw(this.bounds);
+			
+			if (Constants.Debug.shadersActive)
+			{
+				Shader.popShader();
+			}
 		}
 	}
 

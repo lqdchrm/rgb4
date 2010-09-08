@@ -112,14 +112,15 @@ public class Player extends LevelCollidableEntity {
 
 		// set bounding box according to idle animation size
 		int x = 35;
+		int y = 20;
 		int width = assets.getAnimation(Assets.PlayerIdleAnimId).getWidth() - 70;
-		int height = assets.getAnimation(Assets.PlayerIdleAnimId).getHeight();
-		setBounds(new Rectangle(x, 0, width, height)); // bounding box
+		int height = assets.getAnimation(Assets.PlayerIdleAnimId).getHeight() - 20;
+		setBounds(new Rectangle(x, y, width, height)); // bounding box
 
 		if (playerShader == null && Constants.Debug.shadersActive)
 		{
 			playerShader = new Shader("content/jumpnrun/shader/simple.vert",
-			"content/jumpnrun/shader/playercolor.frag");
+				"content/jumpnrun/shader/playercolor.frag");
 			playerGlow = new Image("content/jumpnrun/shader/playerGlow.png");
 			weaponGlow = new Image("content/jumpnrun/shader/weaponGlow.png");
 		}
@@ -279,7 +280,7 @@ public class Player extends LevelCollidableEntity {
 		
 		if (Constants.Debug.shadersActive)
 		{
-			Shader.setActiveShader(playerShader);
+			Shader.pushShader(playerShader);
 			Shader.activateAdditiveBlending();
 			float weaponX = this.getData(CENTER_X);
 			float weaponY = this.getData(CENTER_Y)-weaponGlow.getHeight()/2+40;
@@ -301,7 +302,7 @@ public class Player extends LevelCollidableEntity {
 		
 		if (Constants.Debug.shadersActive)
 		{
-			Shader.setActiveShader(null);
+			Shader.popShader();
 		}
 		
 		if (this.state.name != null) {

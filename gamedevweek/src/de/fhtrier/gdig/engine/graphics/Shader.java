@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Stack;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.ARBFragmentShader;
@@ -29,6 +30,7 @@ public class Shader
     private int vertexShaderId = -1;
     private int fragmentShaderId = -1;
     private static Shader activeShader = null;
+    private static Stack<Shader> shaderStack = new Stack<Shader>();
     
     /**
      * Creates a new Shader, combining the code of the provided files
@@ -300,4 +302,27 @@ public class Shader
         }
         
     }
+    
+    /**
+     * 
+     * @param shader
+     */
+	public static void pushShader(Shader shader)
+	{
+		shaderStack.push(activeShader);
+		setActiveShader(shader);
+	}
+
+	public static void popShader()
+	{
+		if (shaderStack.isEmpty())
+		{
+			setActiveShader(null);
+		}
+		else
+		{
+			setActiveShader(shaderStack.pop());
+		}
+		
+	}
 }

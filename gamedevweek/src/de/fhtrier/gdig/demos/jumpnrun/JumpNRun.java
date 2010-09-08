@@ -2,8 +2,10 @@ package de.fhtrier.gdig.demos.jumpnrun;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.opengl.pbuffer.GraphicsFactory;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.ClientGame;
+import de.fhtrier.gdig.demos.jumpnrun.common.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.common.JumpNRunGame;
 import de.fhtrier.gdig.demos.jumpnrun.common.Lobby;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
@@ -13,8 +15,11 @@ public class JumpNRun {
 	public static final int SCREENWIDTH = 1024;
 	public static final int SCREENHEIGHT = 768;
 
-	public static void main(String[] args) {
-
+	public static void main(String[] args)
+	{
+		if (Constants.Debug.forceNoFBO)
+			GraphicsFactory.setUseFBO(false);
+		
 		// create game
 		JumpNRunGame game = Lobby.createGameByArgs(args);
 

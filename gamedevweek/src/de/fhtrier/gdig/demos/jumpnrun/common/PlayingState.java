@@ -24,7 +24,7 @@ public abstract class PlayingState extends BasicGameState implements
 	private AssetMgr assets;
 	private GameFactory factory;
 	private int levelId;
-	private static Image frameBuffer;
+	//private static Image frameBuffer;
 		
 	public abstract void cleanup(GameContainer container, StateBasedGame game);
 
@@ -65,8 +65,8 @@ public abstract class PlayingState extends BasicGameState implements
 		// Level
 		this.levelId = factory.createEntity(EntityType.LEVEL);
 		
-		// FrameBuffer
-		frameBuffer = new Image(JumpNRun.SCREENWIDTH, JumpNRun.SCREENHEIGHT);
+		// FrameBuffer für Postprocessing
+		//frameBuffer = new Image(JumpNRun.SCREENWIDTH, JumpNRun.SCREENHEIGHT);
 	}
 
 	@Override
@@ -80,8 +80,10 @@ public abstract class PlayingState extends BasicGameState implements
 		{
 			if (Constants.Debug.shadersActive)
 			{
-				level.render(frameBuffer.getGraphics(), frameBuffer);
-				graphicContext.drawImage(frameBuffer, 0, 0);
+				// Reserved for postprocessing
+				level.render(graphicContext, null);
+				//level.render(frameBuffer.getGraphics(), frameBuffer);
+				//graphicContext.drawImage(frameBuffer, 0, 0);
 			}
 			else
 			{
