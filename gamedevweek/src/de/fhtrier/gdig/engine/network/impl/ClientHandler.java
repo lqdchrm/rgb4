@@ -28,6 +28,16 @@ public class ClientHandler extends Thread {
 	public ClientHandler(Socket s, NetworkComponentImpl netComp,
 			int clientNetworkId) {
 		this.s = s;
+		
+		try
+		{
+		   this.s.setTcpNoDelay( true );
+		}
+		catch( SocketException e )
+		{
+           System.out.println( "Could not set TCP_NODELAY Flag" );			
+		}
+		
 		this.netComp = netComp;
 		this.clientNetworkId = clientNetworkId;
 		this.doClose = false;
