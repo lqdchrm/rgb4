@@ -20,6 +20,7 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckStartGame;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
+import de.fhtrier.gdig.engine.network.impl.protocol.ClientQueryDisconnect;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
 
 public class ServerLobbyState extends BasicGameState  implements
@@ -81,6 +82,24 @@ public class ServerLobbyState extends BasicGameState  implements
 			NetworkComponent.getInstance().sendCommand(data.getSender(), new AckConnect());
 			players.add(new NetworkPlayer(name, data.getSender()));
 			NetworkComponent.getInstance().sendCommand(new AckNewPlayerList(players));
+		}
+		
+		if (data instanceof ClientQueryDisconnect)
+		{
+			NetworkPlayer playerToDelete = null;
+			for (NetworkPlayer networkPlayer : players)
+			{
+				if (networkPlayer.getNetworkId() == data.getSender())
+				{
+					playerToDelete = networkPlayer;
+					break;
+				}
+			}
+			if (playerToDelete!=null)
+			{
+				players.remove(playerToDelete);
+				NetworkComponent.getInstance().sendCommand(new AckNewPlayerList(players));
+			}
 		}
 		
 		if (data instanceof QueryStartGame) {

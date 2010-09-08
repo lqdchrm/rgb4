@@ -46,10 +46,44 @@
 		</effect>
 	</style>
 
+	<style id="standard-header">
+		<attributes padding="10px,10px,10px,10px" backgroundColor="#333e" />
+	</style>
+	
+	<style id="header-label">
+		<attributes font="verdana-24-glow.fnt" focusable="false" align="center" valign="center"/>
+	</style>
+	
+	<style id="standard-panel-background">
+	</style>
+
+
+	<style id="lobby-panel-background">
+		<attributes backgroundColor="#aaaa"/>
+	</style>
+
+	<style id="standard-panel">
+		<attributes valign="top" align="left" childLayout="vertical" padding="10px,10px,10px,10px"/>
+	</style>
+
+
+	<style id="standard-footer">
+		<attributes padding="10px,10px,10px,10px" backgroundColor="#333e" />
+	</style>
+
+
 	<style id="lobby-header">
 		<attributes align="center"
 			font="content/jumpnrun/default/gui/small-font-unselected.fnt"
 			focusable="false" />
+	</style>
+	
+	<style id="player-list">
+		<attributes backgroundColor="#000e"/>
+	</style>
+	
+	<style id="level-list">
+		<attributes backgroundColor="#000e"/>
 	</style>
 
 	<style id="lobby-text">

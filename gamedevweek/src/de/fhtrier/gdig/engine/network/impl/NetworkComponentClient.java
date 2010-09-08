@@ -77,6 +77,7 @@ public class NetworkComponentClient extends NetworkComponentImpl {
 			// if server tells us to disconnect, do it
 			if (command instanceof ServerAckDisconnect) {
 				this.serverHandler.close();
+				this.networkId=-1;
 				setState(LocalState.DISCONNECTED);
 				return true;
 			}

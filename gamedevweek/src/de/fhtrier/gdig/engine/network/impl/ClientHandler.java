@@ -3,11 +3,13 @@ package de.fhtrier.gdig.engine.network.impl;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.NetworkInterface;
 import java.net.Socket;
 
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.engine.network.INetworkCommand;
+import de.fhtrier.gdig.engine.network.NetworkComponent;
 
 /**
  * This class is used by the server to listen for commands coming from clients.

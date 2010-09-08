@@ -18,7 +18,16 @@ public class DedicatedServer {
 
 	public static void main(String[] args) {
 		// create game
-		ServerGame serverGame = new ServerGame(args[0], Integer.parseInt(args[1]));
+		ServerGame serverGame;
+
+		if (args.length==0)
+		{
+			serverGame = new ServerGame("my-server", 49999);
+		}
+		else
+		{
+			serverGame = new ServerGame(args[0], Integer.parseInt(args[1]));
+		}
 
 		// initialize (gfx) settings depending on game type
 		if (serverGame != null) {

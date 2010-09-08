@@ -34,6 +34,7 @@ public class ServerSettingsState extends NiftyGameState implements ScreenControl
 	private StateBasedGame game;
 	private TextFieldControl portControl;
 	private TextFieldControl serverNameControl;
+	private TextFieldControl playerNameControl;
 	private boolean connecting = false;
 	private boolean serverStarting = false;
 	  
@@ -65,6 +66,7 @@ public class ServerSettingsState extends NiftyGameState implements ScreenControl
 	public void bind(Nifty arg0, Screen screen) {
 		portControl = screen.findControl("portnumber", TextFieldControl.class);
 		serverNameControl = screen.findControl("servername", TextFieldControl.class);
+		playerNameControl = screen.findControl("playername", TextFieldControl.class);
 	}
 
 	@Override
@@ -93,7 +95,7 @@ public class ServerSettingsState extends NiftyGameState implements ScreenControl
 			NetworkComponent.getInstance().update();
 		}
 		if(NetworkComponent.getInstance().getNetworkId() != -1) {
-			NetworkComponent.getInstance().sendCommand(new QueryConnect("holycrap"));
+			NetworkComponent.getInstance().sendCommand(new QueryConnect(playerNameControl.getText()));
 			game.enterState(GameStates.CLIENT_LOBBY);
 		}
 	}
