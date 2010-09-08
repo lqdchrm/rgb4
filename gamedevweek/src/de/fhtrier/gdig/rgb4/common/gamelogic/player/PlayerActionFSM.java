@@ -12,6 +12,7 @@ public class PlayerActionFSM extends FiniteStateMachine<PlayerActionState, Playe
 		// register: standing running combinations
 		add(PlayerActionState.Standing, PlayerActions.StartRunning, PlayerActionState.Running);
 		add(PlayerActionState.Running, PlayerActions.StopRunning, PlayerActionState.Standing);
+		add(PlayerActionState.Running, PlayerActions.Jump, PlayerActionState.Jumping);
 		
 		// register standing running while shooting
 		add(PlayerActionState.ShootStanding, PlayerActions.StartRunning, PlayerActionState.ShootRunning);
@@ -25,9 +26,23 @@ public class PlayerActionFSM extends FiniteStateMachine<PlayerActionState, Playe
 		add(PlayerActionState.Running, PlayerActions.StartShooting, PlayerActionState.ShootRunning);
 		add(PlayerActionState.ShootRunning, PlayerActions.StopShooting, PlayerActionState.Running);
 		
-		// register: jumping falling shooting
-//		add(PlayerActionState.Standing, PlayerActions.Jump, PlayerActionState.Jumping);
-//		add(PlayerActionState.Standing, PlayerActions.Fall, PlayerActionState.Falling);
+		// register: jumping landing
+		add(PlayerActionState.Standing, PlayerActions.Jump, PlayerActionState.Jumping);
+		add(PlayerActionState.Jumping,PlayerActions.Land, PlayerActionState.Landing);
+		add(PlayerActionState.Landing, PlayerActions.DoNothing, PlayerActionState.Standing);
+		add(PlayerActionState.Landing, PlayerActions.Jump, PlayerActionState.Jumping);
+		add(PlayerActionState.Landing, PlayerActions.StartShooting, PlayerActionState.ShootStanding);
+		add(PlayerActionState.Landing, PlayerActions.StartRunning, PlayerActionState.Running);
+		
+		// register: jumping shooting
+		add(PlayerActionState.Jumping, PlayerActions.StartShooting, PlayerActionState.ShootJumping);
+		add(PlayerActionState.ShootJumping, PlayerActions.StopShooting, PlayerActionState.Jumping);
+		add(PlayerActionState.ShootStanding, PlayerActions.Jump, PlayerActionState.Jumping);
+		add(PlayerActionState.ShootRunning, PlayerActions.Jump, PlayerActionState.Jumping);
+		add(PlayerActionState.ShootJumping, PlayerActions.Land, PlayerActionState.ShootStanding);
+		
+		
+		//		add(PlayerActionState.Standing, PlayerActions.Fall, PlayerActionState.Falling);
 //		add(PlayerActionState.Running, PlayerActions.Jump, PlayerActionState.Jumping);
 //		add(PlayerActionState.Running, PlayerActions.Fall, PlayerActionState.Falling);
 //		add(PlayerActionState.Falling, PlayerActions.Land, PlayerActionState.Standing);

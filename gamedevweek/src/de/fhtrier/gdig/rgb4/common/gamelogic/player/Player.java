@@ -19,6 +19,7 @@ import de.fhtrier.gdig.rgb4.common.entities.physics.CollisionManager;
 import de.fhtrier.gdig.rgb4.common.entities.physics.LevelCollidableEntity;
 import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.PlayerAssetState;
 import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.PlayerJumpingState;
+import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.PlayerLandingState;
 import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.PlayerRunningState;
 import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.PlayerShootJumpingState;
 import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.PlayerShootRunningState;
@@ -55,6 +56,7 @@ public class Player extends LevelCollidableEntity implements
 	private PlayerShootRunningState stateShootRunning;
 	private PlayerJumpingState stateJumping;
 	private PlayerShootJumpingState stateShootJumping;
+	private PlayerLandingState stateLanding;
 	
 	private PlayerActionFSM fsmAction;
 	private PlayerOrientationFSM fsmOrientation;
@@ -104,6 +106,7 @@ public class Player extends LevelCollidableEntity implements
 		stateShootRunning = new PlayerShootRunningState(this, factory);
 		stateJumping = new PlayerJumpingState(this, factory);
 		stateShootJumping = new PlayerShootJumpingState(this, factory);
+		stateLanding = new PlayerLandingState(this, factory);
 	}
 
 	private void initGraphics() throws SlickException {
@@ -290,7 +293,8 @@ public class Player extends LevelCollidableEntity implements
 
 			if (InputControl.isRefKeyPressed(InputControl.REFJUMP)) {
 				if (this.isOnGround()) {
-					// applyAction(PlayerActions.Jump);
+					getVel()[Entity.Y] = -Constants.GamePlayConstants.playerJumpSpeed;	
+					applyAction(PlayerActions.Jump);
 				}
 			}
 
@@ -384,9 +388,9 @@ public class Player extends LevelCollidableEntity implements
 
 			// set Drag
 			if (isOnGround()) {
-				setDrag(0.005f);
+				setDrag(Constants.GamePlayConstants.playerGroundDrag);
 			} else {
-				setDrag(0.0000001f);
+				setDrag(Constants.GamePlayConstants.playerAirDrag);
 			}
 
 			super.update(deltaInMillis); // calc physics
@@ -467,6 +471,9 @@ public class Player extends LevelCollidableEntity implements
 			break;
 		case ShootJumping:
 			setState(stateShootJumping);
+			break;
+		case Landing:
+			setState(stateLanding);
 			break;
 		default:
 			if (Constants.Debug.finiteStateMachineDebug) {

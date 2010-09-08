@@ -5,9 +5,7 @@ import org.newdawn.slick.SlickException;
 import de.fhtrier.gdig.engine.entities.Entity;
 import de.fhtrier.gdig.engine.management.Factory;
 import de.fhtrier.gdig.rgb4.common.gamelogic.player.Player;
-import de.fhtrier.gdig.rgb4.common.gamelogic.player.states.identifiers.PlayerActions;
 import de.fhtrier.gdig.rgb4.identifiers.Assets;
-import de.fhtrier.gdig.rgb4.identifiers.Constants;
 import de.fhtrier.gdig.rgb4.identifiers.EntityOrder;
 
 public class PlayerStandingState extends PlayerAssetState {
@@ -28,10 +26,6 @@ public class PlayerStandingState extends PlayerAssetState {
 
 	@Override
 	public void update() {
-		
-//		// check if falling
-//		if (getPlayer().getVel()[Entity.Y] > Constants.GamePlayConstants.playerFallTriggerSpeed) {
-//			getPlayer().applyAction(PlayerActions.Fall);
-//		}
+
 	}
 }

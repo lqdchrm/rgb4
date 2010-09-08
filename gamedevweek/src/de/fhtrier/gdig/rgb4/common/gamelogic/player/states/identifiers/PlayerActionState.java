@@ -17,12 +17,13 @@ package de.fhtrier.gdig.rgb4.common.gamelogic.player.states.identifiers;
 public enum PlayerActionState {
 	Standing,
 	ShootStanding,
-	ShootRunning,
 	Running,
+	ShootRunning,	
 	Jumping,
 	ShootJumping,
-	FallShooting,
 	Falling,
+	FallShooting,
+	Landing,
 	Left,
 	Right	
 }

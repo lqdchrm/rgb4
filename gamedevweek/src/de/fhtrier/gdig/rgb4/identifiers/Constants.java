@@ -10,17 +10,18 @@ public class Constants {
 
 	public static class GamePlayConstants extends Configuration {
 
-		public static float gravity = 2000.0f;//981.0f==Erdbeschleunigung
+		public static float gravity = 2000.0f; // Erdbeschleunigung
 		
 		public static float shotSpeed = 1000.0f;
 		public static float shotCooldown = 100.0f;
 		
 		public static float playerWalkSpeed = 4000.0f;
-		public static float playerJumpSpeed = 3500.0f;
+		public static float playerJumpSpeed = 1000.0f;
 		public static float playerMaxSpeed = 850.0f;
 		
-		public static final float playerIdleTriggerSpeed = 10.0f;
-		public static final float playerFallTriggerSpeed = 5.0f;
+		public static final float playerIdleTriggerSpeed = 5.0f;
+		public static final float playerGroundDrag = 0.01f;
+		public static final float playerAirDrag = 0.000001f;
 	}
 
 	public static class Debug extends Configuration {
