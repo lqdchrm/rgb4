@@ -59,6 +59,20 @@ public abstract class Configuration
 		int minValue();
 	}
 
+	/**
+	 * Boolean werte welche standardmäßig true sind können mit dieser Annotation
+	 * versehen werden. Hierdurch wird wenn das entsprechende argument gepharst
+	 * wird, anstelle true der wert auf false gesetzt.
+	 * 
+	 * @author Loki
+	 * 
+	 */
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	protected @interface DefaultTrue
+	{
+	}
+
 	private Map<String, Field> commandMap;
 
 	public Configuration()
@@ -237,7 +251,9 @@ public abstract class Configuration
 					} else if (filedType == boolean.class)
 					{
 						--i;
-						field.set(this, true);
+						DefaultTrue shuldBeFalse = field
+								.getAnnotation(DefaultTrue.class);
+						field.set(this, shuldBeFalse == null);
 					} else if (filedType == InetSocketAddress.class)
 					{
 						if (args[i].contains(":"))
