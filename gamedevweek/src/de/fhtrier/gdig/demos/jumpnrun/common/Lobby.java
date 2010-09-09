@@ -1,6 +1,12 @@
 package de.fhtrier.gdig.demos.jumpnrun.common;
 
+<<<<<<< HEAD
 import java.net.InterfaceAddress;
+=======
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.UnknownHostException;
+>>>>>>> roessgri/master
 import java.util.List;
 
 import javax.swing.JDialog;
@@ -40,9 +46,14 @@ public class Lobby extends JDialog
 		return new ClientGame();
 	}
 
+<<<<<<< HEAD
 	public static JumpNRunGame createGameByArgs(String[] args)
 	{
 
+=======
+	public static RGB4Game createGameByArgs(String[] args) {
+		
+>>>>>>> roessgri/master
 		String address = "";
 
 		INetworkLobby networkLobby = new NetworkLobby();
@@ -90,8 +101,12 @@ public class Lobby extends JDialog
 
 	}
 
+<<<<<<< HEAD
 	public static JumpNRunGame createGameViaDialog()
 	{
+=======
+	public static RGB4Game createGameViaDialog() {
+>>>>>>> roessgri/master
 
 		// Ask whether we want to be server
 		Object[] options = { "Server", "Client", "Spectator" };

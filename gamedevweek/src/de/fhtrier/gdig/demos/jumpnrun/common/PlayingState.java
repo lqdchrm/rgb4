@@ -8,16 +8,16 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import de.fhtrier.gdig.demos.jumpnrun.JumpNRun;
-import de.fhtrier.gdig.demos.jumpnrun.common.entities.physics.CollisionManager;
-import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
-import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
+import de.fhtrier.gdig.demos.jumpnrun.RGB4;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
-import de.fhtrier.gdig.engine.entities.Entity;
+import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
+import de.fhtrier.gdig.engine.physics.CollisionManager;
 
 public abstract class PlayingState extends BasicGameState implements
 		INetworkCommandListener
@@ -26,7 +26,7 @@ public abstract class PlayingState extends BasicGameState implements
 	private AssetMgr assets;
 	private GameFactory factory;
 	private int levelId;
-	//private static Image frameBuffer;
+	private static Image frameBuffer;
 		
 	public abstract void cleanup(GameContainer container, StateBasedGame game);
 
@@ -58,8 +58,8 @@ public abstract class PlayingState extends BasicGameState implements
 
 		// create assetmgr
 		this.assets = new AssetMgr();
-		this.assets.setAssetPathPrefix("content/jumpnrun/test/");
-		this.assets.setAssetFallbackPathPrefix("content/jumpnrun/default/");
+		this.assets.setAssetPathPrefix(Assets.AssetManagerPath);
+		this.assets.setAssetFallbackPathPrefix(Assets.AssetManagerFallbackPath);
 
 		// Factory
 		this.factory = new GameFactory(this.assets);
@@ -67,8 +67,8 @@ public abstract class PlayingState extends BasicGameState implements
 		// Level
 		this.levelId = factory.createEntity(EntityType.LEVEL);
 		
-		// FrameBuffer für Postprocessing
-		//frameBuffer = new Image(JumpNRun.SCREENWIDTH, JumpNRun.SCREENHEIGHT);
+		// FrameBuffer
+		frameBuffer = new Image(RGB4.SCREENWIDTH, RGB4.SCREENHEIGHT);
 	}
 
 	@Override
@@ -80,17 +80,9 @@ public abstract class PlayingState extends BasicGameState implements
 		
 		if (level != null)
 		{
-			if (Constants.Debug.shadersActive)
-			{
-				// Reserved for postprocessing
-				level.render(graphicContext, null);
-				//level.render(frameBuffer.getGraphics(), frameBuffer);
-				//graphicContext.drawImage(frameBuffer, 0, 0);
-			}
-			else
-			{
-				level.render(graphicContext, null);
-			}
+			level.render(frameBuffer.getGraphics(), frameBuffer);
+			
+			graphicContext.drawImage(frameBuffer, 0, 0);
 		}
 	}
 	
@@ -135,8 +127,6 @@ public abstract class PlayingState extends BasicGameState implements
 			// Den Objekten gesagt wird die Kollision zu behandeln.
 			CollisionManager.update();
 			level.handleCollisions();
-			
-			EventManager.update();
 		}
 	}
 
