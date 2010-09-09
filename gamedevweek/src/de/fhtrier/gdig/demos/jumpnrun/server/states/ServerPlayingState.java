@@ -115,7 +115,7 @@ public class ServerPlayingState extends PlayingState {
 				QueryPlayerCondition tmpCmd = (QueryPlayerCondition) actionCmd;
 
 				int tmpId = tmpCmd.getPlayerId();
-				Player tmpPlayer = (Player) getFactory().getEntity(playerId);
+				Player tmpPlayer = (Player) getFactory().getEntity(tmpId);
 
 				NetworkComponent.getInstance().sendCommand(
 						actionCmd.getSender(),
