@@ -319,8 +319,8 @@ public class Player extends LevelCollidableEntity {
 		{
 			Shader.pushShader(playerShader);
 			Shader.activateAdditiveBlending();
-			float weaponGlowSize = 0.2f+this.getState().ammo*0.8f;
-			float glowSize = 0.2f+this.getState().health*0.8f;
+			float weaponGlowSize = 0.1f+this.getState().ammo*0.9f;
+			float glowSize = 0.1f+this.getState().health*0.9f;
 			
 			float weaponX = this.getData(CENTER_X);
 			float weaponY = this.getData(CENTER_Y)-weaponGlow.getHeight()*weaponGlowSize/2+40;
