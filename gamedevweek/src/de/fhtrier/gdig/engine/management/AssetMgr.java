@@ -7,6 +7,7 @@ import java.util.StringTokenizer;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Music;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.SpriteSheet;
@@ -21,6 +22,7 @@ public class AssetMgr {
 	private String assetFallbackPathPrefix;
 	private HashMap<Integer, Image> images;
 	private HashMap<Integer, Sound> sounds;
+	private HashMap<Integer, Music> musics;
 	private HashMap<Integer, TiledMap> tiledMaps;
 	private HashMap<Integer, Animation> animations;
 	private HashMap<Integer, ParticleSystem> particleSystems;
@@ -99,6 +101,26 @@ public class AssetMgr {
 
 	public Sound getSound(int id) {
 		return this.sounds.get(id);
+	}
+	
+	public void storeMusic(int id, Music song)
+	{
+		this.musics.put(id, song);
+	}
+	
+	public Music storeMusic(int id, String src) throws SlickException {
+		Music song = null;
+		try {
+			song = new Music(combinePathStrings(this.assetPathPrefix, src));
+		} catch (Exception e) {
+			song = new Music(combinePathStrings(this.assetFallbackPathPrefix, src));
+		}
+		storeMusic(id, song);
+		return song;
+	}
+	
+	public Music getMusic(int id) {
+		return this.musics.get(id);
 	}
 
 	public void storeTiledMap(int id, TiledMap map) {
@@ -199,5 +221,9 @@ public class AssetMgr {
 	
 	public ParticleSystem getParticleSystem (int id) {
 		return this.particleSystems.get(id);
+	}
+	
+	public String makePathRelativeToAssetPath(String path) {
+		return AssetMgr.combinePathStrings(assetPathPrefix, path);
 	}
 }

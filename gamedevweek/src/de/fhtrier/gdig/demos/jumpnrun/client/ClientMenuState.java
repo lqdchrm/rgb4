@@ -10,6 +10,7 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.Log;
 
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.lessvoid.nifty.EndNotify;
 import de.lessvoid.nifty.Nifty;
@@ -68,7 +69,9 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 	}
 
 	public void newGame() {
-		Log.debug("mouseX: " + mouseX + ", mouseY: " + mouseY);
+		if (Constants.Debug.guiDebug) {
+			Log.debug("mouseX: " + mouseX + ", mouseY: " + mouseY);
+		}
 		game.enterState(GameStates.PLAYING, new FadeOutTransition(),
 				new FadeInTransition());
 	}
@@ -84,7 +87,10 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 	public void mouseMoved(final int oldx, final int oldy, final int newx,
 			final int newy) {
 		super.mouseMoved(oldx, oldy, newx, newy);
-		Log.debug(oldx + ", " + oldy + ", " + newx + ", " + newy);
+
+		if (Constants.Debug.guiDebug) {
+			Log.debug(oldx + ", " + oldy + ", " + newx + ", " + newy);
+		}
 	}
 
 	public Nifty getNifty() {

@@ -1,15 +1,15 @@
 License Information
 ===================
 
-**RGB4 - der Letzte macht das Licht aus.**
+**RGB4 - Der Letzte macht das Licht aus.**
 
-This Software, except media (sound, sound effects, graphics and animations) and branding is Licensed under the BSD-License.
-All media (sound, sound effects, graphics and animations) and the branding is Licensed under a Creative Commons License (BY-NC-SA). More Information on http://creativecommons.org/licenses/by-nc-sa/3.0/.
+This software, except media (sound, sound effects, graphics and animations) and branding is licensed under the BSD-License.
+All media (sound, sound effects, graphics and animations) and the branding is licensed under a Creative Commons License (BY-NC-SA). More Information on http://creativecommons.org/licenses/by-nc-sa/3.0/.
 
 Notice special LBSD License
 -----------
 
-Copyright (c) <2010>, <GDIG - Game Development Interesting Group>
+Copyright (c) <2010>, <GDIG - Game Development Interest Group>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

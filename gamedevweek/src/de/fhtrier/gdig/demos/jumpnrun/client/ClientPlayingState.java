@@ -16,9 +16,8 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
-import de.fhtrier.gdig.demos.jumpnrun.common.Level;
-import de.fhtrier.gdig.demos.jumpnrun.common.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.PlayingState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
@@ -31,11 +30,14 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeColor;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeWeaponColor;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
-import de.fhtrier.gdig.engine.entities.Entity;
-import de.fhtrier.gdig.engine.entities.EntityUpdateStrategy;
+import de.fhtrier.gdig.engine.gamelogic.Entity;
+import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
+import de.fhtrier.gdig.engine.physics.CollisionManager;
+import de.fhtrier.gdig.engine.physics.entities.CollidableEntity;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 
 enum LocalState {
 	JOINING, CREATINGPLAYER, PLAYING, DISCONNECTING, EXITING
@@ -50,7 +52,7 @@ public class ClientPlayingState extends PlayingState {
 	private ServerData recv;
 	private ClientData send;
 
-	public ClientPlayingState() {
+	public ClientPlayingState() throws SlickException {
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ClientData();
 	}
@@ -66,10 +68,8 @@ public class ClientPlayingState extends PlayingState {
 
 		// InputControl initialisieren
 		InputControl.loadKeyMapping();
-
-		// HACK load and play sound
-		// getFactory().getAssetMgr().storeSound(Assets.LevelSoundtrack,
-		// "sounds/kaliba.ogg").loop();
+		
+		SoundManager.setAssetMgr(this.getFactory().getAssetMgr());		
 	}
 
 	private boolean handleProtocolCommands(INetworkCommand cmd) {
@@ -136,6 +136,9 @@ public class ClientPlayingState extends PlayingState {
 					&& id == getLevel().getCurrentPlayer().getId()) {
 				getLevel().setCurrentPlayer(-1);
 			}
+			
+			CollisionManager.removeEntity((CollidableEntity) getFactory().getEntity(id));
+			
 			getLevel().remove(getFactory().getEntity(id));
 
 			// remove Entity recursively from Factory
