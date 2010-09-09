@@ -16,6 +16,9 @@ import org.newdawn.slick.particles.ParticleIO;
 import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.tiled.TiledMap;
 
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
+
 public class AssetMgr {
 
 	private String assetPathPrefix;
@@ -34,8 +37,8 @@ public class AssetMgr {
 		this.tiledMaps = new HashMap<Integer, TiledMap>();
 		this.animations = new HashMap<Integer, Animation>();
 		this.particleSystems = new HashMap<Integer, ParticleSystem>();
-		this.assetPathPrefix = "";
-		this.assetFallbackPathPrefix = "";
+		this.assetPathPrefix = Assets.AssetManagerPath;
+		this.assetFallbackPathPrefix = Assets.AssetManagerFallbackPath;
 	}
 
 	public void setAssetFallbackPathPrefix(String path) {

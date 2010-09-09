@@ -9,13 +9,12 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
-import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 import de.fhtrier.gdig.engine.physics.CollisionManager;
@@ -23,8 +22,6 @@ import de.fhtrier.gdig.engine.physics.CollisionManager;
 public abstract class PlayingState extends BasicGameState implements
 		INetworkCommandListener
 {
-
-	private AssetMgr assets;
 	private GameFactory factory;
 	private int levelId;
 	private static Image frameBuffer;
@@ -63,14 +60,9 @@ public abstract class PlayingState extends BasicGameState implements
 			throws SlickException {
 		// TODO Auto-generated method stub
 		super.enter(container, game);
-
-		// create assetmgr
-		this.assets = new AssetMgr();
-		this.assets.setAssetPathPrefix(Assets.AssetManagerPath);
-		this.assets.setAssetFallbackPathPrefix(Assets.AssetManagerFallbackPath);	
 		
 		// Factory
-		this.factory = new GameFactory(this.assets);
+		this.factory = new GameFactory();
 
 		// Level
 		this.levelId = factory.createEntity(EntityType.LEVEL);
@@ -130,6 +122,8 @@ public abstract class PlayingState extends BasicGameState implements
 		{
 			level.handleInput(input);
 			level.update(deltaInMillis);
+			
+			EventManager.update();
 			
 			// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2. Zeile
 			// Den Objekten gesagt wird die Kollision zu behandeln.

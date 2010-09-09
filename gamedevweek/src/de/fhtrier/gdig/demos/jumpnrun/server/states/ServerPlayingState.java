@@ -18,7 +18,6 @@ import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Bullet;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.PlayerCondition;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActionState;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
@@ -42,12 +41,12 @@ public class ServerPlayingState extends PlayingState {
 
 	private Queue<INetworkCommand> queue;
 	private ServerData send;
-	private HashMap<Integer, Integer> networkId2Player;
+	public static HashMap<Integer, Integer> networkId2Player = new HashMap<Integer, Integer>();
+	public static HashMap<Integer, Integer> player2NetworkId = new HashMap<Integer, Integer>();
 
 	public ServerPlayingState() {
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ServerData();
-		networkId2Player = new HashMap<Integer, Integer>();
 	}
 
 	private boolean handlePlayerActions(QueryAction actionCmd) {
@@ -83,17 +82,14 @@ public class ServerPlayingState extends PlayingState {
 			bullet.getData()[Entity.X] = player.getData()[Entity.X] + 40;
 			bullet.getData()[Entity.Y] = player.getData()[Entity.Y] + 80;
 			bullet.getVel()[Entity.X] = player.getVel()[Entity.X]
-					+ (state.shootDirection == PlayerActionState.Right
-							.ordinal() ? Constants.GamePlayConstants.shotSpeed
-							: -Constants.GamePlayConstants.shotSpeed);
-
-			if (player.getPlayerCondition().shootDirection == PlayerActionState.Right
-					.ordinal())
-				bullet.getData()[Entity.SCALE_X] = -1;
-
-			else if (player.getPlayerCondition().shootDirection == PlayerActionState.Right
-					.ordinal())
-				bullet.getData()[Entity.SCALE_X] = 1;
+			        + (player.getData()[Entity.SCALE_X] == -1 ? Constants.GamePlayConstants.shotSpeed
+			                                            	: -Constants.GamePlayConstants.shotSpeed);
+			
+			if(player.getData()[Entity.SCALE_X] == -1) // Right
+			bullet.getData()[Entity.SCALE_X] = -1;
+			
+			else if(player.getData()[Entity.SCALE_X] == 1) // Left
+			bullet.getData()[Entity.SCALE_X] = 1;
 
 			return true;
 		case PLAYERCOLOR:
@@ -199,6 +195,7 @@ public class ServerPlayingState extends PlayingState {
 
 				// remember, which networkId identifies which player
 				networkId2Player.put(cmd.getSender(), id);
+				player2NetworkId.put(id, cmd.getSender());
 				
 				String name = ServerLobbyState.players.get(cmd.getSender()).getPlayerName();
 				

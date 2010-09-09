@@ -44,8 +44,16 @@ public class CollisionManager {
 			return false;
 		}
 
-		return CollisionManager.getTransformedBounds(e1).intersects(
-				CollisionManager.getTransformedBounds(e2));
+		return ((CollisionManager.getTransformedBounds(e1)
+				.intersects(CollisionManager.getTransformedBounds(e2)))
+				||
+
+				(CollisionManager.getTransformedBounds(e1)
+						.contains(CollisionManager.getTransformedBounds(e2)))
+				||
+
+				(CollisionManager.getTransformedBounds(e2)
+						.contains(CollisionManager.getTransformedBounds(e1))));
 	}
 
 	/**

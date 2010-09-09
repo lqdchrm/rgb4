@@ -19,13 +19,13 @@ public abstract class PlayerAssetState {
 	
 	public PlayerAssetState(Player player, int animAssetId, String animAssetPath, int entityOrder, Factory factory) throws SlickException {
 
-		AssetMgr assets = factory.getAssetMgr();
+		AssetMgr assets = player.getAssetMgr();
 		this.player = player;
 		this.factory = factory;
 		
 		// gfx
 		assets.storeAnimation(animAssetId, animAssetPath);
-		AnimationEntity anim = getFactory().createAnimationEntity(entityOrder, animAssetId);		
+		AnimationEntity anim = getFactory().createAnimationEntity(entityOrder, animAssetId, assets);		
 		
 		anim.getData()[Entity.CENTER_X] = player.getData()[Entity.CENTER_X];
 		anim.getData()[Entity.CENTER_Y] = player.getData()[Entity.CENTER_Y];

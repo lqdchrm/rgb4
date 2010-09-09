@@ -34,13 +34,12 @@ public class PlayerShootRunningState extends PlayerAssetState {
 			anim.restart();
 		}
 
-		SoundManager.loopSound(Assets.BulletSoundId, 1f, 0.2f);
+		SoundManager.playSound(Assets.BulletSoundId, 1f, 0.2f);
 	}
 
 
 	@Override
 	public void leave() {
-		SoundManager.stopSound(Assets.BulletSoundId);
 	}
 
 	@Override
@@ -54,7 +53,6 @@ public class PlayerShootRunningState extends PlayerAssetState {
 		// check if currentPos < prevPos --> start falling
 		if (getPlayer().getVel()[Entity.Y] > Constants.GamePlayConstants.playerFallingTriggerSpeed) {
 			getPlayer().applyAction(PlayerActions.Fall);
-			System.out.println("State: FallShooting");
 		}
 		
 		if (anim.isStopped()) {
