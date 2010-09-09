@@ -27,5 +27,5 @@ public class Assets
 	// Particle Effects
 	public static final int WeaponParticleEffect = 200;
 	public static final String WeaponParticleEffectImgPath = "sprites/player/weaponparticle.png";
-	public static final String WeaponParticleEffectCfgPath = "sprites/player/weaponparticleemitter3.xml";
+	public static final String WeaponParticleEffectCfgPath = "sprites/player/weaponparticleemitter5.xml";
 }
