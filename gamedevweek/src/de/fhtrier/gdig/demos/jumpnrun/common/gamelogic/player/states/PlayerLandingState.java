@@ -27,7 +27,7 @@ public class PlayerLandingState extends PlayerAssetState {
 
 	@Override
 	public void enter() {
-		getPlayer().getVel()[Entity.Y] = 0.0f;
+//		getPlayer().getVel()[Entity.Y] = 0.0f;
 		anim.restart();
 	}
 

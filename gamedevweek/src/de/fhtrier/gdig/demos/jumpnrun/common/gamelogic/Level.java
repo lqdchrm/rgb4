@@ -111,7 +111,9 @@ public class Level extends MoveableEntity {
 							+ e.getData()[SCALE_X] + " SY: "
 							+ e.getData()[SCALE_Y] + "\n" + "ROT: "
 							+ e.getData()[ROTATION] + "\n" + "STATE: "
-							+ ((Player) e).getState().toString(), 20, 250);
+							+ ((Player) e).getState().toString() + "\n"
+							+ "IsOnGround " + ((Player) e).isOnGround() + "\n"
+							+ "SPEED (" + ((Player) e).getVel()[Entity.X] + ", " + ((Player) e).getVel()[Entity.Y] + ")", 20, 250);
 		}
 	}
 

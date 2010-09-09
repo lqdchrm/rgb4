@@ -17,7 +17,7 @@ public class PlayerStandingState extends PlayerAssetState {
 
 	@Override
 	public void enter() {
-		getPlayer().getAcc()[Entity.X] = 0.0f;
+//		getPlayer().getAcc()[Entity.X] = 0.0f;
 	}
 
 	@Override
