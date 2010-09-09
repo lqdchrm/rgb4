@@ -11,8 +11,8 @@ public class SoundManager {
 
 	private static SoundManager instance = null;
 
-	private SoundManager(AssetMgr assets) throws SlickException {
-		this.assets = assets;
+	private SoundManager() throws SlickException {
+		this.assets = new AssetMgr();
 
 		//this.assets.storeMusic(Assets.LevelSoundtrackId, Assets.LevelSoundtrackPath);
 
@@ -113,13 +113,6 @@ public class SoundManager {
 		SoundManager.getInstance().assets.getMusic(id).setPosition(position);
 	}
 
-	public static void setAssetMgr(AssetMgr assets) throws SlickException {
-		if (instance == null) {
-			instance = new SoundManager(assets);
-		} else {
-			instance.assets = assets;
-		}
-	}
 
 	public static SoundManager getInstance() {
 		if (instance == null) {
@@ -127,6 +120,12 @@ public class SoundManager {
 		}
 
 		return instance;
+	}
+
+	public static void init() throws SlickException {
+		if (instance == null) {
+			instance = new SoundManager();
+		}
 	}
 
 }

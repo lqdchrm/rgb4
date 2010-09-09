@@ -2,6 +2,7 @@ package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActions;
@@ -25,7 +26,7 @@ public class PlayerShootStandingState extends PlayerAssetState {
 
 		anim = e.Assets().getAnimation(e.getAssetId());
 		anim.setLooping(false);
-
+		anim.setAutoUpdate(true);
 	}
 
 	@Override
@@ -35,13 +36,12 @@ public class PlayerShootStandingState extends PlayerAssetState {
 			anim.restart();
 		}
 
-		//SoundManager.playSound(Assets.PlayerRunSoundId, 1f, 0.2f);
-		SoundManager.loopSound(Assets.BulletSoundId, 1f, 0.2f);
+		// SoundManager.playSound(Assets.PlayerRunSoundId, 1f, 0.2f);
+		SoundManager.playSound(Assets.BulletSoundId, 1f, 0.2f);
 	}
 
 	@Override
 	public void leave() {
-		SoundManager.stopSound(Assets.BulletSoundId);
 	}
 
 	@Override
@@ -50,7 +50,6 @@ public class PlayerShootStandingState extends PlayerAssetState {
 		// check if currentPos < prevPos --> start falling
 		if (getPlayer().getVel()[Entity.Y] > Constants.GamePlayConstants.playerFallingTriggerSpeed) {
 			getPlayer().applyAction(PlayerActions.Fall);
-			System.out.println("State: ShootFalling");
 		}
 
 		if (anim.isStopped()) {

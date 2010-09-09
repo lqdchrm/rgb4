@@ -42,6 +42,8 @@ public class Level extends MoveableEntity {
 	private ArrayList<ArrayList<SpawnPoint>> teleportExitPoints;
 
 	private Random rd = new Random(System.currentTimeMillis());
+	
+	private AssetMgr assets;
 
 	public Level(int id, GameFactory factory) throws SlickException {
 		super(id, EntityType.LEVEL);
@@ -49,7 +51,7 @@ public class Level extends MoveableEntity {
 		this.currentPlayerId = -1;
 
 		this.factory = factory;
-		AssetMgr assets = factory.getAssetMgr();
+		assets = new AssetMgr();
 
 		// Load Images
 		Image tmp = assets.storeImage(Assets.LevelBackgroundImageId,
@@ -65,17 +67,17 @@ public class Level extends MoveableEntity {
 
 		// gfx
 		this.backgroundImage = factory.createImageEntity(
-				Assets.LevelBackgroundImageId, Assets.LevelBackgroundImageId);
+				Assets.LevelBackgroundImageId, Assets.LevelBackgroundImageId, assets);
 		this.backgroundImage.setVisible(true);
 		add(this.backgroundImage);
 
 		this.middlegroundImage = factory.createImageEntity(
-				Assets.LevelMiddlegroundImageId, Assets.LevelMiddlegroundImageId);
+				Assets.LevelMiddlegroundImageId, Assets.LevelMiddlegroundImageId, assets);
 		this.middlegroundImage.setVisible(true);
 		add(this.middlegroundImage);
 
 		this.ground = factory.createTiledMapEntity(Assets.LevelTileMapId,
-				Assets.LevelTileMapId);
+				Assets.LevelTileMapId, assets);
 		this.ground.setVisible(true);
 		this.ground.setActive(true);
 		add(this.ground);
@@ -382,10 +384,14 @@ public class Level extends MoveableEntity {
 			Player player = getCurrentPlayer();
 			if (player != null) {
 				player.setActive(false);
+				player.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 			}
+			
 			this.currentPlayerId = playerId;
+			
 			player = getPlayer(currentPlayerId);
 			if (player != null) {
+				player.setUpdateStrategy(EntityUpdateStrategy.ClientToServer);
 				player.setActive(true);
 			}
 		}

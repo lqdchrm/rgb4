@@ -11,6 +11,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
 import de.fhtrier.gdig.engine.management.Factory;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class PlayerShootFallingState extends PlayerAssetState {
 	
@@ -31,6 +32,7 @@ public class PlayerShootFallingState extends PlayerAssetState {
 		if (anim.isStopped()) {
 			anim.restart();
 		}
+		SoundManager.playSound(Assets.BulletSoundId, 1f, 0.2f);
 	}
 
 	@Override

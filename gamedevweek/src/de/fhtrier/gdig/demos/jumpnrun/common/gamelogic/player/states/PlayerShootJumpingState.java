@@ -32,12 +32,11 @@ public class PlayerShootJumpingState extends PlayerAssetState {
 		if (anim.isStopped()) {
 			anim.restart();
 		}
-		SoundManager.loopSound(Assets.BulletSoundId, 1f, 0.2f);
+		SoundManager.playSound(Assets.BulletSoundId, 1f, 0.2f);
 	}
 
 	@Override
 	public void leave() {
-		SoundManager.stopSound(Assets.BulletSoundId);
 	}
 
 	@Override
