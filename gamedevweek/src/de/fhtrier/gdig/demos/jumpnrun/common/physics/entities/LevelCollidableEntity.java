@@ -25,6 +25,10 @@ public class LevelCollidableEntity extends CollidableEntity {
 	private boolean bottomRightCollision = false;
 	
 	private float[] correction = new float[]{0.0f,0.0f};
+
+	private int collisionLayer = 1;
+
+	private int logicLayer = 3;
 	
 	/**
 	 * Custom entity class which implements level collisions (ugly ?) needs to
@@ -95,7 +99,7 @@ public class LevelCollidableEntity extends CollidableEntity {
 						this.map.getWidth(), rightTile); x++) {
 
 					// items
-					final int tileId = this.map.getTileId(x, y, 0);
+					final int tileId = this.map.getTileId(x, y, collisionLayer);
 					
 					final Rectangle bbTile = new Rectangle(x
 							* this.map.getTileWidth(), y
@@ -107,7 +111,7 @@ public class LevelCollidableEntity extends CollidableEntity {
 					if (Constants.Debug.tileMapLogicDebug) {
 						if (this.map.getLayerCount() >= 2) {
 							final int actionTileId = this.map
-									.getTileId(x, y, 1);
+									.getTileId(x, y, logicLayer);
 
 							if (actionTileId > 0) {
 								if (collisionWithTile(bbTile))
@@ -293,7 +297,7 @@ public class LevelCollidableEntity extends CollidableEntity {
 
 					// if tile is not empty
 					// TODO read from special layer
-					final int tileId = this.map.getTileId(x, y, 0);
+					final int tileId = this.map.getTileId(x, y, collisionLayer);
 					if (tileId > 0) {
 
 						// Bounding box for current tile

@@ -86,6 +86,9 @@ public class Level extends MoveableEntity {
 
 	@Override
 	protected void postRender(Graphics graphicContext) {
+		if (isVisible()){
+			ground.Assets().getTiledMap(ground.getAssetId()).render(0, 0, 2);
+		}
 		super.postRender(graphicContext);
 
 		graphicContext.setColor(Constants.Debug.overlayColor);
