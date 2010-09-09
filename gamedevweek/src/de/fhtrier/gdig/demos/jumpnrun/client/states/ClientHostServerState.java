@@ -1,7 +1,10 @@
 package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.net.InterfaceAddress;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.newdawn.slick.GameContainer;
@@ -19,11 +22,13 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkHelper;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.button.CreateButtonControl;
+import de.lessvoid.nifty.controls.button.controller.ButtonControl;
 import de.lessvoid.nifty.controls.textfield.controller.TextFieldControl;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import de.lessvoid.nifty.slick.NiftyGameState;
+import de.lessvoid.nifty.tools.Color;
 import de.lessvoid.nifty.tools.resourceloader.FileSystemLocation;
 import de.lessvoid.nifty.tools.resourceloader.ResourceLoader;
 
@@ -44,6 +49,7 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 
 	private List<InterfaceAddress> interfaces;
 	private int selectedInterfaceIndex = -1;
+	private List<ButtonControl> interfaceButtons=new ArrayList<ButtonControl>();
 	
 	public ClientHostServerState(final StateBasedGame game) {
 		super(GameStates.SERVER_SETTINGS);
@@ -91,6 +97,18 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 		// left intentionally blank
 	}
 	
+	public void setButton(int nr,List<ButtonControl> buttons,Color setColor,Color notSetColor)
+	{
+		for (int i=0;i < buttons.size(); i++)
+		{
+			ButtonControl b = buttons.get(i);
+			if (i==nr)
+				b.setColor(setColor);
+			else
+				b.setColor(notSetColor);
+		}
+	}
+	
 	@Override
 	public void leave(GameContainer container, StateBasedGame game)
 			throws SlickException {
@@ -121,19 +139,38 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 	
 	public void createServer() {
 		
-		if (selectedInterfaceIndex == -1) {
-			return;
-		}
-		
 		if(!serverStarting){
 			serverStarting = true;
+		
 			
-			
-			// TODO spawn server
+			if (selectedInterfaceIndex==-1)
+			{
+				popupNoServer();
+				return;
+			}
+			else if (playerNameControl.getText().trim().equals(""))
+			{
+				popupNoName();
+			}
+			else
+			{
+				String interfaceA = interfaces.get(selectedInterfaceIndex).getAddress().getHostAddress().replace('/', ' ').trim();
+	 			ProcessBuilder pb = new ProcessBuilder("server.bat",serverNameControl.getText(),interfaceA,portControl.getText());
+	 		
+//				 pb.directory("myDir");
+				 try {
+					Process p = pb.start();
+					System.setOut(new PrintStream(p.getOutputStream()));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
-			
-			// connect as client master
-			connect();
+				// TODO spawn server
+				
+				// connect as client master
+				connect();
+			}
 		} else {
 			Log.debug("Allready tried creating a server");
 		}
@@ -143,6 +180,8 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 		String currentConnectionIp = interfaces.get(selectedInterfaceIndex).getAddress().getHostAddress();
 		int currentConnectionPort = Integer.parseInt(portControl.getText());
 		
+		
+	
 		if (currentConnectionIp != null && !connecting) {
 			NetworkComponent.getInstance().connect(
 					currentConnectionIp.replace('/', ' ').trim(),
@@ -160,17 +199,20 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 	public void drawInterfaces() {
 		// interfaces.add("server "+new Date().getTime());
 		clearList(guiInterfacePanel);
+		interfaceButtons.clear();
 		for (int i = 0; i < interfaces.size(); i++) {
 			InterfaceAddress iA = interfaces.get(i);
-			CreateButtonControl createButton = new CreateButtonControl("button");
+			CreateButtonControl createButton = new CreateButtonControl("button"+i);
 			createButton.setHeight("20px");
 			createButton.setWidth("100%");
 			createButton.set("label", iA.getAddress().getCanonicalHostName());
 			createButton.setAlign("left");
 			// TODO setin real values
 			createButton.setInteractOnClick("chooseInterface(" + i + ")");
-			createButton.create(nifty, nifty.getCurrentScreen(),
+			ButtonControl bC = createButton.create(nifty, nifty.getCurrentScreen(),
 					guiInterfacePanel);
+			
+			interfaceButtons.add(bC);
 		}
 	}
 	public void chooseInterface(String id) {
@@ -178,6 +220,7 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 		
 		// set interface as active
 		selectedInterfaceIndex = Integer.parseInt(id);
+		setButton(Integer.parseInt(id), interfaceButtons, new Color(1,0,0,1), new Color(1,1,1,1));
 	}
 	
 	private void clearList(Element e) {
@@ -186,4 +229,24 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 		}
 	}
 
+	  public void popupNoServer() {
+		    Element element = nifty.createPopupWithId("popupServer");
+//		    TextRenderer tR = element.getRenderer(TextRenderer.class);
+//		    tR.setText(text);
+		    nifty.showPopup(nifty.getCurrentScreen(), element.getId(), null);
+		    return;
+	  }
+
+	  public void popupNoName() {
+		    Element element = nifty.createPopupWithId("popupName");
+//		    TextRenderer tR = element.getRenderer(TextRenderer.class);
+//		    tR.setText(text);
+		    nifty.showPopup(nifty.getCurrentScreen(), element.getId(), null);
+		    return;
+	  }
+	  
+	  
+	  public void removePopup() {
+	      nifty.closePopup(nifty.getCurrentScreen().getTopMostPopup().getId(), null);
+	  }
 }

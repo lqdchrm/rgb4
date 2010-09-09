@@ -78,15 +78,18 @@
 
 					<panel height="10%" id="bottom_panel" childLayout="horizontal"
 						backgroundColor="#000a">
-						<panel height="100%" width="100%" childLayout="horizontal">
-							<label id="startstop_server" text="Create server" style="lobby-button"
-								hintText="Create Server">
-								<interact onClick="createServer()" />
-							</label>
-							<panel width="50px" />						
-							<label id="exit" text="Back" style="lobby-button" hintText="Exit the Game">
-								<interact onClick="back()" />
-							</label>
+						<panel padding="0px,50px,0px,50px" height="100%" width="100%" childLayout="horizontal">
+							<panel width="50%" childLayout="horizontal">
+								<label id="startstop_server" text="Create server" style="lobby-button"
+									hintText="Create Server">
+									<interact onClick="createServer()" />
+								</label>
+							</panel>
+							<panel width="50%" childLayout="horizontal" align="right">
+								<label id="exit" align="right" text="Back" style="lobby-button" hintText="Exit the Game">
+									<interact onClick="back()" />
+								</label>
+							</panel>
 						</panel>
 					</panel>
 				</panel>
@@ -99,7 +102,39 @@
 
 	</screen>
 
-
+  <popup id="popupServer" childLayout="center" backgroundColor="#0001">
+    <panel style="nifty-panel" childLayout="center" padding="18px,28px,40px,16px" width="50%" height="20%" align="center" valign="center">
+      <panel childLayout="vertical" align="center" valign="center">
+        <panel childLayout="center" height="70%" width="100%">
+          <label id="pop-text" text="You forgot to select an interface!!!" style="lobby-text" align="center" valign="center" color="#000f"/>
+        </panel>
+        <panel childLayout="horizontal" align="center" height="30%">
+          <panel childLayout="center" width="100%" align="center">
+            <control id="yesButton" name="button" label="ok" width="30px" align="center">
+              <interact onClick="removePopup()" /> 
+            </control>
+          </panel>
+        </panel>
+      </panel>
+    </panel>
+  </popup>
+  
+    <popup id="popupName" childLayout="center" backgroundColor="#0001">
+    <panel style="nifty-panel" childLayout="center" padding="18px,28px,40px,16px" width="50%" height="20%" align="center" valign="center">
+      <panel childLayout="vertical" align="center" valign="center">
+        <panel childLayout="center" height="70%" width="100%">
+          <label id="pop-text" text="You forgot to enter a name!!!" style="lobby-text" align="center" valign="center" color="#000f"/>
+        </panel>
+        <panel childLayout="horizontal" align="center" height="30%">
+          <panel childLayout="center" width="100%" align="center">
+            <control id="yesButton" name="button" label="ok" width="30px" align="center">
+              <interact onClick="removePopup()" /> 
+            </control>
+          </panel>
+        </panel>
+      </panel>
+    </panel>
+  </popup>
 
 
 </nifty>
