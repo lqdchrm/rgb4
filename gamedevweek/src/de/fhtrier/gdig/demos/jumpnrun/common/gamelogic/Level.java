@@ -14,6 +14,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.graphics.entities.ImageEntity;
@@ -22,7 +23,8 @@ import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.physics.entities.MoveableEntity;
 
-public class Level extends MoveableEntity {
+public class Level extends MoveableEntity
+{
 
 	public GameFactory factory;
 
@@ -33,7 +35,8 @@ public class Level extends MoveableEntity {
 
 	private int currentPlayerId;
 
-	public Level(int id, GameFactory factory) throws SlickException {
+	public Level(int id, GameFactory factory) throws SlickException
+	{
 		super(id, EntityType.LEVEL);
 
 		this.currentPlayerId = -1;
@@ -60,7 +63,8 @@ public class Level extends MoveableEntity {
 		add(this.backgroundImage);
 
 		this.middlegroundImage = factory.createImageEntity(
-				Assets.LevelMiddlegroundImageId, Assets.LevelMiddlegroundImageId);
+				Assets.LevelMiddlegroundImageId,
+				Assets.LevelMiddlegroundImageId);
 		this.middlegroundImage.setVisible(true);
 		add(this.middlegroundImage);
 
@@ -78,14 +82,15 @@ public class Level extends MoveableEntity {
 
 		// order
 		setOrder(EntityOrder.Level);
-		
+
 		// setup
 		setActive(true);
 		setVisible(true);
 	}
 
 	@Override
-	protected void postRender(Graphics graphicContext) {
+	protected void postRender(Graphics graphicContext)
+	{
 		super.postRender(graphicContext);
 
 		graphicContext.setColor(Constants.Debug.overlayColor);
@@ -102,7 +107,8 @@ public class Level extends MoveableEntity {
 				+ "ROT: " + e.getData()[ROTATION], 20, 100);
 
 		e = getCurrentPlayer();
-		if (e != null) {
+		if (e != null)
+		{
 			graphicContext.drawString(
 					"Player\n" + "ID: " + e.getId() + "\n" + " X: "
 							+ e.getData()[X] + "  Y: " + e.getData()[Y] + "\n"
@@ -116,11 +122,13 @@ public class Level extends MoveableEntity {
 	}
 
 	@Override
-	public void update(int deltaInMillis) {
+	public void update(int deltaInMillis)
+	{
 
 		super.update(deltaInMillis); // calculate physics
 
-		if (isActive()) {
+		if (isActive())
+		{
 			focusOnPlayer();
 
 			checkLevelBordersScrolling();
@@ -132,7 +140,8 @@ public class Level extends MoveableEntity {
 	/**
 	 * scrolls background layers relative to foreground
 	 */
-	private void parallaxScrollingBackground() {
+	private void parallaxScrollingBackground()
+	{
 		this.middlegroundImage.getData()[X] = -getData()[X] * 0.6f;
 		this.middlegroundImage.getData()[Y] = -getData()[Y];
 		this.backgroundImage.getData()[X] = -getData()[X] * 0.95f;
@@ -142,29 +151,34 @@ public class Level extends MoveableEntity {
 	/**
 	 * Ensures, that we don't scroll across level borders
 	 */
-	 // TODO: doesn't work with scaling factor != 1
-	private void checkLevelBordersScrolling() {
+	// TODO: doesn't work with scaling factor != 1
+	private void checkLevelBordersScrolling()
+	{
 
 		// Left
-		if (getData()[X] > 0) {
+		if (getData()[X] > 0)
+		{
 			getData()[X] = 0.0f;
 			getVel()[X] = 0.0f;
 		}
 		// Top
-		if (getData()[Y] > 0) {
+		if (getData()[Y] > 0)
+		{
 			getData()[Y] = 0.0f;
 			getVel()[Y] = 0.0f;
 		}
 		// Right
 		if (getData()[X] < -this.groundMap.getWidth()
-				* this.groundMap.getTileWidth() + RGB4.SCREENWIDTH) {
+				* this.groundMap.getTileWidth() + RGB4.SCREENWIDTH)
+		{
 			getData()[X] = -this.groundMap.getWidth()
 					* this.groundMap.getTileWidth() + RGB4.SCREENWIDTH;
 			getVel()[X] = 0.0f;
 		}
 		// Bottom
 		if (getData()[Y] < -this.groundMap.getHeight()
-				* this.groundMap.getTileHeight() + RGB4.SCREENHEIGHT) {
+				* this.groundMap.getTileHeight() + RGB4.SCREENHEIGHT)
+		{
 			getData()[Y] = -this.groundMap.getHeight()
 					* this.groundMap.getTileHeight() + RGB4.SCREENHEIGHT;
 			getVel()[Y] = 0.0f;
@@ -174,9 +188,11 @@ public class Level extends MoveableEntity {
 	/**
 	 * keep our player in the middle of the screen
 	 */
-	private void focusOnPlayer() {
+	private void focusOnPlayer()
+	{
 		Player player = getCurrentPlayer();
-		if (player != null) {
+		if (player != null)
+		{
 
 			// Focus on Player
 			getData()[X] = RGB4.SCREENWIDTH / 2 - player.getData()[X];
@@ -185,104 +201,167 @@ public class Level extends MoveableEntity {
 	}
 
 	@Override
-	public void handleInput(Input input) {
-		if (isActive()) {
-			
+	public void handleInput(Input input)
+	{
+		if (isActive())
+		{
+
 			// Left / Right
-			if (!input.isKeyDown(Input.KEY_A) && !input.isKeyDown(Input.KEY_D)) {
+			if (!input.isKeyDown(Input.KEY_A) && !input.isKeyDown(Input.KEY_D))
+			{
 				getVel()[X] = 0.0f;
 			}
-			if (input.isKeyDown(Input.KEY_A)) {
+			if (input.isKeyDown(Input.KEY_A))
+			{
 				getVel()[X] = 600.0f;
 			}
-			if (input.isKeyDown(Input.KEY_D)) {
+			if (input.isKeyDown(Input.KEY_D))
+			{
 				getVel()[X] = -600.0f;
 			}
 
 			// Up / Down
-			if (!input.isKeyDown(Input.KEY_W) && !input.isKeyDown(Input.KEY_S)) {
+			if (!input.isKeyDown(Input.KEY_W) && !input.isKeyDown(Input.KEY_S))
+			{
 				getVel()[Y] = 0.0f;
 			}
 
-			if (input.isKeyDown(Input.KEY_W)) {
+			if (input.isKeyDown(Input.KEY_W))
+			{
 				getVel()[Y] = 600.0f;
 			}
 
-			if (input.isKeyDown(Input.KEY_S)) {
+			if (input.isKeyDown(Input.KEY_S))
+			{
 				getVel()[Y] = -600.0f;
 			}
 
 			// Zoom
-			if (!input.isKeyDown(Input.KEY_R) && !input.isKeyDown(Input.KEY_F)) {
+			if (!input.isKeyDown(Input.KEY_R) && !input.isKeyDown(Input.KEY_F))
+			{
 				getVel()[SCALE_X] = getVel()[SCALE_Y] = 0.0f;
 			}
 
-			if (input.isKeyDown(Input.KEY_R)) {
+			if (input.isKeyDown(Input.KEY_R))
+			{
 				getVel()[SCALE_X] = getVel()[SCALE_Y] = 1;
 			}
 
-			if (input.isKeyDown(Input.KEY_F)) {
+			if (input.isKeyDown(Input.KEY_F))
+			{
 				getVel()[SCALE_X] = getVel()[SCALE_Y] = -1;
 			}
 
 			// Rotation
-			if (!input.isKeyDown(Input.KEY_Q) && !input.isKeyDown(Input.KEY_E)) {
+			if (!input.isKeyDown(Input.KEY_Q) && !input.isKeyDown(Input.KEY_E))
+			{
 				getVel()[ROTATION] = 0.0f;
 			}
 
-			if (input.isKeyDown(Input.KEY_Q)) {
+			if (input.isKeyDown(Input.KEY_Q))
+			{
 				getVel()[ROTATION] = -15;
 			}
-			if (input.isKeyDown(Input.KEY_E)) {
+			if (input.isKeyDown(Input.KEY_E))
+			{
 				getVel()[ROTATION] = 15;
 			}
 		}
 		super.handleInput(input);
 	}
 
-	public TiledMap getMap() {
+	public TiledMap getMap()
+	{
 		return this.groundMap;
 	}
 
-	public Player getCurrentPlayer() {
+	public Player getCurrentPlayer()
+	{
 		return getPlayer(this.currentPlayerId);
 	}
 
-	public void setCurrentPlayer(int playerId) {
-		if (playerId != currentPlayerId) {
+	public void setCurrentPlayer(int playerId)
+	{
+		if (playerId != currentPlayerId)
+		{
 			Player player = getCurrentPlayer();
-			if (player != null) {
+			if (player != null)
+			{
 				player.setActive(false);
 			}
 			this.currentPlayerId = playerId;
 			player = getCurrentPlayer();
-			if (player != null) {
+			if (player != null)
+			{
 				player.setActive(true);
 			}
 		}
 	}
 
-	public Player getPlayer(int id) {
-		if (id == -1) {
+	public Player getPlayer(int id)
+	{
+		if (id == -1)
+		{
 			return null;
 		}
 
 		Entity player = factory.getEntity(id);
-		if (player instanceof Player) {
+		if (player instanceof Player)
+		{
 			return (Player) player;
 		}
 		throw new RuntimeException("id doesn't match requested entity type");
 	}
 
 	@Override
-	public Entity add(Entity e) {
+	public Entity add(Entity e)
+	{
 		Entity result = super.add(e);
 
 		// tell player that he belongs to level
-		if (e instanceof LevelCollidableEntity) {
+		if (e instanceof LevelCollidableEntity)
+		{
 			((LevelCollidableEntity) e).setLevel(this);
+		} else if (e instanceof DomsDayDeviceBigExplosion)
+		{
+			((DomsDayDeviceBigExplosion) e).setLevel(this);
 		}
 
 		return result;
+	}
+
+	/**
+	 * Returns the size in pixel
+	 * 
+	 * @return
+	 */
+	public int getWidth()
+	{
+		return getMap().getWidth() * getMap().getTileWidth();
+	}
+
+	/**
+	 * Returns the size in pixel
+	 * 
+	 * @return
+	 */
+	public int getHeight()
+	{
+		return getMap().getHeight() * getMap().getTileHeight();
+	}
+
+	public void serverInit()
+	{
+		// TODO Auto-generated method stub
+
+		int domsDayDeviceID = factory.createEntity(EntityType.DOMSDAYDEVICE);
+		Entity doomesdaydevice = factory.getEntity(domsDayDeviceID);
+		add(doomesdaydevice);
+		doomesdaydevice.setActive(true);
+		doomesdaydevice.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+
+		DoCreateEntity command = new DoCreateEntity(domsDayDeviceID,
+				EntityType.DOMSDAYDEVICE);
+		NetworkComponent.getInstance().sendCommand(command);
 	}
 }

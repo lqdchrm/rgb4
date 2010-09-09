@@ -1,11 +1,6 @@
-<<<<<<< HEAD:gamedevweek/src/de/fhtrier/gdig/demos/jumpnrun/common/Constants.java
-package de.fhtrier.gdig.demos.jumpnrun.common;
+package de.fhtrier.gdig.demos.jumpnrun.identifiers;
 
 import java.net.InetSocketAddress;
-import java.net.Proxy.Type;
-=======
-package de.fhtrier.gdig.demos.jumpnrun.identifiers;
->>>>>>> roessgri/master:gamedevweek/src/de/fhtrier/gdig/demos/jumpnrun/identifiers/Constants.java
 
 import org.newdawn.slick.Color;
 
@@ -23,24 +18,24 @@ public class Constants
 		@ShowAsSlider(maxValue = 10000, minValue = 10)
 		public static float shotSpeed = 1000.0f;
 		public static float shotCooldown = 100.0f;
-		
+
 		public static float playerWalkSpeed = 4000.0f;
 		public static float playerJumpSpeed = 1000.0f;
 		public static float playerMaxSpeed = 850.0f;
 
-<<<<<<< HEAD:gamedevweek/src/de/fhtrier/gdig/demos/jumpnrun/common/Constants.java
-		public static Type enumTest;
-=======
 		public static final float playerIdleTriggerSpeed = 5.0f;
 		public static final float playerGroundDrag = 0.005f;
-		public static final float playerAirDrag = 0.000001f;		
+		public static final float playerAirDrag = 0.000001f;
 
 		public static float colissionPointDistance = 2.0f;
->>>>>>> roessgri/master:gamedevweek/src/de/fhtrier/gdig/demos/jumpnrun/identifiers/Constants.java
 	}
 
 	public static class Debug extends Configuration
 	{
+
+		@CommandlineParameter("noRender")
+		public static boolean doNotRender = false;
+
 		public static boolean drawBounds = true;
 
 		public static Color boundColor = Color.green;
@@ -59,7 +54,7 @@ public class Constants
 		public static boolean forceNoFBO = false;
 
 		public static boolean finiteStateMachineDebug = false;
-		
+
 		public static boolean guiDebug = false;
 	}
 
@@ -73,7 +68,6 @@ public class Constants
 		public static String REFCHANGEWEAPON = "KEY_X";
 		public static String REFCHANGECOLOR = "KEY_Y";
 		public static String REFMENU = "KEY_ESCAPE";
-<<<<<<< HEAD:gamedevweek/src/de/fhtrier/gdig/demos/jumpnrun/common/Constants.java
 
 	}
 
@@ -92,7 +86,4 @@ public class Constants
 
 	}
 
-=======
-	}	
->>>>>>> roessgri/master:gamedevweek/src/de/fhtrier/gdig/demos/jumpnrun/identifiers/Constants.java
 }

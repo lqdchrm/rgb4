@@ -1,19 +1,14 @@
 package de.fhtrier.gdig.demos.jumpnrun.common;
 
-<<<<<<< HEAD
 import java.net.InterfaceAddress;
-=======
-import java.net.InetAddress;
-import java.net.InterfaceAddress;
-import java.net.UnknownHostException;
->>>>>>> roessgri/master
 import java.util.List;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.ClientGame;
-import de.fhtrier.gdig.demos.jumpnrun.common.Constants.NetworkConfig;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.NetworkConfig;
 import de.fhtrier.gdig.demos.jumpnrun.server.ServerGame;
 import de.fhtrier.gdig.engine.network.INetworkLobby;
 import de.fhtrier.gdig.engine.network.NetworkServerObject;
@@ -46,14 +41,9 @@ public class Lobby extends JDialog
 		return new ClientGame();
 	}
 
-<<<<<<< HEAD
-	public static JumpNRunGame createGameByArgs(String[] args)
+	public static RGB4Game createGameByArgs(String[] args)
 	{
 
-=======
-	public static RGB4Game createGameByArgs(String[] args) {
-		
->>>>>>> roessgri/master
 		String address = "";
 
 		INetworkLobby networkLobby = new NetworkLobby();
@@ -101,12 +91,8 @@ public class Lobby extends JDialog
 
 	}
 
-<<<<<<< HEAD
-	public static JumpNRunGame createGameViaDialog()
+	public static RGB4Game createGameViaDialog()
 	{
-=======
-	public static RGB4Game createGameViaDialog() {
->>>>>>> roessgri/master
 
 		// Ask whether we want to be server
 		Object[] options = { "Server", "Client", "Spectator" };

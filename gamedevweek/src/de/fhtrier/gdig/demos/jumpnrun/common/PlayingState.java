@@ -11,6 +11,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import de.fhtrier.gdig.demos.jumpnrun.RGB4;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
@@ -23,11 +24,11 @@ public abstract class PlayingState extends BasicGameState implements
 		INetworkCommandListener
 {
 
-	private AssetMgr assets;
-	private GameFactory factory;
-	private int levelId;
+	protected AssetMgr assets;
+	protected GameFactory factory;
+	protected int levelId;
 	private static Image frameBuffer;
-		
+
 	public abstract void cleanup(GameContainer container, StateBasedGame game);
 
 	public GameFactory getFactory()
@@ -59,14 +60,14 @@ public abstract class PlayingState extends BasicGameState implements
 		// create assetmgr
 		this.assets = new AssetMgr();
 		this.assets.setAssetPathPrefix(Assets.AssetManagerPath);
-		this.assets.setAssetFallbackPathPrefix(Assets.AssetManagerFallbackPath);	
-		
+		this.assets.setAssetFallbackPathPrefix(Assets.AssetManagerFallbackPath);
+
 		// Factory
 		this.factory = new GameFactory(this.assets);
 
 		// Level
 		this.levelId = factory.createEntity(EntityType.LEVEL);
-		
+
 		// FrameBuffer
 		frameBuffer = new Image(RGB4.SCREENWIDTH, RGB4.SCREENHEIGHT);
 	}
@@ -75,17 +76,26 @@ public abstract class PlayingState extends BasicGameState implements
 	public void render(final GameContainer container,
 			final StateBasedGame game, final Graphics graphicContext)
 			throws SlickException
-	{		
+	{
+		if (Constants.Debug.doNotRender)
+			return;
 		Level level = getLevel();
-		
+
 		if (level != null)
 		{
-			level.render(frameBuffer.getGraphics(), frameBuffer);
-			
-			graphicContext.drawImage(frameBuffer, 0, 0);
+			if (Constants.Debug.shadersActive)
+			{
+				// Other only used for post Processing which is not used
+				level.render(graphicContext, null);
+				// level.render(frameBuffer.getGraphics(), frameBuffer);
+				// graphicContext.drawImage(frameBuffer, 0, 0);
+			} else
+			{
+				level.render(graphicContext, null);
+			}
 		}
 	}
-	
+
 	public abstract void notify(INetworkCommand cmd);
 
 	@Override
@@ -122,7 +132,7 @@ public abstract class PlayingState extends BasicGameState implements
 		{
 			level.handleInput(input);
 			level.update(deltaInMillis);
-			
+
 			// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2. Zeile
 			// Den Objekten gesagt wird die Kollision zu behandeln.
 			CollisionManager.update();

@@ -36,36 +36,50 @@ import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
 
-public class ServerPlayingState extends PlayingState {
+public class ServerPlayingState extends PlayingState
+{
 
 	private Queue<INetworkCommand> queue;
 	private ServerData send;
 	private HashMap<Integer, Integer> networkId2Player;
 
-	public ServerPlayingState() {
+	public ServerPlayingState()
+	{
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ServerData();
 		networkId2Player = new HashMap<Integer, Integer>();
 	}
 
-	private boolean handlePlayerActions(QueryAction actionCmd) {
+	@Override
+	public void init(GameContainer arg0, StateBasedGame arg1)
+			throws SlickException
+	{
+		super.init(arg0, arg1);
+		Level level = (Level) factory.getEntity(this.levelId);
+		level.serverInit();
+
+	}
+
+	private boolean handlePlayerActions(QueryAction actionCmd)
+	{
 		Entity e;
 		int playerId = networkId2Player.get(actionCmd.getSender());
 		Player player = (Player) getFactory().getEntity(playerId);
-		switch (actionCmd.getAction()) {
-//		case DROPGEM:
-//			e = createEntity(EntityType.GEM);
-//
-//			// set values
-//			MoveableEntity gem = (MoveableEntity) e;
-//
-//			// set player pos as gem pos
-//			gem.getData()[Entity.X] = player.getData()[Entity.X];
-//			gem.getData()[Entity.Y] = player.getData()[Entity.Y];
-//			gem.getVel()[Entity.X] = player.getVel()[Entity.X];
-//			gem.getVel()[Entity.Y] = player.getVel()[Entity.Y] - 50.0f;
-//
-//			return true;
+		switch (actionCmd.getAction())
+		{
+		// case DROPGEM:
+		// e = createEntity(EntityType.GEM);
+		//
+		// // set values
+		// MoveableEntity gem = (MoveableEntity) e;
+		//
+		// // set player pos as gem pos
+		// gem.getData()[Entity.X] = player.getData()[Entity.X];
+		// gem.getData()[Entity.Y] = player.getData()[Entity.Y];
+		// gem.getVel()[Entity.X] = player.getVel()[Entity.X];
+		// gem.getVel()[Entity.Y] = player.getVel()[Entity.Y] - 50.0f;
+		//
+		// return true;
 		case SHOOT:
 			e = createEntity(EntityType.BULLET);
 
@@ -77,35 +91,41 @@ public class ServerPlayingState extends PlayingState {
 
 			bullet.color = state.weaponColor;
 			// set player pos as gem pos
-			bullet.getData()[Entity.X] = player.getData()[Entity.X]+40;
-			bullet.getData()[Entity.Y] = player.getData()[Entity.Y]+80;
+			bullet.getData()[Entity.X] = player.getData()[Entity.X] + 40;
+			bullet.getData()[Entity.Y] = player.getData()[Entity.Y] + 80;
 			bullet.getVel()[Entity.X] = player.getVel()[Entity.X]
-					+ (state.shootDirection == PlayerActionState.Right.ordinal() ? Constants.GamePlayConstants.shotSpeed
+					+ (state.shootDirection == PlayerActionState.Right
+							.ordinal() ? Constants.GamePlayConstants.shotSpeed
 							: -Constants.GamePlayConstants.shotSpeed);
-			
-			if(player.getPlayerCondition().shootDirection==PlayerActionState.Right.ordinal())
-			bullet.getData()[Entity.SCALE_X] = -1;
-			
-			else if(player.getPlayerCondition().shootDirection==PlayerActionState.Right.ordinal())
-			bullet.getData()[Entity.SCALE_X] = 1; 
+
+			if (player.getPlayerCondition().shootDirection == PlayerActionState.Right
+					.ordinal())
+				bullet.getData()[Entity.SCALE_X] = -1;
+
+			else if (player.getPlayerCondition().shootDirection == PlayerActionState.Right
+					.ordinal())
+				bullet.getData()[Entity.SCALE_X] = 1;
 
 			return true;
 		case PLAYERCOLOR:
 			player.nextColor();
-			NetworkComponent.getInstance().sendCommand(new SendChangeColor(player.getId()));
-			
+			NetworkComponent.getInstance().sendCommand(
+					new SendChangeColor(player.getId()));
+
 			return true;
 		case WEAPONCOLOR:
 			player.nextWeaponColor();
-			NetworkComponent.getInstance().sendCommand(new SendChangeWeaponColor(player.getId()));
-			
+			NetworkComponent.getInstance().sendCommand(
+					new SendChangeWeaponColor(player.getId()));
+
 			return true;
 		}
 
 		return false;
 	}
 
-	private Entity createEntity(EntityType type) {
+	private Entity createEntity(EntityType type)
+	{
 		int id = this.getFactory().createEntity(type);
 
 		Entity e = getFactory().getEntity(id);
@@ -121,14 +141,18 @@ public class ServerPlayingState extends PlayingState {
 		return e;
 	}
 
-	private boolean handleProtocolCommands(INetworkCommand cmd) {
+	private boolean handleProtocolCommands(INetworkCommand cmd)
+	{
 
 		// QueryJoin
-		if (cmd instanceof QueryJoin) {
+		if (cmd instanceof QueryJoin)
+		{
 
 			// create every (player) entity from server on client
-			for (Entity e : getFactory().getEntities()) {
-				if (e.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient) {
+			for (Entity e : getFactory().getEntities())
+			{
+				if (e.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient)
+				{
 					NetworkComponent.getInstance().sendCommand(cmd.getSender(),
 							new DoCreateEntity(e.getId(), e.getType()));
 				}
@@ -139,7 +163,8 @@ public class ServerPlayingState extends PlayingState {
 		}
 
 		// QueryLeave
-		if (cmd instanceof QueryLeave) {
+		if (cmd instanceof QueryLeave)
+		{
 			int playerId = ((QueryLeave) cmd).getPlayerId();
 
 			NetworkComponent.getInstance().sendCommand(
@@ -151,12 +176,14 @@ public class ServerPlayingState extends PlayingState {
 		}
 
 		// QueryCreatePlayer
-		if (cmd instanceof QueryCreateEntity) {
+		if (cmd instanceof QueryCreateEntity)
+		{
 
 			EntityType type = ((QueryCreateEntity) cmd).getType();
 
 			// currently, only client creation of player is allowed
-			if (type == EntityType.PLAYER) {
+			if (type == EntityType.PLAYER)
+			{
 				int id = this.getFactory().createEntity(type);
 
 				Entity e = getFactory().getEntity(id);
@@ -174,7 +201,8 @@ public class ServerPlayingState extends PlayingState {
 
 				// remember, which networkId identifies which player
 				networkId2Player.put(cmd.getSender(), id);
-			} else {
+			} else
+			{
 				throw new RuntimeException(
 						"Client side entity creation only allowed for type PLAYER");
 			}
@@ -182,7 +210,8 @@ public class ServerPlayingState extends PlayingState {
 		}
 
 		// QueryAction
-		if (cmd instanceof QueryAction) {
+		if (cmd instanceof QueryAction)
+		{
 			return handlePlayerActions((QueryAction) cmd);
 		}
 
@@ -191,20 +220,26 @@ public class ServerPlayingState extends PlayingState {
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
-			int deltaInMillis) throws SlickException {
+			int deltaInMillis) throws SlickException
+	{
 
 		// recv and execute items in queue
-		for (INetworkCommand data : this.queue) {
-			if (data != null && !data.isHandled()) {
+		for (INetworkCommand data : this.queue)
+		{
+			if (data != null && !data.isHandled())
+			{
 
 				// handle client data
-				if (data instanceof ClientData) {
+				if (data instanceof ClientData)
+				{
 					ClientData d = (ClientData) data;
 					Level level = getLevel();
-					if (level != null) {
+					if (level != null)
+					{
 						Entity e = getFactory()
 								.getEntity(d.getNetworkData().id);
-						if (e != null) {
+						if (e != null)
+						{
 							e.applyNetworkData(d.getNetworkData());
 						}
 					}
@@ -212,15 +247,17 @@ public class ServerPlayingState extends PlayingState {
 				}
 
 				// handle other commands
-				if (data instanceof ProtocolCommand) {
-					if (handleProtocolCommands(data)) {
+				if (data instanceof ProtocolCommand)
+				{
+					if (handleProtocolCommands(data))
+					{
 						data.setHandled(true);
 					}
 				}
 			}
 		}
 
-		// TODO remove only handled items from queue 
+		// TODO remove only handled items from queue
 		this.queue.clear();
 
 		super.update(container, game, deltaInMillis);
@@ -228,8 +265,10 @@ public class ServerPlayingState extends PlayingState {
 		this.send.clear();
 
 		// send entity data every frame
-		for (Entity e : this.getFactory().getEntities()) {
-			if (e.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient) {
+		for (Entity e : this.getFactory().getEntities())
+		{
+			if (e.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient)
+			{
 
 				NetworkData data = e.getNetworkData();
 				this.send.put(data.id, data);
@@ -241,17 +280,20 @@ public class ServerPlayingState extends PlayingState {
 	}
 
 	@Override
-	public void notify(INetworkCommand cmd) {
+	public void notify(INetworkCommand cmd)
+	{
 		this.queue.add(cmd);
 	}
 
 	@Override
-	public void cleanup(GameContainer container, StateBasedGame game) {
+	public void cleanup(GameContainer container, StateBasedGame game)
+	{
 		container.exit();
 	}
 
 	@Override
-	public void onExitKey(GameContainer container, StateBasedGame game) {
+	public void onExitKey(GameContainer container, StateBasedGame game)
+	{
 		cleanup(container, game);
 	}
 }

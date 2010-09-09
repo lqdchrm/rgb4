@@ -5,9 +5,6 @@ import java.util.List;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
-import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
-import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
-import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
@@ -21,14 +18,16 @@ import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.physics.CollisionManager;
 import de.fhtrier.gdig.engine.physics.entities.CollidableEntity;
 
-public class Bullet extends LevelCollidableEntity {
+public class Bullet extends LevelCollidableEntity
+{
 
 	public Player owner;
 	public int color;
 	private Level level;
 	public AnimationEntity bullet;
 
-	public Bullet(int id, Factory factory) throws SlickException {
+	public Bullet(int id, Factory factory) throws SlickException
+	{
 		super(id, EntityType.BULLET);
 
 		AssetMgr assets = factory.getAssetMgr();
@@ -60,13 +59,16 @@ public class Bullet extends LevelCollidableEntity {
 	}
 
 	@Override
-	public boolean handleCollisions() {
-		if (!isActive()) {
+	public boolean handleCollisions()
+	{
+		if (!isActive())
+		{
 			return false;
 		}
 		boolean result = super.handleCollisions();
 
-		if (result) {
+		if (result)
+		{
 			die();
 			return result;
 		}
@@ -74,24 +76,16 @@ public class Bullet extends LevelCollidableEntity {
 		List<CollidableEntity> iColideWith = CollisionManager
 				.collidingEntities(this);
 
-		for (CollidableEntity collidableEntity : iColideWith) {
-			if (collidableEntity instanceof Player) {
+		for (CollidableEntity collidableEntity : iColideWith)
+		{
+			if (collidableEntity instanceof Player)
+			{
 				Player otherPlayer = (Player) collidableEntity;
-				if (otherPlayer != owner) {
-					if (otherPlayer.getPlayerCondition().color != this.color) {
-						otherPlayer.getPlayerCondition().health -= owner
-								.getPlayerCondition().damage;
-
-						if (otherPlayer.getPlayerCondition().health <= 0.01f) {
-							Event dieEvent = new PlayerDiedEvent(otherPlayer);
-							EventManager.addEvent(dieEvent);
-						}
-					} else {
-						// player gets stronger when hit by bullet of the same
-						// color!
-						otherPlayer.getPlayerCondition().health += owner
-								.getPlayerCondition().damage;
-					}
+				if (otherPlayer != owner)
+				{
+					otherPlayer.doDamage(this.color,
+							owner.getPlayerCondition().damage);
+					die();
 				}
 			}
 		}
@@ -99,7 +93,8 @@ public class Bullet extends LevelCollidableEntity {
 		return result;
 	}
 
-	private void die() {
+	private void die()
+	{
 		NetworkComponent.getInstance().sendCommand(
 				new DoRemoveEntity(this.getId()));
 		CollisionManager.removeEntity(this);
@@ -107,7 +102,8 @@ public class Bullet extends LevelCollidableEntity {
 		level.factory.removeEntity(this.getId(), true);
 	}
 
-	public void setLevel(Level level) {
+	public void setLevel(Level level)
+	{
 		super.setLevel(level);
 		this.level = level;
 	}
