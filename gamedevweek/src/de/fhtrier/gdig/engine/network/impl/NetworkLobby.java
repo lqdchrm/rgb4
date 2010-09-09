@@ -1,25 +1,25 @@
 package de.fhtrier.gdig.engine.network.impl;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InterfaceAddress;
-import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import de.fhtrier.gdig.engine.network.IAddServerListener;
 import de.fhtrier.gdig.engine.network.INetworkLobby;
 import de.fhtrier.gdig.engine.network.NetworkServerObject;
-import de.fhtrier.gdig.engine.network.NetworkUserObject;
 
-public class NetworkLobby implements INetworkLobby 
+public class NetworkLobby implements INetworkLobby, IAddServerListener 
 {
 	private NetworkLobbyListener listener;
 	private Semaphore serverMutex;
 	private List<NetworkServerObject> serverList;
+	private IAddServerListener serverListener; 
+	
+	private NetworkLobby instance;
 	
 	public NetworkLobby()
 	{
@@ -27,35 +27,15 @@ public class NetworkLobby implements INetworkLobby
 	   listener = new NetworkLobbyListener( this );
 	   serverMutex = new Semaphore( 1 );
 	}
-		
-	@Override
-	public List<InterfaceAddress> getInterfaces() 
-	{
-	   List<InterfaceAddress> result = new ArrayList<InterfaceAddress>();
-	   
-	   try 
-	   {
-	      Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
-			
-		  while( en.hasMoreElements() ) 
-		  {
-		     NetworkInterface ni = (NetworkInterface) en.nextElement();
-				
-			 for (InterfaceAddress address : ni.getInterfaceAddresses()) 
-			 {
-			    if ( !address.getAddress().getHostAddress().contains(":") )
-				   result.add( address );
-		     }
-	      }
-	   }
-	   catch (Exception e) 
-	   {
-	     e.printStackTrace();
-	   }
 	
-	   return result;
+	public NetworkLobby(IAddServerListener serverlistener)
+	{
+	   this.serverListener = serverlistener;
+	   serverList = new ArrayList<NetworkServerObject>();
+	   listener = new NetworkLobbyListener( serverlistener );
+	   serverMutex = new Semaphore( 1 );
 	}
-
+		
 	@Override
 	public void getServers( InterfaceAddress networkInterface ) 
 	{		
@@ -78,7 +58,8 @@ public class NetworkLobby implements INetworkLobby
 	     DatagramPacket packet = new DatagramPacket( cqData.getBytes(), 0, cqData.getBytes().length, networkInterface.getBroadcast(), 50000 );
 		 socket.send( packet ); // Send Broadcast to all
 	   }
-  	   catch( IOException e )
+  	   // HACK should only catch IOExceptions
+ 	   catch( Exception e )
 	   {
 	     System.out.println( e.getLocalizedMessage() );
 	     listener.finish();
@@ -89,15 +70,15 @@ public class NetworkLobby implements INetworkLobby
 	public void stopGetServers()
 	{
 	   listener.finish();	
+
+	   if (serverListener!=null)
+		   listener = new NetworkLobbyListener( serverListener );
+	   else
+		   listener = new NetworkLobbyListener( this );
+		   
 	}
 
 	@Override
-	public List<NetworkUserObject> getUsers( NetworkServerObject networkServer ) 
-	{
-		
-		return null;
-	}
-	
 	public List<NetworkServerObject> getServerList()
 	{
 	   List<NetworkServerObject> list = new ArrayList<NetworkServerObject>();

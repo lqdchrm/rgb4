@@ -10,6 +10,7 @@ import java.util.Queue;
 
 import org.newdawn.slick.util.Log;
 
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.impl.protocol.ClientQueryConnect;
 import de.fhtrier.gdig.engine.network.impl.protocol.ClientQueryDisconnect;
@@ -78,6 +79,7 @@ public class NetworkComponentClient extends NetworkComponentImpl {
 			// if server tells us to disconnect, do it
 			if (command instanceof ServerAckDisconnect) {
 				this.serverHandler.close();
+				this.networkId = -1;
 				setState(LocalState.DISCONNECTED);
 				return true;
 			}
@@ -90,9 +92,11 @@ public class NetworkComponentClient extends NetworkComponentImpl {
 			throw new IllegalArgumentException("new state must not be null");
 		}
 
-		Log.debug("NetworkComponent: Changed state from "
-				+ ((localState == null) ? "null" : localState.name()) + " to "
-				+ state.name());
+		if (Constants.Debug.networkDebug) {
+			Log.debug("NetworkComponent: Changed state from "
+					+ ((localState == null) ? "null" : localState.name())
+					+ " to " + state.name());
+		}
 		localState = state;
 	}
 
@@ -130,17 +134,17 @@ public class NetworkComponentClient extends NetworkComponentImpl {
 	}
 
 	@Override
-	public void startListening( InterfaceAddress ni, int port ) {
+	public void startListening(InterfaceAddress ni, int port) {
 		throw new RuntimeException("startListening is not possible on a client");
 	}
-	
+
 	@Override
 	public void stopListening() {
 		throw new RuntimeException("stopListening is not possible on a client");
 	}
 
 	@Override
-	public List<Socket> getClients() {
+	public List<ClientHandler> getClients() {
 		throw new RuntimeException("getClients is not possible on a client");
 	}
 

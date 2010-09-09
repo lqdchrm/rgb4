@@ -93,7 +93,7 @@ public class Player extends LevelCollidableEntity implements
 
 	private void initCondition() {
 		condition = new PlayerCondition();
-		condition.name = "Player";
+		condition.name = "XXX";
 		condition.health = 1;
 		condition.ammo = 1;
 		condition.shootDirection = PlayerActionState.Left.ordinal();
@@ -218,53 +218,6 @@ public class Player extends LevelCollidableEntity implements
 		return result;
 	}
 
-	// state switching
-	// private void enterState(final int state) {
-	// this._currentState = state;
-	// switch (state) {
-	// case PlayerActionState.Idle:
-	// this.idleImage.setVisible(true);
-	// break;
-	// case PlayerActionState.RunLeft:
-	// this.getAcc()[Entity.X] = -Constants.GamePlayConstants.playerWalkVel;
-	// this.playerGroup.getData()[Entity.SCALE_X] = 1;
-	// this.runAnimation.setVisible(true);
-	// this.playerCondition.shootDirection = state;
-	// break;
-	// case PlayerActionState.RunRight:
-	// this.getAcc()[Entity.X] = Constants.GamePlayConstants.playerWalkVel;
-	// this.playerGroup.getData()[Entity.SCALE_X] = -1;
-	// this.runAnimation.setVisible(true);
-	// this.playerCondition.shootDirection = state;
-	// break;
-	// case PlayerActionState.Jump:
-	// this.getVel()[Entity.Y] = -Constants.GamePlayConstants.playerJumpVel;
-	// this.jump.start();
-	// this.jumpAnimation.setVisible(true);
-	// break;
-	// }
-	// }
-	//
-	// private void leaveState(int state) {
-	// switch (state) {
-	// case PlayerActionState.Idle:
-	// this.idleImage.setVisible(false);
-	// break;
-	// case PlayerActionState.RunLeft:
-	// case PlayerActionState.RunRight:
-	// this.runAnimation.setVisible(false);
-	// break;
-	// case PlayerActionState.Jump:
-	// this.jumpAnimation.setVisible(false);
-	// }
-	// }
-	//
-	// public void setState(final int state) {
-	// if (state != this._currentState) {
-	// this.leaveState(this._currentState);
-	// this.enterState(state);
-	// }
-	// }
 
 	public PlayerAssetState getState() {
 		return currentState;
@@ -488,7 +441,7 @@ public class Player extends LevelCollidableEntity implements
 			// name of
 			// player with
 			// his color
-			graphicContext.drawString(condition.name + " " + getId(), x, y);
+			graphicContext.drawString(condition.name, x, y);
 			graphicContext.setColor(StateColor
 					.constIntoColor(condition.weaponColor));
 			graphicContext.drawString("Weapon", x, y + 80);
@@ -547,6 +500,11 @@ public class Player extends LevelCollidableEntity implements
 		return condition;
 	}
 
+	public void setPlayerCondition(PlayerCondition playerCondition) {
+		this.condition = playerCondition;
+		
+	}
+	
 	public void setLevel(final Level level) {
 		this.setMap(level.getMap());
 	}
