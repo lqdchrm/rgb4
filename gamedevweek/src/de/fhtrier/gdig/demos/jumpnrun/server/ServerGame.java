@@ -46,9 +46,9 @@ public class ServerGame extends RGB4Game {
 		NetworkComponent.createServerInstance();
 		NetworkComponent.getInstance().addListener(this);
 		NetworkComponent.getInstance().startListening(networkInterface, port);
-
+		
 		netBroadCastListener = new NetworkBroadcastListener(serverName, "map1",
-				"1.0", port);
+				"1.0", port, networkInterface );
 		netBroadCastListener.start();
 
 		Constants.GamePlayConstants c = new Constants.GamePlayConstants();

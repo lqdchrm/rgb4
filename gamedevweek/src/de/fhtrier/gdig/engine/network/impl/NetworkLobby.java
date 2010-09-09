@@ -19,8 +19,6 @@ public class NetworkLobby implements INetworkLobby, IAddServerListener
 	private List<NetworkServerObject> serverList;
 	private IAddServerListener serverListener; 
 	
-	private NetworkLobby instance;
-	
 	public NetworkLobby()
 	{
 	   serverList = new ArrayList<NetworkServerObject>();
@@ -69,7 +67,7 @@ public class NetworkLobby implements INetworkLobby, IAddServerListener
 	@Override
 	public void stopGetServers()
 	{
-	   listener.finish();	
+	   listener.finish();
 
 	   if (serverListener!=null)
 		   listener = new NetworkLobbyListener( serverListener );
