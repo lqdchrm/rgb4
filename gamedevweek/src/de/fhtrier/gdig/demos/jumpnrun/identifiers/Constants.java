@@ -8,6 +8,7 @@ public class Constants
 {
 
 	public static final float EPSILON = 0.0001f;
+	public static final int winningKills = 5;
 
 	public static class GamePlayConstants extends Configuration
 	{

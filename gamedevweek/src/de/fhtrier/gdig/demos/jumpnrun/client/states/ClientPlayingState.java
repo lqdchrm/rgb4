@@ -18,6 +18,10 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerCondition;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
@@ -34,11 +38,14 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeColor;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeWeaponColor;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
+import de.fhtrier.gdig.engine.physics.CollisionManager;
+import de.fhtrier.gdig.engine.physics.entities.CollidableEntity;
 import de.fhtrier.gdig.engine.sound.SoundManager;
 
 enum LocalState {
@@ -145,6 +152,10 @@ public class ClientPlayingState extends PlayingState {
 					&& id == getLevel().getCurrentPlayer().getId()) {
 				getLevel().setCurrentPlayer(-1);
 			}
+			
+			// robindi: Bugfix, removeEntity from CollisionManager!
+			CollisionManager.removeEntity((CollidableEntity) getFactory().getEntity(id));
+			
 			getLevel().remove(getFactory().getEntity(id));
 
 			// remove Entity recursively from Factory
@@ -175,10 +186,21 @@ public class ClientPlayingState extends PlayingState {
 
 		if (cmd instanceof SendKill) {
 			SendKill killCommand = (SendKill) cmd;
+			
+			Event dieEvent = new PlayerDiedEvent(getLevel().getPlayer(killCommand.getPlayerId()), getLevel().getPlayer(killCommand.getKillerId()));
+			EventManager.addEvent(dieEvent);
 
 			Player player = getLevel().getPlayer(killCommand.getPlayerId());
 
 			player.die();
+			return true;
+		}
+
+		if (cmd instanceof SendWon) {
+			SendWon wonCommand = (SendWon) cmd;
+			
+			Event winEvent = new WonGameEvent(getLevel().getPlayer(wonCommand.getWinnerId()));
+			EventManager.addEvent(winEvent);
 			return true;
 		}
 

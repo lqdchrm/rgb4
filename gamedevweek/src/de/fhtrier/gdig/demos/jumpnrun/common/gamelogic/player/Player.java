@@ -13,6 +13,7 @@ import org.newdawn.slick.util.Log;
 import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerAssetState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerJumpingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerLandingState;
@@ -56,6 +57,7 @@ public class Player extends LevelCollidableEntity implements
 
 	// "useful" members
 	private PlayerCondition condition;
+	private PlayerStats stats;
 
 	// some states for gfx and a statemachine for logic
 	private PlayerStandingState stateStanding;
@@ -83,7 +85,8 @@ public class Player extends LevelCollidableEntity implements
 		this.factory = factory;
 
 		initCondition();
-		initGraphics();
+		initStats();
+		initGraphics();    
 		initPhysics();
 		initStates();
 
@@ -94,12 +97,21 @@ public class Player extends LevelCollidableEntity implements
 	private void initCondition() {
 		condition = new PlayerCondition();
 		condition.name = "XXX";
-		condition.health = 1;
-		condition.ammo = 1;
-		condition.shootDirection = PlayerActionState.Left.ordinal();
+		setConditions();
+	}
+	
+	private void setConditions() {
+		condition.teamId = 1;
+		condition.health = 1.0f;
+		condition.ammo = 1.0f;
+		condition.damage = 0.2f;
 		condition.color = StateColor.RED; // player gets default-color: red
 		condition.weaponColor = StateColor.RED; // weapon of player get
-		// default-color: red
+		// default-color: red		
+	}
+	
+	private void initStats() {
+		stats = new PlayerStats();		
 	}
 
 	private void initStates() throws SlickException {
@@ -124,6 +136,12 @@ public class Player extends LevelCollidableEntity implements
 	private void initGraphics() throws SlickException {
 
 		AssetMgr assets = factory.getAssetMgr();
+		
+		// weapon
+		/*assets.storeAnimation(Assets.WeaponImageId,Assets.WeaponAnimImagePath);
+		this.weapon = factory.createAnimationEntity(Assets.WeaponImageId, Assets.WeaponImageId);
+		this.playerGroup.add(this.weapon);
+		weapon.setVisible(true);*/
 
 		// particles
 		assets.storeParticleSystem(Assets.WeaponParticleEffect,
@@ -353,17 +371,12 @@ public class Player extends LevelCollidableEntity implements
 	public void die() {
 		// TODO: Implement dying animation etc.
 		this.respawn(); // FIXME: Do we want to respawn immediately?
+		this.stats.increaseDeaths();
+		Team.getTeamById(this.getPlayerCondition().teamId).increaseDeaths();
 	}
 
 	public void respawn() {
-		// TODO: Implement correct action
-		condition.health = 1.0f;
-		condition.ammo = 1.0f;
-		condition.damage = 0.2f;
-		condition.shootDirection = PlayerActionState.Left.ordinal();
-		condition.color = StateColor.RED; // player gets default-color: red
-		condition.weaponColor = StateColor.RED; // weapon of player get
-		// default-color: red
+		setConditions();
 
 		initData(new float[] { 200, 200, 65, 70, 1, 1, 0 });
 
@@ -388,8 +401,7 @@ public class Player extends LevelCollidableEntity implements
 
 			int lookDirection = 1;
 
-			if (this.getPlayerCondition().shootDirection == PlayerActionState.Left
-					.ordinal())
+			if (this.getData()[Entity.SCALE_X] == 1) // left
 				lookDirection = -1;
 
 			playerShader.setValue("playercolor", StateColor.constIntoColor(this
@@ -498,6 +510,9 @@ public class Player extends LevelCollidableEntity implements
 	// getters + setters
 	public PlayerCondition getPlayerCondition() {
 		return condition;
+	}
+	public PlayerStats getPlayerStats() {
+		return stats;
 	}
 
 	public void setPlayerCondition(PlayerCondition playerCondition) {
