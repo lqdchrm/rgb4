@@ -14,9 +14,11 @@ import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerAssetState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerFallingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerJumpingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerLandingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerRunningState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerShootFallingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerShootJumpingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerShootRunningState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerShootStandingState;
@@ -65,6 +67,8 @@ public class Player extends LevelCollidableEntity implements
 	private PlayerJumpingState stateJumping;
 	private PlayerShootJumpingState stateShootJumping;
 	private PlayerLandingState stateLanding;
+	private PlayerFallingState stateFalling;
+	private PlayerShootFallingState stateShootFalling;
 
 	private PlayerActionFSM fsmAction;
 	private PlayerOrientationFSM fsmOrientation;
@@ -119,6 +123,8 @@ public class Player extends LevelCollidableEntity implements
 		stateJumping = new PlayerJumpingState(this, factory);
 		stateShootJumping = new PlayerShootJumpingState(this, factory);
 		stateLanding = new PlayerLandingState(this, factory);
+		stateFalling = new PlayerFallingState(this, factory);
+		stateShootFalling = new PlayerShootFallingState(this, factory);
 	}
 
 	private void initGraphics() throws SlickException {
@@ -548,6 +554,12 @@ public class Player extends LevelCollidableEntity implements
 			break;
 		case Landing:
 			setState(stateLanding);
+			break;
+		case Falling:
+			setState(stateFalling);
+			break;
+		case FallShooting:
+			setState(stateShootFalling);
 			break;
 		default:
 			if (Constants.Debug.finiteStateMachineDebug) {

@@ -39,6 +39,8 @@ import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
+import de.fhtrier.gdig.engine.physics.CollisionManager;
+import de.fhtrier.gdig.engine.physics.entities.CollidableEntity;
 import de.fhtrier.gdig.engine.sound.SoundManager;
 
 enum LocalState {
@@ -145,6 +147,9 @@ public class ClientPlayingState extends PlayingState {
 					&& id == getLevel().getCurrentPlayer().getId()) {
 				getLevel().setCurrentPlayer(-1);
 			}
+			
+			CollisionManager.removeEntity((CollidableEntity) getFactory().getEntity(id));
+			
 			getLevel().remove(getFactory().getEntity(id));
 
 			// remove Entity recursively from Factory

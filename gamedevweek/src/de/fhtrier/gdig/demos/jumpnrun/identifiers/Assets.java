@@ -17,7 +17,6 @@ public class Assets {
 	public static final int PlayerStandingAnimId = 111;
 	public static final String PlayerStandingAnimImagePath = "sprites/player/stehen_128_128_20.png";
 	
-
 	public static final int PlayerLandAnimId = 112;
 	public static final String PlayerLandAnimImagePath = "sprites/player/springenrunter_128_128_20.png";
 	
@@ -35,6 +34,12 @@ public class Assets {
 
 	public static final int PlayerRunningAnimId = 117;
 	public static final String PlayerRunningImagePath = "sprites/player/laufen_128_128_20.png";
+	
+	public static final int PlayerFallingAnimId = 118;
+	public static final String PlayerFallingImagePath = "sprites/player/springenrunter_128_128_20.png";
+	
+	public static final int PlayerFallShootingAnimId = 118;
+	public static final String PlayerFallShootingImagePath = "sprites/player/schussspringen_128_128_20.png";
 	
 	public static final String PlayerVertexShaderPath = "shader/simple.vert";
 	public static final String PlayerPixelShaderPath = "shader/playercolor.frag";

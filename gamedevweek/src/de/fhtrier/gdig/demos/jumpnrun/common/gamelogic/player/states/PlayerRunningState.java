@@ -33,5 +33,11 @@ public class PlayerRunningState extends PlayerAssetState {
 		if (Math.abs(getPlayer().getVel()[Entity.X]) < Constants.GamePlayConstants.playerIdleTriggerSpeed) {
 			getPlayer().applyAction(PlayerActions.StopRunning);
 		}
+		
+		// check if currentPos < prevPos --> start falling
+		if (getPlayer().getVel()[Entity.Y] > Constants.GamePlayConstants.playerFallingTriggerSpeed) {
+			getPlayer().applyAction(PlayerActions.Fall);
+			System.out.println("State: Falling");
+		}
 	}
 }
