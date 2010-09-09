@@ -56,6 +56,10 @@ public class Constants
 		public static boolean finiteStateMachineDebug = false;
 
 		public static boolean guiDebug = false;
+		
+		public static boolean networkDebug = false;
+		
+		public static boolean factoryDebug = false;
 	}
 
 	public static class ControlConfig extends Configuration

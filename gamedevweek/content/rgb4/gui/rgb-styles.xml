@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty-styles>
+
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<!-- main menu style -->
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<style id="menu">
+		<attributes childLayout="vertical" align="center" valign="center"
+			height="50%" />
+		<effect>
+			<onStartScreen name="fade" startColor="#fff0" endColor="#ffff"
+				length="250" startDelay="0" inherit="true" />
+			<onEndScreen name="fade" startColor="#ffff" endColor="#fff0"
+				length="250" inherit="true" />
+		</effect>
+	</style>
+
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<!-- menu item style -->
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<style id="menu-item">
+		<attributes align="center"
+			font="content/jumpnrun/default/gui/small-font-unselected.fnt"
+			focusable="true" controller="de.lessvoid.nifty.controls.MenuItemControl"
+			inputMapping="de.lessvoid.nifty.input.mapping.MenuInputMapping" />
+		<effect>
+			<onHover name="focus" />
+			<onFocus name="shake" global="false" length="1000" distance="3"
+				post="false" />
+			<onFocus name="changeFont"
+				font="content/jumpnrun/default/gui/small-font-selected.fnt"
+				timeType="infinite" />
+		</effect>
+	</style>
+
+	<style id="lobby-button">
+		<attributes align="center"
+			font="content/jumpnrun/default/gui/small-font-unselected.fnt"
+			focusable="true" controller="de.lessvoid.nifty.controls.MenuItemControl"
+			inputMapping="de.lessvoid.nifty.input.mapping.MenuInputMapping" />
+		<effect>
+			<onHover name="focus" />
+			<onFocus name="changeFont"
+				font="content/jumpnrun/default/gui/small-font-selected.fnt"
+				timeType="infinite" />
+		</effect>
+	</style>
+
+	<style id="standard-header">
+		<attributes padding="10px,10px,10px,10px" backgroundColor="#333e" />
+	</style>
+	
+	<style id="header-label">
+		<attributes font="verdana-24-glow.fnt" focusable="false" align="center" valign="center"/>
+	</style>
+	
+	<style id="standard-panel-background">
+	</style>
+
+
+	<style id="lobby-panel-background">
+		<attributes backgroundColor="#aaaa"/>
+	</style>
+
+	<style id="standard-panel">
+		<attributes valign="top" align="left" childLayout="vertical" padding="10px,10px,10px,10px"/>
+	</style>
+
+
+	<style id="standard-footer">
+		<attributes padding="10px,10px,10px,10px" backgroundColor="#333e" />
+	</style>
+
+
+	<style id="lobby-header">
+		<attributes align="center"
+			font="content/jumpnrun/default/gui/small-font-unselected.fnt"
+			focusable="false" />
+	</style>
+	
+	<style id="player-list">
+		<attributes backgroundColor="#000e"/>
+	</style>
+	
+	<style id="level-list">
+		<attributes backgroundColor="#000e"/>
+	</style>
+
+	<style id="lobby-text">
+		<attributes font="verdana-24-regular.fnt" focusable="false" />
+
+		<!--
+			<attributes
+			font="content/jumpnrun/default/gui/small-font-unselected.fnt"
+			focusable="false"/>
+		-->
+	</style>
+	
+		<style id="console-text">
+			<attributes font="console.fnt" color="#000f" />
+			<effect>
+				<onActive name="textSize" endSize="1.3" />
+			</effect>
+		</style>	
+		
+  <style id="nifty-button#text">
+    <attributes font="console.fnt" align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="true"/>
+    <effect>
+      <onHover name="saveState" />
+      <onHover name="changeFont" font="verdana-24-glow.fnt" post="false" inherit="false"/>
+      <onHover name="colorPulsate" startColor="#0000" endColor="#000f" post="false" inherit="false"/>
+      <onHover name="renderElement" />
+      <onHover name="restoreState" />
+    </effect>
+  </style>		
+</nifty-styles>

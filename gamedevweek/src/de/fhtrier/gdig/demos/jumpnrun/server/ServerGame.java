@@ -14,23 +14,33 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.ControlConfig;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.Debug;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.GamePlayConstants;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkHelper;
+import de.fhtrier.gdig.demos.jumpnrun.server.states.ServerLobbyState;
+import de.fhtrier.gdig.demos.jumpnrun.server.states.ServerPlayingState;
 import de.fhtrier.gdig.engine.helpers.Configuration;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
-import de.fhtrier.gdig.engine.network.impl.NetworkLobby;
+import de.fhtrier.gdig.engine.network.impl.NetworkBroadcastListener;
 
 public class ServerGame extends RGB4Game
 {
 	public static int port = 49999;
 	public static InterfaceAddress networkInterface = null;
+	public String serverName = "My Server";
+	private NetworkBroadcastListener netBroadCastListener;
 
-	public ServerGame()
+	public ServerGame(String serverName, InterfaceAddress ni, int port)
 	{
-		super(Assets.GameTitle + " (Server)");
+		super(Assets.GameTitle + " (" + serverName + ")");
 
+		this.serverName = serverName;
+		ServerGame.networkInterface = ni;
+		ServerGame.port = port;
+
+		// TODO read in interface from somewhere
 		if (networkInterface == null)
 		{
-			NetworkLobby lobby = new NetworkLobby();
-			List<InterfaceAddress> networkInterfaces = lobby.getInterfaces();
+			List<InterfaceAddress> networkInterfaces = NetworkHelper
+					.getInterfaces();
 
 			if (networkInterfaces.size() > 0)
 			{
@@ -43,7 +53,12 @@ public class ServerGame extends RGB4Game
 		}
 
 		NetworkComponent.createServerInstance();
+		NetworkComponent.getInstance().addListener(this);
 		NetworkComponent.getInstance().startListening(networkInterface, port);
+
+		netBroadCastListener = new NetworkBroadcastListener(serverName, "map1",
+				"1.0", port);
+		netBroadCastListener.start();
 
 		GamePlayConstants gamePlayConstants = new Constants.GamePlayConstants();
 		Debug debug = new Constants.Debug();
@@ -58,6 +73,7 @@ public class ServerGame extends RGB4Game
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException
 	{
+		addState(new ServerLobbyState(this));
 		addState(new ServerPlayingState());
 	}
 }

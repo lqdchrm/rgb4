@@ -55,6 +55,10 @@ public abstract class NetworkComponent {
 			this.listeners.add(l);
 		}
 	}
+	
+	public void removeListener(INetworkCommandListener l) {
+		listeners.remove(l);
+	}
 
 	public abstract Integer getNetworkId();
 
@@ -64,7 +68,7 @@ public abstract class NetworkComponent {
 
 	public abstract void stopListening();
 
-	public abstract List<Socket> getClients();
+	public abstract List<ClientHandler> getClients();
 
 	public abstract void addClient(Socket s);
 

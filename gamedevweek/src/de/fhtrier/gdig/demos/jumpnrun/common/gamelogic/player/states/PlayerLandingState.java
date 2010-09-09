@@ -11,35 +11,42 @@ import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
 import de.fhtrier.gdig.engine.management.Factory;
 
-public class PlayerLandingState extends PlayerAssetState {
-	
+public class PlayerLandingState extends PlayerAssetState
+{
+
 	private Animation anim;
-	
+
 	public PlayerLandingState(Player player, Factory factory)
-			throws SlickException {
-		super(player, Assets.PlayerLandAnimId, Assets.PlayerLandAnimImagePath, EntityOrder.Player, factory);
-	
+			throws SlickException
+	{
+		super(player, Assets.PlayerLandAnimId, Assets.PlayerLandAnimImagePath,
+				EntityOrder.Player, factory);
+
 		AssetEntity e = getGfxEntity();
-		
+
 		anim = e.Assets().getAnimation(e.getAssetId());
 		anim.setLooping(false);
 	}
 
 	@Override
-	public void enter() {
+	public void enter()
+	{
 		getPlayer().getVel()[Entity.Y] = 0.0f;
 		anim.restart();
 	}
 
 	@Override
-	public void leave() {
+	public void leave()
+	{
 	}
 
 	@Override
-	public void update() {	
+	public void update()
+	{
 
 		// check for anim end
-		if (anim.isStopped()) {
+		if (anim.isStopped())
+		{
 			getPlayer().applyAction(PlayerActions.DoNothing);
 		}
 	}

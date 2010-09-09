@@ -11,13 +11,10 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.ControlConfig;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.Debug;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.GamePlayConstants;
-import de.fhtrier.gdig.engine.network.NetworkComponent;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 
 public class RGB4
 {
-
-	public static final int SCREENWIDTH = 1024;
-	public static final int SCREENHEIGHT = 768;
 
 	public static void main(String[] args)
 	{
@@ -40,14 +37,12 @@ public class RGB4
 		if (game != null)
 		{
 
-			// make game network aware
-			NetworkComponent.getInstance().addListener(game);
-
 			try
 			{
 
 				AppGameContainer gc = new AppGameContainer(game);
-				gc.setDisplayMode(SCREENWIDTH, SCREENHEIGHT, false);
+				gc.setDisplayMode(Settings.SCREENWIDTH, Settings.SCREENHEIGHT,
+						false);
 
 				if (game instanceof ClientGame)
 				{

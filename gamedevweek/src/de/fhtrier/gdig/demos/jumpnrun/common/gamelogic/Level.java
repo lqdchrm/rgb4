@@ -6,7 +6,6 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
 
-import de.fhtrier.gdig.demos.jumpnrun.RGB4;
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
@@ -14,6 +13,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
@@ -169,18 +169,19 @@ public class Level extends MoveableEntity
 		}
 		// Right
 		if (getData()[X] < -this.groundMap.getWidth()
-				* this.groundMap.getTileWidth() + RGB4.SCREENWIDTH)
+
+		* this.groundMap.getTileWidth() + Settings.SCREENWIDTH)
 		{
 			getData()[X] = -this.groundMap.getWidth()
-					* this.groundMap.getTileWidth() + RGB4.SCREENWIDTH;
+					* this.groundMap.getTileWidth() + Settings.SCREENHEIGHT;
 			getVel()[X] = 0.0f;
 		}
 		// Bottom
 		if (getData()[Y] < -this.groundMap.getHeight()
-				* this.groundMap.getTileHeight() + RGB4.SCREENHEIGHT)
+				* this.groundMap.getTileHeight() + Settings.SCREENWIDTH)
 		{
 			getData()[Y] = -this.groundMap.getHeight()
-					* this.groundMap.getTileHeight() + RGB4.SCREENHEIGHT;
+					* this.groundMap.getTileHeight() + Settings.SCREENHEIGHT;
 			getVel()[Y] = 0.0f;
 		}
 	}
@@ -195,8 +196,8 @@ public class Level extends MoveableEntity
 		{
 
 			// Focus on Player
-			getData()[X] = RGB4.SCREENWIDTH / 2 - player.getData()[X];
-			getData()[Y] = RGB4.SCREENHEIGHT / 2 - player.getData()[Y];
+			getData()[X] = Settings.SCREENWIDTH / 2 - player.getData()[X];
+			getData()[Y] = Settings.SCREENHEIGHT / 2 - player.getData()[Y];
 		}
 	}
 
