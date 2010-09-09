@@ -11,7 +11,6 @@ public class Assets {
 	public static final int LevelBackgroundImageId = 1;
 	public static final int LevelMiddlegroundImageId = 2;
 	public static final int LevelTileMapId = 3;
-	public static final int LevelSoundtrackId = 4;
 
 	// Player
 	public static final int PlayerStandingAnimId = 111;
@@ -58,4 +57,33 @@ public class Assets {
 	public static final String WeaponParticleEffectImgPath = "sprites/player/weaponparticle.png";
 	public static final String WeaponParticleEffectCfgPath = "sprites/player/weaponparticleemitter3.xml";
 	public static final String WeaponGlowImagePath = "shader/weaponglow.png";
+
+	/* Sounds */
+
+	public static final int LevelSoundtrackId = 1;
+	public static final String LevelSoundtrackPath = "sounds/background.ogg";
+
+	public static final int PlayerRunSoundId = 20;
+	public static final int PlayerJumpSoundId = 21;
+	public static final int PlayerLandSoundId = 22;
+	public static final int PlayerIdleSoundId = 23;
+	public static final int PlayerDyingSoundId = 24;
+	public static final int PlayerShootSoundId = 25;
+
+	public static final String PlayerRunSoundPath = "sounds/playerrun.ogg";
+	public static final String PlayerJumpSoundPath = "sounds/playerjump.ogg";
+	public static final String PlayerLandSoundPath = "sounds/playerland.ogg";
+	public static final String PlayerIdleSoundPath = "sounds/playeridle.ogg";
+	public static final String PlayerDyingSoundPath = "sounds/playerdie.ogg";
+	public static final String PlayerShootSoundPath = "sounds/playershoot.ogg";
+
+	public static final int BulletSoundId = 30;
+	public static final int RocketStartSoundId = 31;
+	public static final int RocketExplodeSoundId = 32;
+	public static final int DoomsdayDeviceSoundId = 33;
+
+	public static final String BulletSoundPath = "sounds/bullet.ogg";
+	public static final String RocketStartSoundPath = "sounds/rocketstart.ogg";
+	public static final String RocketExplodeSoundPath = "sounds/rocketexplode.ogg";
+	public static final String DoomsdayDeviceSoundPath = "sounds/doomsdaydevice.ogg";
 }

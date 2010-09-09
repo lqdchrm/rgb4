@@ -59,8 +59,8 @@ public abstract class PlayingState extends BasicGameState implements
 		// create assetmgr
 		this.assets = new AssetMgr();
 		this.assets.setAssetPathPrefix(Assets.AssetManagerPath);
-		this.assets.setAssetFallbackPathPrefix(Assets.AssetManagerFallbackPath);
-
+		this.assets.setAssetFallbackPathPrefix(Assets.AssetManagerFallbackPath);	
+		
 		// Factory
 		this.factory = new GameFactory(this.assets);
 
