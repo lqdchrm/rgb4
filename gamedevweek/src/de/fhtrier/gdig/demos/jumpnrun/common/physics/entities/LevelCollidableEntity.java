@@ -130,9 +130,8 @@ public class LevelCollidableEntity extends CollidableEntity {
 		if (collided && (correction[Entity.X] != 0 || correction[Entity.Y] != 0)) {
 			// correct position
 			if (Math.abs(correction[Entity.X])<=Math.abs(correction[Entity.Y])){
-				if (leftCollision || rightCollision)
+				if (leftCollision || rightCollision || !isOnGround())
 				{
-					System.err.println("X_SLOW");
 					this.getData()[Entity.X] += correction[Entity.X];
 					this.getVel()[Entity.X] = 0.0f;
 				}
@@ -140,7 +139,6 @@ public class LevelCollidableEntity extends CollidableEntity {
 			else{
 				if (topCollision || bottomCollision)
 				{
-//					System.out.println("Y_SLOW");
 					this.getData()[Entity.Y] += correction[Entity.Y];
 					this.getVel()[Entity.Y] = 0.0f;
 				}
