@@ -49,6 +49,10 @@ public class Constants
 		public static boolean finiteStateMachineDebug = false;
 		
 		public static boolean guiDebug = false;
+		
+		public static boolean networkDebug = true;
+		
+		public static boolean factoryDebug = false;
 	}
 	
 	public static class Level extends Configuration

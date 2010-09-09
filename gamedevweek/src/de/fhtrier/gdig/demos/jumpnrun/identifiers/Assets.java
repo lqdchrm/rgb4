@@ -3,6 +3,7 @@ package de.fhtrier.gdig.demos.jumpnrun.identifiers;
 public class Assets {
 	
 	// Config
+	public static final String AssetGuiPath = "content/rgb4/gui";
 	public static final String AssetManagerPath = "content/rgb4/publish/";
 	public static final String AssetManagerFallbackPath = "content/rgb4/fallback/";
 	public static final String GameTitle = "RGB 4 - Der Letzte macht das Licht aus";
