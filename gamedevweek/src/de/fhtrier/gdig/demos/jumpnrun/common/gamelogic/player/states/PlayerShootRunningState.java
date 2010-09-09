@@ -9,6 +9,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.management.Factory;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class PlayerShootRunningState extends PlayerAssetState {
 
@@ -20,10 +21,12 @@ public class PlayerShootRunningState extends PlayerAssetState {
 
 	@Override
 	public void enter() {
+		SoundManager.loopSound(Assets.BulletSoundId, 1f, 0.2f);
 	}
 
 	@Override
 	public void leave() {
+		SoundManager.stopSound(Assets.BulletSoundId);
 	}
 
 	@Override

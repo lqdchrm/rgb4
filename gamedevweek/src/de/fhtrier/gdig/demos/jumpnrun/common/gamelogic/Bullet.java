@@ -40,7 +40,7 @@ public class Bullet extends LevelCollidableEntity {
 
 		bullet.setVisible(true);
 		add(bullet);
-
+		
 		// physics
 		// X Y OX OY SX SY ROT
 		initData(new float[] { 200, 200, 24, 24, 1, 1, 0 }); // pos +

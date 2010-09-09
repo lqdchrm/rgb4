@@ -19,6 +19,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.common.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
@@ -90,6 +91,8 @@ public class ClientPlayingState extends PlayingState {
 				// we are only spectator -> don't create player
 				setState(LocalState.PLAYING);
 			}
+			
+			SoundManager.playSound(Assets.PlayerJoiningSoundID);
 			return true;
 		}
 

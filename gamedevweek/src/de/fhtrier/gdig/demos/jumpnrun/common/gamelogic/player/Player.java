@@ -336,7 +336,7 @@ public class Player extends LevelCollidableEntity implements
 				if (this.isOnGround()) {
 					getVel()[Entity.Y] = -Constants.GamePlayConstants.playerJumpSpeed;
 					applyAction(PlayerActions.Jump);
-					SoundManager.playSound(Assets.PlayerJumpSoundId);
+					SoundManager.playSound(Assets.PlayerJumpSoundId, 1f, 0.2f);
 				}
 			}
 
@@ -346,7 +346,6 @@ public class Player extends LevelCollidableEntity implements
 				// TODO refactor PlayerAction to PlayerNetworkAction
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerNetworkAction.SHOOT));
-
 				applyAction(PlayerActions.StartShooting);
 			}
 
@@ -360,12 +359,15 @@ public class Player extends LevelCollidableEntity implements
 			if (InputControl.isRefKeyPressed(InputControl.REFCHANGECOLOR)) {
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerNetworkAction.PLAYERCOLOR));
+				SoundManager.playSound(Assets.PlayerChangeColorSoundID, 1f, 0.2f);
 			}
 
 			// change weapon color
 			if (InputControl.isRefKeyPressed(InputControl.REFCHANGEWEAPON)) {
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerNetworkAction.WEAPONCOLOR));
+				
+				SoundManager.playSound(Assets.WeaponChangeColorSoundID, 1f, 0.2f);
 
 				ParticleSystem particleSystem = weaponParticles.Assets()
 						.getParticleSystem(Assets.WeaponParticleEffect);

@@ -7,6 +7,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.engine.management.Factory;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class PlayerShootJumpingState extends PlayerAssetState {
 
@@ -19,10 +20,12 @@ public class PlayerShootJumpingState extends PlayerAssetState {
 	@Override
 	public void enter() {
 		getPlayer().setOnGround(false);
+		SoundManager.loopSound(Assets.BulletSoundId, 1f, 0.2f);
 	}
 
 	@Override
 	public void leave() {
+		SoundManager.stopSound(Assets.BulletSoundId);
 	}
 
 	@Override
