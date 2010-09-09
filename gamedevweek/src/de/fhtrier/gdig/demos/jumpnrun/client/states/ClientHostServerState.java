@@ -140,7 +140,6 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 	public void createServer() {
 		
 		if(!serverStarting){
-			serverStarting = true;
 		
 			
 			if (selectedInterfaceIndex==-1)
@@ -154,6 +153,7 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 			}
 			else
 			{
+				serverStarting = true;
 				String interfaceA = interfaces.get(selectedInterfaceIndex).getAddress().getHostAddress().replace('/', ' ').trim();
 	 			ProcessBuilder pb = new ProcessBuilder("server.bat",serverNameControl.getText(),interfaceA,portControl.getText());
 	 		
