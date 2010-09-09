@@ -35,6 +35,7 @@ import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 
 enum LocalState {
 	JOINING, CREATINGPLAYER, PLAYING, DISCONNECTING, EXITING
@@ -49,7 +50,7 @@ public class ClientPlayingState extends PlayingState {
 	private ServerData recv;
 	private ClientData send;
 
-	public ClientPlayingState() {
+	public ClientPlayingState() throws SlickException {
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ClientData();
 	}
@@ -65,10 +66,8 @@ public class ClientPlayingState extends PlayingState {
 
 		// InputControl initialisieren
 		InputControl.loadKeyMapping();
-
-		// HACK load and play sound
-		// getFactory().getAssetMgr().storeSound(Assets.LevelSoundtrack,
-		// "sounds/kaliba.ogg").loop();
+		
+		SoundManager.setAssetMgr(this.getFactory().getAssetMgr());		
 	}
 
 	private boolean handleProtocolCommands(INetworkCommand cmd) {

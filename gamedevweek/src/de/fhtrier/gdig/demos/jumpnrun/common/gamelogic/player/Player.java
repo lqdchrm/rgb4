@@ -40,6 +40,7 @@ import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.physics.CollisionManager;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class Player extends LevelCollidableEntity implements
 		IFiniteStateMachineListener<PlayerActionState> {
@@ -161,8 +162,10 @@ public class Player extends LevelCollidableEntity implements
 					assets.makePathRelativeToAssetPath(Assets.PlayerVertexShaderPath),
 					assets.makePathRelativeToAssetPath(Assets.PlayerPixelShaderPath));
 
-			playerGlow = new Image(assets.makePathRelativeToAssetPath(Assets.PlayerGlowImagePath));
-			weaponGlow = new Image(assets.makePathRelativeToAssetPath(Assets.WeaponGlowImagePath));
+			playerGlow = new Image(
+					assets.makePathRelativeToAssetPath(Assets.PlayerGlowImagePath));
+			weaponGlow = new Image(
+					assets.makePathRelativeToAssetPath(Assets.WeaponGlowImagePath));
 		}
 
 		// make entities visible
@@ -333,6 +336,7 @@ public class Player extends LevelCollidableEntity implements
 				if (this.isOnGround()) {
 					getVel()[Entity.Y] = -Constants.GamePlayConstants.playerJumpSpeed;
 					applyAction(PlayerActions.Jump);
+					SoundManager.playSound(Assets.PlayerJumpSoundId);
 				}
 			}
 
