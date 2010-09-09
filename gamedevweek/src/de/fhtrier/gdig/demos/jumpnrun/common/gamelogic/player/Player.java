@@ -1,5 +1,6 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -10,9 +11,13 @@ import org.newdawn.slick.particles.ConfigurableEmitter.ColorRecord;
 import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.util.Log;
 
+import sun.security.action.GetLongAction;
+
 import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.StateColor;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerAssetState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerFallingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerJumpingState;
@@ -33,7 +38,6 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.GamePlayConstants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.StateColor;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.ParticleEntity;
 import de.fhtrier.gdig.engine.graphics.shader.Shader;
@@ -42,6 +46,7 @@ import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.physics.CollisionManager;
+import de.fhtrier.gdig.engine.physics.Collisions;
 import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class Player extends LevelCollidableEntity implements
@@ -74,7 +79,7 @@ public class Player extends LevelCollidableEntity implements
 	private PlayerOrientationFSM fsmOrientation;
 
 	// carries current Asset
-	private PlayerAssetState currentState;
+	private PlayerAssetState currentPlayerAsset;
 
 	// old Stuff
 	private Entity playerGroup;
@@ -185,6 +190,9 @@ public class Player extends LevelCollidableEntity implements
 	private void initPhysics() {
 		// initialize position, velocity and acceleration
 		// X Y OX OY SY SY ROT
+
+		// SpawnPoint randomSpawnPoint = level.getRandomSpawnPoint(1);
+
 		initData(new float[] { 200, 200, 65, 70, 1, 1, 0 }); // pos +
 																// center of
 																// rotation +
@@ -198,7 +206,7 @@ public class Player extends LevelCollidableEntity implements
 		CollisionManager.addEntity(this);
 
 		// set bounding box according to idle animation size
-		setBounds(new Rectangle(35, 0, 58, 128)); // bounding box
+		setBounds(new Rectangle(35, 16, 58, 108)); // bounding box
 	}
 
 	// network
@@ -224,27 +232,17 @@ public class Player extends LevelCollidableEntity implements
 		return result;
 	}
 
-
-	public PlayerAssetState getState() {
-		return currentState;
+	public PlayerAssetState getCurrentPlayerAsset() {
+		return currentPlayerAsset;
 	}
 
-	// public void setState(PlayerActionState stateId) {
-	// switch (stateId) {
-	// case Standing:
-	// setState(stateStanding);
-	// break;
-	// // TODO !!!!
-	// }
-	// }
-
 	public void setState(PlayerAssetState state) {
-		if (currentState != null) {
-			currentState.leave();
+		if (currentPlayerAsset != null) {
+			currentPlayerAsset.leave();
 		}
-		currentState = state;
-		if (currentState != null) {
-			currentState.enter();
+		currentPlayerAsset = state;
+		if (currentPlayerAsset != null) {
+			currentPlayerAsset.enter();
 		}
 	}
 
@@ -299,7 +297,7 @@ public class Player extends LevelCollidableEntity implements
 				}
 			}
 
-			if (InputControl.isRefKeyDown(InputControl.REFFIRE)) {
+			if (InputControl.isRefKeyPressed(InputControl.REFFIRE)) {
 
 				// TODO tell server to create bullet
 				// TODO refactor PlayerAction to PlayerNetworkAction
@@ -307,10 +305,6 @@ public class Player extends LevelCollidableEntity implements
 						new QueryAction(PlayerNetworkAction.SHOOT));
 
 				applyAction(PlayerActions.StartShooting);
-			}
-
-			if (!InputControl.isRefKeyDown(InputControl.REFFIRE)) {
-				applyAction(PlayerActions.StopShooting);
 			}
 
 			PlayerCondition state = this.getPlayerCondition();
@@ -425,8 +419,10 @@ public class Player extends LevelCollidableEntity implements
 	// render
 	@Override
 	public void renderImpl(final Graphics g, Image frameBuffer) {
+
+		currentPlayerAsset.render(g, frameBuffer);
+	
 		super.renderImpl(g, frameBuffer);
-		currentState.render(g, frameBuffer);
 	}
 
 	@Override
@@ -437,23 +433,28 @@ public class Player extends LevelCollidableEntity implements
 			Shader.popShader();
 		}
 
+		super.postRender(graphicContext);
+
 		// render player infos
 		if (this.condition.name != null) {
-			float x = playerHalfWidth
+			float x = getData()[Entity.X] + playerHalfWidth
 					- graphicContext.getFont().getWidth(condition.name) / 2.0f;
-			float y = -graphicContext.getFont().getHeight(condition.name);
-			graphicContext.setColor(StateColor.constIntoColor(condition.color)); // colors
-																					// the
-			// name of
-			// player with
-			// his color
+
+			float y = getData()[Entity.Y]
+					- graphicContext.getFont().getHeight(condition.name);
+
+			// colors the name of player with his color
+
+			if (!Constants.Debug.shadersActive) {
+				graphicContext.setColor(StateColor
+						.constIntoColor(condition.color));
+			} else {
+				graphicContext
+						.setColor(Constants.GamePlayConstants.DefaultPlayerTextColor);
+			}
 			graphicContext.drawString(condition.name, x, y);
-			graphicContext.setColor(StateColor
-					.constIntoColor(condition.weaponColor));
-			graphicContext.drawString("Weapon", x, y + 80);
 		}
 
-		super.postRender(graphicContext);
 	}
 
 	// update
@@ -472,22 +473,22 @@ public class Player extends LevelCollidableEntity implements
 			super.update(deltaInMillis); // calc physics
 
 			// Handle Player Actions according to physics state after update
-			getState().update();
+			getCurrentPlayerAsset().update();
 
 			if (this.getVel()[Entity.X] > Constants.GamePlayConstants.playerMaxSpeed) {
 				this.getVel()[Entity.X] = Constants.GamePlayConstants.playerMaxSpeed;
 			}
 
-			if (this.getVel()[Entity.Y] > Constants.GamePlayConstants.playerMaxSpeed) {
-				this.getVel()[Entity.Y] = Constants.GamePlayConstants.playerMaxSpeed;
+			if (this.getVel()[Entity.Y] > Constants.GamePlayConstants.playerMaxJumpSpeed) {
+				this.getVel()[Entity.Y] = Constants.GamePlayConstants.playerMaxJumpSpeed;
 			}
 
 			if (this.getVel()[Entity.X] < -Constants.GamePlayConstants.playerMaxSpeed) {
 				this.getVel()[Entity.X] = -Constants.GamePlayConstants.playerMaxSpeed;
 			}
 
-			if (this.getVel()[Entity.Y] < -Constants.GamePlayConstants.playerMaxSpeed) {
-				this.getVel()[Entity.Y] = -Constants.GamePlayConstants.playerMaxSpeed;
+			if (this.getVel()[Entity.Y] < -Constants.GamePlayConstants.playerMaxJumpSpeed) {
+				this.getVel()[Entity.Y] = -Constants.GamePlayConstants.playerMaxJumpSpeed;
 			}
 
 			// TODO fix PlayerState
@@ -508,11 +509,7 @@ public class Player extends LevelCollidableEntity implements
 
 	public void setPlayerCondition(PlayerCondition playerCondition) {
 		this.condition = playerCondition;
-		
-	}
-	
-	public void setLevel(final Level level) {
-		this.setMap(level.getMap());
+
 	}
 
 	@Override

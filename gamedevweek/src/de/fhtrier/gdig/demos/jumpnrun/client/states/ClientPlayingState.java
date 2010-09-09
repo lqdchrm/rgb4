@@ -17,6 +17,8 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
@@ -172,6 +174,11 @@ public class ClientPlayingState extends PlayingState {
 			player.setUpdateStrategy(EntityUpdateStrategy.ClientToServer);
 
 			this.getLevel().setCurrentPlayer(acp.getPlayerId());
+
+			Level level = getLevel();
+			SpawnPoint randomSpawnPoint = level.getRandomSpawnPoint(1);
+			player.getData()[Entity.X] = randomSpawnPoint.x;
+			player.getData()[Entity.Y] = randomSpawnPoint.y;
 
 			// we got a player, now we can start :-)
 			setState(LocalState.PLAYING);

@@ -47,7 +47,6 @@ public class Assets {
 	
 	// Bullet
 	public static final int BulletAnimId = 21;
-	public static final String BulletAnimImagePath = "sprites/player/projektil_100_35_10.png";
 	public static final String BulletAnimPath = "sprites/items/bullet2_64_64_100.png";
 
 

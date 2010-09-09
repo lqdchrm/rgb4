@@ -15,11 +15,12 @@ public class PlayerStandingState extends PlayerAssetState {
 	public PlayerStandingState(Player player, Factory factory)
 			throws SlickException {
 		super(player, Assets.PlayerStandingAnimId, Assets.PlayerStandingAnimImagePath, EntityOrder.Player, factory);
+	
 	}
 
 	@Override
 	public void enter() {
-		getPlayer().getAcc()[Entity.X] = 0.0f;
+//		getPlayer().getAcc()[Entity.X] = 0.0f;
 	}
 
 	@Override
@@ -32,8 +33,6 @@ public class PlayerStandingState extends PlayerAssetState {
 		// check if currentPos < prevPos --> start falling
 		if (getPlayer().getVel()[Entity.Y] > Constants.GamePlayConstants.playerFallingTriggerSpeed) {
 			getPlayer().applyAction(PlayerActions.Fall);
-			System.out.println("State: Falling");
 		}
-		
 	}
 }

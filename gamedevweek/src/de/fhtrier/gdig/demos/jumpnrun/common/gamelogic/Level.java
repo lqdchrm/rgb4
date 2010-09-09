@@ -1,5 +1,8 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -30,8 +33,15 @@ public class Level extends MoveableEntity {
 	private ImageEntity middlegroundImage;
 	private TiledMap groundMap;
 	private TiledMapEntity ground;
+	public int firstLogicGID;
+	
+	private ArrayList<ArrayList<SpawnPoint>> spawnPoints;
 
 	private int currentPlayerId;
+
+	private ArrayList<ArrayList<SpawnPoint>> teleportExitPoints;
+
+	private Random rd = new Random(System.currentTimeMillis());
 
 	public Level(int id, GameFactory factory) throws SlickException {
 		super(id, EntityType.LEVEL);
@@ -82,10 +92,125 @@ public class Level extends MoveableEntity {
 		// setup
 		setActive(true);
 		setVisible(true);
+		
+		//HACK determine GID for logic layer
+		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
+		for (int i = 0; i < tiledMap.getTileSetCount(); i++)
+		{
+			if(tiledMap.getTileSet(i).lastGID-tiledMap.getTileSet(i).firstGID == 127) {
+				firstLogicGID = tiledMap.getTileSet(i).firstGID;
+			}
+		}		
+		
+		calculateSpawnpoints();
+		calculateTeleportExits();
 	}
 
+	private void calculateSpawnpoints()
+	{
+		
+		spawnPoints = new ArrayList<ArrayList<SpawnPoint>>();
+		
+		for (int i = 0; i < 32; i++)
+		{
+			spawnPoints.add(new ArrayList<SpawnPoint>());
+		}
+		
+		
+		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
+		
+		for (int x = 0; x < tiledMap.getWidth(); x++)
+		{
+			for (int y = 0; y < tiledMap.getHeight(); y++)
+			{
+				int tileId = tiledMap.getTileId(x, y, Constants.Level.logicLayer);
+				if (tileId == 0)
+				{
+					continue;
+				}
+				tileId -= firstLogicGID;
+				++tileId;
+				// is a spawnpoint
+				if (tileId < 32)
+				{
+					spawnPoints.get(tileId-1).add(new SpawnPoint(tileId, x*tiledMap.getTileWidth(),y*tiledMap.getTileHeight()));
+				}
+			}
+		}
+	}
+
+	private void calculateTeleportExits()
+	{
+		
+		teleportExitPoints = new ArrayList<ArrayList<SpawnPoint>>();
+		
+		for (int i = 0; i < 32; i++)
+		{
+			teleportExitPoints.add(new ArrayList<SpawnPoint>());
+		}
+		
+		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
+		
+		for (int x = 0; x < tiledMap.getWidth(); x++)
+		{
+			for (int y = 0; y < tiledMap.getHeight(); y++)
+			{
+				int tileId = tiledMap.getTileId(x, y, Constants.Level.logicLayer);
+				if (tileId == 0)
+				{
+					continue;
+				}
+				tileId -= firstLogicGID;
+				++tileId;
+				// is a teleporterexit
+				if (tileId > 64 && tileId < 96)
+				{
+					teleportExitPoints.get(tileId-65).add(new SpawnPoint(tileId, x*tiledMap.getTileWidth(),y*tiledMap.getTileHeight()));
+				}
+			}
+		}
+	}
+	
+	public ArrayList<SpawnPoint> getSpawnPoints(int id)
+	{
+		return spawnPoints.get(id-1);
+	}
+	
+	public SpawnPoint getRandomSpawnPoint(int id)
+	{
+		ArrayList<SpawnPoint> sp = getSpawnPoints(id);
+		return sp.get(rd.nextInt(sp.size()));
+	}
+
+	public SpawnPoint getRandomSpawnPoint()
+	{
+		ArrayList<SpawnPoint> sp = getSpawnPoints(rd.nextInt(spawnPoints.size()));
+		return sp.get(rd.nextInt(sp.size()));
+	}
+
+	public ArrayList<SpawnPoint> getTeleporterExitPoints(int id)
+	{
+		return teleportExitPoints.get(id-1);
+	}
+	
+	public SpawnPoint getRandomTeleporterExitPoint(int id)
+	{
+		ArrayList<SpawnPoint> sp = getTeleporterExitPoints(id);
+		return sp.get(rd.nextInt(sp.size()));
+	}
+	
+	public SpawnPoint getRandomTeleporterExitPoint()
+	{
+		ArrayList<SpawnPoint> sp = getTeleporterExitPoints(rd.nextInt(teleportExitPoints.size()));
+		return sp.get(rd.nextInt(sp.size()));
+	}
+	
+	
 	@Override
 	protected void postRender(Graphics graphicContext) {
+		if (isVisible()){
+			ground.Assets().getTiledMap(ground.getAssetId()).render(0, 0, 2);
+		}
 		super.postRender(graphicContext);
 
 		graphicContext.setColor(Constants.Debug.overlayColor);
@@ -94,6 +219,7 @@ public class Level extends MoveableEntity {
 				+ factory.size() + " entities", 20, 50);
 
 		Entity e = this;
+		
 		graphicContext.drawString("Level\n" + "ID: " + e.getId() + "\n"
 				+ " X: " + e.getData()[X] + "  Y: " + e.getData()[Y] + "\n"
 				+ "OX: " + e.getData()[CENTER_X] + " OY: "
@@ -111,7 +237,9 @@ public class Level extends MoveableEntity {
 							+ e.getData()[SCALE_X] + " SY: "
 							+ e.getData()[SCALE_Y] + "\n" + "ROT: "
 							+ e.getData()[ROTATION] + "\n" + "STATE: "
-							+ ((Player) e).getState().toString(), 20, 250);
+							+ ((Player) e).getCurrentPlayerAsset().toString() + "\n"
+							+ "IsOnGround " + ((Player) e).isOnGround() + "\n"
+							+ "SPEED (" + ((Player) e).getVel()[Entity.X] + ", " + ((Player) e).getVel()[Entity.Y] + ")", 20, 250);
 		}
 	}
 
@@ -123,7 +251,7 @@ public class Level extends MoveableEntity {
 		if (isActive()) {
 			focusOnPlayer();
 
-			checkLevelBordersScrolling();
+//			checkLevelBordersScrolling();
 
 			parallaxScrollingBackground();
 		}
@@ -256,7 +384,7 @@ public class Level extends MoveableEntity {
 				player.setActive(false);
 			}
 			this.currentPlayerId = playerId;
-			player = getCurrentPlayer();
+			player = getPlayer(currentPlayerId);
 			if (player != null) {
 				player.setActive(true);
 			}

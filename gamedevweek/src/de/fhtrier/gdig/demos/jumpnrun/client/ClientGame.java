@@ -41,8 +41,14 @@ public class ClientGame extends RGB4Game {
 		Constants.GamePlayConstants c1 = new Constants.GamePlayConstants();
 
 		Constants.ControlConfig c2 = new Constants.ControlConfig();
-		c1.showEditor("ClientSettings", new JPanel[] { c1.getEdittingPanel(),
-				c2.getEdittingPanel() });
+		
+		Constants.Debug c3 = new Constants.Debug();
+		
+		c1.showEditor("ClientSettings",
+				new JPanel[] {
+					c1.getEdittingPanel(),
+					c2.getEdittingPanel(),
+					c3.getEdittingPanel()});
 	}
 
 	@Override

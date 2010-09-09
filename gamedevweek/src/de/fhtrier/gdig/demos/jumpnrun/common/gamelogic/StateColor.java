@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.identifiers;
+package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
 import org.newdawn.slick.Color;
 

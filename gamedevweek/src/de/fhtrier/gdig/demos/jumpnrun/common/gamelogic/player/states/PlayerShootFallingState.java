@@ -28,7 +28,9 @@ public class PlayerShootFallingState extends PlayerAssetState {
 
 	@Override
 	public void enter() {
-		anim.restart();
+		if (anim.isStopped()) {
+			anim.restart();
+		}
 	}
 
 	@Override
@@ -41,6 +43,10 @@ public class PlayerShootFallingState extends PlayerAssetState {
 		// check if vel < threshold --> stop falling
 		if (getPlayer().isOnGround()) {
 			getPlayer().applyAction(PlayerActions.Land);
+		}
+		
+		if (anim.isStopped()) {
+			getPlayer().applyAction(PlayerActions.StopShooting);
 		}
 	}
 	
