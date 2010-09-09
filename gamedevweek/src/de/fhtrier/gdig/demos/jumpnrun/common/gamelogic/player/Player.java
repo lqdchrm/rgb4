@@ -10,9 +10,12 @@ import org.newdawn.slick.particles.ConfigurableEmitter.ColorRecord;
 import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.util.Log;
 
+import sun.security.action.GetLongAction;
+
 import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerAssetState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerJumpingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerLandingState;
@@ -40,6 +43,7 @@ import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.physics.CollisionManager;
+import de.fhtrier.gdig.engine.physics.Collisions;
 import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class Player extends LevelCollidableEntity implements
@@ -179,6 +183,10 @@ public class Player extends LevelCollidableEntity implements
 	private void initPhysics() {
 		// initialize position, velocity and acceleration
 		// X Y OX OY SY SY ROT
+		
+//		SpawnPoint randomSpawnPoint = level.getRandomSpawnPoint(1);
+		
+		
 		initData(new float[] { 200, 200, 65, 70, 1, 1, 0 }); // pos +
 																// center of
 																// rotation +
@@ -545,10 +553,6 @@ public class Player extends LevelCollidableEntity implements
 	// getters + setters
 	public PlayerCondition getPlayerCondition() {
 		return condition;
-	}
-
-	public void setLevel(final Level level) {
-		this.setMap(level.getMap());
 	}
 
 	@Override

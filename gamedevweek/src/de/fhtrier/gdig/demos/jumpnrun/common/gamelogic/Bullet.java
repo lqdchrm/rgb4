@@ -25,7 +25,6 @@ public class Bullet extends LevelCollidableEntity {
 
 	public Player owner;
 	public int color;
-	private Level level;
 	public AnimationEntity bullet;
 
 	public Bullet(int id, Factory factory) throws SlickException {
@@ -105,10 +104,5 @@ public class Bullet extends LevelCollidableEntity {
 		CollisionManager.removeEntity(this);
 		level.remove(this);
 		level.factory.removeEntity(this.getId(), true);
-	}
-
-	public void setLevel(Level level) {
-		super.setLevel(level);
-		this.level = level;
 	}
 }

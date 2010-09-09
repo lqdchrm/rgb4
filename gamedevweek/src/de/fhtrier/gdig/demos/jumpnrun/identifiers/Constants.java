@@ -51,6 +51,12 @@ public class Constants
 		public static boolean guiDebug = false;
 	}
 	
+	public static class Level extends Configuration
+	{
+		public static int collisionLayer = 1;
+		public static int logicLayer = 3;
+	}
+	
 	public static class ControlConfig extends Configuration {
 		
 		public static String REFWALKLEFT = "KEY_LEFT";
