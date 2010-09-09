@@ -22,6 +22,7 @@ public class Constants
 		public static float playerMaxSpeed = 850.0f;
 
 		public static final float playerIdleTriggerSpeed = 5.0f;
+		public static final float playerFallingTriggerSpeed = 500.0f;
 		public static final float playerGroundDrag = 0.005f;
 		public static final float playerAirDrag = 0.000001f;		
 
@@ -47,6 +48,10 @@ public class Constants
 		public static boolean finiteStateMachineDebug = false;
 		
 		public static boolean guiDebug = false;
+		
+		public static boolean networkDebug = false;
+		
+		public static boolean factoryDebug = false;
 	}
 	
 	public static class ControlConfig extends Configuration {

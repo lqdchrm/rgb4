@@ -34,8 +34,7 @@ public class NetworkComponentServer extends NetworkComponentImpl {
 	public void startListening( InterfaceAddress ni, int port ) 
 	{
 		this.networkConnectionListener.startNetworkConnectionListener( ni, port );
-		this.networkBroadcastListener = new NetworkBroadcastListener( "TestServer", "Testmap", "0.01", ni, port );
-		this.networkBroadcastListener.start();
+
 	}
 	
 	@Override
@@ -94,11 +93,11 @@ public class NetworkComponentServer extends NetworkComponentImpl {
 	}
 
 	@Override
-	public List<Socket> getClients() {
-		List<Socket> l = new ArrayList<Socket>();
+	public List<ClientHandler> getClients() {
+		List<ClientHandler> l = new ArrayList<ClientHandler>();
 		synchronized (this.clients) {
 			for (ClientHandler ch : this.clients.values()) {
-				l.add(ch.getSocket());
+				l.add(ch);
 			}
 		}
 		return l;

@@ -8,6 +8,7 @@ import java.util.TreeMap;
 
 import org.newdawn.slick.util.Log;
 
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
@@ -49,7 +50,7 @@ public class Factory {
 		add(result);
 		return result;
 	}
-	
+
 	public ParticleEntity createParticleEntity(int order, int assetId) {
 		ParticleEntity result = new ParticleEntity(getNewId(), assetId, assets);
 		result.setOrder(order);
@@ -114,7 +115,12 @@ public class Factory {
 					"Factory already contains an entity with this id");
 		}
 		entities.put(e.getId(), e);
-		Log.debug("Factory: Entity " + e.getId() + " added - Type: " + e.getType().toString());
+
+		if (Constants.Debug.factoryDebug) {
+			Log.debug("Factory: Entity " + e.getId() + " added - Type: "
+					+ e.getType().toString());
+		}
+
 		return e;
 	}
 

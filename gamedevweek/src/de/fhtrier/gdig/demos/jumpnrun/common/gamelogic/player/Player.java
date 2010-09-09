@@ -14,9 +14,11 @@ import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerAssetState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerFallingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerJumpingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerLandingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerRunningState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerShootFallingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerShootJumpingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerShootRunningState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerShootStandingState;
@@ -65,6 +67,8 @@ public class Player extends LevelCollidableEntity implements
 	private PlayerJumpingState stateJumping;
 	private PlayerShootJumpingState stateShootJumping;
 	private PlayerLandingState stateLanding;
+	private PlayerFallingState stateFalling;
+	private PlayerShootFallingState stateShootFalling;
 
 	private PlayerActionFSM fsmAction;
 	private PlayerOrientationFSM fsmOrientation;
@@ -93,7 +97,7 @@ public class Player extends LevelCollidableEntity implements
 
 	private void initCondition() {
 		condition = new PlayerCondition();
-		condition.name = "Player";
+		condition.name = "XXX";
 		condition.health = 1;
 		condition.ammo = 1;
 		condition.shootDirection = PlayerActionState.Left.ordinal();
@@ -119,6 +123,8 @@ public class Player extends LevelCollidableEntity implements
 		stateJumping = new PlayerJumpingState(this, factory);
 		stateShootJumping = new PlayerShootJumpingState(this, factory);
 		stateLanding = new PlayerLandingState(this, factory);
+		stateFalling = new PlayerFallingState(this, factory);
+		stateShootFalling = new PlayerShootFallingState(this, factory);
 	}
 
 	private void initGraphics() throws SlickException {
@@ -218,53 +224,6 @@ public class Player extends LevelCollidableEntity implements
 		return result;
 	}
 
-	// state switching
-	// private void enterState(final int state) {
-	// this._currentState = state;
-	// switch (state) {
-	// case PlayerActionState.Idle:
-	// this.idleImage.setVisible(true);
-	// break;
-	// case PlayerActionState.RunLeft:
-	// this.getAcc()[Entity.X] = -Constants.GamePlayConstants.playerWalkVel;
-	// this.playerGroup.getData()[Entity.SCALE_X] = 1;
-	// this.runAnimation.setVisible(true);
-	// this.playerCondition.shootDirection = state;
-	// break;
-	// case PlayerActionState.RunRight:
-	// this.getAcc()[Entity.X] = Constants.GamePlayConstants.playerWalkVel;
-	// this.playerGroup.getData()[Entity.SCALE_X] = -1;
-	// this.runAnimation.setVisible(true);
-	// this.playerCondition.shootDirection = state;
-	// break;
-	// case PlayerActionState.Jump:
-	// this.getVel()[Entity.Y] = -Constants.GamePlayConstants.playerJumpVel;
-	// this.jump.start();
-	// this.jumpAnimation.setVisible(true);
-	// break;
-	// }
-	// }
-	//
-	// private void leaveState(int state) {
-	// switch (state) {
-	// case PlayerActionState.Idle:
-	// this.idleImage.setVisible(false);
-	// break;
-	// case PlayerActionState.RunLeft:
-	// case PlayerActionState.RunRight:
-	// this.runAnimation.setVisible(false);
-	// break;
-	// case PlayerActionState.Jump:
-	// this.jumpAnimation.setVisible(false);
-	// }
-	// }
-	//
-	// public void setState(final int state) {
-	// if (state != this._currentState) {
-	// this.leaveState(this._currentState);
-	// this.enterState(state);
-	// }
-	// }
 
 	public PlayerAssetState getState() {
 		return currentState;
@@ -490,7 +449,7 @@ public class Player extends LevelCollidableEntity implements
 			// name of
 			// player with
 			// his color
-			graphicContext.drawString(condition.name + " " + getId(), x, y);
+			graphicContext.drawString(condition.name, x, y);
 			graphicContext.setColor(StateColor
 					.constIntoColor(condition.weaponColor));
 			graphicContext.drawString("Weapon", x, y + 80);
@@ -549,6 +508,11 @@ public class Player extends LevelCollidableEntity implements
 		return condition;
 	}
 
+	public void setPlayerCondition(PlayerCondition playerCondition) {
+		this.condition = playerCondition;
+		
+	}
+	
 	public void setLevel(final Level level) {
 		this.setMap(level.getMap());
 	}
@@ -592,6 +556,12 @@ public class Player extends LevelCollidableEntity implements
 			break;
 		case Landing:
 			setState(stateLanding);
+			break;
+		case Falling:
+			setState(stateFalling);
+			break;
+		case FallShooting:
+			setState(stateShootFalling);
 			break;
 		default:
 			if (Constants.Debug.finiteStateMachineDebug) {
