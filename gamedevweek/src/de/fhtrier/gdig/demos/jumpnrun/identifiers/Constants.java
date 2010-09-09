@@ -26,6 +26,8 @@ public class Constants
 		public static float playerAirDrag = 0.000001f;		
 
 		public static float colissionPointDistance = 2.0f;
+
+		public static float playerMaxJumpSpeed = 1000.0f;
 	}
 
 	public static class Debug extends Configuration

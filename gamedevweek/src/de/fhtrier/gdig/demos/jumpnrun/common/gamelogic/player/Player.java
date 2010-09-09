@@ -192,7 +192,7 @@ public class Player extends LevelCollidableEntity implements
 		CollisionManager.addEntity(this);
 
 		// set bounding box according to idle animation size
-		setBounds(new Rectangle(35, 0, 58, 128)); // bounding box
+		setBounds(new Rectangle(35, 16, 58, 108)); // bounding box
 	}
 
 	// network
@@ -519,16 +519,16 @@ public class Player extends LevelCollidableEntity implements
 				this.getVel()[Entity.X] = Constants.GamePlayConstants.playerMaxSpeed;
 			}
 
-			if (this.getVel()[Entity.Y] > Constants.GamePlayConstants.playerMaxSpeed) {
-				this.getVel()[Entity.Y] = Constants.GamePlayConstants.playerMaxSpeed;
+			if (this.getVel()[Entity.Y] > Constants.GamePlayConstants.playerMaxJumpSpeed) {
+				this.getVel()[Entity.Y] = Constants.GamePlayConstants.playerMaxJumpSpeed;
 			}
 
 			if (this.getVel()[Entity.X] < -Constants.GamePlayConstants.playerMaxSpeed) {
 				this.getVel()[Entity.X] = -Constants.GamePlayConstants.playerMaxSpeed;
 			}
 
-			if (this.getVel()[Entity.Y] < -Constants.GamePlayConstants.playerMaxSpeed) {
-				this.getVel()[Entity.Y] = -Constants.GamePlayConstants.playerMaxSpeed;
+			if (this.getVel()[Entity.Y] < -Constants.GamePlayConstants.playerMaxJumpSpeed) {
+				this.getVel()[Entity.Y] = -Constants.GamePlayConstants.playerMaxJumpSpeed;
 			}
 
 			// TODO fix PlayerState
