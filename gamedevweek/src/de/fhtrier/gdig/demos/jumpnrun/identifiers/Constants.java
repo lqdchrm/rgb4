@@ -20,10 +20,12 @@ public class Constants
 		public static float playerWalkSpeed = 4000.0f;
 		public static float playerJumpSpeed = 1000.0f;
 		public static float playerMaxSpeed = 850.0f;
-		
+
 		public static final float playerIdleTriggerSpeed = 5.0f;
-		public static final float playerGroundDrag = 0.01f;
-		public static final float playerAirDrag = 0.000001f;
+		public static final float playerGroundDrag = 0.005f;
+		public static final float playerAirDrag = 0.000001f;		
+
+		public static float colissionPointDistance = 2.0f;
 	}
 
 	public static class Debug extends Configuration
@@ -42,7 +44,7 @@ public class Constants
 
 		public static boolean forceNoFBO = false;
 
-		public static boolean finiteStateMachineDebug = true;
+		public static boolean finiteStateMachineDebug = false;
 		
 		public static boolean guiDebug = false;
 	}
