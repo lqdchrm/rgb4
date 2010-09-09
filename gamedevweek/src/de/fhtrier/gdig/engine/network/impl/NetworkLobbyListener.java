@@ -3,18 +3,21 @@ package de.fhtrier.gdig.engine.network.impl;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import de.fhtrier.gdig.engine.network.IAddServerListener;
 import de.fhtrier.gdig.engine.network.NetworkServerObject;
 
 public class NetworkLobbyListener extends Thread 
 {
    private ServerSocket socket;
    private boolean halt;
-   private NetworkLobby parent;
+
+   private IAddServerListener parent;
    
-   public NetworkLobbyListener( NetworkLobby myParent )
+   public NetworkLobbyListener( IAddServerListener myParent )
    {
 	  parent = myParent;
       halt = false;	   
@@ -33,12 +36,9 @@ public class NetworkLobbyListener extends Thread
 		 {
 	        Socket userSocket = socket.accept();
 	        ObjectInputStream serverStream = new ObjectInputStream( userSocket.getInputStream() );
+	        InetAddress serverAddress = userSocket.getInetAddress();
 	        NetworkServerObject server = (NetworkServerObject) serverStream.readObject();
-	        
-	        if ( server.getIp() == null )
-	        {
-	           server.setIp( userSocket.getInetAddress() );
-	        }
+	        server.setIp( serverAddress );
 
 	        long curr = System.currentTimeMillis();
 	        
@@ -67,9 +67,11 @@ public class NetworkLobbyListener extends Thread
    {
 	  try
 	  {
-		 if ( socket != null )
+
+		 if ( socket != null && socket.isClosed()==false )
 	        socket.close();
-         halt = true;
+         
+		 halt = true;
 	  }
 	  catch( IOException e )
 	  {
