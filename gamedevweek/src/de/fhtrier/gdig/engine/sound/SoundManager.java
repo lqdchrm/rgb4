@@ -14,29 +14,25 @@ public class SoundManager {
 	private SoundManager(AssetMgr assets) throws SlickException {
 		this.assets = assets;
 
-		// this.assets.storeMusic(Assets.LevelSoundtrackId,
-		// Assets.LevelSoundtrackPath);
+		//this.assets.storeMusic(Assets.LevelSoundtrackId, Assets.LevelSoundtrackPath);
 
-		// this.assets.storeSound(Assets.PlayerRunSoundId,
-		// Assets.PlayerRunSoundPath);
-		this.assets.storeSound(Assets.PlayerJumpSoundId,
-				Assets.PlayerJumpSoundPath);
-		// this.assets.storeSound(Assets.PlayerLandSoundId,
-		// Assets.PlayerLandSoundPath);
-		// this.assets.storeSound(Assets.PlayerIdleSoundId,
-		// Assets.PlayerIdleSoundPath);
-		// this.assets.storeSound(Assets.PlayerDyingSoundId,
-		// Assets.PlayerDyingSoundPath);
-		// this.assets.storeSound(Assets.PlayerShootSoundId,
-		// Assets.PlayerShootSoundPath);
-
-		// this.assets.storeSound(Assets.BulletSoundId, Assets.BulletSoundPath);
-		// this.assets.storeMusic(Assets.DoomsdayDeviceSoundId,
-		// Assets.DoomsdayDeviceSoundPath);
-		// this.assets.storeSound(Assets.RocketStartSoundId,
-		// Assets.RocketStartSoundPath);
-		// this.assets.storeSound(Assets.RocketExplodeSoundId,
-		// Assets.RocketExplodeSoundPath);
+		this.assets.storeSound(Assets.PlayerRunSoundId, Assets.PlayerRunSoundPath);
+		this.assets.storeSound(Assets.PlayerJumpSoundId, Assets.PlayerJumpSoundPath);
+		this.assets.storeSound(Assets.PlayerLandSoundId, Assets.PlayerLandSoundPath);
+		//this.assets.storeSound(Assets.PlayerIdleSoundId, Assets.PlayerIdleSoundPath);
+		this.assets.storeSound(Assets.PlayerDyingSoundId, Assets.PlayerDyingSoundPath);
+		this.assets.storeSound(Assets.PlayerShootSoundId, Assets.PlayerShootSoundPath);
+		this.assets.storeSound(Assets.PlayerGetItemSoundId, Assets.PlayerGetItemSoundPath);
+		this.assets.storeSound(Assets.PlayerWoundSoundId, Assets.PlayerWoundSoundPath);
+		this.assets.storeSound(Assets.PlayerJoiningSoundID, Assets.PlayerJoiningSoundPath);
+		this.assets.storeSound(Assets.PlayerChangeColorSoundID, Assets.PlayerChangeColorPath);
+		
+		this.assets.storeSound(Assets.BeamSoundId, Assets.BeamSoundPath);
+		this.assets.storeSound(Assets.BulletSoundId, Assets.BulletSoundPath);
+		this.assets.storeSound(Assets.DoomsdayDeviceSoundId, Assets.DoomsdayDeviceSoundPath);
+		this.assets.storeSound(Assets.RocketStartSoundId, Assets.RocketStartSoundPath);
+		this.assets.storeSound(Assets.RocketExplodeSoundId, Assets.RocketExplodeSoundPath);
+		this.assets.storeSound(Assets.WeaponChangeColorSoundID, Assets.WeaponChangeColorSoundPath);
 	}
 
 	public static void playSound(int id) {

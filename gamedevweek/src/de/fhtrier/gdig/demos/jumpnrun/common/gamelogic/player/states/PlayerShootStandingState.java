@@ -11,6 +11,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
 import de.fhtrier.gdig.engine.management.Factory;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class PlayerShootStandingState extends PlayerAssetState {
 	private Animation anim;
@@ -29,13 +30,18 @@ public class PlayerShootStandingState extends PlayerAssetState {
 
 	@Override
 	public void enter() {
+
 		if (anim.isStopped()) {
 			anim.restart();
 		}
+
+		//SoundManager.playSound(Assets.PlayerRunSoundId, 1f, 0.2f);
+		SoundManager.loopSound(Assets.BulletSoundId, 1f, 0.2f);
 	}
 
 	@Override
 	public void leave() {
+		SoundManager.stopSound(Assets.BulletSoundId);
 	}
 
 	@Override

@@ -74,21 +74,34 @@ public class Assets {
 	public static final int PlayerIdleSoundId = 23;
 	public static final int PlayerDyingSoundId = 24;
 	public static final int PlayerShootSoundId = 25;
-
+	public static final int PlayerGetItemSoundId = 26;
+	public static final int PlayerWoundSoundId = 27;
+	public static final int PlayerJoiningSoundID = 28;
+	public static final int PlayerChangeColorSoundID = 29;
+	
 	public static final String PlayerRunSoundPath = "sounds/playerrun.ogg";
 	public static final String PlayerJumpSoundPath = "sounds/playerjump.ogg";
 	public static final String PlayerLandSoundPath = "sounds/playerland.ogg";
 	public static final String PlayerIdleSoundPath = "sounds/playeridle.ogg";
 	public static final String PlayerDyingSoundPath = "sounds/playerdie.ogg";
 	public static final String PlayerShootSoundPath = "sounds/playershoot.ogg";
+	public static final String PlayerGetItemSoundPath = "sounds/playergetitem.ogg";
+	public static final String PlayerWoundSoundPath = "sounds/playerwound3.ogg";
+	public static final String PlayerJoiningSoundPath = "sounds/playerjoin.ogg";
+	public static final String PlayerChangeColorPath = "sounds/playerchangecolor.ogg";
 
 	public static final int BulletSoundId = 30;
 	public static final int RocketStartSoundId = 31;
-	public static final int RocketExplodeSoundId = 32;
-	public static final int DoomsdayDeviceSoundId = 33;
-
+	public static final int RocketExplodeSoundId = 32;	
+	public static final int BeamSoundId = 34;
+	public static final int DoomsdayDeviceSoundId = 35;
+	
 	public static final String BulletSoundPath = "sounds/bullet.ogg";
 	public static final String RocketStartSoundPath = "sounds/rocketstart.ogg";
 	public static final String RocketExplodeSoundPath = "sounds/rocketexplode.ogg";
-	public static final String DoomsdayDeviceSoundPath = "sounds/doomsdaydevice.ogg";
+	public static final String DoomsdayDeviceSoundPath = "sounds/rocketstart.ogg";
+	public static final String BeamSoundPath = "sounds/beam.ogg";
+	
+	public static final int WeaponChangeColorSoundID = 60;
+	public static final String WeaponChangeColorSoundPath = "sounds/weaponchangecolor.ogg";
 }

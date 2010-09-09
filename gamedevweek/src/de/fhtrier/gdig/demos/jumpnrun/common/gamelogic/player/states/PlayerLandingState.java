@@ -9,6 +9,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
 import de.fhtrier.gdig.engine.management.Factory;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class PlayerLandingState extends PlayerAssetState {
 	
@@ -25,12 +26,14 @@ public class PlayerLandingState extends PlayerAssetState {
 	}
 
 	@Override
-	public void enter() {
+	public void enter() {		
 		anim.restart();
+		SoundManager.playSound(Assets.PlayerLandSoundId, 1f, 0.1f);
 	}
 
 	@Override
-	public void leave() {
+	public void leave() {		
+		
 	}
 
 	@Override
