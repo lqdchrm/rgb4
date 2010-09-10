@@ -15,7 +15,7 @@ public class AnimationEntity extends AssetEntity {
 	public void renderImpl(Graphics graphicContext, Image frameBuffer) {
 		if (isVisible()) {
 			graphicContext.drawAnimation(Assets().getAnimation(getAssetId()),
-					0, 0);
+					0, 0, this.getColorTint());
 		}
 		super.renderImpl(graphicContext, frameBuffer);
 	}

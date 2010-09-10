@@ -1,5 +1,8 @@
 package de.fhtrier.gdig.demos.jumpnrun;
 
+import java.awt.DisplayMode;
+import java.awt.GraphicsEnvironment;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.opengl.pbuffer.GraphicsFactory;
@@ -17,6 +20,7 @@ public class RGB4 {
 
 	public static void main(String[] args) {
 
+
 		// Parse Commandline in Constants
 		Debug debug = new Constants.Debug();
 		ControlConfig controlConfig = new Constants.ControlConfig();
@@ -28,17 +32,48 @@ public class RGB4 {
 		if (Constants.Debug.forceNoFBO)
 			GraphicsFactory.setUseFBO(false);
 
+
 		// create game
 		RGB4Game game = Lobby.createGameByArgs(args);
 
 		// initialize (gfx) settings depending on game type
 		if (game != null) {
+			
+			boolean fullscreen = false;
+
+			if (game instanceof ClientGame && Settings.USE_NATIVE_FULLSCREEN) {
+				DisplayMode dm = GraphicsEnvironment.getLocalGraphicsEnvironment()
+						.getDefaultScreenDevice().getDisplayMode();
+				
+				if (dm.getWidth() >= dm.getHeight()*1.7f)
+				{
+					Settings.SCREENWIDTH = 1280;
+					Settings.SCREENHEIGHT = 720;
+				}
+				else if (dm.getWidth() >= dm.getHeight()*1.5f)
+				{
+					Settings.SCREENWIDTH = 1280;
+					Settings.SCREENHEIGHT = 800;
+				}
+				else if (dm.getWidth() == 1280 && dm.getHeight() == 1024)
+				{
+					Settings.SCREENWIDTH = 1280;
+					Settings.SCREENHEIGHT = 1024;
+				}
+				else if (dm.getWidth() >= 1280)
+				{
+					Settings.SCREENWIDTH = 1280;
+					Settings.SCREENHEIGHT = 960;
+				}
+				
+				fullscreen = false;
+			}
 
 			try {
 
 				AppGameContainer gc = new AppGameContainer(game);
 				gc.setDisplayMode(Settings.SCREENWIDTH, Settings.SCREENHEIGHT,
-						false);
+						fullscreen);
 
 				if (game instanceof ClientGame) {
 					gc.setVSync(true);

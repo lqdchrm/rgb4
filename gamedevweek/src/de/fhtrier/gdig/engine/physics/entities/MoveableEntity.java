@@ -10,7 +10,7 @@ public class MoveableEntity extends Entity {
 	private float vel[];
 	private float acc[];
 
-	private float drag;
+	private float drag[];
 
 	/**
 	 * @param id
@@ -25,7 +25,7 @@ public class MoveableEntity extends Entity {
 		this.vel = new float[7];
 		this.acc = new float[7];
 
-		this.drag = 0.0f;
+		this.drag = new float[7];
 	}
 
 	@Override
@@ -48,9 +48,11 @@ public class MoveableEntity extends Entity {
 					// vel[i] *= (-1.0f / (drag + secs) + (1.0f / secs)) * secs;
 					// Dies ist eine alternative formel der oberen davon
 					// ausgehend das nur Positive Werte benutzt werden.
-					if (drag != 0
+					if (drag[i] != 0
 							&& Math.abs(acc[Entity.X]) < Constants.EPSILON) {
-						vel[i] *= (secs / (drag + secs));
+						if ((drag[i] + secs) != 0) {
+							vel[i] *= (secs / (drag[i] + secs));
+						}
 					}
 				}
 
@@ -90,11 +92,11 @@ public class MoveableEntity extends Entity {
 		return this.prevPos;
 	}
 
-	public float getDrag() {
+	public float[] getDrag() {
 		return drag;
 	}
 
-	public void setDrag(float drag) {
+	public void setDrag(float[] drag) {
 		this.drag = drag;
 	}
 

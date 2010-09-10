@@ -16,20 +16,24 @@ public class QuickDebugStartClient {
 	 */
 	public static void main(String[] args) {
 
-		final String host = "192.168.2.103";
+		String host = "192.168.2.103";
 		final int port = 49999;
+
+		if (args.length > 0) {
+			host = args[0];
+		}
 
 		// client
 		ClientGame clientGame = Lobby.createClient(true, host, port);
 
-		if (args.length > 0) {
+		if (args.length > 1) {
 			DebugNoMenuStarterState.isMaster = true;
 			try {
 				Thread.sleep(1500);
 			} catch (InterruptedException e) {
 			}
 		}
-
+		
 		if (clientGame != null) {
 
 			try {

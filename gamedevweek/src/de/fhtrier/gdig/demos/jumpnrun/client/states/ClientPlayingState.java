@@ -24,6 +24,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.LogicPoint;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
@@ -83,6 +84,7 @@ public class ClientPlayingState extends PlayingState {
 		// InputControl initialisieren
 		InputControl.loadKeyMapping();
 
+		// init Sound
 		SoundManager.init();
 	}
 
@@ -106,10 +108,14 @@ public class ClientPlayingState extends PlayingState {
 				// we are only spectator -> don't create player
 				setState(LocalState.PLAYING);
 			}
-
-			SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
-			// SoundManager.fadeMusic(Assets.LevelSoundtrackId, 500, 0.4f,
-			// false);
+			
+			if(Constants.GamePlayConstants.clientSound)
+			{
+				SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
+				SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
+				SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 50000, 0.2f, false);
+			}
+			
 			return true;
 		}
 
@@ -212,7 +218,7 @@ public class ClientPlayingState extends PlayingState {
 					killCommand.getPlayerId()), getLevel().getPlayer(
 					killCommand.getKillerId()));
 			EventManager.addEvent(dieEvent);
-
+			
 			Player player = getLevel().getPlayer(killCommand.getPlayerId());
 
 			player.die();
@@ -221,9 +227,14 @@ public class ClientPlayingState extends PlayingState {
 
 		if (cmd instanceof SendWon) {
 			SendWon wonCommand = (SendWon) cmd;
-
-			Event winEvent = new WonGameEvent(getLevel().getPlayer(
-					wonCommand.getWinnerId()));
+			
+			Event winEvent;
+			if (wonCommand.getWinnerType() == SendWon.winnerType_Player) {
+				winEvent = new WonGameEvent(getLevel().getPlayer(wonCommand.getWinnerId()));
+			}
+			else { // Team is Winner
+				winEvent = new WonGameEvent(Team.getTeamById(wonCommand.getWinnerId()));
+			}
 			EventManager.addEvent(winEvent);
 			return true;
 		}

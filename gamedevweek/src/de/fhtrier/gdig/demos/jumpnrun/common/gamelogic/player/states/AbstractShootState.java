@@ -13,11 +13,27 @@ import de.fhtrier.gdig.engine.sound.SoundManager;
 public class AbstractShootState extends AbstractAssetState {
 
 	private Animation anim;
-
-	public AbstractShootState(Player player, int animAssetId,
-			String animAssetPath, int entityOrder, Factory factory)
+	private Animation weaponAnim;
+	
+	public AbstractShootState(Player player, int aPlayerAnimAssetId, int bPlayerAnimAssetId,
+			String aPlayerAnimAssetPath, String bPlayerAnimAssetPath, int weaponAnimAssetId, String weaponAnimAssetPath, int entityOrder, Factory factory)
 			throws SlickException {
-		super(player, animAssetId, animAssetPath, entityOrder, factory);
+		super(player, aPlayerAnimAssetId, bPlayerAnimAssetId, aPlayerAnimAssetPath, bPlayerAnimAssetPath, weaponAnimAssetId, weaponAnimAssetPath, entityOrder, factory);
+		
+		AssetEntity e = getGfxEntity();
+
+		anim = e.Assets().getAnimation(e.getAssetId());
+		anim.setLooping(false);
+		anim.setAutoUpdate(true);
+		
+		e = getWeaponGfxEntity();
+
+		weaponAnim = e.Assets().getAnimation(e.getAssetId());
+		weaponAnim.setLooping(false);
+		weaponAnim.setAutoUpdate(true);
+	}
+	
+	public void getAnim () {
 		AssetEntity e = getGfxEntity();
 
 		anim = e.Assets().getAnimation(e.getAssetId());
@@ -27,12 +43,13 @@ public class AbstractShootState extends AbstractAssetState {
 
 	@Override
 	public void enter() {
+		getAnim ();
 		if (anim.isStopped()) {
 			anim.restart();
+			weaponAnim.restart();
 		}
 
-		// SoundManager.playSound(Assets.PlayerRunSoundId, 1f, 0.2f);
-		SoundManager.playSound(Assets.Sounds.BulletSoundId, 1f, 0.2f);
+		SoundManager.playSound(Assets.Sounds.PlayerShootSoundId, 1f, 0.5f);
 
 	}
 
@@ -47,6 +64,6 @@ public class AbstractShootState extends AbstractAssetState {
 	@Override
 	public void leave() {
 		// TODO Auto-generated method stub
-
+		
 	}
 }

@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 
+import de.fhtrier.gdig.demos.jumpnrun.client.states.ClientCreditsState;
 import de.fhtrier.gdig.demos.jumpnrun.client.states.ClientHostServerState;
 import de.fhtrier.gdig.demos.jumpnrun.client.states.ClientLobbyState;
 import de.fhtrier.gdig.demos.jumpnrun.client.states.ClientMenuState;
@@ -43,5 +44,6 @@ public class ClientGame extends RGB4Game {
 		addState(new ClientHostServerState(this));
 		addState(new ClientLobbyState());
 		addState(new ClientPlayingState());
+		addState(new ClientCreditsState());
 	}
 }

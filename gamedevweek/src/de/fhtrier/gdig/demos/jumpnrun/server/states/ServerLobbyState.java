@@ -11,12 +11,16 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryConnect;
+import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetLevel;
+import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetTeam;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryStartGame;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.ServerGame;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkLevel;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkPlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckConnect;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckNewPlayerList;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckSetLevel;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckStartGame;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
@@ -24,13 +28,14 @@ import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ClientQueryDisconnect;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
 
-public class ServerLobbyState extends BasicGameState implements
-		INetworkCommandListener {
+public class ServerLobbyState extends BasicGameState  implements
+	INetworkCommandListener {
 
 	private ServerGame serverGame;
 	public static HashMap<Integer, NetworkPlayer> players = new HashMap<Integer, NetworkPlayer>();
 	private Queue<INetworkCommand> queue;
-
+	private NetworkLevel currentLevel;	
+	
 	public ServerLobbyState(ServerGame serverGame) {
 		this.serverGame = serverGame;
 		queue = new LinkedList<INetworkCommand>();
@@ -65,35 +70,47 @@ public class ServerLobbyState extends BasicGameState implements
 				}
 			}
 		}
-
+		
 		// clear all commands even if not handled
 		queue.clear();
-
+		
 		// Networkcomponent updaten
 		NetworkComponent.getInstance().update();
 	}
-
+	
+	
+	
 	private void handleProtocolCommands(INetworkCommand data) {
-		if (data instanceof QueryConnect) {
-			String name = ((QueryConnect) data).getPlayerName();
-			NetworkComponent.getInstance().sendCommand(data.getSender(),
-					new AckConnect());
-			players.put(data.getSender(),
-					new NetworkPlayer(name, data.getSender()));
-			NetworkComponent.getInstance().sendCommand(
-					new AckNewPlayerList(players));
+		if (data instanceof QueryConnect)
+		{
+			String name = ((QueryConnect)data).getPlayerName();
+			NetworkComponent.getInstance().sendCommand(data.getSender(), new AckConnect());
+			players.put(data.getSender(), new NetworkPlayer(name, data.getSender()));
+			NetworkComponent.getInstance().sendCommand(new AckNewPlayerList(players));
+			if (currentLevel!=null)
+				NetworkComponent.getInstance().sendCommand(new AckSetLevel(currentLevel));
 		}
-
-		if (data instanceof ClientQueryDisconnect) {
+		else if (data instanceof ClientQueryDisconnect)
+		{
 			players.remove(data.getSender());
 			NetworkComponent.getInstance().sendCommand(
 					new AckNewPlayerList(players));
 		}
-
-		if (data instanceof QueryStartGame) {
+		else if (data instanceof QueryStartGame) {
 			serverGame.enterState(GameStates.PLAYING);
 			NetworkComponent.getInstance().sendCommand(new AckStartGame());
 		}
+		else if (data instanceof QuerySetTeam)
+		{
+			players.get(data.getSender()).setTeamId(((QuerySetTeam)data).getTeamID());
+			NetworkComponent.getInstance().sendCommand(new AckNewPlayerList(players));
+		}
+		else if (data instanceof QuerySetLevel)
+		{
+			currentLevel = ((QuerySetLevel)data).getNetworkLevel();
+			NetworkComponent.getInstance().sendCommand(new AckSetLevel(((QuerySetLevel)data).getNetworkLevel()));
+		}
+		
 	}
 
 	@Override
@@ -101,7 +118,7 @@ public class ServerLobbyState extends BasicGameState implements
 			throws SlickException {
 		super.enter(container, game);
 	}
-
+	
 	@Override
 	public void leave(GameContainer container, StateBasedGame game)
 			throws SlickException {

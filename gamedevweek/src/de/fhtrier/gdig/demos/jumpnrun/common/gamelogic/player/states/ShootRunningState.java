@@ -14,19 +14,21 @@ public class ShootRunningState extends AbstractShootState {
 
 	public ShootRunningState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.ShootRunningAnimId,
-				Assets.Player.ShootRunningImagePath, EntityOrder.Player,
-				factory);
+		super(player, Assets.Player.aShootRunningAnimId, Assets.Player.bShootRunningAnimId,
+				Assets.Player.aShootRunningImagePath, Assets.Player.bShootRunningImagePath, Assets.Weapon.ShootRunningAnimId,
+				Assets.Weapon.ShootRunningImagePath, EntityOrder.Player, factory);
 	}
+
 
 	@Override
 	public void update() {
-
+		super.update();
+		
 		// check if vel < threshold --> stop running
 		if (Math.abs(getPlayer().getVel()[Entity.X]) < Constants.GamePlayConstants.playerIdleTriggerSpeed) {
 			getPlayer().applyAction(PlayerActions.StopRunning);
 		}
-
+		
 		// check if currentPos < prevPos --> start falling
 		if (getPlayer().getVel()[Entity.Y] > Constants.GamePlayConstants.playerFallingTriggerSpeed) {
 			getPlayer().applyAction(PlayerActions.Fall);

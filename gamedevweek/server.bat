@@ -1,0 +1,1 @@
+java -Djava.library.path=../ext/lib/native -jar server/server.jar %1 %2 %3

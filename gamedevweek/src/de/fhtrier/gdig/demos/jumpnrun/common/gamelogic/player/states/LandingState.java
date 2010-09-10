@@ -12,32 +12,47 @@ import de.fhtrier.gdig.engine.management.Factory;
 import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class LandingState extends AbstractAssetState {
-
+	
 	private Animation anim;
-
-	public LandingState(Player player, Factory factory) throws SlickException {
-		super(player, Assets.Player.LandAnimId,
-				Assets.Player.LandAnimImagePath, EntityOrder.Player, factory);
-
+	private Animation weaponAnim;
+	
+	public LandingState(Player player, Factory factory)
+			throws SlickException {
+		super(player, Assets.Player.aLandAnimId, Assets.Player.bLandAnimId, Assets.Player.aLandAnimImagePath, Assets.Player.bLandAnimImagePath, Assets.Weapon.LandAnimId, Assets.Weapon.LandAnimImagePath, EntityOrder.Player, factory);
+	
 		AssetEntity e = getGfxEntity();
-
+		
+		anim = e.Assets().getAnimation(e.getAssetId());
+		anim.setLooping(false);
+		
+		e = getWeaponGfxEntity();
+		
+		weaponAnim = e.Assets().getAnimation(e.getAssetId());
+		weaponAnim.setLooping(false);
+	}
+	
+	public void getAnim() {
+		AssetEntity e = getGfxEntity();
+		
 		anim = e.Assets().getAnimation(e.getAssetId());
 		anim.setLooping(false);
 	}
 
 	@Override
-	public void enter() {
+	public void enter() {	
+		getAnim();
 		anim.restart();
-		SoundManager.playSound(Assets.Sounds.PlayerLandSoundId, 1f, 0.1f);
+		weaponAnim.restart();
+		SoundManager.playSound(Assets.Sounds.PlayerLandSoundId, 1f, 0.5f);
 	}
 
 	@Override
-	public void leave() {
-
+	public void leave() {		
+		
 	}
 
 	@Override
-	public void update() {
+	public void update() {	
 
 		// check for anim end
 		if (anim.isStopped()) {

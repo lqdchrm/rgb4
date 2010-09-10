@@ -18,9 +18,13 @@ public class QuickDebugStartServer {
 	public static void main(String[] args) {
 
 		final String serverName = "Testserver";
-		final String host = "192.168.2.103";
+		String host = "192.168.2.103";
 		final int port = 49999;
 
+		if (args.length==1) {
+			host = args[0];
+		}
+		
 		InterfaceAddress ni = NetworkHelper.getInterfaceByIp(host);
 		ServerGame serverGame = new ServerGame(serverName, ni, port);
 
