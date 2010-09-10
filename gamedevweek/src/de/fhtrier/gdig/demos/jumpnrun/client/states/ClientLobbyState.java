@@ -83,7 +83,7 @@ public class ClientLobbyState extends NiftyGameState implements
 		if (files != null) {
 			for (int i = 0; i < files.length; i++) {
 				String fileName = files[i].getName();
-				if (files[i].isDirectory() && fileName.startsWith("level")) {
+				if (files[i].isDirectory() && fileName.startsWith("Level")) {
 					levels.add(new NetworkLevel(0, "content/rgb4/"+fileName, formatLevelname(fileName)));
 				}
 			}

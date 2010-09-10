@@ -2,7 +2,7 @@ package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states;
 
 import javax.swing.text.AbstractDocument.Content;
 
-import org.GNOME.Accessibility.ContentStream;
+//import org.GNOME.Accessibility.ContentStream;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
