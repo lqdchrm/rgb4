@@ -5,15 +5,13 @@ public class Assets {
 	// Config
 	public static class Config {
 		public static final String AssetGuiPath = "content/rgb4/gui";
-		public static final String AssetManagerPath = "content/rgb4/publish/";
+		public static final String AssetManagerPath = "content/rgb4/level1/";
 		public static final String AssetManagerFallbackPath = "content/rgb4/fallback/";
 		public static final String GameTitle = "RGB 4 - Der Letzte macht das Licht aus";
 	}
 
 	// Level
 	public static class Level {
-		public static final int BackgroundImageId = 1;
-		public static final int MiddlegroundImageId = 2;
 		public static final int TileMapId = 3;
 	}
 

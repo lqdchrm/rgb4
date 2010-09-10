@@ -1,5 +1,6 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.states;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -72,15 +73,21 @@ public abstract class PlayingState extends BasicGameState implements
 		frameBuffer = new Image(Settings.SCREENWIDTH, Settings.SCREENHEIGHT);
 	}
 
+	
+	
 	@Override
 	public void render(final GameContainer container,
 			final StateBasedGame game, final Graphics graphicContext)
 			throws SlickException
 	{		
+		frameBuffer.getGraphics().setColor(Color.black);
+		frameBuffer.getGraphics().fillRect(0, 0, Settings.SCREENWIDTH, Settings.SCREENHEIGHT);
+
 		Level level = getLevel();
 		
 		if (level != null)
 		{
+		
 			level.render(frameBuffer.getGraphics(), frameBuffer);
 			
 			graphicContext.drawImage(frameBuffer, 0, 0);

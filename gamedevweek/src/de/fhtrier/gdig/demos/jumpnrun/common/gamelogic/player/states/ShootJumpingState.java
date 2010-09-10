@@ -19,6 +19,7 @@ public class ShootJumpingState extends AbstractShootState {
 
 	@Override
 	public void update() {
+		super.update();
 		
 		// check if landed
 		if (getPlayer().isOnGround()) {
