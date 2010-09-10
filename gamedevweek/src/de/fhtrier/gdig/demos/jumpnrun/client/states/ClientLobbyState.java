@@ -63,6 +63,14 @@ public class ClientLobbyState extends NiftyGameState implements
 	private TextRenderer guiCurrentLevelRenderer;
 	private Element guiButtonPanel;
 	
+	public String formatLevelname (String levelName) {
+		String helpString = levelName.substring(6);
+		
+		if (helpString != "")
+			return helpString;
+		return levelName;
+	}
+	
 	public void readLevels(File dir, ArrayList<NetworkLevel> levels) {
 
 		File[] files = dir.listFiles();
@@ -70,7 +78,7 @@ public class ClientLobbyState extends NiftyGameState implements
 			for (int i = 0; i < files.length; i++) {
 				String fileName = files[i].getName();
 				if (files[i].isDirectory() && fileName.startsWith("level")) {
-					levels.add(new NetworkLevel(0, "content/rgb4/"+fileName, fileName));
+					levels.add(new NetworkLevel(0, "content/rgb4/"+fileName, formatLevelname(fileName)));
 				}
 			}
 		}
