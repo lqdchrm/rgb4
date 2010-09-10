@@ -16,9 +16,11 @@ public class StateColor {
 	 * Creates a new Color Object matching the Color for the specified
 	 * Color-Index.
 	 * 
-	 * @param colorConst The ColorIndex (e.g. StateColor.BLACK)
-	 * @return A new Color Object 
-	 * @throws IllegalArgumentException If an invalid Index is specified
+	 * @param colorConst
+	 *            The ColorIndex (e.g. StateColor.BLACK)
+	 * @return A new Color Object
+	 * @throws IllegalArgumentException
+	 *             If an invalid Index is specified
 	 */
 	public static Color constIntoColor(int colorConst)
 			throws IllegalArgumentException {

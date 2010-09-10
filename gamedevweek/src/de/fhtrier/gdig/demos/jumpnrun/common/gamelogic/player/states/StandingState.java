@@ -12,10 +12,11 @@ import de.fhtrier.gdig.engine.management.Factory;
 
 public class StandingState extends AbstractAssetState {
 
-	public StandingState(Player player, Factory factory)
-			throws SlickException {
-		super(player, Assets.Player.StandingAnimId, Assets.Player.StandingAnimImagePath, EntityOrder.Player, factory);
-	
+	public StandingState(Player player, Factory factory) throws SlickException {
+		super(player, Assets.Player.StandingAnimId,
+				Assets.Player.StandingAnimImagePath, EntityOrder.Player,
+				factory);
+
 	}
 
 	@Override

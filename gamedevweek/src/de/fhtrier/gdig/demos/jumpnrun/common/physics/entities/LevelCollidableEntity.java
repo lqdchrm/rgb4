@@ -43,7 +43,7 @@ public class LevelCollidableEntity extends CollidableEntity {
 	 * 
 	 * @return transformed Shape
 	 */
-	private Shape getTransformedBounds() {
+	public Shape getTransformedBounds() {
 		return this.getBounds().transform(
 				Transform.createTranslateTransform(this.getData()[Entity.X],
 						this.getData()[Entity.Y]));
@@ -120,11 +120,11 @@ public class LevelCollidableEntity extends CollidableEntity {
 											this.getTransformedBounds());
 							if (level != null
 									&& (intersectionDepth[Entity.X] != 0 || intersectionDepth[Entity.Y] != 0)) {
-								
+
 								if (Constants.Debug.tileMapLogicDebug) {
 									Log.debug("Colission with: " + actionTileId);
 								}
-								
+
 								actionTileId -= level.firstLogicGID;
 								++actionTileId;
 								if (actionTileId > 32 && actionTileId <= 64) {

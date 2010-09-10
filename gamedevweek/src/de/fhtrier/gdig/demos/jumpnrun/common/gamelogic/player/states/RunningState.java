@@ -13,8 +13,7 @@ import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class RunningState extends AbstractAssetState {
 
-	public RunningState(Player player, Factory factory)
-			throws SlickException {
+	public RunningState(Player player, Factory factory) throws SlickException {
 		super(player, Assets.Player.RunningAnimId,
 				Assets.Player.RunningImagePath, EntityOrder.Player, factory);
 	}
@@ -30,13 +29,13 @@ public class RunningState extends AbstractAssetState {
 	}
 
 	@Override
-	public void update() {	
-		
+	public void update() {
+
 		// check if vel < threshold --> stop running
 		if (Math.abs(getPlayer().getVel()[Entity.X]) < Constants.GamePlayConstants.playerIdleTriggerSpeed) {
 			getPlayer().applyAction(PlayerActions.StopRunning);
 		}
-		
+
 		// check if currentPos < prevPos --> start falling
 		if (getPlayer().getVel()[Entity.Y] > Constants.GamePlayConstants.playerFallingTriggerSpeed) {
 			getPlayer().applyAction(PlayerActions.Fall);

@@ -4,21 +4,25 @@ import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 
 public class PlayerDiedEvent extends Event {
-	
+
 	private Player player;
 	private Player killer;
-	
-	public PlayerDiedEvent (Player player, Player killer) {
+
+	public PlayerDiedEvent(Player player, Player killer) {
 		super();
-		
+
 		this.player = player;
 		this.killer = killer;
 	}
-	
-	public void update () {
+
+	@Override
+	public void update() {
 		player.die();
-		killer.getPlayerStats().increaseKills();
-		Team.getTeamById(killer.getPlayerCondition().teamId).increaseKills();
+		if (killer != null) {
+			killer.getPlayerStats().increaseKills();
+			Team.getTeamById(killer.getPlayerCondition().teamId)
+					.increaseKills();
+		}
 	}
 
 }

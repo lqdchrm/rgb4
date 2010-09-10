@@ -12,6 +12,8 @@ import org.newdawn.slick.SlickException;
 import de.fhtrier.gdig.demos.jumpnrun.client.ClientGame;
 import de.fhtrier.gdig.demos.jumpnrun.client.states.ClientPlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.client.states.debug.DebugNoMenuStarterState;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.NetworkConfig;
 import de.fhtrier.gdig.demos.jumpnrun.server.ServerGame;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkHelper;
 import de.fhtrier.gdig.engine.network.INetworkLobby;
@@ -34,11 +36,11 @@ public class Lobby extends JDialog {
 		return new ServerGame(serverName, ni, port);
 	}
 
-	public static ClientGame createClient(boolean debug, final String ip, final int port) {
+	public static ClientGame createClient(boolean debug, final String ip,
+			final int port) {
 
 		if (debug) {
-			return new ClientGame()
-			{
+			return new ClientGame() {
 
 				@Override
 				public void initStatesList(GameContainer container)
@@ -46,17 +48,43 @@ public class Lobby extends JDialog {
 					addState(new DebugNoMenuStarterState(ip, port));
 					addState(new ClientPlayingState());
 				}
-				
+
 			};
 
 		}
-		
+
 		return new ClientGame();
 	}
 
 	public static RGB4Game createGameByArgs(String[] args) {
 
-		return createGameViaDialog(); // via Dialog
+		String address = "";
+
+		NetworkConfig networkConfig = new Constants.NetworkConfig();
+		networkConfig.parseCommandLine(args);
+
+		if (networkConfig.isSpectator) {
+			ClientGame.isSpectator = true; // assume we are client in spectator
+		}
+
+		if (networkConfig.isServer) {
+			List<InterfaceAddress> interfaces = NetworkHelper.getInterfaces();
+
+			InterfaceAddress ni = null;
+
+			for (int x = 0; x < interfaces.size(); x++) {
+				if (interfaces.get(x).getAddress().getHostAddress()
+						.contains("127.0.0.1"))
+					ni = interfaces.get(x);
+			}
+
+			return createServer("My Server", ni, (networkConfig.port));
+
+		} else if (networkConfig.isClient || networkConfig.isSpectator) {
+			return createClient(false, "", 0);
+		} else {
+			return createGameViaDialog(); // via Dialog
+		}
 
 	}
 
@@ -83,20 +111,19 @@ public class Lobby extends JDialog {
 	}
 
 	public static ClientGame configDebugClient() {
-		
+
 		List<InterfaceAddress> interfaces = NetworkHelper.getInterfaces();
 
 		Object[] serverListe = new Object[interfaces.size()];
 
 		for (int x = 0; x < interfaces.size(); x++) {
-			serverListe[x] = interfaces.get(x).getAddress()
-					.getHostAddress();
+			serverListe[x] = interfaces.get(x).getAddress().getHostAddress();
 		}
 
 		String Interface = (String) JOptionPane.showInputDialog(null,
 				"Please select interface to scan for servers",
-				"You are Client", JOptionPane.PLAIN_MESSAGE, null,
-				serverListe, null);
+				"You are Client", JOptionPane.PLAIN_MESSAGE, null, serverListe,
+				null);
 
 		InterfaceAddress ni = null;
 
@@ -105,7 +132,7 @@ public class Lobby extends JDialog {
 					.getHostAddress()))
 				ni = interfaces.get(x);
 		}
-		
+
 		INetworkLobby networkLobby = new NetworkLobby();
 		networkLobby.getServers(ni);
 
@@ -126,8 +153,7 @@ public class Lobby extends JDialog {
 		// if client ask for server ip and port number
 		String strServer = (String) JOptionPane.showInputDialog(null,
 				"Please select server", "You are Client",
-				JOptionPane.PLAIN_MESSAGE, null, servers,
-				ClientGame.nameOrIp);
+				JOptionPane.PLAIN_MESSAGE, null, servers, ClientGame.nameOrIp);
 
 		String ip = "127.0.0.1";
 		int port = 49999;
@@ -149,8 +175,7 @@ public class Lobby extends JDialog {
 		Object[] serverListe = new Object[interfaces.size()];
 
 		for (int x = 0; x < interfaces.size(); x++) {
-			serverListe[x] = interfaces.get(x).getAddress()
-					.getHostAddress();
+			serverListe[x] = interfaces.get(x).getAddress().getHostAddress();
 		}
 
 		String Interface = (String) JOptionPane.showInputDialog(null,

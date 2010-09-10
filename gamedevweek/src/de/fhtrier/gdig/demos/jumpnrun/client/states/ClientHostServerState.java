@@ -27,12 +27,13 @@ import de.lessvoid.nifty.slick.NiftyGameState;
 import de.lessvoid.nifty.tools.resourceloader.FileSystemLocation;
 import de.lessvoid.nifty.tools.resourceloader.ResourceLoader;
 
-public class ClientHostServerState extends NiftyGameState implements ScreenController {
+public class ClientHostServerState extends NiftyGameState implements
+		ScreenController {
 
 	private static final String CROSSHAIR_PNG = "crosshair.png";
 	public static String menuNiftyXMLFile = "server_settings.xml";
 	public static String menuAssetPath = Assets.Config.AssetGuiPath;
-	
+
 	private StateBasedGame game;
 	private TextFieldControl portControl;
 	private TextFieldControl serverNameControl;
@@ -44,7 +45,7 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 
 	private List<InterfaceAddress> interfaces;
 	private int selectedInterfaceIndex = -1;
-	
+
 	public ClientHostServerState(final StateBasedGame game) {
 		super(GameStates.SERVER_SETTINGS);
 		this.game = game;
@@ -73,16 +74,18 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 	public void enter(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		super.enter(container, game);
-	
+
 		interfaces = NetworkHelper.getInterfaces();
 		drawInterfaces();
 	}
-	
+
 	@Override
 	public void bind(Nifty arg0, Screen screen) {
 		portControl = screen.findControl("portnumber", TextFieldControl.class);
-		serverNameControl = screen.findControl("servername", TextFieldControl.class);
-		playerNameControl = screen.findControl("playername", TextFieldControl.class);
+		serverNameControl = screen.findControl("servername",
+				TextFieldControl.class);
+		playerNameControl = screen.findControl("playername",
+				TextFieldControl.class);
 		guiInterfacePanel = screen.findElementByName("interfaces");
 	}
 
@@ -90,73 +93,73 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 	public void onEndScreen() {
 		// left intentionally blank
 	}
-	
+
 	@Override
 	public void leave(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		super.leave(container, game);
-		((ClientLobbyState)game.getState(GameStates.CLIENT_LOBBY)).setGameCreator(true);
+		((ClientLobbyState) game.getState(GameStates.CLIENT_LOBBY))
+				.setGameCreator(true);
 	}
 
 	@Override
 	public void onStartScreen() {
 		// left intentionally blank
 	}
-	
+
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int d)
 			throws SlickException {
 		// TODO Auto-generated method stub
 		super.update(container, game, d);
-		
-		if(connecting) {
+
+		if (connecting) {
 			NetworkComponent.getInstance().update();
 		}
-		if(NetworkComponent.getInstance().getNetworkId() != -1) {
-			NetworkComponent.getInstance().sendCommand(new QueryConnect(playerNameControl.getText()));
+		if (NetworkComponent.getInstance().getNetworkId() != -1) {
+			NetworkComponent.getInstance().sendCommand(
+					new QueryConnect(playerNameControl.getText()));
 			game.enterState(GameStates.CLIENT_LOBBY);
 			connecting = false;
 		}
 	}
-	
+
 	public void createServer() {
-		
+
 		if (selectedInterfaceIndex == -1) {
 			return;
 		}
-		
-		if(!serverStarting){
+
+		if (!serverStarting) {
 			serverStarting = true;
-			
-			
+
 			// TODO spawn server
 
-			
 			// connect as client master
 			connect();
 		} else {
 			Log.debug("Allready tried creating a server");
 		}
 	}
-	
+
 	private void connect() {
-		String currentConnectionIp = interfaces.get(selectedInterfaceIndex).getAddress().getHostAddress();
+		String currentConnectionIp = interfaces.get(selectedInterfaceIndex)
+				.getAddress().getHostAddress();
 		int currentConnectionPort = Integer.parseInt(portControl.getText());
-		
+
 		if (currentConnectionIp != null && !connecting) {
 			NetworkComponent.getInstance().connect(
 					currentConnectionIp.replace('/', ' ').trim(),
 					currentConnectionPort);
 			connecting = true;
-		}		
+		}
 	}
-	
 
 	public void back() {
-		game.enterState(GameStates.MENU,new FadeOutTransition(),new FadeInTransition());
-	}	
-	
-	
+		game.enterState(GameStates.MENU, new FadeOutTransition(),
+				new FadeInTransition());
+	}
+
 	public void drawInterfaces() {
 		// interfaces.add("server "+new Date().getTime());
 		clearList(guiInterfacePanel);
@@ -173,13 +176,14 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 					guiInterfacePanel);
 		}
 	}
+
 	public void chooseInterface(String id) {
-		// clearList(guiServerPanel);		
-		
+		// clearList(guiServerPanel);
+
 		// set interface as active
 		selectedInterfaceIndex = Integer.parseInt(id);
 	}
-	
+
 	private void clearList(Element e) {
 		for (Element child : e.getElements()) {
 			child.markForRemoval();

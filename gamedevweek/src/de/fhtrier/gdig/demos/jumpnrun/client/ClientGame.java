@@ -15,7 +15,6 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 
-
 public class ClientGame extends RGB4Game {
 	public static int port = 49999;
 	public static String nameOrIp = "localhost";
@@ -30,14 +29,11 @@ public class ClientGame extends RGB4Game {
 		Constants.GamePlayConstants c1 = new Constants.GamePlayConstants();
 
 		Constants.ControlConfig c2 = new Constants.ControlConfig();
-		
+
 		Constants.Debug c3 = new Constants.Debug();
-		
-		c1.showEditor("ClientSettings",
-				new JPanel[] {
-					c1.getEdittingPanel(),
-					c2.getEdittingPanel(),
-					c3.getEdittingPanel()});
+
+		c1.showEditor("ClientSettings", new JPanel[] { c1.getEdittingPanel(),
+				c2.getEdittingPanel(), c3.getEdittingPanel() });
 	}
 
 	@Override

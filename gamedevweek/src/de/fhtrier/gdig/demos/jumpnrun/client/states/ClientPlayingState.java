@@ -65,7 +65,7 @@ public class ClientPlayingState extends PlayingState {
 	private ServerData recv;
 	private ClientData send;
 
-	public ClientPlayingState() throws SlickException {
+	public ClientPlayingState() {
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ClientData();
 	}
@@ -106,9 +106,10 @@ public class ClientPlayingState extends PlayingState {
 				// we are only spectator -> don't create player
 				setState(LocalState.PLAYING);
 			}
-			
+
 			SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
-			//SoundManager.fadeMusic(Assets.LevelSoundtrackId, 500, 0.4f, false);
+			// SoundManager.fadeMusic(Assets.LevelSoundtrackId, 500, 0.4f,
+			// false);
 			return true;
 		}
 
@@ -159,11 +160,11 @@ public class ClientPlayingState extends PlayingState {
 					&& id == getLevel().getCurrentPlayer().getId()) {
 				getLevel().setCurrentPlayer(-1);
 			}
-			
 
 			// robindi: Bugfix, removeEntity from CollisionManager!
-			CollisionManager.removeEntity((CollidableEntity) getFactory().getEntity(id));
-			
+			CollisionManager.removeEntity((CollidableEntity) getFactory()
+					.getEntity(id));
+
 			getLevel().remove(getFactory().getEntity(id));
 
 			// remove Entity recursively from Factory
@@ -171,11 +172,11 @@ public class ClientPlayingState extends PlayingState {
 
 			return true;
 		}
-		
+
 		// DoPlaySound... well it just does what it says
 		if (cmd instanceof DoPlaySound) {
 			DoPlaySound dps = (DoPlaySound) cmd;
-			
+
 			SoundManager.playSound(dps.getSoundAssetId());
 			return true;
 		}
@@ -206,8 +207,10 @@ public class ClientPlayingState extends PlayingState {
 
 		if (cmd instanceof SendKill) {
 			SendKill killCommand = (SendKill) cmd;
-			
-			Event dieEvent = new PlayerDiedEvent(getLevel().getPlayer(killCommand.getPlayerId()), getLevel().getPlayer(killCommand.getKillerId()));
+
+			Event dieEvent = new PlayerDiedEvent(getLevel().getPlayer(
+					killCommand.getPlayerId()), getLevel().getPlayer(
+					killCommand.getKillerId()));
 			EventManager.addEvent(dieEvent);
 
 			Player player = getLevel().getPlayer(killCommand.getPlayerId());
@@ -218,8 +221,9 @@ public class ClientPlayingState extends PlayingState {
 
 		if (cmd instanceof SendWon) {
 			SendWon wonCommand = (SendWon) cmd;
-			
-			Event winEvent = new WonGameEvent(getLevel().getPlayer(wonCommand.getWinnerId()));
+
+			Event winEvent = new WonGameEvent(getLevel().getPlayer(
+					wonCommand.getWinnerId()));
 			EventManager.addEvent(winEvent);
 			return true;
 		}

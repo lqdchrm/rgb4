@@ -5,20 +5,12 @@ import java.util.List;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
-import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
-import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
-import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
-import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
 import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
@@ -45,7 +37,7 @@ public class Bullet extends LevelCollidableEntity {
 
 		bullet.setVisible(true);
 		add(bullet);
-		
+
 		// physics
 		// X Y OX OY SX SY ROT
 		initData(new float[] { 200, 200, 24, 24, 1, 1, 0 }); // pos +
@@ -82,35 +74,10 @@ public class Bullet extends LevelCollidableEntity {
 		for (CollidableEntity collidableEntity : iColideWith) {
 			if (collidableEntity instanceof Player) {
 				Player otherPlayer = (Player) collidableEntity;
-				if (otherPlayer != owner && otherPlayer.getPlayerCondition().health > 0.01f) {
-					if (otherPlayer.getPlayerCondition().color != this.color) {
-						otherPlayer.getPlayerCondition().health -= owner
-								.getPlayerCondition().damage;
-						
-
-						if (otherPlayer.getPlayerCondition().health <= 0.01f) {
-							NetworkComponent.getInstance().sendCommand(new SendKill(otherPlayer.getId(),owner.getId()));
-							
-							Event dieEvent = new PlayerDiedEvent(otherPlayer,owner);
-							dieEvent.update();
-						}
-						
-						if (owner.getPlayerStats().getKills() >= Constants.GamePlayConstants.winningKills) {
-							NetworkComponent.getInstance().sendCommand(new SendWon(owner.getId()));
-							
-							Event wonEvent = new WonGameEvent (owner);
-							EventManager.addEvent(wonEvent);
-						}
-					} else {
-						// player gets stronger when hit by bullet of the same
-						// color!
-						otherPlayer.getPlayerCondition().health += owner
-								.getPlayerCondition().damage;
-					}
-					
-					NetworkComponent.getInstance().sendCommand(new AckPlayerCondition(otherPlayer.getId(), otherPlayer.getPlayerCondition()));
-					
-					this.die();
+				if (otherPlayer != owner) {
+					otherPlayer.doDamage(this.color,
+							owner.getPlayerCondition().damage, owner);
+					die();
 				}
 			}
 		}

@@ -49,6 +49,23 @@ public class ServerPlayingState extends PlayingState {
 		this.send = new ServerData();
 	}
 
+	// @Override
+	// public void init(GameContainer arg0, StateBasedGame arg1)
+	// throws SlickException
+	// {
+	// super.init(arg0, arg1);
+	// Level level = (Level) factory.getEntity(this.levelId);
+	// level.serverInit();
+	//
+	// }
+
+	@Override
+	public void enter(GameContainer container, StateBasedGame game)
+			throws SlickException {
+		super.enter(container, game);
+		((Level) factory.getEntity(levelId)).serverInit();
+	}
+
 	private boolean handlePlayerActions(QueryAction actionCmd) {
 		Entity e;
 		int playerId = networkId2Player.get(actionCmd.getSender());
@@ -82,14 +99,14 @@ public class ServerPlayingState extends PlayingState {
 			bullet.getData()[Entity.X] = player.getData()[Entity.X] + 40;
 			bullet.getData()[Entity.Y] = player.getData()[Entity.Y] + 80;
 			bullet.getVel()[Entity.X] = player.getVel()[Entity.X]
-			        + (player.getData()[Entity.SCALE_X] == -1 ? Constants.GamePlayConstants.shotSpeed
-			                                            	: -Constants.GamePlayConstants.shotSpeed);
-			
-			if(player.getData()[Entity.SCALE_X] == -1) // Right
-			bullet.getData()[Entity.SCALE_X] = -1;
-			
-			else if(player.getData()[Entity.SCALE_X] == 1) // Left
-			bullet.getData()[Entity.SCALE_X] = 1;
+					+ (player.getData()[Entity.SCALE_X] == -1 ? Constants.GamePlayConstants.shotSpeed
+							: -Constants.GamePlayConstants.shotSpeed);
+
+			if (player.getData()[Entity.SCALE_X] == -1) // Right
+				bullet.getData()[Entity.SCALE_X] = -1;
+
+			else if (player.getData()[Entity.SCALE_X] == 1) // Left
+				bullet.getData()[Entity.SCALE_X] = 1;
 
 			return true;
 		case PLAYERCOLOR:
@@ -180,7 +197,7 @@ public class ServerPlayingState extends PlayingState {
 			if (type == EntityType.PLAYER) {
 				int id = this.getFactory().createEntity(type);
 
-				Player e = (Player)getFactory().getEntity(id);
+				Player e = (Player) getFactory().getEntity(id);
 				e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 				getLevel().add(e);
 
@@ -195,12 +212,14 @@ public class ServerPlayingState extends PlayingState {
 
 				// remember, which networkId identifies which player
 				networkId2Player.put(cmd.getSender(), id);
+
 				player2NetworkId.put(id, cmd.getSender());
-				
-				String name = ServerLobbyState.players.get(cmd.getSender()).getPlayerName();
-				
+
+				String name = ServerLobbyState.players.get(cmd.getSender())
+						.getPlayerName();
+
 				e.getPlayerCondition().name = name;
-				
+
 			} else {
 				throw new RuntimeException(
 						"Client side entity creation only allowed for type PLAYER");

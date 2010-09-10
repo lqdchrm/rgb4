@@ -17,26 +17,25 @@ import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 
-public class DebugNoMenuStarterState extends BasicGameState implements INetworkCommandListener {
-
+public class DebugNoMenuStarterState extends BasicGameState implements
+		INetworkCommandListener {
 
 	private final int NOT_CONNECTED = 1;
 	private final int CONNECTING = 2;
 	private final int CONNECTED = 3;
 	private final int REQUESTED_GAME_START = 4;
-	
+
 	private int status = NOT_CONNECTED;
-	
+
 	private Queue<INetworkCommand> queue;
-	
+
 	private String ip;
 	private int port;
-	
+
 	public static boolean isMaster = false;
-	
-	
+
 	public DebugNoMenuStarterState(String ip, int port) {
-		super();	
+		super();
 		queue = new LinkedList<INetworkCommand>();
 		this.ip = ip;
 		this.port = port;
@@ -56,39 +55,37 @@ public class DebugNoMenuStarterState extends BasicGameState implements INetworkC
 	public void render(GameContainer arg0, StateBasedGame arg1, Graphics arg2)
 			throws SlickException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int arg2)
 			throws SlickException {
-		
+
 		// connect to standard-server
 		if (status == NOT_CONNECTED) {
 			NetworkComponent.getInstance().connect(ip, port);
 			status = CONNECTING;
 		}
-		
+
 		// wait for Network-ID
 		if (status >= CONNECTING) {
 			NetworkComponent.getInstance().update();
 		}
-		
+
 		// if received network-id register player to server
-		if(NetworkComponent.getInstance().getNetworkId() != -1) {
-			NetworkComponent.getInstance().sendCommand(new QueryConnect("Player"));
+		if (NetworkComponent.getInstance().getNetworkId() != -1) {
+			NetworkComponent.getInstance().sendCommand(
+					new QueryConnect("Player"));
 			status = CONNECTED;
 		}
-		
-		if (status==CONNECTED && isMaster)
-		{
+
+		if (status == CONNECTED && isMaster) {
 			NetworkComponent.getInstance().sendCommand(new QueryStartGame());
 			status = REQUESTED_GAME_START;
 		}
-		
-		for (INetworkCommand cmd : queue)
-		{
+
+		for (INetworkCommand cmd : queue) {
 			if (cmd instanceof AckStartGame) {
 				game.enterState(GameStates.PLAYING);
 			}
@@ -99,9 +96,7 @@ public class DebugNoMenuStarterState extends BasicGameState implements INetworkC
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
-	
 }

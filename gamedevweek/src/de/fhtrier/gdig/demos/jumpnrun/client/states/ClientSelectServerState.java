@@ -46,7 +46,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 	private INetworkLobby networkLobby;
 	private boolean connecting = false;
 
-//	private boolean startConnect = false;
+	// private boolean startConnect = false;
 	private String currentConnectionIp = null;
 	private int currentConnectionPort = -1;
 
@@ -91,10 +91,10 @@ public class ClientSelectServerState extends NiftyGameState implements
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		super.init(container, game);
-		
+
 		serverList = new ArrayList<NetworkServerObject>();
 		serverMutex = new Semaphore(1);
-		
+
 		// add asset-folder to the ResourceLocators of nifty and slick2d
 		ResourceLoader.addResourceLocation(new FileSystemLocation(new File(
 				menuAssetPath)));
@@ -136,30 +136,31 @@ public class ClientSelectServerState extends NiftyGameState implements
 			game.enterState(GameStates.CLIENT_LOBBY);
 			connecting = false;
 		}
-		
+
 		try {
 			serverMutex.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		for ( NetworkServerObject server : serverList )
-		{
-			CreateButtonControl createButton = new CreateButtonControl("mybutton");
+
+		for (NetworkServerObject server : serverList) {
+			CreateButtonControl createButton = new CreateButtonControl(
+					"mybutton");
 			createButton.setHeight("30px");
 			createButton.setWidth("100%");
-			createButton
-					.set("label", server.getName() + "(" + server.getIp() + ")");
+			createButton.set("label", server.getName() + "(" + server.getIp()
+					+ ")");
 			createButton.setAlign("left");
 			// TODO setin real values
-			createButton.setInteractOnClick("chooseServer(" + server.getIp() + ","
-					+ server.getPort() + ")");
-			createButton.create(nifty, nifty.getCurrentScreen(), guiServerPanel);	
+			createButton.setInteractOnClick("chooseServer(" + server.getIp()
+					+ "," + server.getPort() + ")");
+			createButton
+					.create(nifty, nifty.getCurrentScreen(), guiServerPanel);
 		}
-		
+
 		serverList.clear();
-		
+
 		serverMutex.release();
 	}
 
@@ -202,7 +203,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		serverList.add( server );
+		serverList.add(server);
 		serverMutex.release();
 	}
 

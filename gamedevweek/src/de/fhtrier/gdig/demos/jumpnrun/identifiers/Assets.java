@@ -67,6 +67,10 @@ public class Assets {
 		public static final String GlowImagePath = "shader/weaponglow.png";
 	}
 
+	// Doomsday
+	public static final int DoomsdayBigExplosionImageId = 43;
+	public static final String DoomsdayBigExplosionImagePath = "sprites/items/doom.png";
+
 	/* Sounds */
 	public static class Sounds {
 		public static final int LevelSoundtrackId = 1;

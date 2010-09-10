@@ -52,7 +52,6 @@ public class Level extends MoveableEntity {
 
 	public Level(int id, GameFactory factory) throws SlickException {
 		super(id, EntityType.LEVEL);
-
 		this.currentPlayerId = -1;
 
 		this.factory = factory;
@@ -78,8 +77,9 @@ public class Level extends MoveableEntity {
 		add(this.backgroundImage);
 
 		this.middlegroundImage = factory.createImageEntity(
-				Assets.Level.MiddlegroundImageId,
-				Assets.Level.MiddlegroundImageId, assets);
+
+		Assets.Level.MiddlegroundImageId, Assets.Level.MiddlegroundImageId,
+				assets);
 		this.middlegroundImage.setVisible(true);
 		add(this.middlegroundImage);
 
@@ -339,7 +339,8 @@ public class Level extends MoveableEntity {
 		}
 		// Right
 		if (getData()[X] < -this.groundMap.getWidth()
-				* this.groundMap.getTileWidth() + Settings.SCREENWIDTH) {
+
+		* this.groundMap.getTileWidth() + Settings.SCREENWIDTH) {
 			getData()[X] = -this.groundMap.getWidth()
 					* this.groundMap.getTileWidth() + Settings.SCREENHEIGHT;
 			getVel()[X] = 0.0f;
@@ -465,11 +466,57 @@ public class Level extends MoveableEntity {
 	public Entity add(Entity e) {
 		Entity result = super.add(e);
 
-		// tell player that he belongs to level
 		if (e instanceof LevelCollidableEntity) {
 			((LevelCollidableEntity) e).setLevel(this);
 		}
+		if (e instanceof DoomsdayDevice) {
+			((DoomsdayDevice) e).setLevel(this);
+		}
 
 		return result;
+	}
+
+	/**
+	 * Returns the size in pixel
+	 * 
+	 * @return
+	 */
+	public int getWidth() {
+		return getMap().getWidth() * getMap().getTileWidth();
+	}
+
+	/**
+	 * Returns the size in pixel
+	 * 
+	 * @return
+	 */
+	public int getHeight() {
+		return getMap().getHeight() * getMap().getTileHeight();
+	}
+
+	public AssetMgr getAssets() {
+		return assets;
+	}
+
+	/**
+	 * This is to Inelize Entetys in the Level. only the Server do this.
+	 */
+	public void serverInit() {
+		// TODO Wie kann ich mit der Factory DoomsdayDevices erstellen mit
+		// assetfactory und allem drum und dran.
+
+		int domsDayDeviceID = factory.createEntity(EntityType.DOOMSDAYDEVICE);
+		DoomsdayDevice doomesdaydevice = (DoomsdayDevice) factory
+				.getEntity(domsDayDeviceID);
+		add(doomesdaydevice);
+		doomesdaydevice.setActive(true);
+		doomesdaydevice.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+		doomesdaydevice.getData()[X] = this.getWidth() >> 1;
+		doomesdaydevice.getData()[Y] = this.getHeight() >> 1;
+		doomesdaydevice.initServer();
+		//
+		// DoCreateEntity command = new DoCreateEntity(domsDayDeviceID,
+		// EntityType.DOOMSDAYDEVICE);
+		// NetworkComponent.getInstance().sendCommand(command);
 	}
 }

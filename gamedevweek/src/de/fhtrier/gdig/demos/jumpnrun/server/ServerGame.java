@@ -11,10 +11,13 @@ import org.newdawn.slick.SlickException;
 import de.fhtrier.gdig.demos.jumpnrun.common.RGB4Game;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.ControlConfig;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.Debug;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.GamePlayConstants;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkHelper;
 import de.fhtrier.gdig.demos.jumpnrun.server.states.ServerLobbyState;
 import de.fhtrier.gdig.demos.jumpnrun.server.states.ServerPlayingState;
+import de.fhtrier.gdig.engine.helpers.Configuration;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.NetworkBroadcastListener;
 
@@ -26,14 +29,14 @@ public class ServerGame extends RGB4Game {
 
 	public ServerGame(String serverName, InterfaceAddress ni, int port) {
 		super(Assets.Config.GameTitle + " (" + serverName + ")");
-
 		this.serverName = serverName;
 		ServerGame.networkInterface = ni;
 		ServerGame.port = port;
 
 		// TODO read in interface from somewhere
 		if (networkInterface == null) {
-			List<InterfaceAddress> networkInterfaces = NetworkHelper.getInterfaces();
+			List<InterfaceAddress> networkInterfaces = NetworkHelper
+					.getInterfaces();
 
 			if (networkInterfaces.size() > 0) {
 				networkInterface = networkInterfaces.get(0);
@@ -46,15 +49,19 @@ public class ServerGame extends RGB4Game {
 		NetworkComponent.createServerInstance();
 		NetworkComponent.getInstance().addListener(this);
 		NetworkComponent.getInstance().startListening(networkInterface, port);
-		
+
 		netBroadCastListener = new NetworkBroadcastListener(serverName, "map1",
-				"1.0", port, networkInterface );
+				"1.0", port, networkInterface);
 		netBroadCastListener.start();
 
-		Constants.GamePlayConstants c = new Constants.GamePlayConstants();
-		Constants.Debug d = new Debug();
-		d.showEditor("Server",
-				new JPanel[] { d.getEdittingPanel(), c.getEdittingPanel() });
+		GamePlayConstants gamePlayConstants = new Constants.GamePlayConstants();
+		Debug debug = new Constants.Debug();
+		ControlConfig controlConfig = new Constants.ControlConfig();
+		Configuration.showEditor(
+				"Server",
+				new JPanel[] { gamePlayConstants.getEdittingPanel(),
+						debug.getEdittingPanel(),
+						controlConfig.getEdittingPanel() });
 	}
 
 	@Override

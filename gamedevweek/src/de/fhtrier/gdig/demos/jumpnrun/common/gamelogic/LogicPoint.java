@@ -9,6 +9,5 @@ public class LogicPoint {
 		this.id = id;
 		this.x = x;
 		this.y = y;
-		}
-	
+	}
 }

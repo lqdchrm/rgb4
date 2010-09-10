@@ -12,6 +12,10 @@ import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.StateColor;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.AbstractAssetState;
@@ -34,6 +38,9 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.GamePlayConstants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckPlayerCondition;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.ParticleEntity;
 import de.fhtrier.gdig.engine.graphics.shader.Shader;
@@ -91,7 +98,7 @@ public class Player extends LevelCollidableEntity implements
 
 		initCondition();
 		initStats();
-		initGraphics();    
+		initGraphics();
 		initPhysics();
 		initStates();
 
@@ -104,7 +111,7 @@ public class Player extends LevelCollidableEntity implements
 		condition.name = "XXX";
 		setConditions();
 	}
-	
+
 	private void setConditions() {
 		condition.teamId = 1;
 		condition.health = 1.0f;
@@ -112,11 +119,11 @@ public class Player extends LevelCollidableEntity implements
 		condition.damage = 0.2f;
 		condition.color = StateColor.RED; // player gets default-color: red
 		condition.weaponColor = StateColor.RED; // weapon of player get
-		// default-color: red		
+		// default-color: red
 	}
-	
+
 	private void initStats() {
-		stats = new PlayerStats();		
+		stats = new PlayerStats();
 	}
 
 	private void initStates() throws SlickException {
@@ -141,19 +148,22 @@ public class Player extends LevelCollidableEntity implements
 	}
 
 	private void initGraphics() throws SlickException {
-		
+
 		// weapon
-		/*assets.storeAnimation(Assets.WeaponImageId,Assets.WeaponAnimImagePath);
-		this.weapon = factory.createAnimationEntity(Assets.WeaponImageId, Assets.WeaponImageId);
-		this.playerGroup.add(this.weapon);
-		weapon.setVisible(true);*/
+		/*
+		 * assets.storeAnimation(Assets.WeaponImageId,Assets.WeaponAnimImagePath)
+		 * ; this.weapon = factory.createAnimationEntity(Assets.WeaponImageId,
+		 * Assets.WeaponImageId); this.playerGroup.add(this.weapon);
+		 * weapon.setVisible(true);
+		 */
 
 		// particles
 		assets.storeParticleSystem(Assets.Weapon.ParticleEffect,
 				Assets.Weapon.ParticleEffectImgPath,
 				Assets.Weapon.ParticleEffectCfgPath);
 		weaponParticles = factory.createParticleEntity(
-				Assets.Weapon.ParticleEffect, Assets.Weapon.ParticleEffect, assets);
+				Assets.Weapon.ParticleEffect, Assets.Weapon.ParticleEffect,
+				assets);
 
 		int groupId = factory.createEntity(EntityOrder.Player,
 				EntityType.HELPER);
@@ -305,7 +315,8 @@ public class Player extends LevelCollidableEntity implements
 				if (this.isOnGround()) {
 					getVel()[Entity.Y] = -Constants.GamePlayConstants.playerJumpSpeed;
 					applyAction(PlayerActions.Jump);
-					SoundManager.playSound(Assets.Sounds.PlayerJumpSoundId, 1f, 0.2f);
+					SoundManager.playSound(Assets.Sounds.PlayerJumpSoundId, 1f,
+							0.2f);
 				}
 			}
 
@@ -324,15 +335,17 @@ public class Player extends LevelCollidableEntity implements
 			if (InputControl.isRefKeyPressed(InputControl.REFCHANGECOLOR)) {
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerNetworkAction.PLAYERCOLOR));
-				SoundManager.playSound(Assets.Sounds.PlayerChangeColorSoundID, 1f, 0.2f);
+				SoundManager.playSound(Assets.Sounds.PlayerChangeColorSoundID,
+						1f, 0.2f);
 			}
 
 			// change weapon color
 			if (InputControl.isRefKeyPressed(InputControl.REFCHANGEWEAPON)) {
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerNetworkAction.WEAPONCOLOR));
-				
-				SoundManager.playSound(Assets.Sounds.WeaponChangeColorSoundID, 1f, 0.2f);
+
+				SoundManager.playSound(Assets.Sounds.WeaponChangeColorSoundID,
+						1f, 0.2f);
 
 				ParticleSystem particleSystem = weaponParticles.Assets()
 						.getParticleSystem(Assets.Weapon.ParticleEffect);
@@ -429,7 +442,7 @@ public class Player extends LevelCollidableEntity implements
 	public void renderImpl(final Graphics g, Image frameBuffer) {
 
 		currentPlayerAsset.render(g, frameBuffer);
-	
+
 		super.renderImpl(g, frameBuffer);
 	}
 
@@ -514,11 +527,57 @@ public class Player extends LevelCollidableEntity implements
 	public PlayerCondition getPlayerCondition() {
 		return condition;
 	}
+
 	public PlayerStats getPlayerStats() {
 		return stats;
 	}
 
+	/**
+	 * Does Damage to the Player. If Color equels the Color of the Player he
+	 * gain Life instad of reducing it.
+	 * 
+	 * @param damageColor
+	 *            the Color of the Damage
+	 * @param damage
+	 *            the Damage
+	 * @return true if Player Died, else false.
+	 */
+	public boolean doDamage(int colorolor, float damage, Player killer) {
+		boolean died = false;
+		if (getPlayerCondition().color != colorolor) {
+			getPlayerCondition().health -= damage;
+
+			if (getPlayerCondition().health <= 0.01f) {
+				NetworkComponent.getInstance().sendCommand(
+						new SendKill(getId(), killer != null ? killer.getId()
+								: -1));
+
+				Event dieEvent = new PlayerDiedEvent(this, killer);
+				dieEvent.update();
+				died = true;
+			}
+
+			if (killer != null
+					&& killer.getPlayerStats().getKills() >= Constants.GamePlayConstants.winningKills) {
+				NetworkComponent.getInstance().sendCommand(
+						new SendWon(killer.getId()));
+
+				Event wonEvent = new WonGameEvent(killer);
+				EventManager.addEvent(wonEvent);
+			}
+		} else {
+			// player gets stronger when hit by bullet of the same
+			// color!
+			getPlayerCondition().health += damage;
+		}
+
+		NetworkComponent.getInstance().sendCommand(
+				new AckPlayerCondition(getId(), this.getPlayerCondition()));
+		return died;
+	}
+
 	public void setPlayerCondition(PlayerCondition playerCondition) {
+
 		this.condition = playerCondition;
 
 	}

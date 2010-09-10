@@ -9,14 +9,16 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.engine.management.Factory;
 
 public class ShootFallingState extends AbstractShootState {
-	
+
 	public ShootFallingState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.FallShootingAnimId, Assets.Player.FallShootingImagePath, EntityOrder.Player, factory);
+		super(player, Assets.Player.FallShootingAnimId,
+				Assets.Player.FallShootingImagePath, EntityOrder.Player,
+				factory);
 	}
 
 	@Override
-	public void update() {	
+	public void update() {
 
 		// check if vel < threshold --> stop falling
 		if (getPlayer().isOnGround()) {
