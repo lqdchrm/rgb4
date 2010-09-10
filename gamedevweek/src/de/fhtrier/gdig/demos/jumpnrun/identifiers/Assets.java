@@ -40,27 +40,27 @@ public class Assets {
 		public static final String bShootStandingImagePath = "sprites/player/bschussstehen_128_128_15.png";
 
 		public static final int aShootJumpingAnimId = 115;
-		public static final int bShootJumpingAnimId = 115;
+		public static final int bShootJumpingAnimId = 315;
 		public static final String aShootJumpingImagePath = "sprites/player/aschussspringen_128_128_15.png";
 		public static final String bShootJumpingImagePath = "sprites/player/bschussspringen_128_128_15.png";
 
 		public static final int aShootRunningAnimId = 116;
-		public static final int bShootRunningAnimId = 116;
+		public static final int bShootRunningAnimId = 316;
 		public static final String aShootRunningImagePath = "sprites/player/aschusslaufen_128_128_15.png";
 		public static final String bShootRunningImagePath = "sprites/player/bschusslaufen_128_128_15.png";
 
 		public static final int aRunningAnimId = 117;
-		public static final int bRunningAnimId = 117;
+		public static final int bRunningAnimId = 317;
 		public static final String aRunningImagePath = "sprites/player/alaufen_128_128_15.png";
 		public static final String bRunningImagePath = "sprites/player/blaufen_128_128_15.png";
 
 		public static final int aFallingAnimId = 118;
-		public static final int bFallingAnimId = 118;
+		public static final int bFallingAnimId = 318;
 		public static final String aFallingImagePath = "sprites/player/aspringenhoch_128_128_15.png";
 		public static final String bFallingImagePath = "sprites/player/bspringenhoch_128_128_15.png";
 
 		public static final int aFallShootingAnimId = 119;
-		public static final int bFallShootingAnimId = 119;
+		public static final int bFallShootingAnimId = 319;
 		public static final String aFallShootingImagePath = "sprites/player/aschussspringen_128_128_15.png";
 		public static final String bFallShootingImagePath = "sprites/player/bschussspringen_128_128_15.png";
 
