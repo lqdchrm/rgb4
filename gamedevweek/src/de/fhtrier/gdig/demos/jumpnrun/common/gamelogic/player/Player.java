@@ -466,9 +466,11 @@ public class Player extends LevelCollidableEntity implements
 
 			// set Drag
 			if (isOnGround()) {
-				setDrag(Constants.GamePlayConstants.playerGroundDrag);
+				getDrag()[Entity.X] = Constants.GamePlayConstants.playerGroundDrag;
+				getDrag()[Entity.Y] = 0.0f; 
 			} else {
-				setDrag(Constants.GamePlayConstants.playerAirDrag);
+				getDrag()[Entity.X] = Constants.GamePlayConstants.playerAirDrag;
+				getDrag()[Entity.Y] = Constants.GamePlayConstants.playerAirDrag; 
 			}
 
 			super.update(deltaInMillis); // calc physics
