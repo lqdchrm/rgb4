@@ -12,6 +12,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
+import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
@@ -111,17 +112,33 @@ public class Bullet extends LevelCollidableEntity {
 							dieEvent.update();
 						}
 						
-						if (owner.getPlayerStats().getKills() >= Constants.GamePlayConstants.winningKills) {
-							NetworkComponent.getInstance().sendCommand(new SendWon(owner.getId()));
-							
-							Event wonEvent = new WonGameEvent (owner);
-							EventManager.addEvent(wonEvent);
+						if (PlayingState.gameType == Constants.GameTypes.deathMatch) {
+							if (owner.getPlayerStats().getKills() >= Constants.GamePlayConstants.winningKills_Deathmatch) {
+								NetworkComponent.getInstance().sendCommand(new SendWon(owner.getId(),SendWon.winnerType_Player));
+								
+								Event wonEvent = new WonGameEvent (owner);
+								EventManager.addEvent(wonEvent);
+							}
+						}
+						else if (PlayingState.gameType == Constants.GameTypes.teamDeathMatch) {
+							// TODO: do it not hardcoded
+							if (Team.Team1.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
+								NetworkComponent.getInstance().sendCommand(new SendWon(Team.Team1.id,SendWon.winnerType_Team));
+								
+								Event wonEvent = new WonGameEvent (Team.Team1);
+								EventManager.addEvent(wonEvent);
+							}
+							else if (Team.Team2.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
+								NetworkComponent.getInstance().sendCommand(new SendWon(Team.Team2.id,SendWon.winnerType_Team));
+								
+								Event wonEvent = new WonGameEvent (Team.Team1);
+								EventManager.addEvent(wonEvent);
+							}
 						}
 					} else {
 						// player gets stronger when hit by bullet of the same
 						// color!
-						otherPlayer.getPlayerCondition().health += owner
-								.getPlayerCondition().damage;
+						otherPlayer.getPlayerCondition().health += owner.getPlayerCondition().damage;
 					}
 					
 					NetworkComponent.getInstance().sendCommand(new AckPlayerCondition(otherPlayer.getId(), otherPlayer.getPlayerCondition()));

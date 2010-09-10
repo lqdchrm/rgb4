@@ -14,7 +14,8 @@ public class Constants
 		public static float gravity = 2000.0f;
 
 		@ShowAsSlider(maxValue = 50, minValue = 1)
-		public static int winningKills = 5;
+		public static int winningKills_Deathmatch = 5;
+		public static int winningKills_TeamDeathmatch = 25;
 		
 		public static boolean friendyFire = true; // if true you can damage team-mates
 
@@ -70,6 +71,11 @@ public class Constants
 	{
 		public static int collisionLayer = 1;
 		public static int logicLayer = 3;
+	}
+	
+	public static class GameTypes extends Configuration {
+		public static final int deathMatch = 0;
+		public static final int teamDeathMatch = 1;
 	}
 	
 	public static class ControlConfig extends Configuration {
