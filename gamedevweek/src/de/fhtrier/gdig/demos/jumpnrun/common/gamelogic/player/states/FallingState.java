@@ -6,7 +6,9 @@ import org.newdawn.slick.SlickException;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActions;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
+import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
 import de.fhtrier.gdig.engine.management.Factory;
 
@@ -42,11 +44,9 @@ public class FallingState extends AbstractAssetState {
 
 	@Override
 	public void update() {	
-
-		// check if vel < threshold --> stop falling
+		
 		if (getPlayer().isOnGround()) {
 			getPlayer().applyAction(PlayerActions.Land);
 		}
 	}
-	
 }
