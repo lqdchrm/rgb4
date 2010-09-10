@@ -17,8 +17,7 @@ public class JumpingState extends AbstractAssetState {
 	
 	public JumpingState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.JumpAnimId,
-				Assets.Player.JumpAnimImagePath, Assets.Weapon.JumpAnimId, Assets.Weapon.JumpAnimImagePath, EntityOrder.Player, factory);
+		super(player, Assets.Player.aJumpAnimId, Assets.Player.bJumpAnimId, Assets.Player.aJumpAnimImagePath, Assets.Player.bJumpAnimImagePath, Assets.Weapon.JumpAnimId, Assets.Weapon.JumpAnimImagePath, EntityOrder.Player, factory);
 	
 		AssetEntity e = getGfxEntity();
 		
@@ -31,8 +30,16 @@ public class JumpingState extends AbstractAssetState {
 		weaponAnim.setLooping(false);
 	}
 	
+	public void getAnim() {
+		AssetEntity e = getGfxEntity();
+		
+		anim = e.Assets().getAnimation(e.getAssetId());
+		anim.setLooping(false);
+	}
+	
 	@Override
 	public void enter() {
+		getAnim();
 		getPlayer().setOnGround(false);
 		anim.restart();
 		weaponAnim.restart();

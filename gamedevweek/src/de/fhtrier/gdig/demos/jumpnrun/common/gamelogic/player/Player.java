@@ -105,6 +105,7 @@ public class Player extends LevelCollidableEntity implements
 		condition = new PlayerCondition();
 		condition.name = "XXX";
 		condition.teamId = 1;
+		
 		setConditions();
 	}
 
@@ -419,25 +420,34 @@ public class Player extends LevelCollidableEntity implements
 
 		graphicContext.setColor(Color.white);
 		Shader.activateAdditiveBlending();
+		//Shader.activateDefaultBlending();
 		float weaponGlowSize = 0.6f + this.getPlayerCondition().ammo * 0.4f;
 		float glowSize = 0.1f + this.getPlayerCondition().health * 0.9f;
 
 		// TODO find active Animation-Asset and setTintColor(playerCol)
 
 		float weaponX = this.getData(CENTER_X);
-		float weaponY = this.getData(CENTER_Y) - weaponGlow.getHeight()
-				* weaponGlowSize / 2 + 40;
 
-		if (Constants.Debug.shadersActive) {
+		float weaponY = this.getData(CENTER_Y) - weaponGlow.getHeight() * weaponGlowSize / 2 + 40;
+
+		float weaponBrightness = StateColor.constIntoBrightness(this.getPlayerCondition().weaponColor);		
+		
+		if (Constants.Debug.shadersActive)
+		{
+			weaponCol.a = Constants.GamePlayConstants.weaponGlowFalloff * weaponBrightness;
 			colorGlowShader.setValue("playercolor", weaponCol);
 		}
 
 		graphicContext.drawImage(weaponGlow, weaponX, weaponY, weaponX
-				- weaponGlow.getWidth(), weaponY + weaponGlow.getHeight()
-				* weaponGlowSize, 0, 0, weaponGlow.getWidth(),
-				weaponGlow.getHeight(), weaponCol);
+				- weaponGlow.getWidth(), weaponY
+				+ weaponGlow.getHeight() * weaponGlowSize, 0, 0,
+				weaponGlow.getWidth(), weaponGlow.getHeight(), weaponCol);
 
-		if (Constants.Debug.shadersActive) {
+		float brightness = StateColor.constIntoBrightness(this.getPlayerCondition().color);
+		
+		if (Constants.Debug.shadersActive)
+		{
+			playerCol.a = Constants.GamePlayConstants.playerGlowFalloff * brightness;
 			colorGlowShader.setValue("playercolor", playerCol);
 		}
 
@@ -448,7 +458,21 @@ public class Player extends LevelCollidableEntity implements
 				+ playerGlow.getHeight() * glowSize / 2, 0, 0,
 				playerGlow.getWidth(), playerGlow.getHeight(), playerCol);
 
+		if (Constants.Debug.shadersActive)
+		{
+			
+			playerCol = new Color(playerCol.r + brightness,
+					playerCol.g + brightness,
+					playerCol.b + brightness);
+			playerCol.a = 1f;
+			colorGlowShader.setValue("playercolor", playerCol);
+		}
+		
 		Shader.activateDefaultBlending();
+		// deactivate shader
+//		if (Constants.Debug.shadersActive) {
+//			Shader.popShader();
+//		}
 
 	}
 
@@ -464,7 +488,9 @@ public class Player extends LevelCollidableEntity implements
 	@Override
 	protected void postRender(Graphics graphicContext) {
 
-		// deactivate shader
+		//Shader.activateDefaultBlending();
+		
+//		// deactivate shader
 		if (Constants.Debug.shadersActive) {
 			Shader.popShader();
 		}
@@ -553,9 +579,10 @@ public class Player extends LevelCollidableEntity implements
 		this.condition = playerCondition;
 
 	}
-
-	public static Shader getPlayerShader() {
-		return colorGlowShader;
+	
+	public static Shader getColorGlowShader()
+	{
+		return colorGlowShader; 
 	}
 
 	@Override

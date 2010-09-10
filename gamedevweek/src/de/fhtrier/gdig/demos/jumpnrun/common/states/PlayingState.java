@@ -25,6 +25,11 @@ public abstract class PlayingState extends BasicGameState implements
 {
 	private GameFactory factory;
 	private int levelId;
+	
+	/**
+	 * has to be something like winningKills_Deathmatch in Constants.GamePlayConstants
+	 */
+	public static int gameType;
 	// TODO Only activate for postprocessing
 	//private static Image frameBuffer;
 		
@@ -54,7 +59,7 @@ public abstract class PlayingState extends BasicGameState implements
 	@Override
 	public void init(final GameContainer arg0, final StateBasedGame arg1)
 			throws SlickException {
-
+		gameType = Constants.GameTypes.teamDeathMatch; // TODO: change it!
 	}
 	
 	@Override
