@@ -1,6 +1,7 @@
 package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -61,6 +62,19 @@ public class ClientLobbyState extends NiftyGameState implements
 	private Element guiLevelList;
 	private TextRenderer guiCurrentLevelRenderer;
 	private Element guiButtonPanel;
+	
+	public void readLevels(File dir, ArrayList<NetworkLevel> levels) {
+
+		File[] files = dir.listFiles();
+		if (files != null) {
+			for (int i = 0; i < files.length; i++) {
+				String fileName = files[i].getName();
+				if (files[i].isDirectory() && fileName.startsWith("level")) {
+					levels.add(new NetworkLevel(0, "content/rgb4/"+fileName, "Unknown Levelname"));
+				}
+			}
+		}
+	}
 
 	public ClientLobbyState() {
 		super(GameStates.CLIENT_LOBBY);
@@ -68,10 +82,14 @@ public class ClientLobbyState extends NiftyGameState implements
 		players = new HashMap<Integer, NetworkPlayer>();
 
 		levels = new ArrayList<NetworkLevel>();
-		levels.add(new NetworkLevel(0, "content/jumpnrun/default/", "Level 12"));
+		
+		File dir = new File("content/rgb4");
+		readLevels(dir, levels);
+		
+		/*levels.add(new NetworkLevel(0, "content/jumpnrun/default/", "Level 12"));
 		levels.add(new NetworkLevel(1, "content/jumpnrun/default/", "Level 234"));
 		levels.add(new NetworkLevel(2, "content/jumpnrun/default/",
-				"Level 32222"));
+				"Level 32222"));*/
 	}
 
 	public boolean isGameCreator() {
