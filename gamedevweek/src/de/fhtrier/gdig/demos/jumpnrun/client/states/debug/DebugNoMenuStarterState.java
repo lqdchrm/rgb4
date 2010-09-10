@@ -28,10 +28,11 @@ public class DebugNoMenuStarterState extends BasicGameState implements INetworkC
 	private int status = NOT_CONNECTED;
 	
 	private Queue<INetworkCommand> queue;
-	private StateBasedGame game;
 	
 	private String ip;
 	private int port;
+	
+	public static boolean isMaster = false;
 	
 	
 	public DebugNoMenuStarterState(String ip, int port) {
@@ -49,12 +50,6 @@ public class DebugNoMenuStarterState extends BasicGameState implements INetworkC
 	@Override
 	public void notify(INetworkCommand cmd) {
 		queue.add(cmd);
-	}
-
-	@Override
-	public void init(GameContainer arg0, StateBasedGame game)
-			throws SlickException {
-		this.game = game;
 	}
 
 	@Override
@@ -86,7 +81,7 @@ public class DebugNoMenuStarterState extends BasicGameState implements INetworkC
 			status = CONNECTED;
 		}
 		
-		if (status==CONNECTED)
+		if (status==CONNECTED && isMaster)
 		{
 			NetworkComponent.getInstance().sendCommand(new QueryStartGame());
 			status = REQUESTED_GAME_START;
@@ -98,6 +93,13 @@ public class DebugNoMenuStarterState extends BasicGameState implements INetworkC
 				game.enterState(GameStates.PLAYING);
 			}
 		}
+	}
+
+	@Override
+	public void init(GameContainer container, StateBasedGame game)
+			throws SlickException {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

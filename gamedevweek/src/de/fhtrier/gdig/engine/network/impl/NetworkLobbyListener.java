@@ -35,6 +35,7 @@ public class NetworkLobbyListener extends Thread
 		 try
 		 {
 	        Socket userSocket = socket.accept();
+	        
 	        ObjectInputStream serverStream = new ObjectInputStream( userSocket.getInputStream() );
 	        InetAddress serverAddress = userSocket.getInetAddress();
 	        NetworkServerObject server = (NetworkServerObject) serverStream.readObject();
@@ -44,7 +45,11 @@ public class NetworkLobbyListener extends Thread
 	        
 	        server.setLatency( curr - server.getLatency() );
 	        
-	        parent.addServer( server );
+	        if ( !halt )
+	        {	        
+        	   parent.addServer( server );
+	        }
+        	
 	        serverStream.close();
 		 }
 		 catch( EOFException e )
@@ -67,7 +72,6 @@ public class NetworkLobbyListener extends Thread
    {
 	  try
 	  {
-
 		 if ( socket != null && socket.isClosed()==false )
 	        socket.close();
          

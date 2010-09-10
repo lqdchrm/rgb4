@@ -12,19 +12,18 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.DoomsdayDeviceExplosionData;
+import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.StateColor;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.helpers.Configuration;
-import de.fhtrier.gdig.engine.management.Factory;
 
 public class DomsDayDeviceBigExplosion extends Entity
 {
 
-	private Factory factory;
+	private GameFactory factory;
 	private Options options;
 
 	private float minRadius = 0;
@@ -38,7 +37,7 @@ public class DomsDayDeviceBigExplosion extends Entity
 	private int timeScincActivation = 0;
 	private int timeScinclastChangeColor = 0;
 
-	public DomsDayDeviceBigExplosion(int id, Factory factory)
+	public DomsDayDeviceBigExplosion(int id, GameFactory factory)
 			throws IOException
 	{
 		super(id, EntityType.DOOMSDAYDEVICEEXPLOSION);
@@ -46,8 +45,7 @@ public class DomsDayDeviceBigExplosion extends Entity
 
 		try
 		{
-			factory.getAssetMgr().storeImage(
-					Assets.DoomsdayBigExplosionImageId,
+			level.getAssets().storeImage(Assets.DoomsdayBigExplosionImageId,
 					Assets.DoomsdayBigExplosionImagePath);
 		} catch (SlickException e)
 		{
@@ -82,10 +80,9 @@ public class DomsDayDeviceBigExplosion extends Entity
 			return;
 		Color constIntoColor = StateColor.constIntoColor(damageColor);
 		graphicContext.drawImage(
-				factory.getAssetMgr().getImage(
-						Assets.DoomsdayBigExplosionImageId), -maxRadius,
-				-maxRadius, maxRadius, maxRadius, 0, 0, 300, 300, new Color(
-						constIntoColor.r, constIntoColor.g, constIntoColor.b,
+				level.getAssets().getImage(Assets.DoomsdayBigExplosionImageId),
+				-maxRadius, -maxRadius, maxRadius, maxRadius, 0, 0, 300, 300,
+				new Color(constIntoColor.r, constIntoColor.g, constIntoColor.b,
 						0.5f));
 		graphicContext.flush();
 	}
@@ -155,7 +152,7 @@ public class DomsDayDeviceBigExplosion extends Entity
 					* (playerPosY - getData()[Y]);
 			if (playerdistance >= minDistance && playerdistance <= maxDistance)
 			{
-				if (!player.doDamage(damageColor, 0.5f))
+				if (!player.doDamage(damageColor, 0.5f, null))
 					hitedPlayer.add(player);
 			}
 		}

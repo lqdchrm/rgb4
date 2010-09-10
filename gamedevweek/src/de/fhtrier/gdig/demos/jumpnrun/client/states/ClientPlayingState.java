@@ -18,9 +18,16 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerCondition;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
@@ -30,15 +37,19 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoPlaySound;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeColor;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeWeaponColor;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
+import de.fhtrier.gdig.engine.physics.CollisionManager;
+import de.fhtrier.gdig.engine.physics.entities.CollidableEntity;
 import de.fhtrier.gdig.engine.sound.SoundManager;
 
 enum LocalState
@@ -76,7 +87,7 @@ public class ClientPlayingState extends PlayingState
 		// InputControl initialisieren
 		InputControl.loadKeyMapping();
 
-		SoundManager.setAssetMgr(this.getFactory().getAssetMgr());
+		SoundManager.init();
 	}
 
 	private boolean handleProtocolCommands(INetworkCommand cmd)
@@ -104,6 +115,10 @@ public class ClientPlayingState extends PlayingState
 				// we are only spectator -> don't create player
 				setState(LocalState.PLAYING);
 			}
+
+			SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
+			// SoundManager.fadeMusic(Assets.LevelSoundtrackId, 500, 0.4f,
+			// false);
 			return true;
 		}
 
@@ -160,11 +175,25 @@ public class ClientPlayingState extends PlayingState
 			{
 				getLevel().setCurrentPlayer(-1);
 			}
+
+			// robindi: Bugfix, removeEntity from CollisionManager!
+			CollisionManager.removeEntity((CollidableEntity) getFactory()
+					.getEntity(id));
+
 			getLevel().remove(getFactory().getEntity(id));
 
 			// remove Entity recursively from Factory
 			getFactory().removeEntity(id, true);
 
+			return true;
+		}
+
+		// DoPlaySound... well it just does what it says
+		if (cmd instanceof DoPlaySound)
+		{
+			DoPlaySound dps = (DoPlaySound) cmd;
+
+			SoundManager.playSound(dps.getSoundAssetId());
 			return true;
 		}
 
@@ -181,9 +210,13 @@ public class ClientPlayingState extends PlayingState
 			int playerId = acp.getPlayerId();
 
 			Entity player = getFactory().getEntity(playerId);
-			player.setUpdateStrategy(EntityUpdateStrategy.ClientToServer);
 
 			this.getLevel().setCurrentPlayer(acp.getPlayerId());
+
+			Level level = getLevel();
+			SpawnPoint randomSpawnPoint = level.getRandomSpawnPoint(1);
+			player.getData()[Entity.X] = randomSpawnPoint.x;
+			player.getData()[Entity.Y] = randomSpawnPoint.y;
 
 			// we got a player, now we can start :-)
 			setState(LocalState.PLAYING);
@@ -194,9 +227,24 @@ public class ClientPlayingState extends PlayingState
 		{
 			SendKill killCommand = (SendKill) cmd;
 
+			Event dieEvent = new PlayerDiedEvent(getLevel().getPlayer(
+					killCommand.getPlayerId()), getLevel().getPlayer(
+					killCommand.getKillerId()));
+			EventManager.addEvent(dieEvent);
+
 			Player player = getLevel().getPlayer(killCommand.getPlayerId());
 
 			player.die();
+			return true;
+		}
+
+		if (cmd instanceof SendWon)
+		{
+			SendWon wonCommand = (SendWon) cmd;
+
+			Event winEvent = new WonGameEvent(getLevel().getPlayer(
+					wonCommand.getWinnerId()));
+			EventManager.addEvent(winEvent);
 			return true;
 		}
 

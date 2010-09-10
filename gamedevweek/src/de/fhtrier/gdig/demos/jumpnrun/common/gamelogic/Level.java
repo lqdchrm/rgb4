@@ -1,5 +1,8 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -31,44 +34,55 @@ public class Level extends MoveableEntity
 	private ImageEntity middlegroundImage;
 	private TiledMap groundMap;
 	private TiledMapEntity ground;
+	public int firstLogicGID;
+
+	private ArrayList<ArrayList<SpawnPoint>> spawnPoints;
 
 	private int currentPlayerId;
+
+	private ArrayList<ArrayList<SpawnPoint>> teleportExitPoints;
+
+	private Random rd = new Random(System.currentTimeMillis());
+
+	private AssetMgr assets;
 
 	public Level(int id, GameFactory factory) throws SlickException
 	{
 		super(id, EntityType.LEVEL);
-
+		level = this;
 		this.currentPlayerId = -1;
 
 		this.factory = factory;
-		AssetMgr assets = factory.getAssetMgr();
+		assets = new AssetMgr();
 
 		// Load Images
-		Image tmp = assets.storeImage(Assets.LevelBackgroundImageId,
+		Image tmp = assets.storeImage(Assets.Level.BackgroundImageId,
 				"backgrounds/background.png");
-		assets.storeImage(Assets.LevelBackgroundImageId,
+		assets.storeImage(Assets.Level.BackgroundImageId,
 				tmp.getScaledCopy(1350, 800));
-		tmp = assets.storeImage(Assets.LevelMiddlegroundImageId,
+		tmp = assets.storeImage(Assets.Level.MiddlegroundImageId,
 				"backgrounds/middleground.png");
-		assets.storeImage(Assets.LevelMiddlegroundImageId,
+		assets.storeImage(Assets.Level.MiddlegroundImageId,
 				tmp.getScaledCopy(1850, 800));
-		this.groundMap = assets.storeTiledMap(Assets.LevelTileMapId,
+		this.groundMap = assets.storeTiledMap(Assets.Level.TileMapId,
 				"tiles/blocks.tmx");
 
 		// gfx
 		this.backgroundImage = factory.createImageEntity(
-				Assets.LevelBackgroundImageId, Assets.LevelBackgroundImageId);
+				Assets.Level.BackgroundImageId, Assets.Level.BackgroundImageId,
+				assets);
 		this.backgroundImage.setVisible(true);
 		add(this.backgroundImage);
 
 		this.middlegroundImage = factory.createImageEntity(
-				Assets.LevelMiddlegroundImageId,
-				Assets.LevelMiddlegroundImageId);
+
+		Assets.Level.MiddlegroundImageId, Assets.Level.MiddlegroundImageId,
+				assets);
 		this.middlegroundImage.setVisible(true);
 		add(this.middlegroundImage);
 
-		this.ground = factory.createTiledMapEntity(Assets.LevelTileMapId,
-				Assets.LevelTileMapId);
+		this.ground = factory.createTiledMapEntity(Assets.Level.TileMapId,
+				Assets.Level.TileMapId, assets);
 		this.ground.setVisible(true);
 		this.ground.setActive(true);
 		add(this.ground);
@@ -85,38 +99,187 @@ public class Level extends MoveableEntity
 		// setup
 		setActive(true);
 		setVisible(true);
+
+		// HACK determine GID for logic layer
+		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
+		for (int i = 0; i < tiledMap.getTileSetCount(); i++)
+		{
+			if (tiledMap.getTileSet(i).lastGID
+					- tiledMap.getTileSet(i).firstGID == 127)
+			{
+				firstLogicGID = tiledMap.getTileSet(i).firstGID;
+			}
+		}
+
+		calculateSpawnpoints();
+		calculateTeleportExits();
+	}
+
+	private void calculateSpawnpoints()
+	{
+
+		spawnPoints = new ArrayList<ArrayList<SpawnPoint>>();
+
+		for (int i = 0; i < 32; i++)
+		{
+			spawnPoints.add(new ArrayList<SpawnPoint>());
+		}
+
+		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
+
+		for (int x = 0; x < tiledMap.getWidth(); x++)
+		{
+			for (int y = 0; y < tiledMap.getHeight(); y++)
+			{
+				int tileId = tiledMap.getTileId(x, y,
+						Constants.Level.logicLayer);
+				if (tileId == 0)
+				{
+					continue;
+				}
+				tileId -= firstLogicGID;
+				++tileId;
+				// is a spawnpoint
+				if (tileId < 32)
+				{
+					spawnPoints.get(tileId - 1).add(
+							new SpawnPoint(tileId, x * tiledMap.getTileWidth(),
+									y * tiledMap.getTileHeight()));
+				}
+			}
+		}
+	}
+
+	private void calculateTeleportExits()
+	{
+
+		teleportExitPoints = new ArrayList<ArrayList<SpawnPoint>>();
+
+		for (int i = 0; i < 32; i++)
+		{
+			teleportExitPoints.add(new ArrayList<SpawnPoint>());
+		}
+
+		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
+
+		for (int x = 0; x < tiledMap.getWidth(); x++)
+		{
+			for (int y = 0; y < tiledMap.getHeight(); y++)
+			{
+				int tileId = tiledMap.getTileId(x, y,
+						Constants.Level.logicLayer);
+				if (tileId == 0)
+				{
+					continue;
+				}
+				tileId -= firstLogicGID;
+				++tileId;
+				// is a teleporterexit
+				if (tileId > 64 && tileId < 96)
+				{
+					teleportExitPoints.get(tileId - 65).add(
+							new SpawnPoint(tileId, x * tiledMap.getTileWidth(),
+									y * tiledMap.getTileHeight()));
+				}
+			}
+		}
+	}
+
+	public ArrayList<SpawnPoint> getSpawnPoints(int id)
+	{
+		return spawnPoints.get(id - 1);
+	}
+
+	public SpawnPoint getRandomSpawnPoint(int id)
+	{
+		ArrayList<SpawnPoint> sp = getSpawnPoints(id);
+		return sp.get(rd.nextInt(sp.size()));
+	}
+
+	public SpawnPoint getRandomSpawnPoint()
+	{
+		ArrayList<SpawnPoint> sp = getSpawnPoints(rd
+				.nextInt(spawnPoints.size()));
+		return sp.get(rd.nextInt(sp.size()));
+	}
+
+	public ArrayList<SpawnPoint> getTeleporterExitPoints(int id)
+	{
+		return teleportExitPoints.get(id - 1);
+	}
+
+	public SpawnPoint getRandomTeleporterExitPoint(int id)
+	{
+		ArrayList<SpawnPoint> sp = getTeleporterExitPoints(id);
+		return sp.get(rd.nextInt(sp.size()));
+	}
+
+	public SpawnPoint getRandomTeleporterExitPoint()
+	{
+		ArrayList<SpawnPoint> sp = getTeleporterExitPoints(rd
+				.nextInt(teleportExitPoints.size()));
+		return sp.get(rd.nextInt(sp.size()));
 	}
 
 	@Override
 	protected void postRender(Graphics graphicContext)
 	{
+		if (isVisible())
+		{
+			ground.Assets().getTiledMap(ground.getAssetId()).render(0, 0, 2);
+		}
 		super.postRender(graphicContext);
 
-		graphicContext.setColor(Constants.Debug.overlayColor);
-		graphicContext.drawString("NetworkID: "
-				+ NetworkComponent.getInstance().getNetworkId() + "\n"
-				+ factory.size() + " entities", 20, 50);
-
-		Entity e = this;
-		graphicContext.drawString("Level\n" + "ID: " + e.getId() + "\n"
-				+ " X: " + e.getData()[X] + "  Y: " + e.getData()[Y] + "\n"
-				+ "OX: " + e.getData()[CENTER_X] + " OY: "
-				+ e.getData()[CENTER_Y] + "\n" + "FX: " + "SX: "
-				+ e.getData()[SCALE_X] + " SY: " + e.getData()[SCALE_Y] + "\n"
-				+ "ROT: " + e.getData()[ROTATION], 20, 100);
-
-		e = getCurrentPlayer();
-		if (e != null)
+		if (Constants.Debug.showDebugOverlay)
 		{
+			graphicContext.setColor(Constants.Debug.overlayColor);
+			graphicContext.drawString("NetworkID: "
+					+ NetworkComponent.getInstance().getNetworkId() + "\n"
+					+ factory.size() + " entities", 20, 50);
+
+			Entity e = this;
+
 			graphicContext.drawString(
-					"Player\n" + "ID: " + e.getId() + "\n" + " X: "
+					"Level\n" + "ID: " + e.getId() + "\n" + " X: "
 							+ e.getData()[X] + "  Y: " + e.getData()[Y] + "\n"
 							+ "OX: " + e.getData()[CENTER_X] + " OY: "
-							+ e.getData()[CENTER_Y] + "SX: "
+							+ e.getData()[CENTER_Y] + "\n" + "FX: " + "SX: "
 							+ e.getData()[SCALE_X] + " SY: "
 							+ e.getData()[SCALE_Y] + "\n" + "ROT: "
-							+ e.getData()[ROTATION] + "\n" + "STATE: "
-							+ ((Player) e).getState().toString(), 20, 250);
+							+ e.getData()[ROTATION], 20, 100);
+
+			e = getCurrentPlayer();
+			if (e != null)
+			{
+				graphicContext.drawString(
+						"Player\n" + "ID: "
+								+ e.getId()
+								+ "\n"
+								+ " X: "
+								+ e.getData()[X]
+								+ "  Y: "
+								+ e.getData()[Y]
+								+ "\n"
+								+ "OX: "
+								+ e.getData()[CENTER_X]
+								+ " OY: "
+								+ e.getData()[CENTER_Y]
+								+ "SX: "
+								+ e.getData()[SCALE_X]
+								+ " SY: "
+								+ e.getData()[SCALE_Y]
+								+ "\n"
+								+ "ROT: "
+								+ e.getData()[ROTATION]
+								+ "\n"
+								+ "STATE: "
+								+ ((Player) e).getCurrentPlayerAsset()
+										.toString() + "\n" + "IsOnGround "
+								+ ((Player) e).isOnGround() + "\n" + "SPEED ("
+								+ ((Player) e).getVel()[Entity.X] + ", "
+								+ ((Player) e).getVel()[Entity.Y] + ")", 20,
+						250);
+			}
 		}
 	}
 
@@ -130,7 +293,7 @@ public class Level extends MoveableEntity
 		{
 			focusOnPlayer();
 
-			checkLevelBordersScrolling();
+			// checkLevelBordersScrolling();
 
 			parallaxScrollingBackground();
 		}
@@ -177,7 +340,8 @@ public class Level extends MoveableEntity
 		}
 		// Bottom
 		if (getData()[Y] < -this.groundMap.getHeight()
-				* this.groundMap.getTileHeight() + Settings.SCREENWIDTH)
+
+		* this.groundMap.getTileHeight() + Settings.SCREENWIDTH)
 		{
 			getData()[Y] = -this.groundMap.getHeight()
 					* this.groundMap.getTileHeight() + Settings.SCREENHEIGHT;
@@ -288,11 +452,15 @@ public class Level extends MoveableEntity
 			if (player != null)
 			{
 				player.setActive(false);
+				player.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 			}
+
 			this.currentPlayerId = playerId;
-			player = getCurrentPlayer();
+
+			player = getPlayer(currentPlayerId);
 			if (player != null)
 			{
+				player.setUpdateStrategy(EntityUpdateStrategy.ClientToServer);
 				player.setActive(true);
 			}
 		}
@@ -316,9 +484,8 @@ public class Level extends MoveableEntity
 	@Override
 	public Entity add(Entity e)
 	{
-		Entity result = super.add(e);
-
 		e.setLevel(this);
+		Entity result = super.add(e);
 
 		return result;
 	}
@@ -341,6 +508,11 @@ public class Level extends MoveableEntity
 	public int getHeight()
 	{
 		return getMap().getHeight() * getMap().getTileHeight();
+	}
+
+	public AssetMgr getAssets()
+	{
+		return assets;
 	}
 
 	/**

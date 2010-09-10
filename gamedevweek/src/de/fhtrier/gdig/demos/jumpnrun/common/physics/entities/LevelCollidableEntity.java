@@ -7,6 +7,7 @@ import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
@@ -72,6 +73,7 @@ public class LevelCollidableEntity extends CollidableEntity
 
 		boolean collided = false;
 
+		// do it two times: one for each direction
 		for (int i = 0; i < 2; i++)
 		{
 
@@ -105,7 +107,8 @@ public class LevelCollidableEntity extends CollidableEntity
 					{
 
 						// items
-						final int tileId = this.map.getTileId(x, y, 0);
+						final int tileId = this.map.getTileId(x, y,
+								Constants.Level.collisionLayer);
 
 						final Rectangle bbTile = new Rectangle(x
 								* this.map.getTileWidth(), y
@@ -113,31 +116,38 @@ public class LevelCollidableEntity extends CollidableEntity
 								this.map.getTileWidth(),
 								this.map.getTileHeight());
 
-						// TODO GameLogic from Tiles
-						if (Constants.Debug.tileMapLogicDebug)
-						{
-							if (this.map.getLayerCount() >= 2)
-							{
-								final int actionTileId = this.map.getTileId(x,
-										y, 1);
-
-								if (actionTileId > 0)
-								{
-									if (collisionWithTile(bbTile))
-									{
-										Log.debug("Colission with: "
-												+ actionTileId);
-									}
-								}
-							} else
-							{
-								Log.debug("Level has no logic layer");
-							}
-						}
-
 						if (tileId > 0)
 						{
 							collided |= collisionWithTile(bbTile);
+						}
+
+						int actionTileId = this.map.getTileId(x, y,
+								Constants.Level.logicLayer);
+
+						if (actionTileId > 0)
+						{
+							float[] intersectionDepth = Collisions
+									.getIntersectionDepth(bbTile,
+											this.getTransformedBounds());
+							if (level != null
+									&& (intersectionDepth[Entity.X] != 0 || intersectionDepth[Entity.Y] != 0))
+							{
+
+								if (Constants.Debug.tileMapLogicDebug)
+								{
+									Log.debug("Colission with: " + actionTileId);
+								}
+
+								actionTileId -= level.firstLogicGID;
+								++actionTileId;
+								if (actionTileId > 32 && actionTileId <= 64)
+								{
+									SpawnPoint randomTeleporterExitPoint = level
+											.getRandomTeleporterExitPoint(actionTileId - 32);
+									this.getData()[Entity.X] = randomTeleporterExitPoint.x;
+									this.getData()[Entity.Y] = randomTeleporterExitPoint.y;
+								}
+							}
 						}
 					}
 				}
@@ -150,12 +160,18 @@ public class LevelCollidableEntity extends CollidableEntity
 				if (Math.abs(correction[Entity.X]) <= Math
 						.abs(correction[Entity.Y]))
 				{
-					this.getData()[Entity.X] += correction[Entity.X];
-					this.getVel()[Entity.X] = 0.0f;
+					if (leftCollision || rightCollision || !isOnGround())
+					{
+						this.getData()[Entity.X] += correction[Entity.X];
+						this.getVel()[Entity.X] = 0.0f;
+					}
 				} else
 				{
-					this.getData()[Entity.Y] += correction[Entity.Y];
-					this.getVel()[Entity.Y] = 0.0f;
+					if (topCollision || bottomCollision)
+					{
+						this.getData()[Entity.Y] += correction[Entity.Y];
+						this.getVel()[Entity.Y] = 0.0f;
+					}
 				}
 			}
 			correction[Entity.X] = 0.0f;
@@ -250,13 +266,13 @@ public class LevelCollidableEntity extends CollidableEntity
 
 		if (absDepthX > 0 || absDepthY > 0)
 		{
+			collided = true;
 			if (absDepthX + absDepthY > Math.abs(correction[Entity.X])
 					+ Math.abs(correction[Entity.Y]))
 			{
 				correction[Entity.X] = depth[Entity.X];
 				correction[Entity.Y] = depth[Entity.Y];
 			}
-			collided = true;
 		}
 		return collided;
 	}
@@ -337,7 +353,8 @@ public class LevelCollidableEntity extends CollidableEntity
 
 					// if tile is not empty
 					// TODO read from special layer
-					final int tileId = this.map.getTileId(x, y, 0);
+					final int tileId = this.map.getTileId(x, y,
+							Constants.Level.collisionLayer);
 					if (tileId > 0)
 					{
 
@@ -380,7 +397,7 @@ public class LevelCollidableEntity extends CollidableEntity
 
 	public void setLevel(Level level)
 	{
-		this.map = level.getMap();
 		super.setLevel(level);
+		this.map = level.getMap();
 	}
 }

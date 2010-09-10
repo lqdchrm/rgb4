@@ -20,7 +20,7 @@
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 	<style id="menu-item">
 		<attributes align="center"
-			font="content/jumpnrun/default/gui/small-font-unselected.fnt"
+			font="small-font-unselected.fnt"
 			focusable="true" controller="de.lessvoid.nifty.controls.MenuItemControl"
 			inputMapping="de.lessvoid.nifty.input.mapping.MenuInputMapping" />
 		<effect>
@@ -28,20 +28,20 @@
 			<onFocus name="shake" global="false" length="1000" distance="3"
 				post="false" />
 			<onFocus name="changeFont"
-				font="content/jumpnrun/default/gui/small-font-selected.fnt"
+				font="small-font-selected.fnt"
 				timeType="infinite" />
 		</effect>
 	</style>
 
 	<style id="lobby-button">
 		<attributes align="center"
-			font="content/jumpnrun/default/gui/small-font-unselected.fnt"
+			font="small-font-unselected.fnt"
 			focusable="true" controller="de.lessvoid.nifty.controls.MenuItemControl"
 			inputMapping="de.lessvoid.nifty.input.mapping.MenuInputMapping" />
 		<effect>
 			<onHover name="focus" />
 			<onFocus name="changeFont"
-				font="content/jumpnrun/default/gui/small-font-selected.fnt"
+				font="small-font-selected.fnt"
 				timeType="infinite" />
 		</effect>
 	</style>
@@ -74,7 +74,7 @@
 
 	<style id="lobby-header">
 		<attributes align="center"
-			font="content/jumpnrun/default/gui/small-font-unselected.fnt"
+			font="small-font-unselected.fnt"
 			focusable="false" />
 	</style>
 	
@@ -91,7 +91,7 @@
 
 		<!--
 			<attributes
-			font="content/jumpnrun/default/gui/small-font-unselected.fnt"
+			font="small-font-unselected.fnt"
 			focusable="false"/>
 		-->
 	</style>

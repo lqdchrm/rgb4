@@ -2,7 +2,9 @@ package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import java.io.File;
 import java.net.InterfaceAddress;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -35,9 +37,11 @@ public class ClientSelectServerState extends NiftyGameState implements
 
 	private static final String CROSSHAIR_PNG = "crosshair.png";
 	public static String menuNiftyXMLFile = "client_server_select.xml";
-	public static String menuAssetPath = Assets.AssetGuiPath;
+	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 
 	private List<InterfaceAddress> interfaces;
+	private List<NetworkServerObject> serverList;
+	private Semaphore serverMutex;
 
 	private INetworkLobby networkLobby;
 	private boolean connecting = false;
@@ -87,7 +91,10 @@ public class ClientSelectServerState extends NiftyGameState implements
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		super.init(container, game);
-
+		
+		serverList = new ArrayList<NetworkServerObject>();
+		serverMutex = new Semaphore(1);
+		
 		// add asset-folder to the ResourceLocators of nifty and slick2d
 		ResourceLoader.addResourceLocation(new FileSystemLocation(new File(
 				menuAssetPath)));
@@ -129,7 +136,31 @@ public class ClientSelectServerState extends NiftyGameState implements
 			game.enterState(GameStates.CLIENT_LOBBY);
 			connecting = false;
 		}
-
+		
+		try {
+			serverMutex.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for ( NetworkServerObject server : serverList )
+		{
+			CreateButtonControl createButton = new CreateButtonControl("mybutton");
+			createButton.setHeight("30px");
+			createButton.setWidth("100%");
+			createButton
+					.set("label", server.getName() + "(" + server.getIp() + ")");
+			createButton.setAlign("left");
+			// TODO setin real values
+			createButton.setInteractOnClick("chooseServer(" + server.getIp() + ","
+					+ server.getPort() + ")");
+			createButton.create(nifty, nifty.getCurrentScreen(), guiServerPanel);	
+		}
+		
+		serverList.clear();
+		
+		serverMutex.release();
 	}
 
 	@Override
@@ -166,16 +197,13 @@ public class ClientSelectServerState extends NiftyGameState implements
 
 	@Override
 	public void addServer(NetworkServerObject server) {
-		CreateButtonControl createButton = new CreateButtonControl("mybutton");
-		createButton.setHeight("30px");
-		createButton.setWidth("100%");
-		createButton
-				.set("label", server.getName() + "(" + server.getIp() + ")");
-		createButton.setAlign("left");
-		// TODO setin real values
-		createButton.setInteractOnClick("chooseServer(" + server.getIp() + ","
-				+ server.getPort() + ")");
-		createButton.create(nifty, nifty.getCurrentScreen(), guiServerPanel);
+		try {
+			serverMutex.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		serverList.add( server );
+		serverMutex.release();
 	}
 
 	public void chooseInterface(String id) {

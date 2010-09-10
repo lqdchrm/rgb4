@@ -13,10 +13,6 @@ import de.fhtrier.gdig.demos.jumpnrun.client.states.ClientSelectServerState;
 import de.fhtrier.gdig.demos.jumpnrun.common.RGB4Game;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.ControlConfig;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.Debug;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.GamePlayConstants;
-import de.fhtrier.gdig.engine.helpers.Configuration;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 
 public class ClientGame extends RGB4Game
@@ -27,29 +23,19 @@ public class ClientGame extends RGB4Game
 
 	public ClientGame()
 	{
-		super(Assets.GameTitle);
+		super(Assets.Config.GameTitle);
 
 		NetworkComponent.createClientInstance();
 		NetworkComponent.getInstance().addListener(this);
-		//
-		// while (!NetworkComponent.getInstance().connect(nameOrIp, port))
-		// {
-		// try
-		// {
-		// Log.info("Waiting for Server");
-		// Thread.sleep(5000);
-		// } catch (InterruptedException e)
-		// {
-		// }
-		// }
 
-		GamePlayConstants gamePlayConstants = new Constants.GamePlayConstants();
-		Debug debug = new Constants.Debug();
-		ControlConfig controlConfig = new Constants.ControlConfig();
-		Configuration.showEditor("ClientSettings", new JPanel[] {
-				gamePlayConstants.getEdittingPanel(), debug.getEdittingPanel(),
-				controlConfig.getEdittingPanel() });
+		Constants.GamePlayConstants c1 = new Constants.GamePlayConstants();
 
+		Constants.ControlConfig c2 = new Constants.ControlConfig();
+
+		Constants.Debug c3 = new Constants.Debug();
+
+		c1.showEditor("ClientSettings", new JPanel[] { c1.getEdittingPanel(),
+				c2.getEdittingPanel(), c3.getEdittingPanel() });
 	}
 
 	@Override

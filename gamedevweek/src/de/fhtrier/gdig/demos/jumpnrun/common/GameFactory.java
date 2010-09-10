@@ -7,7 +7,6 @@ import org.newdawn.slick.SlickException;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Bullet;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.DomsDayDeviceBigExplosion;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.DoomsdayDevice;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Gem;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
@@ -16,11 +15,6 @@ import de.fhtrier.gdig.engine.management.Factory;
 
 public class GameFactory extends Factory
 {
-
-	public GameFactory(AssetMgr assets)
-	{
-		super(assets);
-	}
 
 	public int createEntity(EntityType type)
 	{
@@ -51,10 +45,6 @@ public class GameFactory extends Factory
 			case LEVEL:
 				Level newLevel = new Level(id, this);
 				add(newLevel);
-				return id;
-			case GEM:
-				Gem newGem = new Gem(id, this);
-				add(newGem);
 				return id;
 			case BULLET:
 				Bullet newBullet = new Bullet(id, this);

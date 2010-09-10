@@ -38,7 +38,7 @@ public class Lobby extends JDialog
 		return new ServerGame(serverName, ni, port);
 	}
 
-	private static ClientGame createClient(boolean debug, final String ip,
+	public static ClientGame createClient(boolean debug, final String ip,
 			final int port)
 	{
 

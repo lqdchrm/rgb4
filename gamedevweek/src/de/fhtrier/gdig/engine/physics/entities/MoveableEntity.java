@@ -1,5 +1,6 @@
 package de.fhtrier.gdig.engine.physics.entities;
 
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 
@@ -40,7 +41,6 @@ public class MoveableEntity extends Entity
 			for (int i = 0; i < getData().length; i++)
 			{
 				// simple euler integration
-				this.vel[i] += this.acc[i] * secs;
 				// reibung folgt hier
 				// -1/(x+1)+1 Sollte besser skalieren bei schwankender framrate,
 				// und kann nicht durch zu große werte merkwürdige effekte
@@ -54,11 +54,14 @@ public class MoveableEntity extends Entity
 					// vel[i] *= (-1.0f / (drag + secs) + (1.0f / secs)) * secs;
 					// Dies ist eine alternative formel der oberen davon
 					// ausgehend das nur Positive Werte benutzt werden.
-					if (secs + drag != 0)
+					if (drag != 0 && Math.abs(acc[Entity.X]) < Constants.EPSILON)
 					{
 						vel[i] *= (secs / (drag + secs));
 					}
 				}
+				
+				this.vel[i] += this.acc[i] * secs;
+				
 				this.getData()[i] = this.getData()[i] + this.vel[i] * secs;
 			}
 		}

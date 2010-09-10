@@ -86,20 +86,9 @@ public class ServerLobbyState extends BasicGameState  implements
 		
 		if (data instanceof ClientQueryDisconnect)
 		{
-			NetworkPlayer playerToDelete = null;
-			for (NetworkPlayer networkPlayer : players.values())
-			{
-				if (networkPlayer.getNetworkId() == data.getSender())
-				{
-					playerToDelete = networkPlayer;
-					break;
-				}
-			}
-			if (playerToDelete!=null)
-			{
-				players.remove(playerToDelete);
-				NetworkComponent.getInstance().sendCommand(new AckNewPlayerList(players));
-			}
+			players.remove(data.getSender());
+			NetworkComponent.getInstance().sendCommand(
+					new AckNewPlayerList(players));
 		}
 		
 		if (data instanceof QueryStartGame) {

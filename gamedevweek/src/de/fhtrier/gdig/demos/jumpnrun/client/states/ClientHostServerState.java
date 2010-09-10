@@ -31,7 +31,7 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 
 	private static final String CROSSHAIR_PNG = "crosshair.png";
 	public static String menuNiftyXMLFile = "server_settings.xml";
-	public static String menuAssetPath = Assets.AssetGuiPath;
+	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 	
 	private StateBasedGame game;
 	private TextFieldControl portControl;
