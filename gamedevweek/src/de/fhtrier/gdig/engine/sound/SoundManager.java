@@ -26,6 +26,10 @@ public class SoundManager {
 		this.assets.storeSound(Assets.Sounds.PlayerWoundSoundId, Assets.Sounds.PlayerWoundSoundPath);
 		this.assets.storeSound(Assets.Sounds.PlayerJoiningSoundID, Assets.Sounds.PlayerJoiningSoundPath);
 		this.assets.storeSound(Assets.Sounds.PlayerChangeColorSoundID, Assets.Sounds.PlayerChangeColorPath);
+		this.assets.storeSound(Assets.Sounds.PlayerPhrase1SoundID, Assets.Sounds.PlayerPhrase1SoundPath);
+		this.assets.storeSound(Assets.Sounds.PlayerPhrase2SoundID, Assets.Sounds.PlayerPhrase2SoundPath);
+		this.assets.storeSound(Assets.Sounds.PlayerPhrase3SoundID, Assets.Sounds.PlayerPhrase3SoundPath);
+		this.assets.storeSound(Assets.Sounds.PlayerPhrase4SoundID, Assets.Sounds.PlayerPhrase4SoundPath);
 		
 		this.assets.storeSound(Assets.Sounds.BeamSoundId, Assets.Sounds.BeamSoundPath);
 		this.assets.storeSound(Assets.Sounds.DoomsdayDeviceSoundId, Assets.Sounds.DoomsdayDeviceSoundPath);

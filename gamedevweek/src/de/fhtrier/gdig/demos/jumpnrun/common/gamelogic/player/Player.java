@@ -35,6 +35,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.GamePlayConstants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoPlaySound;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.ParticleEntity;
 import de.fhtrier.gdig.engine.graphics.shader.Shader;
@@ -329,6 +330,28 @@ public class Player extends LevelCollidableEntity implements
 
 				cr.col = StateColor.constIntoColor(state.weaponColor);
 			}
+			
+			// Player Phrases
+			if (InputControl.isRefKeyPressed(InputControl.REFPHRASE1)) {
+				NetworkComponent.getInstance().sendCommand(new DoPlaySound(Assets.Sounds.PlayerPhrase1SoundID));
+				SoundManager.playSound(Assets.Sounds.PlayerPhrase1SoundID, 1f, 1f);
+			}
+			
+			if (InputControl.isRefKeyPressed(InputControl.REFPHRASE2)) {
+				NetworkComponent.getInstance().sendCommand(new DoPlaySound(Assets.Sounds.PlayerPhrase2SoundID));
+				SoundManager.playSound(Assets.Sounds.PlayerPhrase2SoundID, 1f, 1f);
+			}
+			
+			if (InputControl.isRefKeyPressed(InputControl.REFPHRASE3)) {
+				NetworkComponent.getInstance().sendCommand(new DoPlaySound(Assets.Sounds.PlayerPhrase4SoundID));
+				SoundManager.playSound(Assets.Sounds.PlayerPhrase3SoundID, 1f, 1f);
+			}
+			
+			if (InputControl.isRefKeyPressed(InputControl.REFPHRASE4)) {
+				NetworkComponent.getInstance().sendCommand(new DoPlaySound(Assets.Sounds.PlayerPhrase4SoundID));
+				SoundManager.playSound(Assets.Sounds.PlayerPhrase4SoundID, 1f, 1f);
+			}
+			
 		}
 		super.handleInput(input);
 	}
@@ -353,6 +376,7 @@ public class Player extends LevelCollidableEntity implements
 
 	public void die() {
 		// TODO: Implement dying animation etc.
+		SoundManager.playSound(Assets.Sounds.PlayerDyingSoundId, 1.0f, 0.3f);
 		this.respawn(); // FIXME: Do we want to respawn immediately?
 		this.stats.increaseDeaths();
 		Team.getTeamById(this.getPlayerCondition().teamId).increaseDeaths();
