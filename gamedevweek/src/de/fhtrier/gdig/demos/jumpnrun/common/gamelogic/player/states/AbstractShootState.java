@@ -39,7 +39,7 @@ public class AbstractShootState extends AbstractAssetState {
 			weaponAnim.restart();
 		}
 
-		SoundManager.playSound(Assets.Sounds.PlayerShootSoundId, 1f, 0.3f);
+		SoundManager.playSound(Assets.Sounds.PlayerShootSoundId, 1f, 0.5f);
 
 	}
 

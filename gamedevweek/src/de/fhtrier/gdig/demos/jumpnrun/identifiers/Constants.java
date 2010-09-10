@@ -37,6 +37,10 @@ public class Constants
 		public static float colissionPointDistance = 2.0f;
 
 		public static float playerMaxJumpSpeed = 1000.0f;
+		
+		public static boolean clientSound = true;
+		
+		public static boolean serverSound = true;
 	}
 
 	public static class Debug extends Configuration
@@ -64,6 +68,8 @@ public class Constants
 		public static boolean networkDebug = false;
 		
 		public static boolean factoryDebug = false;
+		
+	
 	}
 	
 	public static class Level extends Configuration

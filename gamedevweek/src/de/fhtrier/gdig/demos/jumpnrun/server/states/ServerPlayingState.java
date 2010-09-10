@@ -37,6 +37,7 @@ import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class ServerPlayingState extends PlayingState {
 
@@ -45,9 +46,18 @@ public class ServerPlayingState extends PlayingState {
 	public static HashMap<Integer, Integer> networkId2Player = new HashMap<Integer, Integer>();
 	public static HashMap<Integer, Integer> player2NetworkId = new HashMap<Integer, Integer>();
 
-	public ServerPlayingState() {
+	public ServerPlayingState() throws SlickException {
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ServerData();
+		
+		if(Constants.GamePlayConstants.serverSound)
+		{
+			SoundManager.init();
+			SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
+			SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
+			SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 50000, 0.2f, false);
+		}		
+		
 	}
 
 	private boolean handlePlayerActions(QueryAction actionCmd) {

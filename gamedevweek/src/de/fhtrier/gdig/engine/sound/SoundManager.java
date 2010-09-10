@@ -16,6 +16,7 @@ public class SoundManager {
 		this.assets = new AssetMgr();
 		
 		this.assets.storeMusic(Assets.Sounds.LevelSoundtrackId, Assets.Sounds.LevelSoundtrackPath);
+		this.assets.storeMusic(Assets.Sounds.MenuSoundtrackId, Assets.Sounds.MenuSoundtrackPath);
 		
 		this.assets.storeSound(Assets.Sounds.PlayerRunSoundId, Assets.Sounds.PlayerRunSoundPath);
 		this.assets.storeSound(Assets.Sounds.PlayerJumpSoundId, Assets.Sounds.PlayerJumpSoundPath);

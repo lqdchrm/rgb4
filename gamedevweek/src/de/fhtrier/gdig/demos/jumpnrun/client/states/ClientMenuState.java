@@ -16,6 +16,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackground;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 import de.lessvoid.nifty.EndNotify;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.screen.Screen;
@@ -49,8 +50,9 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 		enableMouseImage(new Image(
 				ResourceLoader.getResourceAsStream(CROSSHAIR_PNG),
 				CROSSHAIR_PNG, false));
-
-
+		
+		// init Sound
+		SoundManager.init();
 
 	}
 
@@ -65,6 +67,8 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 			// screen.findElementByName("newGame").setFocus();
 		}
 		screen.getFocusHandler().setKeyFocus(null);
+		SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0f);
+		SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f, false);
 	}
 
 	public void onEndScreen() {
@@ -97,6 +101,8 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 		}
 		
 	public void exit() {
+		SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0f, false);
+		SoundManager.stopMusic(Assets.Sounds.MenuSoundtrackId);
 		screen.endScreen(new EndNotify() {
 			public void perform() {
 				game.getContainer().exit();

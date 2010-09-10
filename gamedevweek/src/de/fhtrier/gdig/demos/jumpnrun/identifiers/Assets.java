@@ -101,6 +101,9 @@ public class Assets {
 	public static class Sounds {
 		public static final int LevelSoundtrackId = 1;
 		public static final String LevelSoundtrackPath = "sounds/background.ogg";
+		
+		public static final int MenuSoundtrackId = 5;
+		public static final String MenuSoundtrackPath = "sounds/menu.ogg";
 
 		public static final int PlayerRunSoundId = 20;
 		public static final int PlayerJumpSoundId = 21;
