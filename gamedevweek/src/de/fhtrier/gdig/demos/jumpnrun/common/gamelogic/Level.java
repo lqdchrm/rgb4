@@ -8,6 +8,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
@@ -19,6 +20,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
+import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
 import de.fhtrier.gdig.engine.graphics.entities.ImageEntity;
 import de.fhtrier.gdig.engine.graphics.entities.TiledMapEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
@@ -35,11 +37,14 @@ public class Level extends MoveableEntity {
 	private TiledMapEntity ground;
 	public int firstLogicGID;
 
-	private ArrayList<ArrayList<SpawnPoint>> spawnPoints;
+	private ArrayList<ArrayList<LogicPoint>> spawnPoints;
 
 	private int currentPlayerId;
 
-	private ArrayList<ArrayList<SpawnPoint>> teleportExitPoints;
+	private ArrayList<ArrayList<LogicPoint>> teleportExitPoints;
+	
+	private ArrayList<LogicPoint> doomsdayDevices;
+	private ArrayList<LogicPoint> teleportAnimations;
 
 	private Random rd = new Random(System.currentTimeMillis());
 
@@ -106,18 +111,37 @@ public class Level extends MoveableEntity {
 			}
 		}
 
-		calculateSpawnpoints();
-		calculateTeleportExits();
+		calculateLogicPoints();
+		
+		placeDoomsdayDevices();
+		placeTeleportAnimations();
 	}
 
-	private void calculateSpawnpoints() {
+	private void placeTeleportAnimations() {
+		for (LogicPoint lp : teleportAnimations) {
+			// TODO createTeleportAnimations
+//			add(new AnimationEntity(id, assetId, assets));
+		}
+	}
 
-		spawnPoints = new ArrayList<ArrayList<SpawnPoint>>();
+	private void placeDoomsdayDevices() {
+		for (LogicPoint lp : doomsdayDevices) {
+			//TODO create doomsdayDevices
+		}
+	}
+
+	private void calculateLogicPoints() {
+
+		spawnPoints = new ArrayList<ArrayList<LogicPoint>>();
+		teleportExitPoints = new ArrayList<ArrayList<LogicPoint>>();
+		doomsdayDevices = new ArrayList<LogicPoint>();
+		teleportAnimations = new ArrayList<LogicPoint>();
 
 		for (int i = 0; i < 32; i++) {
-			spawnPoints.add(new ArrayList<SpawnPoint>());
+			spawnPoints.add(new ArrayList<LogicPoint>());
+			teleportExitPoints.add(new ArrayList<LogicPoint>());
 		}
-
+		
 		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
 
 		for (int x = 0; x < tiledMap.getWidth(); x++) {
@@ -130,70 +154,87 @@ public class Level extends MoveableEntity {
 				tileId -= firstLogicGID;
 				++tileId;
 				// is a spawnpoint
-				if (tileId < 32) {
+				if (tileId <= 32) {
+					if (Constants.Debug.tileMapLogicDebug)
+					{
+						Log.debug("SpawnPoint " + tileId + " at: " + x + ", " + y );
+					}
 					spawnPoints.get(tileId - 1).add(
-							new SpawnPoint(tileId, x * tiledMap.getTileWidth(),
+							new LogicPoint(tileId, x * tiledMap.getTileWidth(),
 									y * tiledMap.getTileHeight()));
 				}
-			}
-		}
-	}
-
-	private void calculateTeleportExits() {
-
-		teleportExitPoints = new ArrayList<ArrayList<SpawnPoint>>();
-
-		for (int i = 0; i < 32; i++) {
-			teleportExitPoints.add(new ArrayList<SpawnPoint>());
-		}
-
-		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
-
-		for (int x = 0; x < tiledMap.getWidth(); x++) {
-			for (int y = 0; y < tiledMap.getHeight(); y++) {
-				int tileId = tiledMap.getTileId(x, y,
-						Constants.Level.logicLayer);
-				if (tileId == 0) {
-					continue;
+				
+				// is teleport entry
+				if (tileId > 32 && tileId <= 64)
+				{
+					if (Constants.Debug.tileMapLogicDebug)
+					{
+						Log.debug("Teleporter entry " + tileId + " at: " + x + ", " + y );
+					}
 				}
-				tileId -= firstLogicGID;
-				++tileId;
+				
 				// is a teleporterexit
-				if (tileId > 64 && tileId < 96) {
+				if (tileId > 64 && tileId <= 96) {
+					if (Constants.Debug.tileMapLogicDebug)
+					{
+						Log.debug("Teleporter exit " + tileId + " at: " + x + ", " + y );
+					}
 					teleportExitPoints.get(tileId - 65).add(
-							new SpawnPoint(tileId, x * tiledMap.getTileWidth(),
+							new LogicPoint(tileId, x * tiledMap.getTileWidth(),
 									y * tiledMap.getTileHeight()));
+				}
+				
+				// is doomsday Device
+				if (tileId == 97)
+				{
+					if (Constants.Debug.tileMapLogicDebug)
+					{
+						Log.debug("Doomsday device " + tileId + " at: " + x + ", " + y );
+					}
+					
+					doomsdayDevices.add(new LogicPoint(tileId, x, y));
+				}
+				
+				// is teleport animation Device
+				if (tileId == 98)
+				{
+					if (Constants.Debug.tileMapLogicDebug)
+					{
+						Log.debug("Teleporter animation " + tileId + " at: " + x + ", " + y );
+					}
+					
+					teleportAnimations.add(new LogicPoint(tileId, x, y));
 				}
 			}
 		}
 	}
 
-	public ArrayList<SpawnPoint> getSpawnPoints(int id) {
+	public ArrayList<LogicPoint> getSpawnPoints(int id) {
 		return spawnPoints.get(id - 1);
 	}
 
-	public SpawnPoint getRandomSpawnPoint(int id) {
-		ArrayList<SpawnPoint> sp = getSpawnPoints(id);
+	public LogicPoint getRandomSpawnPoint(int id) {
+		ArrayList<LogicPoint> sp = getSpawnPoints(id);
 		return sp.get(rd.nextInt(sp.size()));
 	}
 
-	public SpawnPoint getRandomSpawnPoint() {
-		ArrayList<SpawnPoint> sp = getSpawnPoints(rd
+	public LogicPoint getRandomSpawnPoint() {
+		ArrayList<LogicPoint> sp = getSpawnPoints(rd
 				.nextInt(spawnPoints.size()));
 		return sp.get(rd.nextInt(sp.size()));
 	}
 
-	public ArrayList<SpawnPoint> getTeleporterExitPoints(int id) {
+	public ArrayList<LogicPoint> getTeleporterExitPoints(int id) {
 		return teleportExitPoints.get(id - 1);
 	}
 
-	public SpawnPoint getRandomTeleporterExitPoint(int id) {
-		ArrayList<SpawnPoint> sp = getTeleporterExitPoints(id);
+	public LogicPoint getRandomTeleporterExitPoint(int id) {
+		ArrayList<LogicPoint> sp = getTeleporterExitPoints(id);
 		return sp.get(rd.nextInt(sp.size()));
 	}
 
-	public SpawnPoint getRandomTeleporterExitPoint() {
-		ArrayList<SpawnPoint> sp = getTeleporterExitPoints(rd
+	public LogicPoint getRandomTeleporterExitPoint() {
+		ArrayList<LogicPoint> sp = getTeleporterExitPoints(rd
 				.nextInt(teleportExitPoints.size()));
 		return sp.get(rd.nextInt(sp.size()));
 	}

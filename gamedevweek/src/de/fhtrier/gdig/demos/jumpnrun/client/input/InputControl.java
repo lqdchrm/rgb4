@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import org.lwjgl.input.Controllers;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 

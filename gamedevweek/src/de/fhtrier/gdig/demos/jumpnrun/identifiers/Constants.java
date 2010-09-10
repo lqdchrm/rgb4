@@ -50,7 +50,7 @@ public class Constants
 		public static boolean shadersActive = true;
 		public static boolean shadersAutoDisable = true;
 		
-		public static boolean tileMapLogicDebug = false;
+		public static boolean tileMapLogicDebug = true;
 
 		public static boolean forceNoFBO = false;
 

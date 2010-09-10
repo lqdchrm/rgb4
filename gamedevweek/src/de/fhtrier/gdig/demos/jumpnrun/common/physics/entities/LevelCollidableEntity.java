@@ -7,7 +7,7 @@ import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.LogicPoint;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
@@ -128,7 +128,7 @@ public class LevelCollidableEntity extends CollidableEntity {
 								actionTileId -= level.firstLogicGID;
 								++actionTileId;
 								if (actionTileId > 32 && actionTileId <= 64) {
-									SpawnPoint randomTeleporterExitPoint = level
+									LogicPoint randomTeleporterExitPoint = level
 											.getRandomTeleporterExitPoint(actionTileId - 32);
 									this.getData()[Entity.X] = randomTeleporterExitPoint.x;
 									this.getData()[Entity.Y] = randomTeleporterExitPoint.y;

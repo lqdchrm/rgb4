@@ -23,7 +23,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.LogicPoint;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
@@ -195,7 +195,7 @@ public class ClientPlayingState extends PlayingState {
 			this.getLevel().setCurrentPlayer(acp.getPlayerId());
 
 			Level level = getLevel();
-			SpawnPoint randomSpawnPoint = level.getRandomSpawnPoint(1);
+			LogicPoint randomSpawnPoint = level.getRandomSpawnPoint(1);
 			player.getData()[Entity.X] = randomSpawnPoint.x;
 			player.getData()[Entity.Y] = randomSpawnPoint.y;
 
