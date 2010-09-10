@@ -1,5 +1,7 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.states;
 
+import java.awt.GraphicsConfigTemplate;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -18,6 +20,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
+import de.fhtrier.gdig.engine.graphics.shader.Shader;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 import de.fhtrier.gdig.engine.physics.CollisionManager;
@@ -80,15 +83,11 @@ public abstract class PlayingState extends BasicGameState implements
 		//frameBuffer = new Image(RGB4.SCREENWIDTH, RGB4.SCREENHEIGHT);
 	}
 
-	
-	
 	@Override
 	public void render(final GameContainer container,
 			final StateBasedGame game, final Graphics graphicContext)
 			throws SlickException
-	{		
-		// frameBuffer.getGraphics().clear();
-
+	{
 		Level level = getLevel();
 		
 		if (level != null)
@@ -97,6 +96,7 @@ public abstract class PlayingState extends BasicGameState implements
 			{
 				// TODO Only use draw to texture if post processing is
 				// implemented in Level.java
+				// frameBuffer.getGraphics().clear();
 				//level.render(frameBuffer.getGraphics(), frameBuffer);
 				//graphicContext.drawImage(frameBuffer, 0, 0);
 				level.render(graphicContext, null);

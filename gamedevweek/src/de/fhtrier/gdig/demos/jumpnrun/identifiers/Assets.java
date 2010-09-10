@@ -13,6 +13,7 @@ public class Assets {
 	// Level
 	public static class Level {
 		public static final int TileMapId = 3;
+		public static final int TileMapRenderOrder = 10;
 	}
 
 	// Player
@@ -53,6 +54,7 @@ public class Assets {
 	public static class Bullet {
 		public static final int AnimId = 21;
 		public static final String AnimPath = "sprites/items/bullet2_64_64_100.png";
+		public static final String GlowImagePath = "shader/bulletglow.png";
 	}
 
 	public static class Weapon {

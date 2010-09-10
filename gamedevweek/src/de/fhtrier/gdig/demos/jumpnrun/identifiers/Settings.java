@@ -1,6 +1,13 @@
 package de.fhtrier.gdig.demos.jumpnrun.identifiers;
 
-public class Settings {
-	public static final int SCREENWIDTH = 1024;
-	public static final int SCREENHEIGHT = 768;
+/**
+ * All Settings in this Class can only be changed before the GameContainer
+ * starts. The should be respected as final!!!
+ *
+ */
+public class Settings
+{
+	public static boolean USE_NATIVE_FULLSCREEN = false;
+	public static int SCREENWIDTH = 1024;
+	public static int SCREENHEIGHT = 768;
 }
