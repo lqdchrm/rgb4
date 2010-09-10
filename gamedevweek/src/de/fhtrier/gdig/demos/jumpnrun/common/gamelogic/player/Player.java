@@ -16,6 +16,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.StateColor;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.AbstractAssetState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.DyingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.FallingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.JumpingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.LandingState;
@@ -72,6 +73,7 @@ public class Player extends LevelCollidableEntity implements
 	private LandingState stateLanding;
 	private FallingState stateFalling;
 	private ShootFallingState stateShootFalling;
+	private DyingState stateDying;
 
 	private PlayerActionFSM fsmAction;
 	private PlayerOrientationFSM fsmOrientation;
@@ -141,6 +143,7 @@ public class Player extends LevelCollidableEntity implements
 		stateLanding = new LandingState(this, factory);
 		stateFalling = new FallingState(this, factory);
 		stateShootFalling = new ShootFallingState(this, factory);
+		stateDying = new DyingState(this, factory);
 	}
 
 	private void initGraphics() throws SlickException {
@@ -381,21 +384,13 @@ public class Player extends LevelCollidableEntity implements
 	}
 
 	public void die() {
-		// TODO: Implement dying animation etc.
-		SoundManager.playSound(Assets.Sounds.PlayerDyingSoundId, 1.0f, 0.3f);
-		this.respawn(); // FIXME: Do we want to respawn immediately?
-		this.stats.increaseDeaths();
-		Team.getTeamById(this.getPlayerCondition().teamId).increaseDeaths();
+		this.applyAction(PlayerActions.Die);
 	}
 
 	public void respawn() {
 		setConditions();
 
 		initData(new float[] { 200, 200, 65, 70, 1, 1, 0 });
-
-		// TODO Reset Player state
-		// setState(PlayerActionState.RunRight);
-		// setState(PlayerActionState.Idle);
 	}
 
 	@Override
@@ -613,6 +608,9 @@ public class Player extends LevelCollidableEntity implements
 			break;
 		case FallShooting:
 			setState(stateShootFalling);
+			break;
+		case Dying:
+			setState(stateDying);
 			break;
 		default:
 			if (Constants.Debug.finiteStateMachineDebug) {

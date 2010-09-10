@@ -64,6 +64,16 @@ public class Assets {
 		public static final String aFallShootingImagePath = "sprites/player/aschussspringen_128_128_15.png";
 		public static final String bFallShootingImagePath = "sprites/player/bschussspringen_128_128_15.png";
 
+		public static final int aTodAnimId = 120;
+		public static final int bTodAnimId = 320;
+		public static final String aTodImagePath = "sprites/player/atod_128_128_15.png";
+		public static final String bTodImagePath = "sprites/player/btod_128_128_15.png";
+		
+		public static final int aSchmerzAnimId = 121;
+		public static final int bSchmerzAnimId = 321;
+		public static final String aSchmerzImagePath = "sprites/player/aschmerz_128_128_15.png";
+		public static final String bSchmerzImagePath = "sprites/player/bschmerz_128_128_15.png";
+		
 		public static final String VertexShaderPath = "shader/simple.vert";
 		public static final String PixelShaderPath = "shader/playercolor.frag";
 		public static final String GlowImagePath = "shader/playerglow.png";
@@ -103,6 +113,9 @@ public class Assets {
 
 		public static final int FallShootingAnimId = 219;
 		public static final String FallShootingImagePath = "sprites/player/weaponschussspringen_128_128_15.png";
+		
+		public static final int DyingAnimId = 220;
+		public static final String DyingImagePath = "sprites/player/weapontod_128_128_15.png";
 		
 		// Weapon
 		public static final int AnimId = 22;
