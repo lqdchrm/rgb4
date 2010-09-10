@@ -27,13 +27,18 @@ public class Constants
 		public static float playerJumpSpeed = 1000.0f;
 		public static float playerMaxSpeed = 850.0f;
 
-		public static final float playerIdleTriggerSpeed = 5.0f;
-		public static final float playerFallingTriggerSpeed = 500.0f;
-		public static final float playerLandingTriggerSpeed = 10.0f;
-		public static final float playerGroundDrag = 0.005f;
-		public static final float playerAirDrag = 0.000001f;
+		public static float playerIdleTriggerSpeed = 5.0f;
+		public static float playerFallingTriggerSpeed = 500.0f;
+		public static float playerLandingTriggerSpeed = 10.0f;
+		public static float playerGroundDrag = 0.005f;
+		public static float playerAirDrag = 0.000001f;
 
-		public static final Color DefaultPlayerTextColor = Color.white;	
+		public static Color DefaultPlayerTextColor = Color.white;
+
+		public static float weaponGlowFalloff = 1.5f;
+
+		public static float playerGlowFalloff = 1.5f;
+		public static float playerBrightness = 1.0f;	
 
 		public static float colissionPointDistance = 2.0f;
 
@@ -74,8 +79,8 @@ public class Constants
 	}
 	
 	public static class GameTypes extends Configuration {
-		public static final int deathMatch = 0;
-		public static final int teamDeathMatch = 1;
+		public static int deathMatch = 0;
+		public static int teamDeathMatch = 1;
 	}
 	
 	public static class ControlConfig extends Configuration {
