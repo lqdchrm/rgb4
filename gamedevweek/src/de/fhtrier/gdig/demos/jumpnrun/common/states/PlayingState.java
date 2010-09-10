@@ -61,7 +61,7 @@ public abstract class PlayingState extends BasicGameState implements
 	@Override
 	public void init(final GameContainer arg0, final StateBasedGame arg1)
 			throws SlickException {
-		gameType = Constants.GameTypes.teamDeathMatch; // TODO: change it!
+		gameType = Constants.GameTypes.deathMatch; // TODO: change it!
 	}
 	
 	@Override
