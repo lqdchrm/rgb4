@@ -53,6 +53,7 @@ public class Assets {
 	public static class Bullet {
 		public static final int AnimId = 21;
 		public static final String AnimPath = "sprites/items/bullet2_64_64_100.png";
+		public static final String GlowImagePath = "shader/bulletglow.png";
 	}
 
 	public static class Weapon {
