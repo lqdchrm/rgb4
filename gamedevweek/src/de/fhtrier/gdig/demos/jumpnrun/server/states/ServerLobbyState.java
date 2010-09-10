@@ -16,6 +16,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetTeam;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryStartGame;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.ServerGame;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkLevel;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkPlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckConnect;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckNewPlayerList;
@@ -32,7 +33,8 @@ public class ServerLobbyState extends BasicGameState  implements
 
 	private ServerGame serverGame;
 	public static HashMap<Integer, NetworkPlayer> players = new HashMap<Integer, NetworkPlayer>();
-	private Queue<INetworkCommand> queue;	
+	private Queue<INetworkCommand> queue;
+	private NetworkLevel currentLevel;	
 	
 	public ServerLobbyState(ServerGame serverGame) {
 		this.serverGame = serverGame;
@@ -85,6 +87,8 @@ public class ServerLobbyState extends BasicGameState  implements
 			NetworkComponent.getInstance().sendCommand(data.getSender(), new AckConnect());
 			players.put(data.getSender(), new NetworkPlayer(name, data.getSender()));
 			NetworkComponent.getInstance().sendCommand(new AckNewPlayerList(players));
+			if (currentLevel!=null)
+				NetworkComponent.getInstance().sendCommand(new AckSetLevel(currentLevel));
 		}
 		else if (data instanceof ClientQueryDisconnect)
 		{
@@ -103,6 +107,7 @@ public class ServerLobbyState extends BasicGameState  implements
 		}
 		else if (data instanceof QuerySetLevel)
 		{
+			currentLevel = ((QuerySetLevel)data).getNetworkLevel();
 			NetworkComponent.getInstance().sendCommand(new AckSetLevel(((QuerySetLevel)data).getNetworkLevel()));
 		}
 		

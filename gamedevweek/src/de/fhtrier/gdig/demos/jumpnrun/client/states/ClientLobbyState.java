@@ -56,7 +56,8 @@ public class ClientLobbyState extends NiftyGameState implements
 	private Queue<INetworkCommand> queue;
 	private HashMap<Integer, NetworkPlayer> players;
 	private ArrayList<NetworkLevel> levels;
-
+	private int currentTeam = 1;
+	
 	private StateBasedGame game;
 	private boolean isGameCreator = false;
 	private NetworkLevel currentLevel;
@@ -74,9 +75,9 @@ public class ClientLobbyState extends NiftyGameState implements
 		players = new HashMap<Integer, NetworkPlayer>();
 
 		levels = new ArrayList<NetworkLevel>();
-		levels.add(new NetworkLevel(0, "content/jumpnrun/default/", "Level 12"));
-		levels.add(new NetworkLevel(1, "content/jumpnrun/default/", "Level 234"));
-		levels.add(new NetworkLevel(2, "content/jumpnrun/default/",
+		levels.add(new NetworkLevel(0, "content/rgb4/level1/", "Level 12"));
+		levels.add(new NetworkLevel(1, "content/rgb4/Level_1/", "Level 234"));
+		levels.add(new NetworkLevel(2, "content/rgb4/Level_2/",
 				"Level 32222"));
 	}
 
@@ -287,8 +288,12 @@ public class ClientLobbyState extends NiftyGameState implements
 			Log.debug("Choose Team:" + teamID);
 		}
 		
-		NetworkComponent.getInstance().sendCommand(
-				new QuerySetTeam(Integer.parseInt(teamID)));
+		if (currentTeam!=Integer.parseInt(teamID))
+		{
+			NetworkComponent.getInstance().sendCommand(
+					new QuerySetTeam(Integer.parseInt(teamID)));
+			currentTeam=Integer.parseInt(teamID);
+		}
 	}
 
 }
