@@ -32,7 +32,7 @@ public class Constants
 		public static final float playerGroundDrag = 0.005f;
 		public static final float playerAirDrag = 0.000001f;
 
-		public static final Color DefaultPlayerTextColor = Color.white;		
+		public static final Color DefaultPlayerTextColor = Color.white;	
 
 		public static float colissionPointDistance = 2.0f;
 

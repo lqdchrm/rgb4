@@ -11,14 +11,12 @@
 	<useControls filename="nifty-default-controls.xml" />
 
 
+
 	<screen id="start"
 		controller="de.fhtrier.gdig.demos.jumpnrun.client.states.ClientSelectServerState">
-		<layer id="back" childLayout="center">
-			<panel id="panel" height="100%" width="100%" backgroundImage="menu-background.png">
 
-			</panel>
-		</layer>
-		<layer id="layer" childLayout="center">
+		<layer id="layer" childLayout="vertical">
+		    <panel height="20%"/>
 			<panel id="dialog" childLayout="vertical" padding="18px,28px,28px,16px"
 				width="55%" height="58%" align="center" valign="center"
 				backgroundColor="#aaaf">
@@ -44,16 +42,61 @@
 					<control width="100%" id="playername"  name="textfield" text="Player" height="30px" valign="center" textVAlign="bottom" />
 				</panel>
 				
-				<panel width="100%" childLayout="vertical">
+				<panel padding="50px" width="100%" childLayout="vertical">
 	              <control id="join" name="button" label="Join" align="center" valign="center">
 	                <interact onClick="connect()" />
 	              </control>
 				</panel>
 
 			</panel>
+							<!--  BOTTOM -->
+				<panel id="top" height="10%" width="100%"  childLayout="horizontal">
+					<panel width="10%"/>
+					<panel childLayout="center" align="right" width="90%" padding="0px,50px,0px,0px">
+						<label id="back_button" text="Back" style="lobby-button" align="left"
+							hintText="Back">
+							<interact onClick="back()" />
+						</label>
+					</panel>
+
+				</panel>
+			
 		</layer>
 	</screen>
 
 
+  <popup id="popupServer" childLayout="center" backgroundColor="#0001">
+    <panel style="nifty-panel" childLayout="center" padding="18px,28px,40px,16px" width="50%" height="20%" align="center" valign="center">
+      <panel childLayout="vertical" align="center" valign="center">
+        <panel childLayout="center" height="70%" width="100%">
+          <label id="pop-text" text="You forgot to select a server!!!" style="lobby-text" align="center" valign="center" color="#000f"/>
+        </panel>
+        <panel childLayout="horizontal" align="center" height="30%">
+          <panel childLayout="center" width="100%" align="center">
+            <control id="yesButton" name="button" label="ok" width="30px" align="center">
+              <interact onClick="removePopup()" /> 
+            </control>
+          </panel>
+        </panel>
+      </panel>
+    </panel>
+  </popup>
+  
+    <popup id="popupName" childLayout="center" backgroundColor="#0001">
+    <panel style="nifty-panel" childLayout="center" padding="18px,28px,40px,16px" width="50%" height="20%" align="center" valign="center">
+      <panel childLayout="vertical" align="center" valign="center">
+        <panel childLayout="center" height="70%" width="100%">
+          <label id="pop-text" text="You forgot to enter a name!!!" style="lobby-text" align="center" valign="center" color="#000f"/>
+        </panel>
+        <panel childLayout="horizontal" align="center" height="30%">
+          <panel childLayout="center" width="100%" align="center">
+            <control id="yesButton" name="button" label="ok" width="30px" align="center">
+              <interact onClick="removePopup()" /> 
+            </control>
+          </panel>
+        </panel>
+      </panel>
+    </panel>
+  </popup>
 
 </nifty>

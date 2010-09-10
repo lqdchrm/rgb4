@@ -180,7 +180,8 @@ public class Player extends LevelCollidableEntity implements
 
 		// make entities visible
 		setVisible(true);
-		weaponParticles.setVisible(true);
+		
+		weaponParticles.setVisible(false);
 
 		// order
 		this.setOrder(EntityOrder.Player);
