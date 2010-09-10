@@ -13,6 +13,7 @@ public class Assets {
 	// Level
 	public static class Level {
 		public static final int TileMapId = 3;
+		public static final int TileMapRenderOrder = 10;
 	}
 
 	// Player
