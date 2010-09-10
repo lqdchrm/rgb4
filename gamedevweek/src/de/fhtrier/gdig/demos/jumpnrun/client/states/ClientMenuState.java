@@ -103,6 +103,13 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 			}
 		});
 	}
+	
+	public void credits()
+	{
+		game.enterState(GameStates.CLIENT_CREDITS, new FadeOutTransition(),
+				new FadeInTransition());
+	}
+	
 
 	public void mouseMoved(final int oldx, final int oldy, final int newx,
 			final int newy) {

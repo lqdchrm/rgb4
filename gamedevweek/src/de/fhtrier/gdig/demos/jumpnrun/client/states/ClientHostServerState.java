@@ -157,19 +157,17 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 			{
 				serverStarting = true;
 				String interfaceA = interfaces.get(selectedInterfaceIndex).getAddress().getHostAddress().replace('/', ' ').trim();
-	 			ProcessBuilder pb = new ProcessBuilder("server.bat",serverNameControl.getText(),interfaceA,portControl.getText());
+
+				// TODO: starter for every OS! This is Windows-dependend
+				ProcessBuilder pb = new ProcessBuilder("server.bat",serverNameControl.getText(),interfaceA,portControl.getText());
 	 		
-//				 pb.directory("myDir");
 				 try {
 					Process p = pb.start();
 					System.setOut(new PrintStream(p.getOutputStream()));
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
-				// TODO spawn server
-				
 				// connect as client master
 				connect();
 			}
