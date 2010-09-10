@@ -141,12 +141,10 @@ public class Player extends LevelCollidableEntity implements
 	}
 
 	private void initGraphics() throws SlickException {
-		
-		// weapon
-		/*assets.storeAnimation(Assets.WeaponImageId,Assets.WeaponAnimImagePath);
-		this.weapon = factory.createAnimationEntity(Assets.WeaponImageId, Assets.WeaponImageId);
-		this.playerGroup.add(this.weapon);
-		weapon.setVisible(true);*/
+
+		int groupId = factory.createEntity(EntityOrder.Player,
+				EntityType.HELPER);
+		playerGroup = factory.getEntity(groupId);
 
 		// particles
 		assets.storeParticleSystem(Assets.Weapon.ParticleEffect,
@@ -155,29 +153,13 @@ public class Player extends LevelCollidableEntity implements
 		weaponParticles = factory.createParticleEntity(
 				Assets.Weapon.ParticleEffect, Assets.Weapon.ParticleEffect, assets);
 
-		int groupId = factory.createEntity(EntityOrder.Player,
-				EntityType.HELPER);
-
-		playerGroup = factory.getEntity(groupId);
 		playerGroup.add(weaponParticles);
 
 		// Position correction for particleEffects
 		weaponParticles.getData()[Entity.X] = 40;
-		weaponParticles.getData()[Entity.Y] = 110;
+		weaponParticles.getData()[Entity.Y] = 0;//110; //by robindi: Debug um Weapon zu sehen!
 
 		add(playerGroup);
-
-		// weapon
-		// TODO Weapon Image loading goes here
-		// assets.storeAnimation(Assets.WeaponImageId,
-		// Assets.BulletAnimImagePath);
-		// this.weapon = factory.createAnimationEntity(Assets.WeaponImageId,
-		// Assets.WeaponImageId);
-		// this.playerGroup.add(this.weapon);
-		// Position correction for weapon
-		// weapon.getData()[Entity.X] += 20;
-		// weapon.getData()[Entity.Y] += 95;
-		// weapon.setVisible(true);
 
 		// shader
 		if (playerShader == null && Constants.Debug.shadersActive) {

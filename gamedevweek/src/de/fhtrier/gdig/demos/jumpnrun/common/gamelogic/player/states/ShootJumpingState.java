@@ -13,7 +13,7 @@ public class ShootJumpingState extends AbstractShootState {
 	public ShootJumpingState(Player player, Factory factory)
 			throws SlickException {
 		super(player, Assets.Player.ShootJumpingAnimId,
-				Assets.Player.ShootJumpingImagePath, EntityOrder.Player, factory);
+				Assets.Player.ShootJumpingImagePath, Assets.Weapon.ShootJumpingAnimId, Assets.Weapon.ShootJumpingImagePath, EntityOrder.Player, factory);
 	}
 
 

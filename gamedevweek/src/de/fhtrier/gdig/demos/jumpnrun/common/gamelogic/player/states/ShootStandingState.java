@@ -16,7 +16,8 @@ public class ShootStandingState extends AbstractShootState {
 	public ShootStandingState(Player player, Factory factory)
 			throws SlickException {
 		super(player, Assets.Player.ShootStandingAnimId,
-				Assets.Player.ShootStandingImagePath, EntityOrder.Player,
+				Assets.Player.ShootStandingImagePath, Assets.Weapon.ShootStandingAnimId,
+				Assets.Weapon.ShootStandingImagePath, EntityOrder.Player,
 				factory);
 
 	}

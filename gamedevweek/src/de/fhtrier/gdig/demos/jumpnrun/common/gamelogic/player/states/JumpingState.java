@@ -17,7 +17,7 @@ public class JumpingState extends AbstractAssetState {
 	public JumpingState(Player player, Factory factory)
 			throws SlickException {
 		super(player, Assets.Player.JumpAnimId,
-				Assets.Player.JumpAnimImagePath, EntityOrder.Player, factory);
+				Assets.Player.JumpAnimImagePath, Assets.Weapon.JumpAnimId, Assets.Weapon.JumpAnimImagePath, EntityOrder.Player, factory);
 	
 		AssetEntity e = getGfxEntity();
 		
