@@ -2,7 +2,9 @@ package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
 import java.util.List;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
@@ -11,6 +13,8 @@ import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
+import de.fhtrier.gdig.demos.jumpnrun.common.network.BulletData;
+import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
@@ -21,6 +25,7 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
 import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
+import de.fhtrier.gdig.engine.graphics.shader.Shader;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
@@ -30,9 +35,10 @@ import de.fhtrier.gdig.engine.physics.entities.CollidableEntity;
 public class Bullet extends LevelCollidableEntity {
 
 	public Player owner;
-	public int color;
 	public AnimationEntity bullet;
 	public AssetMgr assets;
+	private static Image bulletGlow;
+	public int color;
 
 	public Bullet(int id, Factory factory) throws SlickException {
 		super(id, EntityType.BULLET);
@@ -49,7 +55,7 @@ public class Bullet extends LevelCollidableEntity {
 		
 		// physics
 		// X Y OX OY SX SY ROT
-		initData(new float[] { 200, 200, 24, 24, 1, 1, 0 }); // pos +
+		initData(new float[] { 200, 200, 14, 32, 1, 1, 0 }); // pos +
 																// center +
 																// scale +
 																// rot
@@ -60,20 +66,67 @@ public class Bullet extends LevelCollidableEntity {
 		setBounds(new Rectangle(10, 28, 8, 8)); // bounding box
 
 		CollisionManager.addEntity(this);
-
+		
+		if (bulletGlow == null)
+		{
+			bulletGlow = new Image(
+					assets.makePathRelativeToAssetPath(Assets.Bullet.GlowImagePath));
+		}
+		
 		// setup
 		setVisible(true);
+	}
+	
+	@Override
+	public void applyNetworkData(NetworkData networkData) {
+		super.applyNetworkData(networkData);
+		
+		this.color = ((BulletData)networkData).getColor();
+	}
+	
+	@Override
+	protected NetworkData _createNetworkData() {
+		return new BulletData(getId());
+	}
+
+	@Override
+	public NetworkData getNetworkData() {
+		BulletData result = (BulletData) super.getNetworkData();
+		result.bulletColor = this.color;
+
+		return result;
 	}
 	
 	@Override
 	protected void preRender(Graphics graphicContext)
 	{
 		super.preRender(graphicContext);
+		
+		Color bulletCol = StateColor.constIntoColor(this.color);
+		
+		if (Constants.Debug.shadersActive)
+		{
+			Shader.pushShader(Player.getPlayerShader());
+			Player.getPlayerShader().setValue("playercolor", bulletCol);
+		}
+		
+		graphicContext.setColor(Color.white);
+		Shader.activateAdditiveBlending();
+		
+		graphicContext.drawImage(bulletGlow, this.getData(CENTER_X)-bulletGlow.getWidth()/2,
+				this.getData(CENTER_Y)-bulletGlow.getHeight()/2);
+		
+		Shader.activateDefaultBlending();
+		
+		if (Constants.Debug.shadersActive)
+		{
+			Shader.popShader();
+		}
 	}
 	
 	@Override
-	protected void postRender(Graphics graphicContext) {
-		// TODO Auto-generated method stub
+	protected void postRender(Graphics graphicContext)
+	{
 		super.postRender(graphicContext);
 	}
 

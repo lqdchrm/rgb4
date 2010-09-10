@@ -20,6 +20,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.PlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
@@ -79,8 +80,14 @@ public class ServerPlayingState extends PlayingState {
 
 			bullet.color = state.weaponColor;
 			// set player pos as gem pos
-			bullet.getData()[Entity.X] = player.getData()[Entity.X] + 40;
-			bullet.getData()[Entity.Y] = player.getData()[Entity.Y] + 80;
+			bullet.getData()[Entity.X] =
+				(player.getData()[Entity.X] + player.getData()[Entity.CENTER_X]) +
+				(bullet.getData()[Entity.CENTER_X] - Assets.Weapon.weaponXOffset) * player.getData()[Entity.SCALE_X];
+
+			bullet.getData()[Entity.Y] =
+			player.getData()[Entity.Y] + player.getData()[Entity.CENTER_Y] -
+			bullet.getData()[Entity.CENTER_Y] + Assets.Weapon.weaponYOffset;
+			
 			bullet.getVel()[Entity.X] = player.getVel()[Entity.X]
 			        + (player.getData()[Entity.SCALE_X] == -1 ? Constants.GamePlayConstants.shotSpeed
 			                                            	: -Constants.GamePlayConstants.shotSpeed);

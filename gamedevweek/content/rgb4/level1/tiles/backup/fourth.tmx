@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="130" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="elemente_level_compact" tilewidth="32" tileheight="32">
+  <image source="elemente_level_compact.png" trans="ff00ff"/>
+ </tileset>
+ <tileset firstgid="73" name="Deko" tilewidth="32" tileheight="32">
+  <image source="elemente_level_compact2.png" trans="ff007f"/>
+ </tileset>
+ <tileset firstgid="362" name="Logik" tilewidth="32" tileheight="32">
+  <image source="numbers.png"/>
+ </tileset>
+ <layer name="Dekoebene Hinten" width="100" height="130">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3dNYxUQQCH8Vnc3SHBjuAJHjxBL0DHKT3e4z3e4z3e4z3e49bgx3G4fRSv3QoyNzvfL/cVW83/7dTvNgRJkiRJkiRJkiSV85JeeWar8Z1+eGar0a0UQveSZ0qSJEmSJEmSJEmSJEmSJElS6p7SM3pOLyJvUQjN9JFa6FPkLQqhXSmE9tSBOvp+QXT9uYMBNJAGeR9RFe+kjeUextF47yOq4p202dzDHJrrfURVvJO2glbSKu9DkiRJkiRJkiRJkiRJkiRJkiRJ/1EN1VId1VMDNdKamKMytpbW0XraQBtpE22OOSpjW2grbaPttIN20q6YozK2m/bQXtpH++kAHYw5KmOH6DAdoaN0jI7TiZijMnaSTtFpOkNn6RydjzkqYxfoIl2iy3SFrtK1mKMydp1u0E26RbfpDt2NOSpj9+g+PaCH9Ige05OIm3L2mt7QW3pH76mJPsQclbGf9It+//1Q4o/aUFv/70QUPfjee1Iv6k19qC/1S+Q+PtMX+krfIm/5F4bzvY+gkTSKRlMVjUnkPjqxszN1oa6JbC5nCs8wlabRdJpBM2lWIs82mJ1DaCgNS2RzOYt4hsW0hJbSMlpO1Yk82wR2TqRJNDmRzeWs5hlqqJbqqJ4aqDGRZ5vHzvm0gBYmslmSJEmSJEmSJElKUfHbTZV+ZiqK326q9DNTUfx2U6WfKUmSJEmx/AH8x76LIMsAAA==
+  </data>
+ </layer>
+ <layer name="Kollisionsebene" width="100" height="130">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+2da2/TMBSGTbl+59Yx8Q0kaAEJCQTjfhH//y/ho8WKlSXpksU+b5vnkY6aTVPt5s2x3/q2hyGER0R4fCBqlP8kxssAKjwN6KEEemiBHlqghxavAnooQX5oQX5ogR5aoIcW6KEF/bkW6KEFemiBHlqghxb4Ky3IDy0sPz7F2MS4s9B73lrwvdZWpunxceH3hPnQXmmBHlrgr7RADy1or7QgP/wx37xp4ktADyU+BPRQgvZKC/pzLcgPLdBDi+cBPbzB7+qC39UCf6UFemhR01/djfG5iYue1zzuxbgf40GluqlQU4+vMb7F2MXYxjgbiX3ztz8q1U0F0+NN5TLNQyQ99k3k1xZrmtPv+t0hPax9KdFu5Hli936bXa81LxJjftf6+vQcPytU9i6LteVFH2P+6nVo71OJNq2bJ2vOi8SYHul+fQ9l75PlydrzIqHw/YMxzRb00KLUvZjizU5Rj+Rhb4dpa3xL5ccUb3aKesyllB5TvNlN9cifxU3neurz6U0pPaZ4M/Kjhf5cC4V7oVAHFTzGE/vqgB6XeN6L1A/bmGbaM5eHR1/8Nsa7kXhfuHyFZ1NpvORnjF8xfsf407zmP/8tXL75Um89FJ4JFdBDC/yuFuihRYnzAObU4Zj1yOe/bzpW43keQPKWye96+Es1PJ9N85ZdP1nbX6oxR49S605gnt8tve5kzczJj9LrTtbMnP04tdadrBHTw9vv3pQl/aY3pofKWB5ofD+HFvZzaoEeWqCHFvQfWpyC312KQ3PnNcY78bstae483ze3bX43FEuPd9J/XCWNO3vs1zr2uaCS2LqX2uOlNjbImGA/1nbUvjfkxzDWbtWeD7uuHkpjdnld8nrk4V3HKVx3/znUh/OWtFBYnwgt9OdakB9akB9aoIc/nC+qC35XC/pzLeg/tCA/tCA/tEAPf/C7upjfZbxdB1t/hR46oIcWrE/UAn+lBe2VFiXzw/ssqanMWb+79OcpeT6c91lSU0n1nRtLfB76cy0Uzk+ElmPxV90zj4fWI3Z/Vl6X2Mex6LEW8v1RY/HCq4Irw/P8K7gK7ZUWHntOYBj8rha0V1rw/VwL0wO/q4Ppgd/VgfZKC/pzLfC7WpAfWtB/aJH+v0E6/3soPM4FtzkPj7MfPOdMTI/zcHn291l2fZ4F54LXI9dj31znr+maPr8Oth8n6bEN/flhmpAfdUh6mBa70J8fnJtfj6THLozrQX7UwfRI7VRfnpAfdbH+fDcQuR7miS8Win8HYqlyFOpz6L275dh+tf9LzOEhIMsAAA==
+  </data>
+ </layer>
+ <layer name="Dekoebene Vordergrund" width="100" height="130">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3BMQEAAADCoPVPbQ0PoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeDJ9VAwoIMsAAA==
+  </data>
+ </layer>
+ <layer name="Logick Layer" width="100" height="130">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3aQQ6CMBAFULiu3tRTGRck2mDtjNMmmveSLmn/dICyYNsAgBWu++uY6bJ/HlFt/siYVUO0pl6mSOZv9zIzX9W+tnONZsrU2etTpIZ3eSt70HOsseIZfp5/dn1na628PqPtQfWz+HB2z87s/cj9PVJbm3WW0b3I9Cbzbq/oTXSOzJlU2ZdVZ2x1zjZr9XdDdb7Ra1blrfYvdQAAAAAAAAAAAAAxN/8MAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAz7kDA9yjKCDLAAA=
+  </data>
+ </layer>
+</map>

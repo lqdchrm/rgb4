@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="30" height="30" tilewidth="32" tileheight="32">
-<tileset firstgid="1" name="templatetiles" tilewidth="32" tileheight="32">
-  <image source="templatetiles.png" trans="ff00ff"/>
- </tileset> 
-<tileset firstgid="257" name="numbers" tilewidth="32" tileheight="32">
-  <image source="numbers.png" trans="ff00ff"/>
+<map version="1.0" orientation="orthogonal" width="120" height="50" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="elemente_level_compact" tilewidth="32" tileheight="32">
+  <image source="elemente_level_compact.png" trans="ff00ff"/>
  </tileset>
- <layer name="Kachelebene 3" width="30" height="30">
+ <tileset firstgid="73" name="Logik" tilewidth="32" tileheight="32">
+  <image source="numbers.png"/>
+ </tileset>
+ <tileset firstgid="201" name="Deko" tilewidth="32" tileheight="32">
+  <image source="elemente_level_compact2.png"/>
+ </tileset>
+ <layer name="Hintergrund Deko" width="120" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3NywkAIAwE0XRiof5SutNCDgrCPJhblkRIkiRJ0n8WbcrHfzsNmtSK2+r9bQeLZOXcEA4AAA==
+   H4sIAAAAAAAAC+3XO06CARCF0Z+tiqxAMNKjItQiD2ufUKug1KCb8q6AykSdnJN8/SS3mqYBAAAAAAD4P45aTdNOx6nT+u1r+Gkn2bSbeunUvuUMsul5ukiX9i3nOptO0k2a2recu2x6nx7So33Lecmmr+ktre1bzi6b7tNn+rIvAAAA/Dln+df7fvaShtn1Ko3S2MblzLLpPC3SrX3Lecqmz2mZVvYtZ5NN39NH2toXAAAAAAAAAIADvgE/NYftwF0AAA==
   </data>
  </layer>
- <layer name="Kachelebene 2" width="30" height="30">
+ <layer name="Kollisionsebene" width="120" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3NsQ0AIAzEwKwOowbYIz8BBRL5xpZcX0ZEmu4OFxcXFxcXFxcX1+0OPQ3uSz/dpbc+ze4tt+u4AILL+UcQDgAA
+   H4sIAAAAAAAAC+1cbU8UQQwuCuoHv6HcngQTVFBuATXRCHxR4f//J6dhmmvGmdmyzMvR65M82dvdMp3tc+12Zy/sA8Abx7cRpo4bn0a8DhzfgUErvjie956EoRpMX91YgOmrGajvSe9JGKrB9NUNq8+6Yf2Vbpi+umH66obdf3XD8lc3UF97PtILqb47js8cn7MtZ3hut8ZklaNGjM/A8lczTF/dMH11w/TVDeufdQP1/eX40fNTA58XjpcZfm8wh5rofX3UhyNvHH9W9hfit+Mfx7+Ot37L9+8az6c0Nun6foDVZ82w/ko3rL/SjSMwfTVDqq+tP9cH73t5PGPHpDG2/NUN+/2kblj+6obpqxumr26gvrj+fO3ZYu13z/vC9e5jT+rDj4Nj4ecXji8dXzWYZww49w9wP/dcrxs+UyCvPF9XniNf//7quHQc/PZ9Zd+IhffXet27N3AtuEWMj7wf4sg+t6jVuGY2NPK1ScDvdS99SWOs1VhDriNMHX8o8Z3VNuqL32uM8TdY1/jS5DWZuIL7eBP3Yf1/JA4i+8tCNtuo71RMJPGXakRE+xWsdca4nzp+hvX7B74/CmyWAptt1HcqJpL4S2y4tqTv6Le8Rt9E9sdCNnP03YM2PWgN//RbmVxMBoGNRCO67/K6TBojD+H/nD8M7FI2vDbkbObou/B/36LPL+2fcm8qtqsJm2FiHNJwiJBrHKsLIWO1m/fjsTr9mF79DNo9x5X2TzHEGM+JrcRmGZwP97nGsdoRMlaXaVxirHZM9eq53jv33Yi9x+TvM1PrD+G51Ls33gNL5x7W1lh9DeOai5sktmF/VYp8rSTFqfMS9urNUnn02OupyZL6Sq5Xg75h3HprWFLfqTFSGpaMRU996f711PQtOWa4ZkL39VWh8Xvn75y6VSsP8dwI8d62FulZmrOk/03V9yF1rhVr6ZtiifH5O80WvIL8c8SmkedVK30ph2v4a8ne2kn1leTT3Jqf89lbn23Ql8f7H3SVBA/AXQAA
   </data>
  </layer>
- <layer name="Kachelebene 1" width="30" height="30" opacity="0.11">
+ <layer name="Vordergrund Deko" width="120" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3NsQ0AAAjDsP4Oh8PMCciWMicBAAC+q619fY8BwrBNFBAOAAA=
+   H4sIAAAAAAAAC+3TwU0CQBQE0KUMrQDiVU8QCtIGNFqAghagUoFKB2BtjokVEMk33/eSOc9mZ3cMAAAAAAAAAAAAAIDfdTkZ42pSfQqO5Tbb3tm3rcds+2RfDnCdd3Pj7bR0n10fklWytnE7z9n0JXlNNvZt5y2bvicfyda+Le2y6z75tC9wJOfJSXJa1D/76b8o6u9umpyNun2r+7v7vt/K/1vd3131/6nu726eLJLlP+0HAAAAAIC/4gs7vsbqwF0AAA==
   </data>
  </layer>
- <layer name="logic" width="30" height="30">
+ <layer name="Logik Layer" width="120" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3WMREAMAwDsaRMCqX8SRWGkzsJwQ8eXMVUr9MFAAA5Z/gX6uF97HDDO/qfE71YEA4AAA==
+   H4sIAAAAAAAAC+3WQU7DMBAF0F6v3KQFSq9RoMA14JTI28iocoQ96fi9pePEk3xF+rsdAAAAAOSzjx5gAg/RAwAA8KeIPpy9g0f0X50bAGCbsnffLdCFAQC2q1cfvnR67r377PTc0Z1bvnW98h1NvnXyzS1LvszjGD3ARpyjB+ik5PuzWHu9cc9bp1n+w/XG9a/KWnn/rPnWzJbvbOSbm3zzOkQPMMhL9AABSs9oyfep1yArnRr2lnyXvXIGrfkuv9H7ijO/G/d/VNbKHK350m5Nvq1q+TKGfHOTb16Pg897HnzezEq/ich3xg4cxf8LwD37BSHs8bTAXQAA
   </data>
  </layer>
 </map>

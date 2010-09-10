@@ -1,5 +1,8 @@
 package de.fhtrier.gdig.demos.jumpnrun;
 
+import java.awt.DisplayMode;
+import java.awt.GraphicsEnvironment;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.opengl.pbuffer.GraphicsFactory;
@@ -12,11 +15,21 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 
 public class RGB4 {
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		if (Constants.Debug.forceNoFBO)
 			GraphicsFactory.setUseFBO(false);
 		
+		boolean fullscreen = false;
+
+		if (Settings.USE_NATIVE_FULLSCREEN) {
+			DisplayMode dm = GraphicsEnvironment.getLocalGraphicsEnvironment()
+					.getDefaultScreenDevice().getDisplayMode();
+
+			Settings.SCREENWIDTH = dm.getWidth();
+			Settings.SCREENHEIGHT = dm.getHeight();
+			
+			fullscreen = true;
+		}
 
 		// create game
 		RGB4Game game = Lobby.createGameByArgs(args);
@@ -27,7 +40,8 @@ public class RGB4 {
 			try {
 
 				AppGameContainer gc = new AppGameContainer(game);
-				gc.setDisplayMode(Settings.SCREENWIDTH, Settings.SCREENHEIGHT, false);
+				gc.setDisplayMode(Settings.SCREENWIDTH, Settings.SCREENHEIGHT,
+						fullscreen);
 
 				if (game instanceof ClientGame) {
 					gc.setVSync(true);

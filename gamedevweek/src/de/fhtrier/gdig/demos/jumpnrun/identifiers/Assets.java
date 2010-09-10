@@ -5,14 +5,15 @@ public class Assets {
 	// Config
 	public static class Config {
 		public static final String AssetGuiPath = "content/rgb4/gui";
-		public static final String AssetManagerPath = "content/rgb4/level1/";
+		public static String AssetManagerPath = "content/rgb4/level1/";
 		public static final String AssetManagerFallbackPath = "content/rgb4/fallback/";
-		public static final String GameTitle = "RGB 4 - Der Letzte macht das Licht aus";
+		public static String GameTitle = "RGB 4 - Der Letzte macht das Licht aus";
 	}
 
 	// Level
 	public static class Level {
 		public static final int TileMapId = 3;
+		public static final int TileMapRenderOrder = 10;
 	}
 
 	// Player
@@ -53,6 +54,7 @@ public class Assets {
 	public static class Bullet {
 		public static final int AnimId = 21;
 		public static final String AnimPath = "sprites/items/bullet2_64_64_100.png";
+		public static final String GlowImagePath = "shader/bulletglow.png";
 	}
 
 	public static class Weapon {
@@ -85,11 +87,13 @@ public class Assets {
 		
 		// Weapon
 		public static final int AnimId = 22;
+		public static final int WeaponRenderOrder = 9;
 		public static final String AnimImagePath = "sprites/items/waffestehen_128_128_20.png";
 		public static final int ParticleEffect = 200;
 		public static final String ParticleEffectImgPath = "sprites/player/weaponparticle.png";
 		public static final String ParticleEffectCfgPath = "sprites/player/weaponparticleemitter3.xml";
-		
+		public static final float weaponXOffset = 35;		
+		public static final float weaponYOffset = 35;	
 		public static final String GlowImagePath = "shader/weaponglow.png";
 	}
 

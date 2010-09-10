@@ -13,9 +13,13 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.tests.GUITest;
 import org.newdawn.slick.util.Log;
 
+import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetLevel;
+import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetTeam;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryStartGame;
+import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackground;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
@@ -23,6 +27,7 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkLevel;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkPlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckConnect;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckNewPlayerList;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckSetLevel;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckStartGame;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
@@ -57,7 +62,8 @@ public class ClientLobbyState extends NiftyGameState implements
 	private NetworkLevel currentLevel;
 
 	// gui-elements
-	private Element guiPlayerList;
+	private Element guiListTeam1;
+	private Element guiListTeam2;
 	private Element guiLevelList;
 	private TextRenderer guiCurrentLevelRenderer;
 	private Element guiButtonPanel;
@@ -107,15 +113,12 @@ public class ClientLobbyState extends NiftyGameState implements
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
-		// TODO Auto-generated method stub
-		super.render(container, game, g);
-		// float offset = 30;
-		// g.drawString("Client Currently connected: ", 10.0f, offset);
-		// for (NetworkPlayer player : players) {
-		// g.drawString(player.getPlayerName(), 10.0f, 20.0f + offset);
-		// offset += 10.0f;
-		// }
-		// g.drawString("PRESS ENTER TO START", 200, 400);
+		try {
+			MenuBackground.getInstance().render(container, game, g);
+			super.render(container, game, g);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -145,31 +148,35 @@ public class ClientLobbyState extends NiftyGameState implements
 
 		if (Constants.Debug.networkDebug) {
 			Log.debug("try to handle:" + cmd);
-		}
-
-		if (cmd instanceof AckConnect) {
+		} else if (cmd instanceof AckConnect) {
 			if (Constants.Debug.networkDebug) {
 				Log.debug("Client connected to serverlobby");
 			}
-		}
-		if (cmd instanceof AckNewPlayerList) {
+		} else if (cmd instanceof AckNewPlayerList) {
 			players = ((AckNewPlayerList) cmd).getPlayerList();
 			drawPlayers(players.values());
-		}
-		if (cmd instanceof AckStartGame) {
+		} else if (cmd instanceof AckStartGame) {
 			game.enterState(GameStates.PLAYING);
-		}
-		if (cmd instanceof ServerAckDisconnect) {
+		} else if (cmd instanceof ServerAckDisconnect) {
 			if (Constants.Debug.networkDebug) {
 				Log.debug("Player left server!");
 			}
 			game.enterState(GameStates.SERVER_SELECTION);
+		} else if (cmd instanceof AckSetLevel) {
+			selectLevel(((AckSetLevel) cmd).getNetworkLevel());
 		}
+	}
 
+	private void selectLevel(NetworkLevel networkLevel) {
+		this.currentLevel = networkLevel;
+		guiCurrentLevelRenderer.setText(networkLevel.getLevelName());
+		// TODO: SET ASSET-PATH:
+		// Assets.AssetManagerPath = networkLevel.getAssetPath();
 	}
 
 	private void drawPlayers(Collection<NetworkPlayer> players) {
-		clearList(guiPlayerList);
+		clearList(guiListTeam1);
+		clearList(guiListTeam2);
 		for (NetworkPlayer player : players) {
 			// get template from XML ( <controlDefinition name='playerContrl'> )
 			// CustomControlCreator lC = new
@@ -183,7 +190,11 @@ public class ClientLobbyState extends NiftyGameState implements
 			// fill in the name
 			LabelCreator label = new LabelCreator(player.getPlayerName());
 			label.setAlign("left");
-			label.create(nifty, nifty.getCurrentScreen(), guiPlayerList);
+			if (player.getTeamId() == 1) {
+				label.create(nifty, nifty.getCurrentScreen(), guiListTeam1);
+			} else if (player.getTeamId() == 2) {
+				label.create(nifty, nifty.getCurrentScreen(), guiListTeam2);
+			}
 		}
 	}
 
@@ -216,12 +227,11 @@ public class ClientLobbyState extends NiftyGameState implements
 		int chooseLevelID = Integer.parseInt(id);
 		for (NetworkLevel level : levels) {
 			if (level.getLevelID() == chooseLevelID) {
-				this.currentLevel = level;
-				guiCurrentLevelRenderer.setText(level.getLevelName());
+				NetworkComponent.getInstance().sendCommand(
+						new QuerySetLevel(level));
 				break;
 			}
 		}
-		// TODO: Benachrichtige Server und andere Clients
 	}
 
 	private void clearList(Element e) {
@@ -237,7 +247,8 @@ public class ClientLobbyState extends NiftyGameState implements
 
 	@Override
 	public void bind(Nifty nifty, Screen screen) {
-		guiPlayerList = screen.findElementByName("player_list");
+		guiListTeam1 = screen.findElementByName("team_1");
+		guiListTeam2 = screen.findElementByName("team_2");
 		guiLevelList = screen.findElementByName("level_list");
 		guiCurrentLevelRenderer = screen.findElementByName("current_level")
 				.getRenderer(TextRenderer.class);
@@ -270,6 +281,15 @@ public class ClientLobbyState extends NiftyGameState implements
 		if (isGameCreator) {
 			NetworkComponent.getInstance().sendCommand(new QueryStartGame());
 		}
+	}
+
+	public void chooseTeam(String teamID) {
+		if (Constants.Debug.guiDebug) {
+			Log.debug("Choose Team:" + teamID);
+		}
+		
+		NetworkComponent.getInstance().sendCommand(
+				new QuerySetTeam(Integer.parseInt(teamID)));
 	}
 
 }

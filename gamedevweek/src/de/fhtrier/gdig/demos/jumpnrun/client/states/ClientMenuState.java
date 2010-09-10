@@ -2,6 +2,9 @@ package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import java.io.File;
 
+import org.lwjgl.input.Mouse;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
@@ -9,6 +12,7 @@ import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.Log;
 
+import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackground;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
@@ -46,6 +50,8 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 				ResourceLoader.getResourceAsStream(CROSSHAIR_PNG),
 				CROSSHAIR_PNG, false));
 
+
+
 	}
 
 	public void bind(final Nifty newNifty, final Screen newScreen) {
@@ -64,6 +70,22 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 	public void onEndScreen() {
 	}
 	
+	
+	
+	@Override
+	public void render(GameContainer container, StateBasedGame game, Graphics g)
+			throws SlickException {
+		try
+		{
+			MenuBackground.getInstance().render(container, game, g);
+			super.render(container, game, g);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 	public void joinGame() {
 		game.enterState(GameStates.SERVER_SELECTION, new FadeOutTransition(),
 				new FadeInTransition());

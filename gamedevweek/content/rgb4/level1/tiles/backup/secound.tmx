@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="52" height="125" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="elemente_level_compact" tilewidth="32" tileheight="32">
+  <image source="elemente_level_compact.png" trans="ff00ff"/>
+ </tileset>
+ <tileset firstgid="73" name="Logik" tilewidth="32" tileheight="32">
+  <image source="numbers.png"/>
+ </tileset>
+ <layer name="Hintergrund Deko" width="52" height="125">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3BAQ0AAADCoPdPbQ8HFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMCHAeIr8MSQZQAA
+  </data>
+ </layer>
+ <layer name="Kollisionsebene" width="52" height="125">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+1c6XLUMAw2lKsD/4B2l04ZbrYt5SzHlkKXm/d/IqxhNVU9sizZceLdRjPfJM3Gsb7YkmXZ6aZbH9lcYl1k5NO2jHzsctXjmsd1jxuV6+qDz7bHxGPqca9yXX3w+exx4vHF42vlukb7aVtGPrLc9LhV8f6UdM1n1+N+xftTso58PnnMO8Kxx1ND/TOPjx3WD1ymCkwSv9/2uOux5Wxj5nZQVqOLpGNKTy2wTeB9vzDw2QvK5rzL2nys7ZPis27tMwSoTmDfYJdSLA0x99yd9x8t8Nlh+OB1qd9tJ8oOzQl97jHRR+Kzlyg7NHaCY4rPdqJsCwj1kfzCnpPL1sDC45vH9yUW5BrOzxAnwTE1d/scPJ/Wc8LU/Z25ZuHyXtClFTlyej6WGGwosfj3kU//0gUfmE/O3dkco49jbP56bOADYxwXr8A7CccL7TGnTCzOOHT22JNro9wYK8fHIrhxDPTY74DPaYY+1PdbfOx0qTM3jgGfgw74vMvQiT7H2r6xcTCnn0g2FCuzcGdjOBcn0NyvZqznbAfmGhZfgAB7s9hQSUwRa3OOz8zlzUOtfCzz0pJn5vgCiQ/tMxQlawf0mamYNscXpGxoKMm1nVQbDSW5ttMynxzbaZlPru1QG5obYLE3zFtp8buQC20n6fcW8tddooX8dS0+Q+WvV6V9hubTYv5a22dXJX8NY9aB0/n6WA5akx/tO39NeXEI22no/HWqX2n5cPpo+XTZx5DPwsVz1XjtG3NNwg+BzympwwKsm/5Nr8M7XoVctVZgnttSvFkq4CNHPu0Kjuc159SX3Fk++krFenAuDj6h9j5IsNPafgdyKn35t673UcWkL//WF5++/MGq8oF1GbD7cF0K7PQjcx2ObzqsH/0b7l+/7sr2snN5ztQxxxfhnnuqNwDeG+Qj7rj/OQk8WvMafQvmUTi9uX4APEvy67UF5k8xvSG+pjnwvvbmlwj261BvmC9I40+f34ZIotUjNf70+S2FJFo91jEeXTc+lvjaak8PPB56PPJ4vDx/UqEeLGONr9Hva8ent+5sjR/8zodK9YDkxNfo97Xj00+PX+7/Osef5fnfCvWgWONrq7+D++k4Du9bE5fm+tXa/mB3+fxnHs+X9dWMs9eRD/TTlxGUxAQwd3jlzsdZYA+vXdkc4VDQF+M37ONbwXlJ22EOlMurSrnTlMxcXF/M+2KfmDHnrQmnI55jTh37xHFw3iqfmL64TkBjb3oO914OsBG5VpJbu0SeS4/h+cZSb07fEzfm41uXVm0+Vy4aH7DT0EZrHC2/SX7norXPqsnIp20BPjBvjMWrJZBicylGLkHpfj/cv8DtyZPane5r5cpOCtDFfhhuj1SKj1R25DPyuQh8pD15KT5S2aH4YP3cnrwUH6nskHxoO9F9bBo+sbJUv32CvviE+lj4cGU5Ln3zCaEZT1Nohc9kzfjsV+Kj4VSjbWBcgTiXi0lh3em3kk8OpxptE46VsbahZSx8atk8hwOiS4xPqBctE3I5MHCp0T4aPnT/9sTF+XCcUn2jhv0gwrVmtB3UUdPXtN8dTA335fIJ24izHaltKCdNvTX4hJxCPlrbsfLBdu6ay8LF165Og98XCS6UT0pXzT1TF/8+gbs3Z63iSMEF/UEpH0k/7pv4nLXeXYZHqt7c8VOKWXaDexcub10U+yDVUXovIf+YLWG7xmxZem4Xa2L43lPtnOKD1zhOEh/6DY/ULtr9/vi81Po31z8pL4kPrrUCSvYilO73h//7g3u0NLGs1Oc0bZWS0v3kaKspHqvER9JNaz+rykfDidpSDHNn3+//KAG0ma75hOW0cVUuuBghpZOVD/f7yMfGh9ar4fMPpaF0WZBlAAA=
+  </data>
+ </layer>
+ <layer name="Vordergrund Deko" width="52" height="125">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3BAQ0AAADCoPdPbQ8HFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMCHAeIr8MSQZQAA
+  </data>
+ </layer>
+ <layer name="Logik Layer" width="52" height="125">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3aWQqDMBQFULfX7qTjPjruQ1dZA36UIJQ26jPlHHhgIph7/wRtGgCAcdt+LtEhvnTtZxMdAgAAAAAAAAAAVub+4f5tkRTT0QfKHUf2DounmE7q072t03XtfXI19wH+23OYOT2GgV+00QFgZqfoAAXO2Tq9x9fep8v2au8DAAAAAAAAAMku8Oz9xM9L3/aj++T/F5SK7gMAa/YCJ/w5oJBlAAA=
+  </data>
+ </layer>
+</map>

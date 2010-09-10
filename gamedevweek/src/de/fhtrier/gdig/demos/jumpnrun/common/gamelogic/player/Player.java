@@ -181,7 +181,8 @@ public class Player extends LevelCollidableEntity implements
 
 		// make entities visible
 		setVisible(true);
-		weaponParticles.setVisible(true);
+		
+		weaponParticles.setVisible(false);
 
 		// order
 		this.setOrder(EntityOrder.Player);
@@ -393,20 +394,22 @@ public class Player extends LevelCollidableEntity implements
 	}
 
 	@Override
-	protected void preRender(Graphics graphicContext) {
+	protected void preRender(Graphics graphicContext)
+	{
 		super.preRender(graphicContext);
+		
+		Color playerCol = StateColor.constIntoColor(this.getPlayerCondition().color);
+		Color weaponCol = StateColor.constIntoColor(this.getPlayerCondition().weaponColor);
 		
 		if (Constants.Debug.shadersActive)
 		{
 			Shader.pushShader(colorGlowShader);
 		}
 		
+		graphicContext.setColor(Color.white);
 		Shader.activateAdditiveBlending();
 		float weaponGlowSize = 0.6f + this.getPlayerCondition().ammo * 0.4f;
 		float glowSize = 0.1f + this.getPlayerCondition().health * 0.9f;
-		
-		Color playerCol = StateColor.constIntoColor(this.getPlayerCondition().color);
-		Color weaponCol = StateColor.constIntoColor(this.getPlayerCondition().weaponColor);
 		
 		// TODO find active Animation-Asset and setTintColor(playerCol)
 		

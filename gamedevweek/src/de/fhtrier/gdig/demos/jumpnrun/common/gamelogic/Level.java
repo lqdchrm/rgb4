@@ -26,7 +26,6 @@ import de.fhtrier.gdig.engine.graphics.entities.TiledMapEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.physics.entities.MoveableEntity;
-import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class Level extends MoveableEntity {
 
@@ -43,10 +42,10 @@ public class Level extends MoveableEntity {
 	private int currentPlayerId;
 
 	private ArrayList<ArrayList<SpawnPoint>> teleportExitPoints;
-	
+
 	MoveableEntity layerBackgroundFar;
 	MoveableEntity layerBackground;
-	
+	MoveableEntity layerForeground;
 
 	private Random rd = new Random(System.currentTimeMillis());
 
@@ -67,8 +66,9 @@ public class Level extends MoveableEntity {
 
 		this.groundMap = assets.storeTiledMap(Assets.Level.TileMapId,
 				"tiles/blocks.tmx");
-		this.ground = factory.createTiledMapEntity(Assets.Level.TileMapId,
-				Assets.Level.TileMapId, assets);
+		this.ground = factory
+				.createTiledMapEntity(Assets.Level.TileMapRenderOrder,
+						Assets.Level.TileMapId, assets);
 		this.ground.setVisible(true);
 		this.ground.setActive(true);
 		add(this.ground);
@@ -99,25 +99,26 @@ public class Level extends MoveableEntity {
 		calculateTeleportExits();
 	}
 
-	MoveableEntity createBackgroundLayer(int AssetId, String AssetPath) throws SlickException {
-		
+	MoveableEntity createBackgroundLayer(int numTiles, int AssetId, String AssetPath)
+			throws SlickException {
+
 		// Background far
 		MoveableEntity result = new MoveableEntity(AssetId, EntityType.HELPER);
 		int xOffset = 0;
-		
-		for (int i=0; i<4; i++) {
-			String strFile = (assets.makePathRelativeToAssetPath(AssetPath + "_0" + (i+1) + "." + Level1.FileExt));
+
+		for (int i = 0; i < numTiles; i++) {
+			String strFile = (assets.makePathRelativeToAssetPath(AssetPath
+					+ "_0" + (i + 1) + "." + Level1.FileExt));
 			Image img = new Image(strFile);
 
-			assets.storeImage(AssetId+i, img);
-		
-			ImageEntity e = factory.createImageEntity(
-					AssetId, AssetId+0,
+			assets.storeImage(AssetId + i, img);
+
+			ImageEntity e = factory.createImageEntity(AssetId, AssetId + i,
 					assets);
-			
+
 			e.setVisible(true);
 			e.getData()[Entity.X] = xOffset;
-			e.getData()[Entity.Y] = Settings.SCREENHEIGHT - img.getHeight(); 
+			e.getData()[Entity.Y] = Settings.SCREENHEIGHT - img.getHeight();
 			xOffset += img.getWidth();
 			result.add(e);
 		}
@@ -125,20 +126,29 @@ public class Level extends MoveableEntity {
 		result.setVisible(true);
 		return result;
 	}
-	
+
 	private void loadBackgroundLayers() throws SlickException {
-		
+
 		// Background far
-		layerBackgroundFar = createBackgroundLayer(Level1.ImageBackgroundFarId, Level1.ImageBackgroundFarPath);
+		layerBackgroundFar = createBackgroundLayer(Level1.numBackgroundTiles, Level1.ImageBackgroundFarId,
+				Level1.ImageBackgroundFarPath);
 		layerBackgroundFar.setVisible(true);
 		layerBackgroundFar.setOrder(Level1.ImageBackgroundFarRenderOrder);
 		add(layerBackgroundFar);
-		
+
 		// Background
-		layerBackground = createBackgroundLayer(Level1.ImageBackgroundId, Level1.ImageBackgroundPath);
+		layerBackground = createBackgroundLayer(Level1.numBackgroundTiles, Level1.ImageBackgroundId,
+				Level1.ImageBackgroundPath);
 		layerBackground.setVisible(true);
 		layerBackground.setOrder(Level1.ImageBackgroundRenderOrder);
 		add(layerBackground);
+
+		// LayerForeground
+		layerForeground = createBackgroundLayer(Level1.numBackgroundTiles, Level1.ImageForegroundId,
+				Level1.ImageForegroundPath);
+		layerForeground.setVisible(true);
+		layerForeground.setOrder(Level1.ImageForegroundRenderOrder);
+		add(layerForeground);
 	}
 
 	private void calculateSpawnpoints() {
@@ -235,9 +245,10 @@ public class Level extends MoveableEntity {
 			ground.Assets().getTiledMap(ground.getAssetId()).render(0, 0, 2);
 		}
 		super.postRender(graphicContext);
-		
+
 		graphicContext.setColor(Constants.Debug.overlayColor);
-		graphicContext.drawString("Team 1: " +Team.Team1.getKills() + "\nTeam 2: " + Team.Team2.getKills(), 200, 20);
+		graphicContext.drawString("Team 1: " + Team.Team1.getKills()
+				+ "\nTeam 2: " + Team.Team2.getKills(), 200, 20);
 
 		if (Constants.Debug.showDebugOverlay) {
 			graphicContext.setColor(Constants.Debug.overlayColor);
@@ -308,12 +319,16 @@ public class Level extends MoveableEntity {
 	 * scrolls background layers relative to foreground
 	 */
 	private void parallaxScrollingBackground() {
-		
 
-		layerBackgroundFar.getData()[X] = -getData()[X] * Level1.ImageBackgroundFarParallaxFactor;
+		layerBackgroundFar.getData()[X] = -getData()[X]
+				* Level1.ImageBackgroundFarParallaxFactor;
 		layerBackgroundFar.getData()[Y] = -getData()[Y];
-		layerBackground.getData()[X] = -getData()[X] * Level1.ImageBackgroundParallaxFactor;
+		layerBackground.getData()[X] = -getData()[X]
+				* Level1.ImageBackgroundParallaxFactor;
 		layerBackground.getData()[Y] = -getData()[Y];
+		layerForeground.getData()[X] = -getData()[X]
+				* Level1.ImageForegroundParallaxFactor;
+		layerForeground.getData()[Y] = -getData()[Y];
 	}
 
 	/**
