@@ -18,7 +18,7 @@ public class LandingState extends AbstractAssetState {
 	
 	public LandingState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.LandAnimId, Assets.Player.LandAnimImagePath, Assets.Weapon.LandAnimId, Assets.Weapon.LandAnimImagePath, EntityOrder.Player, factory);
+		super(player, Assets.Player.LandAnimId, Assets.Player.aLandAnimImagePath, Assets.Player.bLandAnimImagePath, Assets.Weapon.LandAnimId, Assets.Weapon.LandAnimImagePath, EntityOrder.Player, factory);
 	
 		AssetEntity e = getGfxEntity();
 		

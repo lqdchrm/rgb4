@@ -104,6 +104,7 @@ public class Player extends LevelCollidableEntity implements
 		condition = new PlayerCondition();
 		condition.name = "XXX";
 		condition.teamId = 1;
+		
 		setConditions();
 	}
 	

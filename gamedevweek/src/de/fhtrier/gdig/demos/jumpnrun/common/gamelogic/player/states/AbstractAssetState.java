@@ -18,14 +18,18 @@ public abstract class AbstractAssetState {
 	private AssetEntity gfxEntity;
 	private AssetEntity weaponGfxEntity;
 	
-	public AbstractAssetState(Player player, int playerAnimAssetId, String playerAnimAssetPath, int weaponAnimAssetId, String weaponAnimAssetPath, int entityOrder, Factory factory) throws SlickException {
+	public AbstractAssetState(Player player, int playerAnimAssetId, String aPlayerAnimAssetPath, String bPlayerAnimAssetPath, int weaponAnimAssetId, String weaponAnimAssetPath, int entityOrder, Factory factory) throws SlickException {
 
 		AssetMgr assets = player.getAssetMgr();
 		this.player = player;
 		this.factory = factory;
 		
 		// gfx
-		assets.storeAnimation(playerAnimAssetId, playerAnimAssetPath);
+		if (player.getPlayerCondition().teamId == 1)
+			assets.storeAnimation(playerAnimAssetId, aPlayerAnimAssetPath);
+		else
+			assets.storeAnimation(playerAnimAssetId, bPlayerAnimAssetPath);
+		
 		AnimationEntity anim = getFactory().createAnimationEntity(entityOrder, playerAnimAssetId, assets);
 		
 		anim.getData()[Entity.CENTER_X] = player.getData()[Entity.CENTER_X];

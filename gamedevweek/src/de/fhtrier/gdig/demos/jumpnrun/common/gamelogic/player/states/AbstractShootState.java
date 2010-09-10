@@ -16,9 +16,9 @@ public class AbstractShootState extends AbstractAssetState {
 	private Animation weaponAnim;
 	
 	public AbstractShootState(Player player, int playerAnimAssetId,
-			String playerAnimAssetPath, int weaponAnimAssetId, String weaponAnimAssetPath, int entityOrder, Factory factory)
+			String aPlayerAnimAssetPath, String bPlayerAnimAssetPath, int weaponAnimAssetId, String weaponAnimAssetPath, int entityOrder, Factory factory)
 			throws SlickException {
-		super(player, playerAnimAssetId, playerAnimAssetPath, weaponAnimAssetId, weaponAnimAssetPath, entityOrder, factory);
+		super(player, playerAnimAssetId, aPlayerAnimAssetPath, bPlayerAnimAssetPath, weaponAnimAssetId, weaponAnimAssetPath, entityOrder, factory);
 		AssetEntity e = getGfxEntity();
 
 		anim = e.Assets().getAnimation(e.getAssetId());
