@@ -191,7 +191,8 @@ public class Bullet extends LevelCollidableEntity {
 					} else {
 						// player gets stronger when hit by bullet of the same
 						// color!
-						otherPlayer.getPlayerCondition().health += owner.getPlayerCondition().damage;
+						otherPlayer.getPlayerCondition().health += owner.getPlayerCondition().damage/2;
+						if (otherPlayer.getPlayerCondition().health > 2.0f) otherPlayer.getPlayerCondition().health = 2.0f;
 					}
 					
 					NetworkComponent.getInstance().sendCommand(new AckPlayerCondition(otherPlayer.getId(), otherPlayer.getPlayerCondition()));
