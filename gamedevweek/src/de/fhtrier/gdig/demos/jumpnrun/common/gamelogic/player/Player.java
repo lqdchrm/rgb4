@@ -521,7 +521,7 @@ public class Player extends LevelCollidableEntity implements
 
 	}
 	
-	public static Shader getPlayerShader()
+	public static Shader getColorGlowShader()
 	{
 		return colorGlowShader; 
 	}

@@ -1,8 +1,5 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states;
 
-import javax.swing.text.AbstractDocument.Content;
-
-import org.GNOME.Accessibility.ContentStream;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -13,6 +10,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
+import de.fhtrier.gdig.engine.graphics.shader.Shader;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
 
@@ -60,7 +58,13 @@ public abstract class AbstractAssetState {
 	}
 
 	public void render(Graphics g, Image frameBuffer) {
+		
+		Shader.pushShader(Player.getColorGlowShader());
+		
+		Player.getColorGlowShader().setValue("playercolor", player.getPlayerCondition().weaponColor);
 		weaponGfxEntity.render(g, frameBuffer);
+		Shader.popShader();
+		
 		gfxEntity.render(g, frameBuffer);
 	}
 	

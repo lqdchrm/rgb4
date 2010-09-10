@@ -106,8 +106,8 @@ public class Bullet extends LevelCollidableEntity {
 		
 		if (Constants.Debug.shadersActive)
 		{
-			Shader.pushShader(Player.getPlayerShader());
-			Player.getPlayerShader().setValue("playercolor", bulletCol);
+			Shader.pushShader(Player.getColorGlowShader());
+			Player.getColorGlowShader().setValue("playercolor", bulletCol);
 		}
 		
 		graphicContext.setColor(Color.white);
