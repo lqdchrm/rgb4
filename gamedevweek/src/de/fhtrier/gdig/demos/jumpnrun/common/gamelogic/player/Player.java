@@ -411,9 +411,9 @@ public class Player extends LevelCollidableEntity implements
 			colorGlowShader.setValue("playercolor", weaponCol);
 		}
 		
-		graphicContext.drawImage(weaponGlow, weaponX, weaponY, weaponX
-				+ weaponGlow.getWidth(), weaponY
-				- weaponGlow.getHeight() * weaponGlowSize, 0, 0,
+		graphicContext.drawImage(weaponGlow, weaponX, weaponY,
+				weaponX - weaponGlow.getWidth(), weaponY
+				+ weaponGlow.getHeight() * weaponGlowSize, 0, 0,
 				weaponGlow.getWidth(), weaponGlow.getHeight(), weaponCol);
 		
 		if (Constants.Debug.shadersActive)

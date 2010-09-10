@@ -52,7 +52,7 @@ public class Constants
 		
 		public static boolean tileMapLogicDebug = false;
 
-		public static boolean forceNoFBO = false;
+		public static boolean forceNoFBO = true;
 
 		public static boolean finiteStateMachineDebug = false;
 		
