@@ -7,12 +7,12 @@ public class NetworkServerObject implements Serializable
 {
   private static final long serialVersionUID = 15986547546L;
   
-  InetAddress ip;
-  int port;
-  String name;
-  String map;
-  String version;
-  float latency;
+  private InetAddress ip;
+  private int port;
+  private String name;
+  private String map;
+  private String version;
+  private float latency;
   
   public InetAddress getIp() 
   {

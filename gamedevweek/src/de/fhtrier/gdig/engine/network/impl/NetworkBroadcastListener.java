@@ -4,100 +4,126 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.lang.Math;
 
 import de.fhtrier.gdig.engine.network.NetworkServerObject;
 
-public class NetworkBroadcastListener extends Thread 
-{
-   private NetworkServerObject serverObject;
-   private DatagramSocket socket;
-   private boolean halt;
-   
-   public NetworkBroadcastListener( String serverName, String map, String version, InterfaceAddress ni, int port )
-   {
-      serverObject = new NetworkServerObject();
-	  serverObject.setPort( port );
-	  serverObject.setMap( map );
-	  serverObject.setName( serverName );
-	  serverObject.setVersion( version );
-      serverObject.setIp( ni.getAddress() );
-		      
-	  halt = false;
-		      
-	  try
-	  {
-		if ( ni.getBroadcast() == null )
-			throw new IOException();
+public class NetworkBroadcastListener extends Thread {
+	private NetworkServerObject serverObject;
+	private DatagramSocket socket;
+	private boolean halt;
+	private InterfaceAddress realServerAddress;
+
+	public NetworkBroadcastListener(String serverName, String map,
+			String version, int port, InterfaceAddress realServerAddress) {
+		this.realServerAddress = realServerAddress; 
+		serverObject = new NetworkServerObject();
+		serverObject.setPort(port);
+		serverObject.setMap(map);
+		serverObject.setName(serverName);
+		serverObject.setVersion(version);
+
+		halt = false;
+
+		try {
+			socket = new DatagramSocket(50000);
+		} catch (SocketException e2) {
+			System.out.println(e2.getLocalizedMessage());
+		}
+	}
+	
+	private boolean isOnSubnet( InterfaceAddress receiver, InetAddress sender )
+	{
+		byte[] receiverBytes = receiver.getAddress().getAddress();
+		byte[] senderBytes = sender.getAddress();
+		byte[] subnetBytes = new byte[4];
+		short length = receiver.getNetworkPrefixLength();
+		int position = 0; 
 		
-	    socket = new DatagramSocket( 50000, ni.getBroadcast() );
-	  }
-	  catch( IOException e )
-	  {
-	     try 
-		 {
-		    socket = new DatagramSocket( 50000 );
-		 } 
-	     catch ( SocketException e2 ) 
-		 {
-			System.out.println( e2.getLocalizedMessage() );
-		 }
-	  }
-   }
-   
-   public void run()
-   {
-      while ( !halt )
-      {
-         try
-         {
-        	byte[] rcvData = new byte[31];
-        	DatagramPacket packet = new DatagramPacket( rcvData, 31 );
-            socket.receive( packet );
-            
-            String rcvString = new String( rcvData );
-            
-            if ( rcvString.startsWith( "CQ,CQ,CQ RGB4 " ) )
-            {
-               serverObject.setLatency( System.currentTimeMillis() );
-               Socket socketToClient = new Socket( packet.getAddress(), 50000 );  
-               ObjectOutputStream streamToClient = new ObjectOutputStream( socketToClient.getOutputStream() );
-               streamToClient.writeObject( serverObject );
-               
-               if ( serverObject.getIp() == null )
-               {
-                  sleep( 10 );  //Wait for the Client to get our IP if we didn't send it in the package
-               }
-               
-               streamToClient.close();
-               socketToClient.close();
-            }
-         }
-         catch( InterruptedException e )
-         {
-            finish();
-            System.out.println( e.getLocalizedMessage() );
-         }
-         catch( NullPointerException e )
-         {
-            finish();
-            System.out.println( e.getLocalizedMessage() );
-         }
-         catch( IOException e )
-         {
-        	finish();
-            System.out.println( e.getLocalizedMessage() ); 
-         }
-      }
-      
-      finish();
-   }
-   
-   public void finish()
-   {
-      halt = true;
-      socket.close();
-   }
+		if ( length < 8 )
+		{
+			subnetBytes[0] = 0;
+			subnetBytes[1] = 0;
+			subnetBytes[2] = 0;
+			subnetBytes[3] = (byte) (Math.pow( 2, length ) / 2);
+		}
+		else if ( length < 16 )
+		{
+			subnetBytes[0] = 0;
+			subnetBytes[1] = 0;
+			subnetBytes[2] = (byte) (Math.pow( 2, length ) / 2);
+			subnetBytes[3] = 127;
+		}
+		else if ( length < 24 )
+		{
+			subnetBytes[0] = 0;
+			subnetBytes[1] = (byte) (Math.pow( 2, length ) / 2);
+			subnetBytes[2] = 127;
+			subnetBytes[3] = 127;
+		}
+		else
+		{
+			subnetBytes[0] = (byte) (Math.pow( 2, length ) / 2);
+			subnetBytes[1] = 127;
+			subnetBytes[2] = 127;
+			subnetBytes[3] = 127;
+		}
+		
+		for ( int x = senderBytes.length - 1; x >= 0; x-- ) 
+		{
+		   if ( (senderBytes[x] & subnetBytes[x]) != (receiverBytes[x] & subnetBytes[x]) ) 
+		   {
+              return false;
+           }
+		   
+		   position++;
+        }
+		
+        return true;		
+	}
+
+	public void run() {
+		while (!halt) {
+			try {
+				byte[] rcvData = new byte[31];
+				DatagramPacket packet = new DatagramPacket(rcvData, 31);
+				socket.receive(packet);
+
+				String rcvString = new String(rcvData);
+
+				if (rcvString.startsWith("CQ,CQ,CQ RGB4 ") ) {
+					if ( isOnSubnet( this.realServerAddress, packet.getAddress() ) )
+					{
+					   serverObject.setLatency(System.currentTimeMillis());
+
+					   Socket socketToClient = new Socket(packet.getAddress(),
+							50000);
+					   ObjectOutputStream streamToClient = new ObjectOutputStream(
+							socketToClient.getOutputStream());
+					   streamToClient.writeObject(serverObject);
+
+					   streamToClient.close();
+					   socketToClient.close();
+					}
+				}
+			} catch (NullPointerException e) {
+				finish();
+				System.out.println(e.getLocalizedMessage());
+			} catch (IOException e) {
+				finish();
+				System.out.println(e.getLocalizedMessage());
+			}
+		}
+
+		finish();
+	}
+
+	public void finish() {
+		halt = true;
+		socket.close();
+	}
 }

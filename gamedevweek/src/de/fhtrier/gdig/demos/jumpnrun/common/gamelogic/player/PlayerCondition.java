@@ -1,11 +1,23 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player;
 
-public class PlayerCondition
+import java.io.Serializable;
+
+public class PlayerCondition implements Serializable
 {
 	/**
 	 * 
 	 */
+	private static final long serialVersionUID = 7844617905759951119L;
+
+	/**
+	 * 
+	 */
 	public String name;
+	
+	/**
+	 * 
+	 */
+	public int teamId;
 	
 	/**
 	 * The Player Health-Level between 0.0f and 1.0f
@@ -33,9 +45,4 @@ public class PlayerCondition
 	 * has to be one of Constants.Color
 	 */
 	public int weaponColor;
-	
-	/**
-	 * has to be RunLeft or RunRight
-	 */
-	public int shootDirection;
 }

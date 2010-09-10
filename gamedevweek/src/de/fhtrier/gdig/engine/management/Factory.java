@@ -8,6 +8,7 @@ import java.util.TreeMap;
 
 import org.newdawn.slick.util.Log;
 
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
@@ -17,12 +18,13 @@ import de.fhtrier.gdig.engine.graphics.entities.TiledMapEntity;
 
 public class Factory {
 
-	private AssetMgr assets;
+	// private AssetMgr assets;
 	private TreeMap<Integer, Entity> entities;
 	private static int lastId = 0;
 
-	public Factory(AssetMgr assets) {
-		this.assets = assets;
+	// public Factory(AssetMgr assets) {
+	public Factory() {
+		//this.assets = assets;
 		this.entities = new TreeMap<Integer, Entity>();
 	}
 
@@ -43,21 +45,21 @@ public class Factory {
 		return result.getId();
 	}
 
-	public ImageEntity createImageEntity(int order, int assetId) {
+	public ImageEntity createImageEntity(int order, int assetId, AssetMgr assets) {
 		ImageEntity result = new ImageEntity(getNewId(), assetId, assets);
 		result.setOrder(order);
 		add(result);
 		return result;
 	}
-	
-	public ParticleEntity createParticleEntity(int order, int assetId) {
+
+	public ParticleEntity createParticleEntity(int order, int assetId, AssetMgr assets) {
 		ParticleEntity result = new ParticleEntity(getNewId(), assetId, assets);
 		result.setOrder(order);
 		add(result);
 		return result;
 	}
 
-	public AnimationEntity createAnimationEntity(int order, int assetId) {
+	public AnimationEntity createAnimationEntity(int order, int assetId, AssetMgr assets) {
 		AnimationEntity result = new AnimationEntity(getNewId(), assetId,
 				assets);
 		result.setOrder(order);
@@ -65,7 +67,7 @@ public class Factory {
 		return result;
 	}
 
-	public TiledMapEntity createTiledMapEntity(int order, int assetId) {
+	public TiledMapEntity createTiledMapEntity(int order, int assetId, AssetMgr assets) {
 		TiledMapEntity result = new TiledMapEntity(getNewId(), assetId, assets);
 		result.setOrder(order);
 		add(result);
@@ -96,9 +98,9 @@ public class Factory {
 		return entities.get(id);
 	}
 
-	public AssetMgr getAssetMgr() {
-		return assets;
-	}
+//	public AssetMgr getAssetMgr() {
+//		return assets;
+//	}
 
 	public int size() {
 		return entities.size();
@@ -114,7 +116,12 @@ public class Factory {
 					"Factory already contains an entity with this id");
 		}
 		entities.put(e.getId(), e);
-		Log.debug("Factory: Entity " + e.getId() + " added - Type: " + e.getType().toString());
+
+		if (Constants.Debug.factoryDebug) {
+			Log.debug("Factory: Entity " + e.getId() + " added - Type: "
+					+ e.getType().toString());
+		}
+
 		return e;
 	}
 

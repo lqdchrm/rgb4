@@ -41,6 +41,14 @@ public class PlayerActionFSM extends FiniteStateMachine<PlayerActionState, Playe
 		add(PlayerActionState.ShootRunning, PlayerActions.Jump, PlayerActionState.Jumping);
 		add(PlayerActionState.ShootJumping, PlayerActions.Land, PlayerActionState.ShootStanding);
 		
+		// register: running falling
+		add(PlayerActionState.Running, PlayerActions.Fall, PlayerActionState.Falling);
+		add(PlayerActionState.ShootRunning, PlayerActions.Fall, PlayerActionState.FallShooting);
+		add(PlayerActionState.Falling, PlayerActions.Land, PlayerActionState.Landing);
+		add(PlayerActionState.FallShooting, PlayerActions.Land, PlayerActionState.Landing);
+		add(PlayerActionState.Standing, PlayerActions.Fall, PlayerActionState.Falling);
+		add(PlayerActionState.ShootStanding, PlayerActions.Fall, PlayerActionState.FallShooting);
+		
 		
 		//		add(PlayerActionState.Standing, PlayerActions.Fall, PlayerActionState.Falling);
 //		add(PlayerActionState.Running, PlayerActions.Jump, PlayerActionState.Jumping);

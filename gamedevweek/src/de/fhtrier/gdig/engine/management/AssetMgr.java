@@ -16,6 +16,8 @@ import org.newdawn.slick.particles.ParticleIO;
 import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.tiled.TiledMap;
 
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
+
 public class AssetMgr {
 
 	private String assetPathPrefix;
@@ -34,8 +36,8 @@ public class AssetMgr {
 		this.tiledMaps = new HashMap<Integer, TiledMap>();
 		this.animations = new HashMap<Integer, Animation>();
 		this.particleSystems = new HashMap<Integer, ParticleSystem>();
-		this.assetPathPrefix = "";
-		this.assetFallbackPathPrefix = "";
+		this.assetPathPrefix = Assets.Config.AssetManagerPath;
+		this.assetFallbackPathPrefix = Assets.Config.AssetManagerFallbackPath;
 	}
 
 	public void setAssetFallbackPathPrefix(String path) {
@@ -224,6 +226,17 @@ public class AssetMgr {
 	}
 	
 	public String makePathRelativeToAssetPath(String path) {
-		return AssetMgr.combinePathStrings(assetPathPrefix, path);
+		String result = AssetMgr.combinePathStrings(assetPathPrefix, path);
+		File file = new File(result);
+		
+		if (!file.exists()) {
+			result = AssetMgr.combinePathStrings(assetFallbackPathPrefix, path);
+			file = new File(result);
+			
+			if (!file.exists()) {
+				throw new RuntimeException("File " + path + " neither found in " + assetPathPrefix + " nor in " + assetFallbackPathPrefix);
+			}
+		}
+		return result;
 	}
 }
