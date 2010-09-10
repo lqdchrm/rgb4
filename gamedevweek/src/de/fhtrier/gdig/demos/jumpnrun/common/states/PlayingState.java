@@ -16,6 +16,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
+import de.fhtrier.gdig.demos.jumpnrun.server.states.ServerPlayingState;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
@@ -25,7 +26,7 @@ public abstract class PlayingState extends BasicGameState implements
 		INetworkCommandListener {
 	protected GameFactory factory;
 	protected int levelId;
-	protected static Image frameBuffer;
+	private static Image frameBuffer;
 
 	public abstract void cleanup(GameContainer container, StateBasedGame game);
 
@@ -73,6 +74,7 @@ public abstract class PlayingState extends BasicGameState implements
 		// Level
 		this.levelId = factory.createEntity(EntityType.LEVEL);
 
+		
 		// FrameBuffer
 		frameBuffer = new Image(Settings.SCREENWIDTH, Settings.SCREENHEIGHT);
 	}

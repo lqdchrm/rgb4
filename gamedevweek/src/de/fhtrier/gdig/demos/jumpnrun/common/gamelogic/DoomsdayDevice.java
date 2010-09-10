@@ -5,12 +5,16 @@ import java.util.Random;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
+import de.fhtrier.gdig.engine.management.AssetMgr;
 
 public class DoomsdayDevice extends Entity {
 
@@ -19,7 +23,8 @@ public class DoomsdayDevice extends Entity {
 
 	int chargeTime;
 
-	AssetEntity asset;
+	AssetMgr assets;
+	AssetEntity ddAnimation;
 
 	int minChargeTime = 20;
 	int maxChargeTime = 21;
@@ -28,14 +33,31 @@ public class DoomsdayDevice extends Entity {
 
 	private DomsDayDeviceBigExplosion doomesdaydeviceExplosion;
 
-	public DoomsdayDevice(int id, GameFactory factory) {
+	public DoomsdayDevice(int id, GameFactory factory) throws SlickException {
 		super(id, EntityType.DOOMSDAYDEVICE);
 		this.factory = factory;
-		// asset = new AssetEntity(iddd, Assets, assets)
+		assets = new AssetMgr();
+
+		// gfx
+		assets.storeAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId,
+							  Assets.Level.DoomsdayDevice.DoomsdayDeviceAnimationPath);
+		ddAnimation = factory.createAnimationEntity(EntityOrder.LevelObject,
+				Assets.Level.DoomsdayDevice.DoomsdayDeviceId, assets);
+
+		ddAnimation.setVisible(true);
+//		ddAnimation.getData()[Entity.X] = -ddAnimation.Assets()
+//			.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId).getImage(0).getWidth()/2.0f;
+//		ddAnimation.getData()[Entity.Y] = -ddAnimation.Assets()
+//		.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId).getImage(0).getHeight()/2.0f;
+
+		add(ddAnimation);
+
+		// setup
+		setVisible(true);
 
 	}
 
-	public void initServer() {
+	public void initServer(boolean isServer) {
 		int domsDayDeviceID = factory
 				.createEntity(EntityType.DOOMSDAYDEVICEEXPLOSION);
 		doomesdaydeviceExplosion = (DomsDayDeviceBigExplosion) factory
@@ -43,7 +65,13 @@ public class DoomsdayDevice extends Entity {
 		level.add(doomesdaydeviceExplosion);
 		doomesdaydeviceExplosion.getData()[X] = getData(X);
 		doomesdaydeviceExplosion.getData()[Y] = getData(Y);
-		doomesdaydeviceExplosion.setActive(true);
+
+		doomesdaydeviceExplosion.getData()[Entity.X] += ddAnimation.Assets()
+		.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId).getImage(0).getWidth()/2.0f;
+		doomesdaydeviceExplosion.getData()[Entity.Y]+= ddAnimation.Assets()
+	.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId).getImage(0).getHeight()/2.0f;
+		
+		doomesdaydeviceExplosion.setActive(isServer);
 		doomesdaydeviceExplosion
 				.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 
@@ -53,19 +81,14 @@ public class DoomsdayDevice extends Entity {
 		resetChargetime();
 
 	}
+	
+	
 
 	public void resetChargetime() {
 		timeSinceLastExplosion = 0;
 		chargeTime = (random.nextInt(maxChargeTime - minChargeTime) + minChargeTime) * 1000;
 	}
 
-	@Override
-	protected void renderImpl(Graphics graphicContext, Image frameBuffer) {
-		// TODO Auto-generated method stub
-		super.renderImpl(graphicContext, frameBuffer);
-		graphicContext.setColor(Color.orange);
-		graphicContext.fillOval(-10, -10, 10, 10);
-	}
 
 	public void setLevel(Level level) {
 		this.level = level;
@@ -84,6 +107,21 @@ public class DoomsdayDevice extends Entity {
 	}
 
 	private void explode() {
+		int r = random.nextInt(3);
+		switch (r) {
+		case 0:
+			doomesdaydeviceExplosion.damageColor = StateColor.RED;
+			break;
+		case 1:
+			doomesdaydeviceExplosion.damageColor = StateColor.BLUE;
+			break;
+		case 2:
+			doomesdaydeviceExplosion.damageColor = StateColor.GREEN;
+			break;
+
+		default:
+			break;
+		}
 		doomesdaydeviceExplosion.activate();
 		resetChargetime();
 	}

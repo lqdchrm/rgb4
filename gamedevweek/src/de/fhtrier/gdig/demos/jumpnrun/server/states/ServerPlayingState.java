@@ -63,7 +63,8 @@ public class ServerPlayingState extends PlayingState {
 	public void enter(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		super.enter(container, game);
-		((Level) factory.getEntity(levelId)).serverInit();
+
+		((Level) factory.getEntity(levelId)).init(this instanceof ServerPlayingState);
 	}
 
 	private boolean handlePlayerActions(QueryAction actionCmd) {

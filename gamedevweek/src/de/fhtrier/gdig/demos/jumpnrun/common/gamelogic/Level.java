@@ -68,7 +68,7 @@ public class Level extends MoveableEntity {
 				tmp.getScaledCopy(1850, 800));
 		this.groundMap = assets.storeTiledMap(Assets.Level.TileMapId,
 				"tiles/blocks.tmx");
-
+	
 		// gfx
 		this.backgroundImage = factory.createImageEntity(
 				Assets.Level.BackgroundImageId, Assets.Level.BackgroundImageId,
@@ -112,21 +112,32 @@ public class Level extends MoveableEntity {
 		}
 
 		calculateLogicPoints();
-		
-		placeDoomsdayDevices();
-		placeTeleportAnimations();
 	}
 
-	private void placeTeleportAnimations() {
+	private void placeTeleportAnimations(boolean isServer) {
+		
 		for (LogicPoint lp : teleportAnimations) {
-			// TODO createTeleportAnimations
-//			add(new AnimationEntity(id, assetId, assets));
+
+			int teleporterid = factory.createEntity(EntityType.TELEPORTER);
+			Entity teleporter = factory.getEntity(teleporterid);
+			teleporter.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+			add(teleporter);
+			teleporter.getData()[Entity.X] = lp.x; //-teleporter.Assets().getImage(0).getWidth();
+			teleporter.getData()[Entity.Y] = lp.y; //-teleporter.Assets().getImage(0).getHeight();
 		}
 	}
 
-	private void placeDoomsdayDevices() {
+	private void placeDoomsdayDevices(boolean isServer) {
 		for (LogicPoint lp : doomsdayDevices) {
-			//TODO create doomsdayDevices
+			int domsDayDeviceID = factory.createEntity(EntityType.DOOMSDAYDEVICE);
+			DoomsdayDevice doomesdaydevice = (DoomsdayDevice) factory
+					.getEntity(domsDayDeviceID);
+			add(doomesdaydevice);
+			doomesdaydevice.setActive(isServer);
+			doomesdaydevice.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+			doomesdaydevice.getData()[X] = lp.x;
+			doomesdaydevice.getData()[Y] = lp.y;
+			doomesdaydevice.initServer(isServer);
 		}
 	}
 
@@ -192,7 +203,7 @@ public class Level extends MoveableEntity {
 						Log.debug("Doomsday device " + tileId + " at: " + x + ", " + y );
 					}
 					
-					doomsdayDevices.add(new LogicPoint(tileId, x, y));
+					doomsdayDevices.add(new LogicPoint(tileId, x * tiledMap.getTileWidth(), y * tiledMap.getTileHeight()));
 				}
 				
 				// is teleport animation Device
@@ -203,7 +214,7 @@ public class Level extends MoveableEntity {
 						Log.debug("Teleporter animation " + tileId + " at: " + x + ", " + y );
 					}
 					
-					teleportAnimations.add(new LogicPoint(tileId, x, y));
+					teleportAnimations.add(new LogicPoint(tileId, x * tiledMap.getTileWidth(), y * tiledMap.getTileHeight()));
 				}
 			}
 		}
@@ -500,20 +511,14 @@ public class Level extends MoveableEntity {
 
 	/**
 	 * This is to Inelize Entetys in the Level. only the Server do this.
+	 * @param isServer TODO
 	 */
-	public void serverInit() {
+	public void init(boolean isServer) {
 		// TODO Wie kann ich mit der Factory DoomsdayDevices erstellen mit
 		// assetfactory und allem drum und dran.
-
-		int domsDayDeviceID = factory.createEntity(EntityType.DOOMSDAYDEVICE);
-		DoomsdayDevice doomesdaydevice = (DoomsdayDevice) factory
-				.getEntity(domsDayDeviceID);
-		add(doomesdaydevice);
-		doomesdaydevice.setActive(true);
-		doomesdaydevice.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
-		doomesdaydevice.getData()[X] = this.getWidth() >> 1;
-		doomesdaydevice.getData()[Y] = this.getHeight() >> 1;
-		doomesdaydevice.initServer();
+		
+		placeDoomsdayDevices(isServer);
+		placeTeleportAnimations(isServer);
 		//
 		// DoCreateEntity command = new DoCreateEntity(domsDayDeviceID,
 		// EntityType.DOOMSDAYDEVICE);

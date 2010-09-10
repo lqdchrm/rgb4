@@ -2,6 +2,7 @@ package de.fhtrier.gdig.demos.jumpnrun.identifiers;
 
 public class Assets {
 
+	
 	// Config
 	public static class Config {
 		public static final String AssetGuiPath = "content/rgb4/gui";
@@ -15,6 +16,18 @@ public class Assets {
 		public static final int BackgroundImageId = 1;
 		public static final int MiddlegroundImageId = 2;
 		public static final int TileMapId = 3;
+
+		public static class Teleporter
+		{
+			public static final int TeleporterId = 4;
+			public static final String TeleporterAnimationPath = "sprites/levelobjects/teleport_96_96_16.png";
+		}
+		
+		public static class DoomsdayDevice
+		{
+			public static final int DoomsdayDeviceId = 5;
+			public static final String DoomsdayDeviceAnimationPath = "sprites/levelobjects/doom_170_170_32.png";
+		}
 	}
 
 	// Player

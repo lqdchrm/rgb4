@@ -35,9 +35,8 @@ public class DomsDayDeviceBigExplosion extends Entity {
 
 	private Set<Player> hitedPlayer = new HashSet<Player>();
 
-	private int damageColor = StateColor.RED;
+	public int damageColor = StateColor.RED;
 	private int timeScincActivation = 0;
-	private int timeScinclastChangeColor = 0;
 
 	AssetMgr asset = new AssetMgr();
 
@@ -79,8 +78,6 @@ public class DomsDayDeviceBigExplosion extends Entity {
 		super.renderImpl(graphicContext, frameBuffer);
 
 		// Hack Position of Doomsdaydevice
-		graphicContext.setColor(StateColor.constIntoColor(damageColor));
-		graphicContext.fillRect(-10, -10, 20, 20);
 
 		if (!isActive)
 			return;
@@ -116,6 +113,9 @@ public class DomsDayDeviceBigExplosion extends Entity {
 		if (!isActive)
 			return;
 
+		if(options.timeToDatonate>timeScincActivation)
+		return;
+		timeScincActivation+=deltaInMillis;
 		this.maxRadius += options.speed * secs;
 		this.minRadius = Math.max(maxRadius - options.size, 0);
 
@@ -213,8 +213,7 @@ public class DomsDayDeviceBigExplosion extends Entity {
 		/**
 		 * Time in Millseconds till detonation after Activation.
 		 */
-		int timeToDatonate = 3000;
-		int timeToChangeColor = 1000;
+		int timeToDatonate = 1230;
 		float size = 400f;
 		float speed = 400f;
 
