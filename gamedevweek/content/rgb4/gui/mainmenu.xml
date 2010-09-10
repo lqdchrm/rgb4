@@ -16,7 +16,7 @@
 
 
 	<screen id="start" controller="de.fhtrier.gdig.demos.jumpnrun.client.states.ClientMenuState">
-		<layer id="back" childLayout="center">
+<!-- 	<layer id="back" childLayout="center">
 			<panel id="panel" height="100%" width="100%"
 				backgroundImage="menu-background.png">
 				<effect>
@@ -24,19 +24,21 @@
 						endColor="#ffff" post="false" length="250" />
 				</effect>
 			</panel>
-		</layer>
+		</layer>-->
+		
+
 		<layer id="layer" childLayout="vertical">
 			<panel id="top" height="100%" width="100%" childLayout="center">
-				<image id="logo" filename="b.png" align="center"
+				<image id="logo" filename="rgb_logo.png" align="center"
 					valign="center">
 					<effect>
-						<onStartScreen name="move" direction="right" mode="in"
-							length="600" startDelay="600"/>
+						<onStartScreen name="move" direction="top" mode="in"
+							length="1500" startDelay="0"/>
 					</effect>
 				</image>
 			</panel>
 		</layer>		
-		<layer id="layer" childLayout="vertical">
+<!-- 		<layer id="layer" childLayout="vertical">
 			<panel id="top" height="100%" width="100%" childLayout="center">
 				<image id="logo" filename="g.png" align="center"
 					valign="center">
@@ -58,7 +60,7 @@
 				</image>
 			</panel>
 		</layer>
-
+ -->
 
 	</screen>
 
@@ -66,35 +68,61 @@
 	<!-- start screen -->
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 	<screen id="mainMenu" controller="de.fhtrier.gdig.demos.jumpnrun.client.states.ClientMenuState">
-		<layer id="back" childLayout="center">
-			<panel id="panel" height="100%" width="100%"
-				backgroundImage="menu-background.png" />
+		
 
-			<!-- 				backgroundImage="screens/rgb-background.jpg" />  -->
-		</layer>
+		
+		
 		<layer id="layer" childLayout="vertical">
 			<panel id="top" height="100%" width="100%" childLayout="center">
-				<image id="logo" filename="b.png" align="center"
+				<image id="logo" filename="rgb_logo.png" align="center"
 					valign="center">
 				</image>
 			</panel>
-		</layer>		
-		<layer id="layer" childLayout="vertical">
-			<panel id="top" height="100%" width="100%" childLayout="center">
-				<image id="logo" filename="g.png" align="center"
-					valign="center">
-				</image>
-			</panel>
-		</layer>
-		<layer id="layer" childLayout="vertical">
-			<panel id="top" height="100%" width="100%" childLayout="center">
-				<image id="logo" filename="r.png" align="center"
-					valign="center">
-				</image>
+		</layer>	
+		
+		
+
+		<layer id="hostgame" childLayout="center" align="left" valign="top">
+			<panel padding="539px,0px,0px,271px" childLayout="center" align="left" valign="top">
+				<panel width="100%" childLayout="horizontal">
+					<image filename="button_hostgame.png" style="standard-action">
+						<interact onClick="hostGame()" />	
+					</image>
+				</panel>
 			</panel>
 		</layer>
 
-		<layer id="layer" childLayout="vertical">
+		<layer id="startgame" childLayout="center" align="left" valign="top">
+			<panel padding="396px,0px,0px,616px" childLayout="center" align="left" valign="top">
+				<panel width="100%" childLayout="horizontal">
+					<image filename="button_startgame.png" style="standard-action">
+						<interact onClick="joinGame()" />
+					</image>		
+				</panel>
+			</panel>
+		</layer>
+		
+		<layer id="exit" childLayout="center" align="left" valign="top">
+			<panel padding="605px,0px,0px,555px" childLayout="center" align="left" valign="top">
+				<panel width="100%" childLayout="horizontal">
+					<image filename="button_exit.png" style="standard-action">
+						<interact onClick="exit()" />
+					</image>		
+				</panel>
+			</panel>
+		</layer>
+		
+		<layer id="credits" childLayout="center" align="left" valign="top">
+			<panel padding="636px,0px,0px,373px" childLayout="center" align="left" valign="top">
+				<panel width="100%" childLayout="horizontal">
+					<image filename="button_credits.png" style="standard-action">
+						<interact onClick="credits()" />
+					</image>		
+				</panel>
+			</panel>
+		</layer>				
+		
+<!-- 		<layer id="layer" childLayout="vertical">
 			
 			
 			<panel id="top" height="40%" width="100%" childLayout="center">
@@ -108,10 +136,10 @@
 						hintText="Join a game">
 						<interact onClick="joinGame()" />
 					</label>
-					<label id="hostGame" text="Host Game" style="menu-item"
+ 					<label id="hostGame" text="Host Game" style="menu-item"
 						hintText="Host a New Game">
 						<interact onClick="hostGame()" />
-					</label>
+					</label> 
 					<label id="exit" text="Exit" style="menu-item" hintText="Exit the Game">
 						<interact onClick="exit()" />
 					</label>
@@ -119,7 +147,7 @@
 			</panel>
 			<panel id="bottom" height="40%">
 			</panel>
-		</layer>
+		</layer>  -->
 
 	</screen>
 

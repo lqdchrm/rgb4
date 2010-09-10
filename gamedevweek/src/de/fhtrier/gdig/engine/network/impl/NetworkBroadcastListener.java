@@ -96,8 +96,10 @@ public class NetworkBroadcastListener extends Thread {
 				String rcvString = new String(rcvData);
 
 				if (rcvString.startsWith("CQ,CQ,CQ RGB4 ") ) {
-					if ( isOnSubnet( this.realServerAddress, packet.getAddress() ) )
-					{
+					
+					// HACK not working
+					if (true) {
+					//if ( isOnSubnet( this.realServerAddress, packet.getAddress() ) )
 					   serverObject.setLatency(System.currentTimeMillis());
 
 					   Socket socketToClient = new Socket(packet.getAddress(),

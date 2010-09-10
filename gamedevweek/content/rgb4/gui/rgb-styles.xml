@@ -33,6 +33,15 @@
 		</effect>
 	</style>
 
+	<style id="standard-action">
+		<attributes></attributes>
+		<effect>
+				<onHover name="shake" global="false" length="1000" distance="3"
+					post="false" />
+				<onStartScreen name="fade"></onStartScreen>
+		</effect>			
+	</style>
+
 	<style id="lobby-button">
 		<attributes align="center"
 			font="small-font-unselected.fnt"

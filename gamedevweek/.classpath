@@ -15,7 +15,7 @@
 			<attribute name="javadoc_location" value="file://${workspace_loc}/ext/slick/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/ext/lib/nifty-slick.jar"/>
+	<classpathentry kind="lib" path="/ext/lib/nifty-slick.jar" sourcepath="/nifty"/>
 	<classpathentry kind="lib" path="/ext/lib/xmlpull-xpp3-1.1.4c.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

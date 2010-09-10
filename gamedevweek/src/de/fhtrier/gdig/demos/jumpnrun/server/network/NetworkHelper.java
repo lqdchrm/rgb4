@@ -43,7 +43,7 @@ public class NetworkHelper {
 				
 			 for (InterfaceAddress address : ni.getInterfaceAddresses()) 
 			 {
-			    if ( !address.getAddress().getHostAddress().contains(":") )
+			    if ( !address.getAddress().getHostAddress().contains(":") && !address.getAddress().getHostAddress().contains("127.0.0.1") )
 				   result.add( address );
 		     }
 	      }

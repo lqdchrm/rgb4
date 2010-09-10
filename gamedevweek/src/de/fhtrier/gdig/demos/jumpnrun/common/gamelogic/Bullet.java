@@ -56,7 +56,7 @@ public class Bullet extends LevelCollidableEntity {
 		
 		// physics
 		// X Y OX OY SX SY ROT
-		initData(new float[] { 200, 200, 18, 32, 1, 1, 0 }); // pos +
+		initData(new float[] { 200, 200, 14, 32, 1, 1, 0 }); // pos +
 																// center +
 																// scale +
 																// rot

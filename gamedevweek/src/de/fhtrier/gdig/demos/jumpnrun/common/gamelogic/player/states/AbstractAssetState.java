@@ -1,10 +1,15 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states;
 
+import javax.swing.text.AbstractDocument.Content;
+
+import org.GNOME.Accessibility.ContentStream;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
@@ -41,8 +46,10 @@ public abstract class AbstractAssetState {
 		weaponAnim.getData()[Entity.CENTER_X] = player.getData()[Entity.CENTER_X];
 		weaponAnim.getData()[Entity.CENTER_Y] = player.getData()[Entity.CENTER_Y];
 		
+		anim.setOrder(Assets.Weapon.WeaponRenderOrder+1);
 		anim.setVisible(true);
 		weaponAnim.setVisible(true);
+		weaponAnim.setOrder(Assets.Weapon.WeaponRenderOrder);
 		setGfxEntity(anim, weaponAnim);
 	}
 
@@ -57,8 +64,8 @@ public abstract class AbstractAssetState {
 	}
 
 	public void render(Graphics g, Image frameBuffer) {
-		gfxEntity.render(g, frameBuffer);
 		weaponGfxEntity.render(g, frameBuffer);
+		gfxEntity.render(g, frameBuffer);
 	}
 	
 	public AssetEntity getGfxEntity() {
