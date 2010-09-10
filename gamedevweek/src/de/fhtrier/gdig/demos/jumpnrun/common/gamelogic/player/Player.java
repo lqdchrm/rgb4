@@ -79,9 +79,9 @@ public class Player extends LevelCollidableEntity implements
 	// carries current Asset
 	private AbstractAssetState currentPlayerAsset;
 
-	// old Stuff
-	private Entity playerGroup;
+	// particles
 	private ParticleEntity weaponParticles;
+	
 	private AssetMgr assets;
 
 	// initialization
@@ -145,27 +145,6 @@ public class Player extends LevelCollidableEntity implements
 
 	private void initGraphics() throws SlickException {
 
-		int groupId = factory.createEntity(EntityOrder.Player,
-				EntityType.HELPER);
-		playerGroup = factory.getEntity(groupId);
-
-		// particles
-		assets.storeParticleSystem(Assets.Weapon.ParticleEffect,
-				Assets.Weapon.ParticleEffectImgPath,
-				Assets.Weapon.ParticleEffectCfgPath);
-		weaponParticles = factory.createParticleEntity(
-				Assets.Weapon.ParticleEffect, Assets.Weapon.ParticleEffect,
-				assets);
-
-		playerGroup.add(weaponParticles);
-
-		// Position correction for particleEffects
-		// TODO: take weapon cords
-		weaponParticles.getData()[Entity.X] = 40;
-		weaponParticles.getData()[Entity.Y] = 110;
-
-		add(playerGroup);
-
 		// shader
 		if (playerGlow == null) {
 			if (Constants.Debug.shadersActive) {
@@ -179,11 +158,25 @@ public class Player extends LevelCollidableEntity implements
 			weaponGlow = new Image(
 					assets.makePathRelativeToAssetPath(Assets.Weapon.GlowImagePath));
 		}
+		
+		// weaponparticles
+		assets.storeParticleSystem(this.getId(),
+				Assets.Weapon.ParticleEffectImgPath,
+				Assets.Weapon.ParticleEffectCfgPath);
+		weaponParticles = factory.createParticleEntity(
+				0, this.getId(), assets);
+
+		//playerGroup.add(weaponParticles);
+
+		// Position correction for particleEffects
+		// TODO: take weapon cords
+		weaponParticles.getData()[Entity.X] = 122;
+		weaponParticles.getData()[Entity.Y] = 165;
+		
+		weaponParticles.setVisible(true);
 
 		// make entities visible
 		setVisible(true);
-
-		weaponParticles.setVisible(false);
 
 		// order
 		this.setOrder(EntityOrder.Player);
@@ -324,16 +317,8 @@ public class Player extends LevelCollidableEntity implements
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerNetworkAction.WEAPONCOLOR));
 
-				SoundManager.playSound(Assets.Sounds.WeaponChangeColorSoundID,
-						1f, 0.2f);
+				SoundManager.playSound(Assets.Sounds.WeaponChangeColorSoundID, 1f, 0.2f);
 
-				ParticleSystem particleSystem = weaponParticles.Assets()
-						.getParticleSystem(Assets.Weapon.ParticleEffect);
-				ConfigurableEmitter emitter = (ConfigurableEmitter) particleSystem
-						.getEmitter(0);
-				ColorRecord cr = (ColorRecord) emitter.colors.get(2);
-
-				cr.col = StateColor.constIntoColor(state.weaponColor);
 			}
 
 			// Player Phrases
@@ -385,6 +370,14 @@ public class Player extends LevelCollidableEntity implements
 		if (state.weaponColor > StateColor.BLUE) {
 			state.weaponColor = StateColor.RED;
 		}
+		
+		ParticleSystem particleSystem = weaponParticles.Assets()
+				.getParticleSystem(this.getId());
+		ConfigurableEmitter emitter = (ConfigurableEmitter) particleSystem
+				.getEmitter(0);
+		ColorRecord cr = (ColorRecord) emitter.colors.get(2);
+		
+		cr.col = StateColor.constIntoColor(state.weaponColor);
 	}
 
 	public void die() {
@@ -420,14 +413,12 @@ public class Player extends LevelCollidableEntity implements
 
 		graphicContext.setColor(Color.white);
 		Shader.activateAdditiveBlending();
-		//Shader.activateDefaultBlending();
 		float weaponGlowSize = 0.6f + this.getPlayerCondition().ammo * 0.4f;
 		float glowSize = 0.1f + this.getPlayerCondition().health * 0.9f;
 
 		// TODO find active Animation-Asset and setTintColor(playerCol)
 
 		float weaponX = this.getData(CENTER_X);
-
 		float weaponY = this.getData(CENTER_Y) - weaponGlow.getHeight() * weaponGlowSize / 2 + 40;
 
 		float weaponBrightness = StateColor.constIntoBrightness(this.getPlayerCondition().weaponColor);		
@@ -469,17 +460,11 @@ public class Player extends LevelCollidableEntity implements
 		}
 		
 		Shader.activateDefaultBlending();
-		// deactivate shader
-//		if (Constants.Debug.shadersActive) {
-//			Shader.popShader();
-//		}
-
 	}
 
 	// render
 	@Override
 	public void renderImpl(final Graphics g, Image frameBuffer) {
-
 		currentPlayerAsset.render(g, frameBuffer);
 
 		super.renderImpl(g, frameBuffer);
@@ -488,9 +473,7 @@ public class Player extends LevelCollidableEntity implements
 	@Override
 	protected void postRender(Graphics graphicContext) {
 
-		//Shader.activateDefaultBlending();
-		
-//		// deactivate shader
+		// deactivate shader
 		if (Constants.Debug.shadersActive) {
 			Shader.popShader();
 		}
@@ -640,5 +623,9 @@ public class Player extends LevelCollidableEntity implements
 
 	public AssetMgr getAssetMgr() {
 		return assets;
+	}
+	
+	public ParticleEntity getWeaponParticleEntity() {
+		return this.weaponParticles;
 	}
 }

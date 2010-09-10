@@ -109,10 +109,10 @@ public class Assets {
 		public static final int WeaponRenderOrder = 9;
 		public static final String AnimImagePath = "sprites/items/waffestehen_128_128_20.png";
 		public static final int ParticleEffect = 200;
-		public static final String ParticleEffectImgPath = "sprites/player/weaponparticle.png";
-		public static final String ParticleEffectCfgPath = "sprites/player/weaponparticleemitter3.xml";
+		public static final String ParticleEffectImgPath = "sprites/player/weaponparticle6.png";
+		public static final String ParticleEffectCfgPath = "sprites/player/weaponparticleemitter7.xml";
 		public static final float weaponXOffset = 35;		
-		public static final float weaponYOffset = 35;	
+		public static final float weaponYOffset = 35;
 		public static final String GlowImagePath = "shader/weaponglow.png";
 	}
 
