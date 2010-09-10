@@ -66,7 +66,7 @@ public class ClientLobbyState extends NiftyGameState implements
 	public String formatLevelname (String levelName) {
 		String helpString = levelName.substring(6);
 		
-		if (helpString != "")
+		if (!helpString.equals(""))
 			return helpString;
 		return levelName;
 	}
