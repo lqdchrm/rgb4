@@ -161,7 +161,7 @@ public class ClientHostServerState extends NiftyGameState implements
 				// ProcessBuilder pb = new ProcessBuilder("bash",
 				// "server.bat",serverNameControl.getText(),interfaceA,portControl.getText());
 				ProcessBuilder pb = new ProcessBuilder("java",
-						"-Djava.library.path=lib/native", "-jar",
+						"-Djava.library.path=./lib/native", "-jar",
 						"server/server.jar", serverNameControl.getText(),
 						interfaceA, portControl.getText());
 				pb.redirectErrorStream(true);
@@ -172,9 +172,14 @@ public class ClientHostServerState extends NiftyGameState implements
 						public void run() {
 							BufferedReader r = new BufferedReader(
 									new InputStreamReader(p.getInputStream()));
-							while (true)
+							
 								try {
-									Log.debug("SERVER PROCESS -- "+r.readLine());
+									while (true)
+									{
+										String s = r.readLine();
+										if (s != null) Log.debug("SERVER PROCESS -- "+s);
+										else return;
+									}
 								} catch (IOException e) {}
 						};
 					};
