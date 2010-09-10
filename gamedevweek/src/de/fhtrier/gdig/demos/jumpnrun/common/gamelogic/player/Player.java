@@ -321,14 +321,6 @@ public class Player extends LevelCollidableEntity implements
 						new QueryAction(PlayerNetworkAction.WEAPONCOLOR));
 				
 				SoundManager.playSound(Assets.Sounds.WeaponChangeColorSoundID, 1f, 0.2f);
-
-				ParticleSystem particleSystem = weaponParticles.Assets()
-						.getParticleSystem(this.getId());
-				ConfigurableEmitter emitter = (ConfigurableEmitter) particleSystem
-						.getEmitter(0);
-				ColorRecord cr = (ColorRecord) emitter.colors.get(2);
-
-				cr.col = StateColor.constIntoColor(state.weaponColor);
 			}
 		}
 		super.handleInput(input);
@@ -350,6 +342,14 @@ public class Player extends LevelCollidableEntity implements
 		if (state.weaponColor > StateColor.BLUE) {
 			state.weaponColor = StateColor.RED;
 		}
+		
+		ParticleSystem particleSystem = weaponParticles.Assets()
+				.getParticleSystem(this.getId());
+		ConfigurableEmitter emitter = (ConfigurableEmitter) particleSystem
+				.getEmitter(0);
+		ColorRecord cr = (ColorRecord) emitter.colors.get(2);
+		
+		cr.col = StateColor.constIntoColor(state.weaponColor);
 	}
 
 	public void die() {

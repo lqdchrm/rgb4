@@ -22,11 +22,13 @@ public class RunningState extends AbstractAssetState {
 	@Override
 	public void enter() {
 		SoundManager.loopSound(Assets.Sounds.PlayerRunSoundId, 1f, 0.2f);
+		getPlayer().getWeaponParticleEntity().getData()[Entity.Y] = 155;
 	}
 
 	@Override
 	public void leave() {
 		SoundManager.stopSound(Assets.Sounds.PlayerRunSoundId);
+		getPlayer().getWeaponParticleEntity().getData()[Entity.Y] = 165;
 	}
 
 	@Override
