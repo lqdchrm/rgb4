@@ -161,7 +161,7 @@ public class ClientHostServerState extends NiftyGameState implements
 				// ProcessBuilder pb = new ProcessBuilder("bash",
 				// "server.bat",serverNameControl.getText(),interfaceA,portControl.getText());
 				ProcessBuilder pb = new ProcessBuilder("java",
-						"-Djava.library.path=../ext/lib/native", "-jar",
+						"-Djava.library.path=./lib/native", "-jar",
 						"server/server.jar", serverNameControl.getText(),
 						interfaceA, portControl.getText());
 				pb.redirectErrorStream(true);
