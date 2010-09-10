@@ -168,7 +168,7 @@ public class Shader
      */
     public static void activateAdditiveBlending()
     {
-    	Renderer.get().glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_DST_ALPHA);
+    	Renderer.get().glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_ONE);
     }
     
     /**
@@ -270,7 +270,7 @@ public class Shader
             byte[] infoBytes = new byte[length-1];
             infoLog.get(infoBytes);
             String out = new String(infoBytes);
-            if (!out.toLowerCase().contains("no errors"))
+            if (!out.toLowerCase().contains("no errors") && !out.toLowerCase().contains("successfully"))
             {
             	Log.debug(string+"("+glObjectId+") -- OpenGL ERROR:\r\n" + out);
             	

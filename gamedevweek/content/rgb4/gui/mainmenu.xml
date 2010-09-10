@@ -85,7 +85,7 @@
 					valign="center">
 				</image>
 			</panel>
-		</layer>		
+		</layer>
 		<layer id="layer" childLayout="vertical">
 			<panel id="top" height="100%" width="100%" childLayout="center">
 				<image id="logo" filename="r.png" align="center"

@@ -22,27 +22,22 @@ public class ClientGame extends RGB4Game {
 	public static boolean isSpectator = false;
 
 	public ClientGame() {
-		super(Assets.GameTitle);
+		super(Assets.Config.GameTitle);
 
 		NetworkComponent.createClientInstance();
 		NetworkComponent.getInstance().addListener(this);
-//
-//		while (!NetworkComponent.getInstance().connect(nameOrIp, port))
-//		{
-//			try
-//			{
-//				Log.info("Waiting for Server");
-//				Thread.sleep(5000);
-//			} catch (InterruptedException e)
-//			{
-//			}
-//		}
 
 		Constants.GamePlayConstants c1 = new Constants.GamePlayConstants();
 
 		Constants.ControlConfig c2 = new Constants.ControlConfig();
-		c1.showEditor("ClientSettings", new JPanel[] { c1.getEdittingPanel(),
-				c2.getEdittingPanel() });
+		
+		Constants.Debug c3 = new Constants.Debug();
+		
+		c1.showEditor("ClientSettings",
+				new JPanel[] {
+					c1.getEdittingPanel(),
+					c2.getEdittingPanel(),
+					c3.getEdittingPanel()});
 	}
 
 	@Override
