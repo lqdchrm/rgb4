@@ -8,7 +8,6 @@ import org.newdawn.slick.tiled.TiledMap;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
-import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
@@ -319,14 +318,7 @@ public class Level extends MoveableEntity
 	{
 		Entity result = super.add(e);
 
-		// tell player that he belongs to level
-		if (e instanceof LevelCollidableEntity)
-		{
-			((LevelCollidableEntity) e).setLevel(this);
-		} else if (e instanceof DomsDayDeviceBigExplosion)
-		{
-			((DomsDayDeviceBigExplosion) e).setLevel(this);
-		}
+		e.setLevel(this);
 
 		return result;
 	}
@@ -351,18 +343,23 @@ public class Level extends MoveableEntity
 		return getMap().getHeight() * getMap().getTileHeight();
 	}
 
+	/**
+	 * This is to Inelize Entetys in the Level. only the Server do this.
+	 */
 	public void serverInit()
 	{
-		// TODO Auto-generated method stub
-
-		int domsDayDeviceID = factory.createEntity(EntityType.DOMSDAYDEVICE);
+		// TODO Wie kann ich mit der Factory DoomsdayDevices erstellen mit
+		// assetfactory und allem drum und dran.
+		int domsDayDeviceID = factory.createEntity(EntityType.DOOMSDAYDEVICE);
 		Entity doomesdaydevice = factory.getEntity(domsDayDeviceID);
 		add(doomesdaydevice);
 		doomesdaydevice.setActive(true);
 		doomesdaydevice.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+		doomesdaydevice.getData()[X] = level.getWidth() >> 1;
+		doomesdaydevice.getData()[Y] = level.getHeight() >> 1;
 
 		DoCreateEntity command = new DoCreateEntity(domsDayDeviceID,
-				EntityType.DOMSDAYDEVICE);
+				EntityType.DOOMSDAYDEVICE);
 		NetworkComponent.getInstance().sendCommand(command);
 	}
 }

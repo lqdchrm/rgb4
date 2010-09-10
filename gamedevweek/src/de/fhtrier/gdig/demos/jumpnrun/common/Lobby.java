@@ -79,24 +79,12 @@ public class Lobby extends JDialog
 		{
 			List<InterfaceAddress> interfaces = NetworkHelper.getInterfaces();
 
-			Object[] serverListe = new Object[interfaces.size()];
-
-			for (int x = 0; x < interfaces.size(); x++)
-			{
-				serverListe[x] = interfaces.get(x).getAddress()
-						.getHostAddress();
-			}
-
-			String Interface = (String) JOptionPane.showInputDialog(null,
-					"Please select interface to host on", "You are Server",
-					JOptionPane.PLAIN_MESSAGE, null, serverListe, null);
-
 			InterfaceAddress ni = null;
 
 			for (int x = 0; x < interfaces.size(); x++)
 			{
-				if (Interface.contains(interfaces.get(x).getAddress()
-						.getHostAddress()))
+				if (interfaces.get(x).getAddress().getHostAddress()
+						.contains("127.0.0.1"))
 					ni = interfaces.get(x);
 			}
 

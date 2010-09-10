@@ -15,7 +15,6 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerAssetState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerJumpingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerLandingState;
@@ -584,11 +583,6 @@ public class Player extends LevelCollidableEntity implements
 	{
 		this.condition = playerCondition;
 
-	}
-
-	public void setLevel(final Level level)
-	{
-		this.setMap(level.getMap());
 	}
 
 	@Override

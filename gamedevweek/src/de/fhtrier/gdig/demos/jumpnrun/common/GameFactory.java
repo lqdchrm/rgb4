@@ -1,9 +1,12 @@
 package de.fhtrier.gdig.demos.jumpnrun.common;
 
+import java.io.IOException;
+
 import org.newdawn.slick.SlickException;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Bullet;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.DomsDayDeviceBigExplosion;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.DoomsdayDevice;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Gem;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
@@ -57,13 +60,21 @@ public class GameFactory extends Factory
 				Bullet newBullet = new Bullet(id, this);
 				add(newBullet);
 				return id;
-			case DOMSDAYDEVICE:
-				DomsDayDeviceBigExplosion newDoomsdaydevice = new DomsDayDeviceBigExplosion(
+			case DOOMSDAYDEVICEEXPLOSION:
+				DomsDayDeviceBigExplosion newDoomsdaydeviceExplosion = new DomsDayDeviceBigExplosion(
 						id, this);
+				add(newDoomsdaydeviceExplosion);
+				return id;
+			case DOOMSDAYDEVICE:
+				DoomsdayDevice newDoomsdaydevice = new DoomsdayDevice(id, this);
 				add(newDoomsdaydevice);
 				return id;
 			}
 		} catch (SlickException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();

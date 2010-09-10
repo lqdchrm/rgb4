@@ -52,15 +52,15 @@ public class ServerPlayingState extends PlayingState
 		networkId2Player = new HashMap<Integer, Integer>();
 	}
 
-	@Override
-	public void init(GameContainer arg0, StateBasedGame arg1)
-			throws SlickException
-	{
-		super.init(arg0, arg1);
-		Level level = (Level) factory.getEntity(this.levelId);
-		level.serverInit();
-
-	}
+	// @Override
+	// public void init(GameContainer arg0, StateBasedGame arg1)
+	// throws SlickException
+	// {
+	// super.init(arg0, arg1);
+	// Level level = (Level) factory.getEntity(this.levelId);
+	// level.serverInit();
+	//
+	// }
 
 	private boolean handlePlayerActions(QueryAction actionCmd)
 	{
