@@ -6,27 +6,36 @@ import org.newdawn.slick.SlickException;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActions;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
+import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
 import de.fhtrier.gdig.engine.management.Factory;
 
 public class FallingState extends AbstractAssetState {
 	
 	private Animation anim;
+	private Animation weaponAnim;
 	
 	public FallingState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.FallingAnimId, Assets.Player.FallingImagePath, EntityOrder.Player, factory);
+		super(player, Assets.Player.FallingAnimId, Assets.Player.FallingImagePath, Assets.Weapon.FallingAnimId, Assets.Weapon.FallingImagePath, EntityOrder.Player, factory);
 	
 		AssetEntity e = getGfxEntity();
 		
 		anim = e.Assets().getAnimation(e.getAssetId());
 		anim.setLooping(false);
+		
+		e = getWeaponGfxEntity();
+		
+		weaponAnim = e.Assets().getAnimation(e.getAssetId());
+		weaponAnim.setLooping(false);
 	}
 
 	@Override
 	public void enter() {
 		anim.restart();
+		weaponAnim.restart();
 	}
 
 	@Override
@@ -35,11 +44,9 @@ public class FallingState extends AbstractAssetState {
 
 	@Override
 	public void update() {	
-
-		// check if vel < threshold --> stop falling
+		
 		if (getPlayer().isOnGround()) {
 			getPlayer().applyAction(PlayerActions.Land);
 		}
 	}
-	
 }

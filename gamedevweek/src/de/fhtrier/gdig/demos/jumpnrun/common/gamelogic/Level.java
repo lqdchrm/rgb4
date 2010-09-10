@@ -234,6 +234,9 @@ public class Level extends MoveableEntity {
 			ground.Assets().getTiledMap(ground.getAssetId()).render(0, 0, 2);
 		}
 		super.postRender(graphicContext);
+		
+		graphicContext.setColor(Constants.Debug.overlayColor);
+		graphicContext.drawString("Team 1: " +Team.Team1.getKills() + "\nTeam 2: " + Team.Team2.getKills(), 200, 20);
 
 		if (Constants.Debug.showDebugOverlay) {
 			graphicContext.setColor(Constants.Debug.overlayColor);

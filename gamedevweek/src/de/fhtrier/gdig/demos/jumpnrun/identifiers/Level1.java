@@ -12,7 +12,7 @@ public class Level1 {
 	public static int ImageBackgroundId = 5;
 	public static final int ImageBackgroundRenderOrder = 1;
 	public static final float ImageBackgroundParallaxFactor = 0.65f;
-	public static String ImageBackgroundPath = "backgrounds/saeulen_hinten";
+	public static String ImageBackgroundPath = "backgrounds/saeulen_hinten_t";
 	
 	public static int ImageMiddlegroundTopId = 9;
 	public static String ImageMiddlegroundTopPath = "backgrounds/stalak_oben";
@@ -21,6 +21,8 @@ public class Level1 {
 	public static String ImageMiddlegroundBottomPath = "backgrounds/stalak_unten";
 	
 	public static int ImageForegroundId = 17;
+	public static int ImageForegroundRenderOrder = 20;
+	public static float ImageForegroundParallaxFactor = 0.3f;
 	public static String ImageForegroundPath = "backgrounds/saeulen_vorne";
 	
 }

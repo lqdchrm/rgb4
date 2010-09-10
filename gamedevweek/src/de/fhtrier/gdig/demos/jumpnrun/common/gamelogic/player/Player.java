@@ -103,11 +103,11 @@ public class Player extends LevelCollidableEntity implements
 	private void initCondition() {
 		condition = new PlayerCondition();
 		condition.name = "XXX";
+		condition.teamId = 1;
 		setConditions();
 	}
 	
 	private void setConditions() {
-		condition.teamId = 1;
 		condition.health = 1.0f;
 		condition.ammo = 1.0f;
 		condition.damage = 0.2f;
@@ -142,12 +142,10 @@ public class Player extends LevelCollidableEntity implements
 	}
 
 	private void initGraphics() throws SlickException {
-		
-		// weapon
-		/*assets.storeAnimation(Assets.WeaponImageId,Assets.WeaponAnimImagePath);
-		this.weapon = factory.createAnimationEntity(Assets.WeaponImageId, Assets.WeaponImageId);
-		this.playerGroup.add(this.weapon);
-		weapon.setVisible(true);*/
+
+		int groupId = factory.createEntity(EntityOrder.Player,
+				EntityType.HELPER);
+		playerGroup = factory.getEntity(groupId);
 
 		// particles
 		assets.storeParticleSystem(Assets.Weapon.ParticleEffect,
@@ -156,29 +154,14 @@ public class Player extends LevelCollidableEntity implements
 		weaponParticles = factory.createParticleEntity(
 				Assets.Weapon.ParticleEffect, Assets.Weapon.ParticleEffect, assets);
 
-		int groupId = factory.createEntity(EntityOrder.Player,
-				EntityType.HELPER);
-
-		playerGroup = factory.getEntity(groupId);
 		playerGroup.add(weaponParticles);
 
 		// Position correction for particleEffects
+		// TODO: take weapon cords
 		weaponParticles.getData()[Entity.X] = 40;
 		weaponParticles.getData()[Entity.Y] = 110;
 
 		add(playerGroup);
-
-		// weapon
-		// TODO Weapon Image loading goes here
-		// assets.storeAnimation(Assets.WeaponImageId,
-		// Assets.BulletAnimImagePath);
-		// this.weapon = factory.createAnimationEntity(Assets.WeaponImageId,
-		// Assets.WeaponImageId);
-		// this.playerGroup.add(this.weapon);
-		// Position correction for weapon
-		// weapon.getData()[Entity.X] += 20;
-		// weapon.getData()[Entity.Y] += 95;
-		// weapon.setVisible(true);
 
 		// shader
 		if (playerGlow == null)
@@ -485,9 +468,11 @@ public class Player extends LevelCollidableEntity implements
 
 			// set Drag
 			if (isOnGround()) {
-				setDrag(Constants.GamePlayConstants.playerGroundDrag);
+				getDrag()[Entity.X] = Constants.GamePlayConstants.playerGroundDrag;
+				getDrag()[Entity.Y] = 0.0f; 
 			} else {
-				setDrag(Constants.GamePlayConstants.playerAirDrag);
+				getDrag()[Entity.X] = Constants.GamePlayConstants.playerAirDrag;
+				getDrag()[Entity.Y] = Constants.GamePlayConstants.playerAirDrag; 
 			}
 
 			super.update(deltaInMillis); // calc physics

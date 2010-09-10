@@ -13,22 +13,30 @@ import de.fhtrier.gdig.engine.sound.SoundManager;
 public class AbstractShootState extends AbstractAssetState {
 
 	private Animation anim;
+	private Animation weaponAnim;
 	
-	public AbstractShootState(Player player, int animAssetId,
-			String animAssetPath, int entityOrder, Factory factory)
+	public AbstractShootState(Player player, int playerAnimAssetId,
+			String playerAnimAssetPath, int weaponAnimAssetId, String weaponAnimAssetPath, int entityOrder, Factory factory)
 			throws SlickException {
-		super(player, animAssetId, animAssetPath, entityOrder, factory);
+		super(player, playerAnimAssetId, playerAnimAssetPath, weaponAnimAssetId, weaponAnimAssetPath, entityOrder, factory);
 		AssetEntity e = getGfxEntity();
 
 		anim = e.Assets().getAnimation(e.getAssetId());
 		anim.setLooping(false);
 		anim.setAutoUpdate(true);
+		
+		e = getWeaponGfxEntity();
+
+		weaponAnim = e.Assets().getAnimation(e.getAssetId());
+		weaponAnim.setLooping(false);
+		weaponAnim.setAutoUpdate(true);
 	}
 
 	@Override
 	public void enter() {
 		if (anim.isStopped()) {
 			anim.restart();
+			weaponAnim.restart();
 		}
 
 		// SoundManager.playSound(Assets.PlayerRunSoundId, 1f, 0.2f);

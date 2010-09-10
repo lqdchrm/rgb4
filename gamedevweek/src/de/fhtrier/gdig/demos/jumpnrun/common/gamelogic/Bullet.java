@@ -148,13 +148,16 @@ public class Bullet extends LevelCollidableEntity {
 		for (CollidableEntity collidableEntity : iColideWith) {
 			if (collidableEntity instanceof Player) {
 				Player otherPlayer = (Player) collidableEntity;
-				if (otherPlayer != owner && otherPlayer.getPlayerCondition().health > 0.01f) {
+				if (otherPlayer != owner && otherPlayer.getPlayerCondition().health > Constants.EPSILON 
+						&& (Constants.GamePlayConstants.friendyFire == true || // Friendly Fire or
+						owner.getPlayerCondition().teamId != otherPlayer.getPlayerCondition().teamId)) // Enemy
+				{
 					if (otherPlayer.getPlayerCondition().color != this.color) {
 						otherPlayer.getPlayerCondition().health -= owner
 								.getPlayerCondition().damage;
 						
 
-						if (otherPlayer.getPlayerCondition().health <= 0.01f) {
+						if (otherPlayer.getPlayerCondition().health <= Constants.EPSILON) {
 							NetworkComponent.getInstance().sendCommand(new SendKill(otherPlayer.getId(),owner.getId()));
 							
 							Event dieEvent = new PlayerDiedEvent(otherPlayer,owner);

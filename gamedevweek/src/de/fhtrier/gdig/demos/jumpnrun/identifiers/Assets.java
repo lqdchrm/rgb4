@@ -18,31 +18,31 @@ public class Assets {
 	// Player
 	public static class Player {
 		public static final int StandingAnimId = 111;
-		public static final String StandingAnimImagePath = "sprites/player/stehen_128_128_20.png";
+		public static final String StandingAnimImagePath = "sprites/player/astehen_128_128_15.png";
 
 		public static final int LandAnimId = 112;
-		public static final String LandAnimImagePath = "sprites/player/springenrunter_128_128_20.png";
+		public static final String LandAnimImagePath = "sprites/player/aspringenrunter_128_128_15.png";
 
 		public static final int JumpAnimId = 113;
-		public static final String JumpAnimImagePath = "sprites/player/springenhoch_128_128_20.png";
+		public static final String JumpAnimImagePath = "sprites/player/aspringenhoch_128_128_15.png";
 
 		public static final int ShootStandingAnimId = 114;
-		public static final String ShootStandingImagePath = "sprites/player/schussstehen_128_128_20.png";
+		public static final String ShootStandingImagePath = "sprites/player/aschussstehen_128_128_15.png";
 
 		public static final int ShootJumpingAnimId = 115;
-		public static final String ShootJumpingImagePath = "sprites/player/schussspringen_128_128_20.png";
+		public static final String ShootJumpingImagePath = "sprites/player/aschussspringen_128_128_15.png";
 
 		public static final int ShootRunningAnimId = 116;
-		public static final String ShootRunningImagePath = "sprites/player/schusslaufen_128_128_20.png";
+		public static final String ShootRunningImagePath = "sprites/player/aschusslaufen_128_128_15.png";
 
 		public static final int RunningAnimId = 117;
-		public static final String RunningImagePath = "sprites/player/laufen_128_128_20.png";
+		public static final String RunningImagePath = "sprites/player/alaufen_128_128_15.png";
 
 		public static final int FallingAnimId = 118;
-		public static final String FallingImagePath = "sprites/player/springenhoch_128_128_20.png";
+		public static final String FallingImagePath = "sprites/player/aspringenhoch_128_128_15.png";
 
 		public static final int FallShootingAnimId = 119;
-		public static final String FallShootingImagePath = "sprites/player/schussspringen_128_128_20.png";
+		public static final String FallShootingImagePath = "sprites/player/aschussspringen_128_128_15.png";
 
 		public static final String VertexShaderPath = "shader/simple.vert";
 		public static final String PixelShaderPath = "shader/playercolor.frag";
@@ -57,12 +57,40 @@ public class Assets {
 	}
 
 	public static class Weapon {
+		public static final int StandingAnimId = 211;
+		public static final String StandingAnimImagePath = "sprites/player/weaponstehen_128_128_15.png";
+
+		public static final int LandAnimId = 212;
+		public static final String LandAnimImagePath = "sprites/player/weaponspringenrunter_128_128_15.png";
+
+		public static final int JumpAnimId = 213;
+		public static final String JumpAnimImagePath = "sprites/player/weaponspringenhoch_128_128_15.png";
+
+		public static final int ShootStandingAnimId = 214;
+		public static final String ShootStandingImagePath = "sprites/player/weaponschussstehen_128_128_15.png";
+
+		public static final int ShootJumpingAnimId = 215;
+		public static final String ShootJumpingImagePath = "sprites/player/weaponschussspringen_128_128_15.png";
+
+		public static final int ShootRunningAnimId = 216;
+		public static final String ShootRunningImagePath = "sprites/player/weaponschusslaufen_128_128_15.png";
+
+		public static final int RunningAnimId = 217;
+		public static final String RunningImagePath = "sprites/player/weaponlaufen_128_128_15.png";
+
+		public static final int FallingAnimId = 218;
+		public static final String FallingImagePath = "sprites/player/weaponspringenhoch_128_128_15.png";
+
+		public static final int FallShootingAnimId = 219;
+		public static final String FallShootingImagePath = "sprites/player/weaponschussspringen_128_128_15.png";
+		
 		// Weapon
 		public static final int AnimId = 22;
 		public static final String AnimImagePath = "sprites/items/waffestehen_128_128_20.png";
 		public static final int ParticleEffect = 200;
 		public static final String ParticleEffectImgPath = "sprites/player/weaponparticle.png";
 		public static final String ParticleEffectCfgPath = "sprites/player/weaponparticleemitter3.xml";
+		
 		public static final String GlowImagePath = "shader/weaponglow.png";
 	}
 
