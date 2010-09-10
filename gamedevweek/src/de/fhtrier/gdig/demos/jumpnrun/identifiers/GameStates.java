@@ -7,4 +7,5 @@ public class GameStates {
 	public static final int CLIENT_LOBBY = 3;
 	public static final int PLAYING = 4;
 	public static final int SERVER_LOBBY = 5;
+	public static final int CLIENT_CREDITS = 6;
 }
