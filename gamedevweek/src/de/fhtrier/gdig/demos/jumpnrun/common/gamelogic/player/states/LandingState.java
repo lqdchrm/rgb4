@@ -14,6 +14,7 @@ import de.fhtrier.gdig.engine.sound.SoundManager;
 public class LandingState extends AbstractAssetState {
 	
 	private Animation anim;
+	private Animation weaponAnim;
 	
 	public LandingState(Player player, Factory factory)
 			throws SlickException {
@@ -26,13 +27,14 @@ public class LandingState extends AbstractAssetState {
 		
 		e = getWeaponGfxEntity();
 		
-		anim = e.Assets().getAnimation(e.getAssetId());
-		anim.setLooping(false);
+		weaponAnim = e.Assets().getAnimation(e.getAssetId());
+		weaponAnim.setLooping(false);
 	}
 
 	@Override
 	public void enter() {		
 		anim.restart();
+		weaponAnim.restart();
 		SoundManager.playSound(Assets.Sounds.PlayerLandSoundId, 1f, 0.1f);
 	}
 

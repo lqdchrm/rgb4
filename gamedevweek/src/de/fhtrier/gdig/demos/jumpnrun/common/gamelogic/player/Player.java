@@ -156,8 +156,9 @@ public class Player extends LevelCollidableEntity implements
 		playerGroup.add(weaponParticles);
 
 		// Position correction for particleEffects
+		// TODO: take weapon cords
 		weaponParticles.getData()[Entity.X] = 40;
-		weaponParticles.getData()[Entity.Y] = 0;//110; //by robindi: Debug um Weapon zu sehen!
+		weaponParticles.getData()[Entity.Y] = 110;
 
 		add(playerGroup);
 

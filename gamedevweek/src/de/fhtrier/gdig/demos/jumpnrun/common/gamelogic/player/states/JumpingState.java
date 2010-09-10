@@ -13,6 +13,7 @@ import de.fhtrier.gdig.engine.management.Factory;
 public class JumpingState extends AbstractAssetState {
 
 	private Animation anim;
+	private Animation weaponAnim;
 	
 	public JumpingState(Player player, Factory factory)
 			throws SlickException {
@@ -26,14 +27,15 @@ public class JumpingState extends AbstractAssetState {
 		
 		e = getWeaponGfxEntity();
 		
-		anim = e.Assets().getAnimation(e.getAssetId());
-		anim.setLooping(false);
+		weaponAnim = e.Assets().getAnimation(e.getAssetId());
+		weaponAnim.setLooping(false);
 	}
 	
 	@Override
 	public void enter() {
 		getPlayer().setOnGround(false);
 		anim.restart();
+		weaponAnim.restart();
 	}
 
 	@Override

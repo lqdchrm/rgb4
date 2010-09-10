@@ -13,6 +13,7 @@ import de.fhtrier.gdig.engine.management.Factory;
 public class FallingState extends AbstractAssetState {
 	
 	private Animation anim;
+	private Animation weaponAnim;
 	
 	public FallingState(Player player, Factory factory)
 			throws SlickException {
@@ -25,13 +26,14 @@ public class FallingState extends AbstractAssetState {
 		
 		e = getWeaponGfxEntity();
 		
-		anim = e.Assets().getAnimation(e.getAssetId());
-		anim.setLooping(false);
+		weaponAnim = e.Assets().getAnimation(e.getAssetId());
+		weaponAnim.setLooping(false);
 	}
 
 	@Override
 	public void enter() {
 		anim.restart();
+		weaponAnim.restart();
 	}
 
 	@Override
