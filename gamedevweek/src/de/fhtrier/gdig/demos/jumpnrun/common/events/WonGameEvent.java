@@ -19,7 +19,7 @@ public class WonGameEvent extends Event {
 	@Override
 	public void update () {
 		System.out.println(winningPlayer.getPlayerCondition().name + " won.");
-		NetworkComponent.getInstance().sendCommand(new DoPlaySound(Assets.DoomsdayDeviceSoundId));
+		NetworkComponent.getInstance().sendCommand(new DoPlaySound(Assets.Sounds.DoomsdayDeviceSoundId));
 	}
 
 }

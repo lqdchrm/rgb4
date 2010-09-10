@@ -46,7 +46,7 @@ public class ClientLobbyState extends NiftyGameState implements
 
 	private static final String CROSSHAIR_PNG = "crosshair.png";
 	public static String menuNiftyXMLFile = "client_lobby.xml";
-	public static String menuAssetPath = Assets.AssetGuiPath;
+	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 
 	private Queue<INetworkCommand> queue;
 	private HashMap<Integer, NetworkPlayer> players;

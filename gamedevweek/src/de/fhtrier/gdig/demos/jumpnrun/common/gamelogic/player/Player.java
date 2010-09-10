@@ -14,16 +14,16 @@ import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.StateColor;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerAssetState;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerFallingState;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerJumpingState;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerLandingState;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerRunningState;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerShootFallingState;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerShootJumpingState;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerShootRunningState;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerShootStandingState;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.PlayerStandingState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.AbstractAssetState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.FallingState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.JumpingState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.LandingState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.RunningState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.ShootFallingState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.ShootJumpingState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.ShootRunningState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.ShootStandingState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.StandingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActionState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActions;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
@@ -61,21 +61,21 @@ public class Player extends LevelCollidableEntity implements
 	private PlayerStats stats;
 
 	// some states for gfx and a statemachine for logic
-	private PlayerStandingState stateStanding;
-	private PlayerShootStandingState stateShootStanding;
-	private PlayerRunningState stateRunning;
-	private PlayerShootRunningState stateShootRunning;
-	private PlayerJumpingState stateJumping;
-	private PlayerShootJumpingState stateShootJumping;
-	private PlayerLandingState stateLanding;
-	private PlayerFallingState stateFalling;
-	private PlayerShootFallingState stateShootFalling;
+	private StandingState stateStanding;
+	private ShootStandingState stateShootStanding;
+	private RunningState stateRunning;
+	private ShootRunningState stateShootRunning;
+	private JumpingState stateJumping;
+	private ShootJumpingState stateShootJumping;
+	private LandingState stateLanding;
+	private FallingState stateFalling;
+	private ShootFallingState stateShootFalling;
 
 	private PlayerActionFSM fsmAction;
 	private PlayerOrientationFSM fsmOrientation;
 
 	// carries current Asset
-	private PlayerAssetState currentPlayerAsset;
+	private AbstractAssetState currentPlayerAsset;
 
 	// old Stuff
 	private Entity playerGroup;
@@ -129,15 +129,15 @@ public class Player extends LevelCollidableEntity implements
 		this.fsmOrientation.add(this);
 
 		// some states
-		stateStanding = new PlayerStandingState(this, factory);
-		stateShootStanding = new PlayerShootStandingState(this, factory);
-		stateRunning = new PlayerRunningState(this, factory);
-		stateShootRunning = new PlayerShootRunningState(this, factory);
-		stateJumping = new PlayerJumpingState(this, factory);
-		stateShootJumping = new PlayerShootJumpingState(this, factory);
-		stateLanding = new PlayerLandingState(this, factory);
-		stateFalling = new PlayerFallingState(this, factory);
-		stateShootFalling = new PlayerShootFallingState(this, factory);
+		stateStanding = new StandingState(this, factory);
+		stateShootStanding = new ShootStandingState(this, factory);
+		stateRunning = new RunningState(this, factory);
+		stateShootRunning = new ShootRunningState(this, factory);
+		stateJumping = new JumpingState(this, factory);
+		stateShootJumping = new ShootJumpingState(this, factory);
+		stateLanding = new LandingState(this, factory);
+		stateFalling = new FallingState(this, factory);
+		stateShootFalling = new ShootFallingState(this, factory);
 	}
 
 	private void initGraphics() throws SlickException {
@@ -149,11 +149,11 @@ public class Player extends LevelCollidableEntity implements
 		weapon.setVisible(true);*/
 
 		// particles
-		assets.storeParticleSystem(Assets.WeaponParticleEffect,
-				Assets.WeaponParticleEffectImgPath,
-				Assets.WeaponParticleEffectCfgPath);
+		assets.storeParticleSystem(Assets.Weapon.ParticleEffect,
+				Assets.Weapon.ParticleEffectImgPath,
+				Assets.Weapon.ParticleEffectCfgPath);
 		weaponParticles = factory.createParticleEntity(
-				Assets.WeaponParticleEffect, Assets.WeaponParticleEffect, assets);
+				Assets.Weapon.ParticleEffect, Assets.Weapon.ParticleEffect, assets);
 
 		int groupId = factory.createEntity(EntityOrder.Player,
 				EntityType.HELPER);
@@ -182,13 +182,13 @@ public class Player extends LevelCollidableEntity implements
 		// shader
 		if (playerShader == null && Constants.Debug.shadersActive) {
 			playerShader = new Shader(
-					assets.makePathRelativeToAssetPath(Assets.PlayerVertexShaderPath),
-					assets.makePathRelativeToAssetPath(Assets.PlayerPixelShaderPath));
+					assets.makePathRelativeToAssetPath(Assets.Player.VertexShaderPath),
+					assets.makePathRelativeToAssetPath(Assets.Player.PixelShaderPath));
 
 			playerGlow = new Image(
-					assets.makePathRelativeToAssetPath(Assets.PlayerGlowImagePath));
+					assets.makePathRelativeToAssetPath(Assets.Player.GlowImagePath));
 			weaponGlow = new Image(
-					assets.makePathRelativeToAssetPath(Assets.WeaponGlowImagePath));
+					assets.makePathRelativeToAssetPath(Assets.Weapon.GlowImagePath));
 		}
 
 		// make entities visible
@@ -244,11 +244,11 @@ public class Player extends LevelCollidableEntity implements
 		return result;
 	}
 
-	public PlayerAssetState getCurrentPlayerAsset() {
+	public AbstractAssetState getCurrentPlayerAsset() {
 		return currentPlayerAsset;
 	}
 
-	public void setState(PlayerAssetState state) {
+	public void setState(AbstractAssetState state) {
 		if (currentPlayerAsset != null) {
 			currentPlayerAsset.leave();
 		}
@@ -305,7 +305,7 @@ public class Player extends LevelCollidableEntity implements
 				if (this.isOnGround()) {
 					getVel()[Entity.Y] = -Constants.GamePlayConstants.playerJumpSpeed;
 					applyAction(PlayerActions.Jump);
-					SoundManager.playSound(Assets.PlayerJumpSoundId, 1f, 0.2f);
+					SoundManager.playSound(Assets.Sounds.PlayerJumpSoundId, 1f, 0.2f);
 				}
 			}
 
@@ -324,7 +324,7 @@ public class Player extends LevelCollidableEntity implements
 			if (InputControl.isRefKeyPressed(InputControl.REFCHANGECOLOR)) {
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerNetworkAction.PLAYERCOLOR));
-				SoundManager.playSound(Assets.PlayerChangeColorSoundID, 1f, 0.2f);
+				SoundManager.playSound(Assets.Sounds.PlayerChangeColorSoundID, 1f, 0.2f);
 			}
 
 			// change weapon color
@@ -332,10 +332,10 @@ public class Player extends LevelCollidableEntity implements
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerNetworkAction.WEAPONCOLOR));
 				
-				SoundManager.playSound(Assets.WeaponChangeColorSoundID, 1f, 0.2f);
+				SoundManager.playSound(Assets.Sounds.WeaponChangeColorSoundID, 1f, 0.2f);
 
 				ParticleSystem particleSystem = weaponParticles.Assets()
-						.getParticleSystem(Assets.WeaponParticleEffect);
+						.getParticleSystem(Assets.Weapon.ParticleEffect);
 				ConfigurableEmitter emitter = (ConfigurableEmitter) particleSystem
 						.getEmitter(0);
 				ColorRecord cr = (ColorRecord) emitter.colors.get(2);

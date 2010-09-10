@@ -9,15 +9,14 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
 import de.fhtrier.gdig.engine.management.Factory;
-import de.fhtrier.gdig.engine.sound.SoundManager;
 
-public class PlayerShootFallingState extends PlayerAssetState {
+public class FallingState extends AbstractAssetState {
 	
 	private Animation anim;
 	
-	public PlayerShootFallingState(Player player, Factory factory)
+	public FallingState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.PlayerFallShootingAnimId, Assets.PlayerFallShootingImagePath, EntityOrder.Player, factory);
+		super(player, Assets.Player.FallingAnimId, Assets.Player.FallingImagePath, EntityOrder.Player, factory);
 	
 		AssetEntity e = getGfxEntity();
 		
@@ -27,10 +26,7 @@ public class PlayerShootFallingState extends PlayerAssetState {
 
 	@Override
 	public void enter() {
-		if (anim.isStopped()) {
-			anim.restart();
-		}
-		SoundManager.playSound(Assets.BulletSoundId, 1f, 0.2f);
+		anim.restart();
 	}
 
 	@Override
@@ -43,10 +39,6 @@ public class PlayerShootFallingState extends PlayerAssetState {
 		// check if vel < threshold --> stop falling
 		if (getPlayer().isOnGround()) {
 			getPlayer().applyAction(PlayerActions.Land);
-		}
-		
-		if (anim.isStopped()) {
-			getPlayer().applyAction(PlayerActions.StopShooting);
 		}
 	}
 	

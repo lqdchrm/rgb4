@@ -11,13 +11,13 @@ import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
 
-public abstract class PlayerAssetState {
+public abstract class AbstractAssetState {
 
 	private Factory factory;
 	private Player player;
 	private AssetEntity gfxEntity;
 	
-	public PlayerAssetState(Player player, int animAssetId, String animAssetPath, int entityOrder, Factory factory) throws SlickException {
+	public AbstractAssetState(Player player, int animAssetId, String animAssetPath, int entityOrder, Factory factory) throws SlickException {
 
 		AssetMgr assets = player.getAssetMgr();
 		this.player = player;

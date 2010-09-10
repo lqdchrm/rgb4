@@ -5,6 +5,7 @@ import java.net.InterfaceAddress;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
 
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 import de.fhtrier.gdig.demos.jumpnrun.server.ServerGame;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkHelper;
@@ -36,6 +37,7 @@ public class QuickDebugStartServer {
 				gc.setAlwaysRender(true);
 				gc.setUpdateOnlyWhenVisible(false);
 				gc.setTargetFrameRate(60);
+				gc.setShowFPS(Constants.Debug.showDebugOverlay);
 				gc.start();
 			} catch (SlickException e) {
 				e.printStackTrace();

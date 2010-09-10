@@ -37,7 +37,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 
 	private static final String CROSSHAIR_PNG = "crosshair.png";
 	public static String menuNiftyXMLFile = "client_server_select.xml";
-	public static String menuAssetPath = Assets.AssetGuiPath;
+	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 
 	private List<InterfaceAddress> interfaces;
 	private List<NetworkServerObject> serverList;

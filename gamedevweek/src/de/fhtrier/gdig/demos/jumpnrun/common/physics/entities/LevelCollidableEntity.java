@@ -68,6 +68,7 @@ public class LevelCollidableEntity extends CollidableEntity {
 
 		boolean collided = false;
 
+		// do it two times: one for each direction
 		for (int i = 0; i < 2; i++) {
 
 			if (this.map != null && this.getBounds() != null) {

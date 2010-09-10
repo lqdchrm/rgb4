@@ -9,26 +9,34 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.management.Factory;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 
-public class PlayerStandingState extends PlayerAssetState {
+public class RunningState extends AbstractAssetState {
 
-	public PlayerStandingState(Player player, Factory factory)
+	public RunningState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.PlayerStandingAnimId, Assets.PlayerStandingAnimImagePath, EntityOrder.Player, factory);
-	
+		super(player, Assets.Player.RunningAnimId,
+				Assets.Player.RunningImagePath, EntityOrder.Player, factory);
 	}
 
 	@Override
 	public void enter() {
+		SoundManager.loopSound(Assets.Sounds.PlayerRunSoundId, 1f, 0.2f);
 	}
 
 	@Override
 	public void leave() {
+		SoundManager.stopSound(Assets.Sounds.PlayerRunSoundId);
 	}
 
 	@Override
-	public void update() {
-
+	public void update() {	
+		
+		// check if vel < threshold --> stop running
+		if (Math.abs(getPlayer().getVel()[Entity.X]) < Constants.GamePlayConstants.playerIdleTriggerSpeed) {
+			getPlayer().applyAction(PlayerActions.StopRunning);
+		}
+		
 		// check if currentPos < prevPos --> start falling
 		if (getPlayer().getVel()[Entity.Y] > Constants.GamePlayConstants.playerFallingTriggerSpeed) {
 			getPlayer().applyAction(PlayerActions.Fall);

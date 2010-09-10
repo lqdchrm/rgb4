@@ -1,39 +1,21 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states;
 
-import org.newdawn.slick.Animation;
 import org.newdawn.slick.SlickException;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActions;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
-import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
 import de.fhtrier.gdig.engine.management.Factory;
 
-public class PlayerJumpingState extends PlayerAssetState {
+public class ShootJumpingState extends AbstractShootState {
 
-	private Animation anim;
-	
-	public PlayerJumpingState(Player player, Factory factory)
+	public ShootJumpingState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.PlayerJumpAnimId,
-				Assets.PlayerJumpAnimImagePath, EntityOrder.Player, factory);
-	
-		AssetEntity e = getGfxEntity();
-		
-		anim = e.Assets().getAnimation(e.getAssetId());
-		anim.setLooping(false);
-	}
-	
-	@Override
-	public void enter() {
-		getPlayer().setOnGround(false);
-		anim.restart();
+		super(player, Assets.Player.ShootJumpingAnimId,
+				Assets.Player.ShootJumpingImagePath, EntityOrder.Player, factory);
 	}
 
-	@Override
-	public void leave() {
-	}
 
 	@Override
 	public void update() {
@@ -43,5 +25,4 @@ public class PlayerJumpingState extends PlayerAssetState {
 			getPlayer().applyAction(PlayerActions.Land);
 		}
 	}
-
 }

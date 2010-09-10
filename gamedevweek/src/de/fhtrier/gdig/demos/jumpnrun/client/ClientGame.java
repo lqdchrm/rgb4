@@ -22,7 +22,7 @@ public class ClientGame extends RGB4Game {
 	public static boolean isSpectator = false;
 
 	public ClientGame() {
-		super(Assets.GameTitle);
+		super(Assets.Config.GameTitle);
 
 		NetworkComponent.createClientInstance();
 		NetworkComponent.getInstance().addListener(this);

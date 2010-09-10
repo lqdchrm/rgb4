@@ -39,9 +39,9 @@ public class Bullet extends LevelCollidableEntity {
 		assets = new AssetMgr();
 
 		// gfx
-		assets.storeAnimation(Assets.BulletAnimId, Assets.BulletAnimPath);
+		assets.storeAnimation(Assets.Bullet.AnimId, Assets.Bullet.AnimPath);
 		bullet = factory.createAnimationEntity(EntityOrder.Bullet,
-				Assets.BulletAnimId, assets);
+				Assets.Bullet.AnimId, assets);
 
 		bullet.setVisible(true);
 		add(bullet);

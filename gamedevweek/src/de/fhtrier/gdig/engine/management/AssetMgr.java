@@ -36,8 +36,8 @@ public class AssetMgr {
 		this.tiledMaps = new HashMap<Integer, TiledMap>();
 		this.animations = new HashMap<Integer, Animation>();
 		this.particleSystems = new HashMap<Integer, ParticleSystem>();
-		this.assetPathPrefix = Assets.AssetManagerPath;
-		this.assetFallbackPathPrefix = Assets.AssetManagerFallbackPath;
+		this.assetPathPrefix = Assets.Config.AssetManagerPath;
+		this.assetFallbackPathPrefix = Assets.Config.AssetManagerFallbackPath;
 	}
 
 	public void setAssetFallbackPathPrefix(String path) {

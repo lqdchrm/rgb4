@@ -6,6 +6,7 @@ import org.newdawn.slick.SlickException;
 import de.fhtrier.gdig.demos.jumpnrun.client.ClientGame;
 import de.fhtrier.gdig.demos.jumpnrun.client.states.debug.DebugNoMenuStarterState;
 import de.fhtrier.gdig.demos.jumpnrun.common.Lobby;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 
 public class QuickDebugStartClient {
@@ -23,8 +24,12 @@ public class QuickDebugStartClient {
 
 		if (args.length > 0) {
 			DebugNoMenuStarterState.isMaster = true;
+			try {
+				Thread.sleep(1500);
+			} catch (InterruptedException e) {
+			}
 		}
-		
+
 		if (clientGame != null) {
 
 			try {
@@ -37,6 +42,7 @@ public class QuickDebugStartClient {
 				gc.setUpdateOnlyWhenVisible(false);
 				gc.setMaximumLogicUpdateInterval(30);
 				gc.setTargetFrameRate(60);
+				gc.setShowFPS(Constants.Debug.showDebugOverlay);
 				gc.start();
 			} catch (SlickException e) {
 				e.printStackTrace();

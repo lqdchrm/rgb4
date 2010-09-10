@@ -25,7 +25,7 @@ public class ServerGame extends RGB4Game {
 	private NetworkBroadcastListener netBroadCastListener;
 
 	public ServerGame(String serverName, InterfaceAddress ni, int port) {
-		super(Assets.GameTitle + " (" + serverName + ")");
+		super(Assets.Config.GameTitle + " (" + serverName + ")");
 
 		this.serverName = serverName;
 		ServerGame.networkInterface = ni;

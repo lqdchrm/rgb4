@@ -7,6 +7,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
@@ -103,11 +104,11 @@ public abstract class PlayingState extends BasicGameState implements
 				container.setFullscreen(!container.isFullscreen());
 			} catch (final SlickException e)
 			{
-
+				Log.error(e);
 			}
-			container.setVSync(true);
-			container.setSmoothDeltas(true);
-			container.setMaximumLogicUpdateInterval(17);
+//			container.setVSync(true);
+//			container.setSmoothDeltas(true);
+//			container.setMaximumLogicUpdateInterval(17);
 			container.setPaused(false);
 		}
 

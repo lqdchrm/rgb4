@@ -4,6 +4,7 @@ import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.ClientGame;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 
 public class JumpNRunClient {
@@ -28,6 +29,7 @@ public class JumpNRunClient {
 				gc.setUpdateOnlyWhenVisible(false);
 				gc.setMaximumLogicUpdateInterval(30);
 				gc.setTargetFrameRate(60);
+				gc.setShowFPS(Constants.Debug.showDebugOverlay);
 				gc.start();
 			} catch (SlickException e) {
 				e.printStackTrace();
