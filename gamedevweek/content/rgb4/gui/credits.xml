@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty xmlns="http://nifty-gui.sourceforge.net/nifty.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://nifty-gui.sourceforge.net/nifty.xsd http://nifty-gui.sourceforge.net/nifty.xsd">
+
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<!-- load default styles and controls -->
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<useStyles filename="nifty-default-styles.xml" />
+	<useStyles filename="rgb-styles.xml" />
+	<useControls filename="nifty-default-controls.xml" />
+
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<!-- start screen -->
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+
+
+	<screen id="start" controller="de.fhtrier.gdig.demos.jumpnrun.client.states.ClientCreditsState">
+		
+	
+		<layer id="layer" childLayout="center">
+			<panel width="100%" height="100%" childLayout="vertical">
+				<label style="lobby-text" text="HAllo" valign="center" align="center">
+					<effect>
+						<onActive name="move" direction="down" mode="out"
+							length="1500" startDelay="0"/>
+					</effect>
+				</label>				
+			</panel>
+		</layer>		
+	</screen>
+
+
+
+</nifty>

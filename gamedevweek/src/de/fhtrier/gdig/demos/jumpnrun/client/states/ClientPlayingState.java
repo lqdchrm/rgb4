@@ -24,6 +24,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
@@ -209,7 +210,7 @@ public class ClientPlayingState extends PlayingState {
 			
 			Event dieEvent = new PlayerDiedEvent(getLevel().getPlayer(killCommand.getPlayerId()), getLevel().getPlayer(killCommand.getKillerId()));
 			EventManager.addEvent(dieEvent);
-
+			
 			Player player = getLevel().getPlayer(killCommand.getPlayerId());
 
 			player.die();
@@ -219,7 +220,14 @@ public class ClientPlayingState extends PlayingState {
 		if (cmd instanceof SendWon) {
 			SendWon wonCommand = (SendWon) cmd;
 			
-			Event winEvent = new WonGameEvent(getLevel().getPlayer(wonCommand.getWinnerId()));
+			Event winEvent;
+			if (wonCommand.getWinnerType() == SendWon.winnerType_Player) {
+				winEvent = new WonGameEvent(getLevel().getPlayer(wonCommand.getWinnerId()));
+			}
+			else { // Team is Winner
+				winEvent = new WonGameEvent(Team.getTeamById(wonCommand.getWinnerId()));
+			}
+			
 			EventManager.addEvent(winEvent);
 			return true;
 		}

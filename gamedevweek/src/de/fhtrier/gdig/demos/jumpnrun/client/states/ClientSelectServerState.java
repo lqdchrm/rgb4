@@ -158,18 +158,21 @@ public class ClientSelectServerState extends NiftyGameState implements
 			e.printStackTrace();
 		}
 		
+		int count = 0;
 		for ( NetworkServerObject server : serverList )
 		{
-			CreateButtonControl createButton = new CreateButtonControl("mybutton");
+			CreateButtonControl createButton = new CreateButtonControl("mybutton"+count);
 			createButton.setHeight("30px");
 			createButton.setWidth("100%");
 			createButton
-					.set("label", server.getName() + "(" + server.getIp() + ")");
+					.set("label", server.getName() + "("+ count+"," + server.getIp() + ")");
 			createButton.setAlign("left");
 			// TODO setin real values
-			createButton.setInteractOnClick("chooseServer(" + server.getIp() + ","
+			createButton.setInteractOnClick("chooseServer(" +count+ ","+ server.getIp() + ","
 					+ server.getPort() + ")");
-			createButton.create(nifty, nifty.getCurrentScreen(), guiServerPanel);	
+			ButtonControl bC = createButton.create(nifty, nifty.getCurrentScreen(), guiServerPanel);
+			count++;
+			serverButtons.add(bC);
 		}
 		
 		serverList.clear();
