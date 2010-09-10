@@ -107,8 +107,8 @@ public class Bullet extends LevelCollidableEntity {
 		
 		if (Constants.Debug.shadersActive)
 		{
-			Shader.pushShader(Player.getPlayerShader());
-			Player.getPlayerShader().setValue("playercolor", bulletCol);
+			Shader.pushShader(Player.getColorGlowShader());
+			Player.getColorGlowShader().setValue("playercolor", bulletCol);
 		}
 		
 		graphicContext.setColor(Color.white);
@@ -192,6 +192,7 @@ public class Bullet extends LevelCollidableEntity {
 						// player gets stronger when hit by bullet of the same
 						// color!
 						otherPlayer.getPlayerCondition().health += Constants.GamePlayConstants.healHP;
+						if (otherPlayer.getPlayerCondition().health > Constants.GamePlayConstants.maxHealthpoints) otherPlayer.getPlayerCondition().health = Constants.GamePlayConstants.maxHealthpoints;
 					}
 					
 					NetworkComponent.getInstance().sendCommand(new AckPlayerCondition(otherPlayer.getId(), otherPlayer.getPlayerCondition()));

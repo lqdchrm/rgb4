@@ -73,7 +73,7 @@ public class Level extends MoveableEntity {
 		this.ground.setVisible(true);
 		this.ground.setActive(true);
 		add(this.ground);
-
+		
 		// physics
 		setData(new float[] { 0, 0, 0, 0, 1, 1, 0 });
 

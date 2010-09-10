@@ -9,6 +9,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
+import de.fhtrier.gdig.engine.graphics.shader.Shader;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
 
@@ -67,7 +68,14 @@ public abstract class AbstractAssetState {
 	}
 
 	public void render(Graphics g, Image frameBuffer) {
+		
+		Shader.pushShader(Player.getColorGlowShader());
+		
+		Player.getColorGlowShader().setValue("playercolor", player.getPlayerCondition().weaponColor);
 		weaponGfxEntity.render(g, frameBuffer);
+
+		Shader.popShader();
+		
 		getGfxEntity().render(g, frameBuffer);
 	}
 	

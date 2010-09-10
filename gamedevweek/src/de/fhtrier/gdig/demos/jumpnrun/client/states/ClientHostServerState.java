@@ -21,6 +21,7 @@ import org.newdawn.slick.util.Log;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryConnect;
 import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackground;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkHelper;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
@@ -161,26 +162,35 @@ public class ClientHostServerState extends NiftyGameState implements
 				// ProcessBuilder pb = new ProcessBuilder("bash",
 				// "server.bat",serverNameControl.getText(),interfaceA,portControl.getText());
 				ProcessBuilder pb = new ProcessBuilder("java",
-						"-Djava.library.path=lib/native", "-jar",
+						"-Djava.library.path=./lib/native", "-jar",
 						"server/server.jar", serverNameControl.getText(),
 						interfaceA, portControl.getText());
 				pb.redirectErrorStream(true);
-				
+
 				try {
 					final Process p = pb.start();
 					Thread t = new Thread() {
 						public void run() {
 							BufferedReader r = new BufferedReader(
 									new InputStreamReader(p.getInputStream()));
-							while (true)
-								try {
-									Log.debug("SERVER PROCESS -- "+r.readLine());
-								} catch (IOException e) {}
+
+							try {
+								while (true) {
+									String s = r.readLine();
+									if (s != null) {
+										if (Constants.Debug.networkDebug) {
+											Log.debug("SERVER PROCESS -- " + s);
+										}
+									} else
+										return;
+								}
+							} catch (IOException e) {
+							}
 						};
 					};
 					t.setDaemon(true);
 					t.start();
-					
+
 					Runtime.getRuntime().addShutdownHook(new Thread() {
 						@Override
 						public void run() {
