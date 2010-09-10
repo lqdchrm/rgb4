@@ -1,15 +1,11 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states;
 
-import javax.swing.text.AbstractDocument.Content;
-
-//import org.GNOME.Accessibility.ContentStream;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;

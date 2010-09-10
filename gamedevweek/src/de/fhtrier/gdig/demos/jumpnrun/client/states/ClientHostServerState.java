@@ -1,7 +1,9 @@
 package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.InterfaceAddress;
 import java.util.ArrayList;
@@ -154,22 +156,41 @@ public class ClientHostServerState extends NiftyGameState implements
 				popupNoName();
 			} else {
 				serverStarting = true;
-//				String interfaceA = interfaces.get(selectedInterfaceIndex)
-//						.getAddress().getHostAddress().replace('/', ' ').trim();
-//				// ProcessBuilder pb = new ProcessBuilder("bash",
-//				// "server.bat",serverNameControl.getText(),interfaceA,portControl.getText());
-//				ProcessBuilder pb = new ProcessBuilder("java",
-//						"-Djava.library.path=lib/native", "-jar",
-//						"server/server.jar", serverNameControl.getText(),
-//						interfaceA, portControl.getText());
-//				// pb.directory("myDir");
-//				try {
-//					Process p = pb.start();
-//					System.setOut(new PrintStream(p.getOutputStream()));
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
+				String interfaceA = interfaces.get(selectedInterfaceIndex)
+						.getAddress().getHostAddress().replace('/', ' ').trim();
+				// ProcessBuilder pb = new ProcessBuilder("bash",
+				// "server.bat",serverNameControl.getText(),interfaceA,portControl.getText());
+				ProcessBuilder pb = new ProcessBuilder("java",
+						"-Djava.library.path=lib/native", "-jar",
+						"server/server.jar", serverNameControl.getText(),
+						interfaceA, portControl.getText());
+				pb.redirectErrorStream(true);
+				
+				try {
+					final Process p = pb.start();
+					Thread t = new Thread() {
+						public void run() {
+							BufferedReader r = new BufferedReader(
+									new InputStreamReader(p.getInputStream()));
+							while (true)
+								try {
+									Log.debug("SERVER PROCESS -- "+r.readLine());
+								} catch (IOException e) {}
+						};
+					};
+					t.setDaemon(true);
+					t.start();
+					
+					Runtime.getRuntime().addShutdownHook(new Thread() {
+						@Override
+						public void run() {
+							p.destroy();
+						}
+					});
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				// TODO spawn server
 

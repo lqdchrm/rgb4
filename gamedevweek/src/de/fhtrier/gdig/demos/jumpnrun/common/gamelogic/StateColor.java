@@ -2,6 +2,8 @@ package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
 import org.newdawn.slick.Color;
 
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
+
 public class StateColor {
 	public static final int BLACK = 0;
 	public static final int RED = 1;
@@ -16,9 +18,11 @@ public class StateColor {
 	 * Creates a new Color Object matching the Color for the specified
 	 * Color-Index.
 	 * 
-	 * @param colorConst The ColorIndex (e.g. StateColor.BLACK)
-	 * @return A new Color Object 
-	 * @throws IllegalArgumentException If an invalid Index is specified
+	 * @param colorConst
+	 *            The ColorIndex (e.g. StateColor.BLACK)
+	 * @return A new Color Object
+	 * @throws IllegalArgumentException
+	 *             If an invalid Index is specified
 	 */
 	public static Color constIntoColor(int colorConst)
 			throws IllegalArgumentException {
@@ -32,7 +36,7 @@ public class StateColor {
 		case YELLOW:
 			return new Color(Color.yellow);
 		case BLUE:
-			return new Color(Color.blue);
+			return new Color(0.2f, 0.2f, 1.0f);
 		case MAGENTA:
 			return new Color(Color.magenta);
 		case CYAN:
@@ -41,6 +45,16 @@ public class StateColor {
 			return new Color(Color.white);
 		default:
 			throw new IllegalArgumentException("Undefined parameter");
+		}
+	}
+
+	public static float constIntoBrightness(int colorConst)
+			throws IllegalArgumentException {
+		switch (colorConst) {
+		case RED:
+			return 0.8f;
+		default:
+			return Constants.GamePlayConstants.playerBrightness;
 		}
 	}
 }
