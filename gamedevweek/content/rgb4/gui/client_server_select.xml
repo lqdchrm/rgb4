@@ -14,11 +14,7 @@
 
 	<screen id="start"
 		controller="de.fhtrier.gdig.demos.jumpnrun.client.states.ClientSelectServerState">
-		<layer id="back" childLayout="center">
-			<panel id="panel" height="100%" width="100%" backgroundImage="menu-background.png">
 
-			</panel>
-		</layer>
 		<layer id="layer" childLayout="vertical">
 		    <panel height="20%"/>
 			<panel id="dialog" childLayout="vertical" padding="18px,28px,28px,16px"

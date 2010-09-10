@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
@@ -16,6 +17,7 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryConnect;
+import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackground;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkHelper;
@@ -245,6 +247,20 @@ public class ClientHostServerState extends NiftyGameState implements ScreenContr
 		    return;
 	  }
 	  
+	  
+		@Override
+		public void render(GameContainer container, StateBasedGame game, Graphics g)
+				throws SlickException {
+			try
+			{
+				MenuBackground.getInstance().render(container, game, g);
+				super.render(container, game, g);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
 	  
 	  public void removePopup() {
 	      nifty.closePopup(nifty.getCurrentScreen().getTopMostPopup().getId(), null);

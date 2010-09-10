@@ -19,6 +19,7 @@ import org.newdawn.slick.util.Log;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetLevel;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetTeam;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryStartGame;
+import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackground;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
@@ -112,15 +113,15 @@ public class ClientLobbyState extends NiftyGameState implements
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
-		// TODO Auto-generated method stub
-		super.render(container, game, g);
-		// float offset = 30;
-		// g.drawString("Client Currently connected: ", 10.0f, offset);
-		// for (NetworkPlayer player : players) {
-		// g.drawString(player.getPlayerName(), 10.0f, 20.0f + offset);
-		// offset += 10.0f;
-		// }
-		// g.drawString("PRESS ENTER TO START", 200, 400);
+		try
+		{
+			MenuBackground.getInstance().render(container, game, g);
+			super.render(container, game, g);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override

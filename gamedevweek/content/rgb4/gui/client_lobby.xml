@@ -32,9 +32,7 @@
 
 	<screen id="start"
 		controller="de.fhtrier.gdig.demos.jumpnrun.client.states.ClientLobbyState">
-		<layer id="background" childLayout="center">
-			<panel id="panel" height="100%" width="100%" backgroundImage="menu-background.png" />
-		</layer>
+
 
 		<layer id="host_layer" childLayout="center" align="center"
 			valign="center">
