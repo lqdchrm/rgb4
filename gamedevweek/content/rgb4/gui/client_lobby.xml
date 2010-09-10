@@ -57,22 +57,35 @@
 				<panel id="mainMenu" childLayout="horizontal" width="100%"
 					height="90%">
 
-					<panel id="player_panel" style="standard-panel" width="30%" childLayout="vertical">
-						<label style="lobby-text" text="Players:" height="10%" />
+					<panel id="player_panel" style="standard-panel" width="60%" childLayout="horizontal">
+						<panel width="45%" childLayout="vertical">
+							<label style="lobby-text" text="Team 1:" height="10%" />
+	
+							<panel id="team_1" height="80%" width="100%" style="player-list" align="left" childLayout="vertical">
+								<interact onClick="chooseTeam(1)" />
+							</panel>
+						</panel>
+						
+						<panel width="10%" childLayout="vertical"/>
+						
+						<panel width="45%" childLayout="vertical">
+							<label style="lobby-text" text="Team 2:" height="10%" />
 
-						<panel id="player_list" height="80%" width="100%" style="player-list" align="left" childLayout="vertical">
+							<panel id="team_2" height="80%" width="100%" style="player-list" align="left" childLayout="vertical">
+								<interact onClick="chooseTeam(2)" />
+							</panel>
 						</panel>
 					</panel>
 
 					<panel id="spacer" width="10%"></panel>
 
-					<panel id="level_panel" style="standard-panel" width="60%" childLayout="horizontal">
+					<panel id="level_panel" style="standard-panel" width="30%" childLayout="vertical">
 						
 						<panel childLayout="vertical">
 							<label style="lobby-text" text="Current Level:" height="10%" />
 						</panel>
 	
-						<panel childLayout="vertical">
+						<panel childLayout="vertical" height="90%">
 							<label id="current_level" style="lobby-text" text="none" height="10%" width="150px" backgroundColor="#000a"/>
 						
 							<panel height="10px"/>

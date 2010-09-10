@@ -11,12 +11,15 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryConnect;
+import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetLevel;
+import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetTeam;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryStartGame;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.ServerGame;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkPlayer;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckConnect;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckNewPlayerList;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckSetLevel;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckStartGame;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
@@ -83,18 +86,26 @@ public class ServerLobbyState extends BasicGameState  implements
 			players.put(data.getSender(), new NetworkPlayer(name, data.getSender()));
 			NetworkComponent.getInstance().sendCommand(new AckNewPlayerList(players));
 		}
-		
-		if (data instanceof ClientQueryDisconnect)
+		else if (data instanceof ClientQueryDisconnect)
 		{
 			players.remove(data.getSender());
 			NetworkComponent.getInstance().sendCommand(
 					new AckNewPlayerList(players));
 		}
-		
-		if (data instanceof QueryStartGame) {
+		else if (data instanceof QueryStartGame) {
 			serverGame.enterState(GameStates.PLAYING);
 			NetworkComponent.getInstance().sendCommand(new AckStartGame());
 		}
+		else if (data instanceof QuerySetTeam)
+		{
+			players.get(data.getSender()).setTeamId(((QuerySetTeam)data).getTeamID());
+			NetworkComponent.getInstance().sendCommand(new AckNewPlayerList(players));
+		}
+		else if (data instanceof QuerySetLevel)
+		{
+			NetworkComponent.getInstance().sendCommand(new AckSetLevel(((QuerySetLevel)data).getNetworkLevel()));
+		}
+		
 	}
 
 	@Override

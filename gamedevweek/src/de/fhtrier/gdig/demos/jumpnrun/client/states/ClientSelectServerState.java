@@ -198,6 +198,8 @@ public class ClientSelectServerState extends NiftyGameState implements
 		setButton(Integer.parseInt(id), interfaceButtons, new Color(1,0,0,1), new Color(1,1,1,1));
 		networkLobby.stopGetServers();
 		networkLobby.getServers(iA);
+		currentConnectionIp = null;
+		currentConnectionPort = -1;
 	}
 
 	public void setButton(int nr,List<ButtonControl> buttons,Color setColor,Color notSetColor)
@@ -218,6 +220,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 		Log.debug("set server-info to :" + ip + ":" + port);
 		networkLobby.stopGetServers();
 		setButton(Integer.parseInt(id), serverButtons, new Color(1,0,0,1), new Color(1,1,1,1));
+		
 	}
 
 	public void connect() {
