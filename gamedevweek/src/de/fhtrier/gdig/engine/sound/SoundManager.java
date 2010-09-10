@@ -14,7 +14,7 @@ public class SoundManager {
 	private SoundManager(AssetMgr assets) throws SlickException {
 		this.assets = assets;
 
-		//this.assets.storeMusic(Assets.LevelSoundtrackId, Assets.LevelSoundtrackPath);
+		//this.assets.storeSound(Assets.LevelSoundtrackId, Assets.LevelSoundtrackPath);
 
 		this.assets.storeSound(Assets.PlayerRunSoundId, Assets.PlayerRunSoundPath);
 		this.assets.storeSound(Assets.PlayerJumpSoundId, Assets.PlayerJumpSoundPath);
@@ -28,7 +28,7 @@ public class SoundManager {
 		this.assets.storeSound(Assets.PlayerChangeColorSoundID, Assets.PlayerChangeColorPath);
 		
 		this.assets.storeSound(Assets.BeamSoundId, Assets.BeamSoundPath);
-		this.assets.storeSound(Assets.BulletSoundId, Assets.BulletSoundPath);
+		this.assets.storeSound(Assets.BulletSoundId, Assets.PlayerShootSoundPath);
 		this.assets.storeSound(Assets.DoomsdayDeviceSoundId, Assets.DoomsdayDeviceSoundPath);
 		this.assets.storeSound(Assets.RocketStartSoundId, Assets.RocketStartSoundPath);
 		this.assets.storeSound(Assets.RocketExplodeSoundId, Assets.RocketExplodeSoundPath);

@@ -100,7 +100,7 @@ public class ClientPlayingState extends PlayingState {
 			}
 			
 			SoundManager.playSound(Assets.PlayerJoiningSoundID);
-			//SoundManager.fadeMusic(Assets.LevelSoundtrackId, 500, 0.4f, false);
+			//SoundManager.loopSound(Assets.LevelSoundtrackId, 1.0f, 0.1f);
 			return true;
 		}
 
