@@ -10,28 +10,28 @@
   <image source="elemente_level_compact2.png"/>
  </tileset>
  <tileset firstgid="378" name="elemente_level_compact3" tilewidth="32" tileheight="32">
-  <image source="../rgb4/gamedevweek/content/rgb4/fallback/tiles/elemente_level_compact3.png"/>
+  <image source="elemente_level_compact3.png"/>
  </tileset>
  <tileset firstgid="667" name="elemente_level_compact4" tilewidth="32" tileheight="32">
-  <image source="../rgb4/gamedevweek/content/rgb4/fallback/tiles/elemente_level_compact4.png"/>
+  <image source="elemente_level_compact4.png"/>
  </tileset>
  <tileset firstgid="956" name="elemente_level_compact5" tilewidth="32" tileheight="32">
-  <image source="../rgb4/gamedevweek/content/rgb4/fallback/tiles/elemente_level_compact5.png"/>
+  <image source="elemente_level_compact5.png"/>
  </tileset>
  <tileset firstgid="1245" name="numbers" tilewidth="32" tileheight="32">
-  <image source="../rgb4/gamedevweek/content/rgb4/fallback/tiles/numbers.png"/>
+  <image source="numbers.png"/>
  </tileset>
  <tileset firstgid="1373" name="elemente_level_compact6" tilewidth="32" tileheight="32">
-  <image source="../rgb4/gamedevweek/content/rgb4/fallback/tiles/elemente_level_compact6.png"/>
+  <image source="elemente_level_compact6.png"/>
  </tileset>
  <tileset firstgid="1662" name="elemente_level_compact7" tilewidth="32" tileheight="32">
-  <image source="../rgb4/gamedevweek/content/rgb4/fallback/tiles/elemente_level_compact7.png"/>
+  <image source="elemente_level_compact7.png"/>
  </tileset>
  <tileset firstgid="1951" name="elemente_level_compact8" tilewidth="32" tileheight="32">
-  <image source="../rgb4/gamedevweek/content/rgb4/fallback/tiles/elemente_level_compact8.png"/>
+  <image source="elemente_level_compact8.png"/>
  </tileset>
  <tileset firstgid="2240" name="elemente_level_compact9" tilewidth="32" tileheight="32">
-  <image source="../rgb4/gamedevweek/content/rgb4/fallback/tiles/elemente_level_compact9.png"/>
+  <image source="elemente_level_compact9.png"/>
  </tileset>
  <tileset firstgid="2529" name="elemente_level_compact10" tilewidth="32" tileheight="32">
   <image source="elemente_level_compact10.png"/>

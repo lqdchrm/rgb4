@@ -57,7 +57,8 @@ public class ClientLobbyState extends NiftyGameState implements
 	private Queue<INetworkCommand> queue;
 	private HashMap<Integer, NetworkPlayer> players;
 	private ArrayList<NetworkLevel> levels;
-
+	private int currentTeam = 1;
+	
 	private StateBasedGame game;
 	private boolean isGameCreator = false;
 	private NetworkLevel currentLevel;
@@ -84,7 +85,7 @@ public class ClientLobbyState extends NiftyGameState implements
 			for (int i = 0; i < files.length; i++) {
 				String fileName = files[i].getName();
 				if (files[i].isDirectory() && fileName.startsWith("Level")) {
-					levels.add(new NetworkLevel(0, "content/rgb4/"+fileName, formatLevelname(fileName)));
+					levels.add(new NetworkLevel(i, "content/rgb4/"+fileName, formatLevelname(fileName)));
 				}
 			}
 		}
@@ -97,6 +98,7 @@ public class ClientLobbyState extends NiftyGameState implements
 
 		levels = new ArrayList<NetworkLevel>();
 		
+		// TODO get path from assets
 		File dir = new File("content/rgb4");
 		readLevels(dir, levels);
 		
@@ -196,8 +198,7 @@ public class ClientLobbyState extends NiftyGameState implements
 	private void selectLevel(NetworkLevel networkLevel) {
 		this.currentLevel = networkLevel;
 		guiCurrentLevelRenderer.setText(networkLevel.getLevelName());
-		// TODO: SET ASSET-PATH:
-		// Assets.AssetManagerPath = networkLevel.getAssetPath();
+		Assets.Config.AssetManagerPath = networkLevel.getAssetPath();
 	}
 
 	private void drawPlayers(Collection<NetworkPlayer> players) {
@@ -314,8 +315,12 @@ public class ClientLobbyState extends NiftyGameState implements
 			Log.debug("Choose Team:" + teamID);
 		}
 		
-		NetworkComponent.getInstance().sendCommand(
-				new QuerySetTeam(Integer.parseInt(teamID)));
+		if (currentTeam!=Integer.parseInt(teamID))
+		{
+			NetworkComponent.getInstance().sendCommand(
+					new QuerySetTeam(Integer.parseInt(teamID)));
+			currentTeam=Integer.parseInt(teamID);
+		}
 	}
 
 }
