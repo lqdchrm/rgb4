@@ -1,5 +1,6 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.states;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -12,6 +13,7 @@ import org.newdawn.slick.util.Log;
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
@@ -25,7 +27,8 @@ public abstract class PlayingState extends BasicGameState implements
 {
 	private GameFactory factory;
 	private int levelId;
-	private static Image frameBuffer;
+	// TODO Only activate for postprocessing
+	//private static Image frameBuffer;
 		
 	public abstract void cleanup(GameContainer container, StateBasedGame game);
 
@@ -68,22 +71,35 @@ public abstract class PlayingState extends BasicGameState implements
 		// Level
 		this.levelId = factory.createEntity(EntityType.LEVEL);
 		
-		// FrameBuffer
-		frameBuffer = new Image(Settings.SCREENWIDTH, Settings.SCREENHEIGHT);
+		// TODO FrameBuffer - only activate for postprocessing
+		//frameBuffer = new Image(RGB4.SCREENWIDTH, RGB4.SCREENHEIGHT);
 	}
 
+	
+	
 	@Override
 	public void render(final GameContainer container,
 			final StateBasedGame game, final Graphics graphicContext)
 			throws SlickException
 	{		
+		// frameBuffer.getGraphics().clear();
+
 		Level level = getLevel();
 		
 		if (level != null)
 		{
-			level.render(frameBuffer.getGraphics(), frameBuffer);
-			
-			graphicContext.drawImage(frameBuffer, 0, 0);
+			if (!Constants.Debug.shadersActive)
+			{
+				// TODO Only use draw to texture if post processing is
+				// implemented in Level.java
+				//level.render(frameBuffer.getGraphics(), frameBuffer);
+				//graphicContext.drawImage(frameBuffer, 0, 0);
+				level.render(graphicContext, null);
+			}
+			else
+			{
+				level.render(graphicContext, null);
+			}
 		}
 	}
 	

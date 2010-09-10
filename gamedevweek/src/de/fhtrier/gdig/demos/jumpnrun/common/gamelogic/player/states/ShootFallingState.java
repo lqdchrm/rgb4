@@ -17,7 +17,8 @@ public class ShootFallingState extends AbstractShootState {
 
 	@Override
 	public void update() {	
-
+		super.update();
+		
 		// check if vel < threshold --> stop falling
 		if (getPlayer().isOnGround()) {
 			getPlayer().applyAction(PlayerActions.Land);

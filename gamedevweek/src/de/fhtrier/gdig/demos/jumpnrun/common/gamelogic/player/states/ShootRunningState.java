@@ -22,7 +22,8 @@ public class ShootRunningState extends AbstractShootState {
 
 	@Override
 	public void update() {
-	
+		super.update();
+		
 		// check if vel < threshold --> stop running
 		if (Math.abs(getPlayer().getVel()[Entity.X]) < Constants.GamePlayConstants.playerIdleTriggerSpeed) {
 			getPlayer().applyAction(PlayerActions.StopRunning);

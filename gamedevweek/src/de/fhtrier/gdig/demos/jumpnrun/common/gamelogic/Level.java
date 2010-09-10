@@ -1,6 +1,7 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import org.newdawn.slick.Graphics;
@@ -16,6 +17,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Level1;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
@@ -29,8 +31,8 @@ public class Level extends MoveableEntity {
 
 	public GameFactory factory;
 
-	private ImageEntity backgroundImage;
-	private ImageEntity middlegroundImage;
+	private HashMap<Integer, Float> scrollingLayers;
+
 	private TiledMap groundMap;
 	private TiledMapEntity ground;
 	public int firstLogicGID;
@@ -40,6 +42,10 @@ public class Level extends MoveableEntity {
 	private int currentPlayerId;
 
 	private ArrayList<ArrayList<SpawnPoint>> teleportExitPoints;
+	
+	MoveableEntity layerBackgroundFar;
+	MoveableEntity layerBackground;
+	
 
 	private Random rd = new Random(System.currentTimeMillis());
 
@@ -48,36 +54,18 @@ public class Level extends MoveableEntity {
 	public Level(int id, GameFactory factory) throws SlickException {
 		super(id, EntityType.LEVEL);
 
+		this.scrollingLayers = new HashMap<Integer, Float>();
+
 		this.currentPlayerId = -1;
 
 		this.factory = factory;
 		assets = new AssetMgr();
 
-		// Load Images
-		Image tmp = assets.storeImage(Assets.Level.BackgroundImageId,
-				"backgrounds/background.png");
-		assets.storeImage(Assets.Level.BackgroundImageId,
-				tmp.getScaledCopy(1350, 800));
-		tmp = assets.storeImage(Assets.Level.MiddlegroundImageId,
-				"backgrounds/middleground.png");
-		assets.storeImage(Assets.Level.MiddlegroundImageId,
-				tmp.getScaledCopy(1850, 800));
+		// gfx
+		loadBackgroundLayers();
+
 		this.groundMap = assets.storeTiledMap(Assets.Level.TileMapId,
 				"tiles/blocks.tmx");
-
-		// gfx
-		this.backgroundImage = factory.createImageEntity(
-				Assets.Level.BackgroundImageId, Assets.Level.BackgroundImageId,
-				assets);
-		this.backgroundImage.setVisible(true);
-		add(this.backgroundImage);
-
-		this.middlegroundImage = factory.createImageEntity(
-				Assets.Level.MiddlegroundImageId,
-				Assets.Level.MiddlegroundImageId, assets);
-		this.middlegroundImage.setVisible(true);
-		add(this.middlegroundImage);
-
 		this.ground = factory.createTiledMapEntity(Assets.Level.TileMapId,
 				Assets.Level.TileMapId, assets);
 		this.ground.setVisible(true);
@@ -108,6 +96,48 @@ public class Level extends MoveableEntity {
 
 		calculateSpawnpoints();
 		calculateTeleportExits();
+	}
+
+	MoveableEntity createBackgroundLayer(int AssetId, String AssetPath) throws SlickException {
+		
+		// Background far
+		MoveableEntity result = new MoveableEntity(AssetId, EntityType.HELPER);
+		int xOffset = 0;
+		
+		for (int i=0; i<4; i++) {
+			String strFile = (assets.makePathRelativeToAssetPath(AssetPath + "_0" + (i+1) + "." + Level1.FileExt));
+			Image img = new Image(strFile);
+
+			assets.storeImage(AssetId+i, img);
+		
+			ImageEntity e = factory.createImageEntity(
+					AssetId, AssetId+0,
+					assets);
+			
+			e.setVisible(true);
+			e.getData()[Entity.X] = xOffset;
+			e.getData()[Entity.Y] = Settings.SCREENHEIGHT - img.getHeight(); 
+			xOffset += img.getWidth();
+			result.add(e);
+		}
+
+		result.setVisible(true);
+		return result;
+	}
+	
+	private void loadBackgroundLayers() throws SlickException {
+		
+		// Background far
+		layerBackgroundFar = createBackgroundLayer(Level1.ImageBackgroundFarId, Level1.ImageBackgroundFarPath);
+		layerBackgroundFar.setVisible(true);
+		layerBackgroundFar.setOrder(Level1.ImageBackgroundFarRenderOrder);
+		add(layerBackgroundFar);
+		
+		// Background
+		layerBackground = createBackgroundLayer(Level1.ImageBackgroundId, Level1.ImageBackgroundPath);
+		layerBackground.setVisible(true);
+		layerBackground.setOrder(Level1.ImageBackgroundRenderOrder);
+		add(layerBackground);
 	}
 
 	private void calculateSpawnpoints() {
@@ -274,10 +304,12 @@ public class Level extends MoveableEntity {
 	 * scrolls background layers relative to foreground
 	 */
 	private void parallaxScrollingBackground() {
-		this.middlegroundImage.getData()[X] = -getData()[X] * 0.6f;
-		this.middlegroundImage.getData()[Y] = -getData()[Y];
-		this.backgroundImage.getData()[X] = -getData()[X] * 0.95f;
-		this.backgroundImage.getData()[Y] = -getData()[Y];
+		
+
+		layerBackgroundFar.getData()[X] = -getData()[X] * Level1.ImageBackgroundFarParallaxFactor;
+		layerBackgroundFar.getData()[Y] = -getData()[Y];
+		layerBackground.getData()[X] = -getData()[X] * Level1.ImageBackgroundParallaxFactor;
+		layerBackground.getData()[Y] = -getData()[Y];
 	}
 
 	/**

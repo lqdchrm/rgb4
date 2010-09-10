@@ -168,7 +168,7 @@ public class Shader
      */
     public static void activateAdditiveBlending()
     {
-    	Renderer.get().glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_DST_ALPHA);
+    	Renderer.get().glBlendFunc(SGL.GL_SRC_ALPHA, SGL.GL_ONE);
     }
     
     /**
