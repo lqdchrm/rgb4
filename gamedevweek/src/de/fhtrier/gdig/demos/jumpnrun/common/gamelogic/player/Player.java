@@ -405,10 +405,6 @@ public class Player extends LevelCollidableEntity implements
 		
 		float weaponX = this.getData(CENTER_X);
 		float weaponY = this.getData(CENTER_Y) - weaponGlow.getHeight() * weaponGlowSize / 2 + 40;
-		int lookDirection = 1;
-
-		if (this.getData()[Entity.SCALE_X] == 1) // left
-			lookDirection = -1;
 		
 		if (Constants.Debug.shadersActive)
 		{
@@ -416,8 +412,8 @@ public class Player extends LevelCollidableEntity implements
 		}
 		
 		graphicContext.drawImage(weaponGlow, weaponX, weaponY, weaponX
-				+ weaponGlow.getWidth() * lookDirection, weaponY
-				+ weaponGlow.getHeight() * weaponGlowSize, 0, 0,
+				+ weaponGlow.getWidth(), weaponY
+				- weaponGlow.getHeight() * weaponGlowSize, 0, 0,
 				weaponGlow.getWidth(), weaponGlow.getHeight(), weaponCol);
 		
 		if (Constants.Debug.shadersActive)
