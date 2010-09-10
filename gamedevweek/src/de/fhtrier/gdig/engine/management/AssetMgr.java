@@ -17,7 +17,6 @@ import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.tiled.TiledMap;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 
 public class AssetMgr {
 
@@ -227,6 +226,17 @@ public class AssetMgr {
 	}
 	
 	public String makePathRelativeToAssetPath(String path) {
-		return AssetMgr.combinePathStrings(assetPathPrefix, path);
+		String result = AssetMgr.combinePathStrings(assetPathPrefix, path);
+		File file = new File(result);
+		
+		if (!file.exists()) {
+			result = AssetMgr.combinePathStrings(assetFallbackPathPrefix, path);
+			file = new File(result);
+			
+			if (!file.exists()) {
+				throw new RuntimeException("File " + path + " neither found in " + assetPathPrefix + " nor in " + assetFallbackPathPrefix);
+			}
+		}
+		return result;
 	}
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
-import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
@@ -20,7 +19,6 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckPlayerCondition
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
-import de.fhtrier.gdig.demos.jumpnrun.server.states.ServerPlayingState;
 import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
@@ -97,7 +95,7 @@ public class Bullet extends LevelCollidableEntity {
 							dieEvent.update();
 						}
 						
-						if (owner.getPlayerStats().getKills() >= Constants.winningKills) {
+						if (owner.getPlayerStats().getKills() >= Constants.GamePlayConstants.winningKills) {
 							NetworkComponent.getInstance().sendCommand(new SendWon(owner.getId()));
 							
 							Event wonEvent = new WonGameEvent (owner);

@@ -26,17 +26,6 @@ public class ClientGame extends RGB4Game {
 
 		NetworkComponent.createClientInstance();
 		NetworkComponent.getInstance().addListener(this);
-//
-//		while (!NetworkComponent.getInstance().connect(nameOrIp, port))
-//		{
-//			try
-//			{
-//				Log.info("Waiting for Server");
-//				Thread.sleep(5000);
-//			} catch (InterruptedException e)
-//			{
-//			}
-//		}
 
 		Constants.GamePlayConstants c1 = new Constants.GamePlayConstants();
 

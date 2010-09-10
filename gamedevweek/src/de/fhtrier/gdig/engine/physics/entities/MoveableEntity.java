@@ -1,7 +1,5 @@
 package de.fhtrier.gdig.engine.physics.entities;
 
-import com.sun.corba.se.impl.orbutil.closure.Constant;
-
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.gamelogic.Entity;

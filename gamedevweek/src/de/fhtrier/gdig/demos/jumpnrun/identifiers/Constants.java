@@ -8,11 +8,13 @@ public class Constants
 {
 
 	public static final float EPSILON = 0.0001f;
-	public static final int winningKills = 5;
 
 	public static class GamePlayConstants extends Configuration
 	{
 		public static float gravity = 2000.0f;
+
+		@ShowAsSlider(maxValue = 50, minValue = 1)
+		public static int winningKills = 5;
 
 		@ShowAsSlider(maxValue = 10000, minValue = 10)
 		public static float shotSpeed = 1000.0f;

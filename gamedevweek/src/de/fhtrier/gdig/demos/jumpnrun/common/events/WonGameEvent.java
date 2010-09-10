@@ -2,7 +2,8 @@ package de.fhtrier.gdig.demos.jumpnrun.common.events;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
-import de.fhtrier.gdig.engine.sound.SoundManager;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoPlaySound;
+import de.fhtrier.gdig.engine.network.NetworkComponent;
 
 public class WonGameEvent extends Event {
 	
@@ -18,8 +19,7 @@ public class WonGameEvent extends Event {
 	@Override
 	public void update () {
 		System.out.println(winningPlayer.getPlayerCondition().name + " won.");
-		SoundManager.playSound(Assets.DoomsdayDeviceSoundId);
-		// TODO: what happens after the end?
+		NetworkComponent.getInstance().sendCommand(new DoPlaySound(Assets.DoomsdayDeviceSoundId));
 	}
 
 }

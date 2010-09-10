@@ -18,9 +18,7 @@ public class NetworkLobby implements INetworkLobby, IAddServerListener
 	private Semaphore serverMutex;
 	private List<NetworkServerObject> serverList;
 	private IAddServerListener serverListener; 
-	
-	private NetworkLobby instance;
-	
+		
 	public NetworkLobby()
 	{
 	   serverList = new ArrayList<NetworkServerObject>();

@@ -17,13 +17,13 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
@@ -37,6 +37,7 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoPlaySound;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeColor;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeWeaponColor;
@@ -168,6 +169,14 @@ public class ClientPlayingState extends PlayingState {
 			// remove Entity recursively from Factory
 			getFactory().removeEntity(id, true);
 
+			return true;
+		}
+		
+		// DoPlaySound... well it just does what it says
+		if (cmd instanceof DoPlaySound) {
+			DoPlaySound dps = (DoPlaySound) cmd;
+			
+			SoundManager.playSound(dps.getSoundAssetId());
 			return true;
 		}
 
