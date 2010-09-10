@@ -148,18 +148,18 @@ public class Player extends LevelCollidableEntity implements
 		playerGroup = factory.getEntity(groupId);
 
 		// particles
-		assets.storeParticleSystem(Assets.Weapon.ParticleEffect,
+		assets.storeParticleSystem(this.getId(),
 				Assets.Weapon.ParticleEffectImgPath,
 				Assets.Weapon.ParticleEffectCfgPath);
 		weaponParticles = factory.createParticleEntity(
-				Assets.Weapon.ParticleEffect, Assets.Weapon.ParticleEffect, assets);
+				0, this.getId(), assets);
 
-		playerGroup.add(weaponParticles);
+		//playerGroup.add(weaponParticles);
 
 		// Position correction for particleEffects
 		// TODO: take weapon cords
-		weaponParticles.getData()[Entity.X] = 40;
-		weaponParticles.getData()[Entity.Y] = 110;
+		weaponParticles.getData()[Entity.X] = 122;
+		weaponParticles.getData()[Entity.Y] = 165;
 
 		add(playerGroup);
 
@@ -181,7 +181,7 @@ public class Player extends LevelCollidableEntity implements
 		// make entities visible
 		setVisible(true);
 		
-		weaponParticles.setVisible(false);
+		weaponParticles.setVisible(true);
 
 		// order
 		this.setOrder(EntityOrder.Player);
@@ -323,7 +323,7 @@ public class Player extends LevelCollidableEntity implements
 				SoundManager.playSound(Assets.Sounds.WeaponChangeColorSoundID, 1f, 0.2f);
 
 				ParticleSystem particleSystem = weaponParticles.Assets()
-						.getParticleSystem(Assets.Weapon.ParticleEffect);
+						.getParticleSystem(this.getId());
 				ConfigurableEmitter emitter = (ConfigurableEmitter) particleSystem
 						.getEmitter(0);
 				ColorRecord cr = (ColorRecord) emitter.colors.get(2);
@@ -417,13 +417,12 @@ public class Player extends LevelCollidableEntity implements
 				playerGlow.getHeight(), playerCol);
 
 		Shader.activateDefaultBlending();
-
 	}
 
 	// render
 	@Override
 	public void renderImpl(final Graphics g, Image frameBuffer) {
-
+		this.weaponParticles.render(g, frameBuffer);
 		currentPlayerAsset.render(g, frameBuffer);
 	
 		super.renderImpl(g, frameBuffer);
@@ -581,5 +580,9 @@ public class Player extends LevelCollidableEntity implements
 
 	public AssetMgr getAssetMgr() {
 		return assets;
+	}
+	
+	public ParticleEntity getWeaponParticleEntity() {
+		return this.weaponParticles;
 	}
 }
