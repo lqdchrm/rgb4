@@ -19,7 +19,7 @@ public class FallingState extends AbstractAssetState {
 	
 	public FallingState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.FallingAnimId, Assets.Player.aFallingImagePath, Assets.Player.bFallingImagePath, Assets.Weapon.FallingAnimId, Assets.Weapon.FallingImagePath, EntityOrder.Player, factory);
+		super(player, Assets.Player.aFallingAnimId, Assets.Player.bFallingAnimId, Assets.Player.aFallingImagePath, Assets.Player.bFallingImagePath, Assets.Weapon.FallingAnimId, Assets.Weapon.FallingImagePath, EntityOrder.Player, factory);
 	
 		AssetEntity e = getGfxEntity();
 		
@@ -31,9 +31,17 @@ public class FallingState extends AbstractAssetState {
 		weaponAnim = e.Assets().getAnimation(e.getAssetId());
 		weaponAnim.setLooping(false);
 	}
+	
+	public void getAnim() {
+		AssetEntity e = getGfxEntity();
+		
+		anim = e.Assets().getAnimation(e.getAssetId());
+		anim.setLooping(false);
+	}
 
 	@Override
 	public void enter() {
+		getAnim();
 		anim.restart();
 		weaponAnim.restart();
 	}

@@ -15,7 +15,7 @@ public class RunningState extends AbstractAssetState {
 
 	public RunningState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.RunningAnimId,
+		super(player, Assets.Player.aRunningAnimId, Assets.Player.bRunningAnimId,
 				Assets.Player.aRunningImagePath, Assets.Player.bRunningImagePath, Assets.Weapon.RunningAnimId, Assets.Weapon.RunningImagePath, EntityOrder.Player, factory);
 	}
 

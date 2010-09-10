@@ -14,7 +14,7 @@ public class StandingState extends AbstractAssetState {
 
 	public StandingState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.StandingAnimId, Assets.Player.aStandingAnimImagePath, Assets.Player.bStandingAnimImagePath, Assets.Weapon.StandingAnimId, Assets.Weapon.StandingAnimImagePath, EntityOrder.Player, factory);
+		super(player, Assets.Player.aStandingAnimId, Assets.Player.bStandingAnimId, Assets.Player.aStandingAnimImagePath, Assets.Player.bStandingAnimImagePath, Assets.Weapon.StandingAnimId, Assets.Weapon.StandingAnimImagePath, EntityOrder.Player, factory);
 	
 	}
 

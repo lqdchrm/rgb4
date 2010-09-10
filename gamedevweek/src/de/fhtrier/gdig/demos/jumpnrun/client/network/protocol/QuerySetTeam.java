@@ -11,6 +11,10 @@ import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
  */
 public class QuerySetTeam extends ProtocolCommand {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2993220870450700943L;
 	private int teamID;
 	
 	public QuerySetTeam(int teamID)

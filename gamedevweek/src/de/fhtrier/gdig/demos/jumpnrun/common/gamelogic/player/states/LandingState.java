@@ -18,7 +18,7 @@ public class LandingState extends AbstractAssetState {
 	
 	public LandingState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.LandAnimId, Assets.Player.aLandAnimImagePath, Assets.Player.bLandAnimImagePath, Assets.Weapon.LandAnimId, Assets.Weapon.LandAnimImagePath, EntityOrder.Player, factory);
+		super(player, Assets.Player.aLandAnimId, Assets.Player.bLandAnimId, Assets.Player.aLandAnimImagePath, Assets.Player.bLandAnimImagePath, Assets.Weapon.LandAnimId, Assets.Weapon.LandAnimImagePath, EntityOrder.Player, factory);
 	
 		AssetEntity e = getGfxEntity();
 		
@@ -30,9 +30,17 @@ public class LandingState extends AbstractAssetState {
 		weaponAnim = e.Assets().getAnimation(e.getAssetId());
 		weaponAnim.setLooping(false);
 	}
+	
+	public void getAnim() {
+		AssetEntity e = getGfxEntity();
+		
+		anim = e.Assets().getAnimation(e.getAssetId());
+		anim.setLooping(false);
+	}
 
 	@Override
-	public void enter() {		
+	public void enter() {	
+		getAnim();
 		anim.restart();
 		weaponAnim.restart();
 		SoundManager.playSound(Assets.Sounds.PlayerLandSoundId, 1f, 0.1f);

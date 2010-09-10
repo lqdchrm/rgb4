@@ -14,7 +14,7 @@ public class ShootRunningState extends AbstractShootState {
 
 	public ShootRunningState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.ShootRunningAnimId,
+		super(player, Assets.Player.aShootRunningAnimId, Assets.Player.bShootRunningAnimId,
 				Assets.Player.aShootRunningImagePath, Assets.Player.bShootRunningImagePath, Assets.Weapon.ShootRunningAnimId,
 				Assets.Weapon.ShootRunningImagePath, EntityOrder.Player, factory);
 	}

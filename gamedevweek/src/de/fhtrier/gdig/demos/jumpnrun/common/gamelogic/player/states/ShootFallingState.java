@@ -12,7 +12,7 @@ public class ShootFallingState extends AbstractShootState {
 	
 	public ShootFallingState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.FallShootingAnimId, Assets.Player.aFallShootingImagePath, Assets.Player.bFallShootingImagePath, Assets.Weapon.FallShootingAnimId, Assets.Weapon.FallShootingImagePath, EntityOrder.Player, factory);
+		super(player, Assets.Player.aFallShootingAnimId, Assets.Player.bFallShootingAnimId, Assets.Player.aFallShootingImagePath, Assets.Player.bFallShootingImagePath, Assets.Weapon.FallShootingAnimId, Assets.Weapon.FallShootingImagePath, EntityOrder.Player, factory);
 	}
 
 	@Override

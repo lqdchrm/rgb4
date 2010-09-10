@@ -205,8 +205,10 @@ public class ServerPlayingState extends PlayingState {
 				player2NetworkId.put(id, cmd.getSender());
 				
 				String name = ServerLobbyState.players.get(cmd.getSender()).getPlayerName();
+				int teamId = ServerLobbyState.players.get(cmd.getSender()).getTeamId();
 				
 				e.getPlayerCondition().name = name;
+				e.getPlayerCondition().teamId = teamId;
 				
 			} else {
 				throw new RuntimeException(
