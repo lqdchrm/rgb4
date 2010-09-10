@@ -28,7 +28,7 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 
 	private static final String CROSSHAIR_PNG = "crosshair.png";
 	public static String menuNiftyXMLFile = "mainmenu.xml";
-	public static String menuAssetPath = Assets.AssetGuiPath;
+	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 
 	private StateBasedGame game;
 	private Screen screen;

@@ -15,6 +15,11 @@ public class PlayerCondition implements Serializable
 	public String name;
 	
 	/**
+	 * 
+	 */
+	public int teamId;
+	
+	/**
 	 * The Player Health-Level between 0.0f and 1.0f
 	 * 1.0f representing 100% health
 	 */
@@ -40,9 +45,4 @@ public class PlayerCondition implements Serializable
 	 * has to be one of Constants.Color
 	 */
 	public int weaponColor;
-	
-	/**
-	 * has to be RunLeft or RunRight
-	 */
-	public int shootDirection;
 }

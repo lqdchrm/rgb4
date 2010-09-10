@@ -13,6 +13,11 @@ public class Constants
 	{
 		public static float gravity = 2000.0f;
 
+		@ShowAsSlider(maxValue = 50, minValue = 1)
+		public static int winningKills = 5;
+		
+		public static boolean friendyFire = true; // if true you can damage team-mates
+
 		@ShowAsSlider(maxValue = 10000, minValue = 10)
 		public static float shotSpeed = 1000.0f;
 		public static float shotCooldown = 100.0f;
@@ -22,14 +27,22 @@ public class Constants
 		public static float playerMaxSpeed = 850.0f;
 
 		public static final float playerIdleTriggerSpeed = 5.0f;
+		public static final float playerFallingTriggerSpeed = 500.0f;
+		public static final float playerLandingTriggerSpeed = 10.0f;
 		public static final float playerGroundDrag = 0.005f;
-		public static final float playerAirDrag = 0.000001f;		
+		public static final float playerAirDrag = 0.000001f;
+
+		public static final Color DefaultPlayerTextColor = Color.white;	
 
 		public static float colissionPointDistance = 2.0f;
+
+		public static float playerMaxJumpSpeed = 1000.0f;
 	}
 
 	public static class Debug extends Configuration
 	{
+		public static boolean showDebugOverlay = false;
+		
 		public static boolean drawBounds = true;
 		
 		public static Color boundColor = Color.green;
@@ -51,6 +64,12 @@ public class Constants
 		public static boolean networkDebug = false;
 		
 		public static boolean factoryDebug = false;
+	}
+	
+	public static class Level extends Configuration
+	{
+		public static int collisionLayer = 1;
+		public static int logicLayer = 3;
 	}
 	
 	public static class ControlConfig extends Configuration {

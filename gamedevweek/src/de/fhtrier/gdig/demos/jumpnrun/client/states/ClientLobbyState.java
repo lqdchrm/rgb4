@@ -51,7 +51,7 @@ public class ClientLobbyState extends NiftyGameState implements
 
 	private static final String CROSSHAIR_PNG = "crosshair.png";
 	public static String menuNiftyXMLFile = "client_lobby.xml";
-	public static String menuAssetPath = Assets.AssetGuiPath;
+	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 
 	private Queue<INetworkCommand> queue;
 	private HashMap<Integer, NetworkPlayer> players;
@@ -113,13 +113,10 @@ public class ClientLobbyState extends NiftyGameState implements
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
-		try
-		{
+		try {
 			MenuBackground.getInstance().render(container, game, g);
 			super.render(container, game, g);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -151,28 +148,22 @@ public class ClientLobbyState extends NiftyGameState implements
 
 		if (Constants.Debug.networkDebug) {
 			Log.debug("try to handle:" + cmd);
-		}
-		else if (cmd instanceof AckConnect) {
+		} else if (cmd instanceof AckConnect) {
 			if (Constants.Debug.networkDebug) {
 				Log.debug("Client connected to serverlobby");
 			}
-		}
-		else if (cmd instanceof AckNewPlayerList) {
+		} else if (cmd instanceof AckNewPlayerList) {
 			players = ((AckNewPlayerList) cmd).getPlayerList();
 			drawPlayers(players.values());
-		}
-		else if (cmd instanceof AckStartGame) {
+		} else if (cmd instanceof AckStartGame) {
 			game.enterState(GameStates.PLAYING);
-		}
-		else if (cmd instanceof ServerAckDisconnect) {
+		} else if (cmd instanceof ServerAckDisconnect) {
 			if (Constants.Debug.networkDebug) {
 				Log.debug("Player left server!");
 			}
 			game.enterState(GameStates.SERVER_SELECTION);
-		}
-		else if (cmd instanceof AckSetLevel)
-		{
-			selectLevel(((AckSetLevel)cmd).getNetworkLevel());
+		} else if (cmd instanceof AckSetLevel) {
+			selectLevel(((AckSetLevel) cmd).getNetworkLevel());
 		}
 	}
 
@@ -180,7 +171,7 @@ public class ClientLobbyState extends NiftyGameState implements
 		this.currentLevel = networkLevel;
 		guiCurrentLevelRenderer.setText(networkLevel.getLevelName());
 		// TODO: SET ASSET-PATH:
-//		Assets.AssetManagerPath = networkLevel.getAssetPath();
+		// Assets.AssetManagerPath = networkLevel.getAssetPath();
 	}
 
 	private void drawPlayers(Collection<NetworkPlayer> players) {
@@ -199,10 +190,9 @@ public class ClientLobbyState extends NiftyGameState implements
 			// fill in the name
 			LabelCreator label = new LabelCreator(player.getPlayerName());
 			label.setAlign("left");
-			if (player.getTeamId()==1) {
+			if (player.getTeamId() == 1) {
 				label.create(nifty, nifty.getCurrentScreen(), guiListTeam1);
-			}
-			else if (player.getTeamId()==2) {
+			} else if (player.getTeamId() == 2) {
 				label.create(nifty, nifty.getCurrentScreen(), guiListTeam2);
 			}
 		}
@@ -237,7 +227,8 @@ public class ClientLobbyState extends NiftyGameState implements
 		int chooseLevelID = Integer.parseInt(id);
 		for (NetworkLevel level : levels) {
 			if (level.getLevelID() == chooseLevelID) {
-				NetworkComponent.getInstance().sendCommand(new QuerySetLevel(level));
+				NetworkComponent.getInstance().sendCommand(
+						new QuerySetLevel(level));
 				break;
 			}
 		}
@@ -292,10 +283,13 @@ public class ClientLobbyState extends NiftyGameState implements
 		}
 	}
 
-	public void chooseTeam(String teamID)
-	{
-		Log.debug("Choose Team:"+teamID);
-		NetworkComponent.getInstance().sendCommand(new QuerySetTeam(Integer.parseInt(teamID)));
+	public void chooseTeam(String teamID) {
+		if (Constants.Debug.guiDebug) {
+			Log.debug("Choose Team:" + teamID);
+		}
+		
+		NetworkComponent.getInstance().sendCommand(
+				new QuerySetTeam(Integer.parseInt(teamID)));
 	}
-	
+
 }

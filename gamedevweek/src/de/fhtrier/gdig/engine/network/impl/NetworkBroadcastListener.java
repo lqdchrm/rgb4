@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.lang.Math;
 
 import de.fhtrier.gdig.engine.network.NetworkServerObject;
 
@@ -13,9 +16,11 @@ public class NetworkBroadcastListener extends Thread {
 	private NetworkServerObject serverObject;
 	private DatagramSocket socket;
 	private boolean halt;
+	private InterfaceAddress realServerAddress;
 
 	public NetworkBroadcastListener(String serverName, String map,
-			String version, int port) {
+			String version, int port, InterfaceAddress realServerAddress) {
+		this.realServerAddress = realServerAddress; 
 		serverObject = new NetworkServerObject();
 		serverObject.setPort(port);
 		serverObject.setMap(map);
@@ -30,6 +35,56 @@ public class NetworkBroadcastListener extends Thread {
 			System.out.println(e2.getLocalizedMessage());
 		}
 	}
+	
+	private boolean isOnSubnet( InterfaceAddress receiver, InetAddress sender )
+	{
+		byte[] receiverBytes = receiver.getAddress().getAddress();
+		byte[] senderBytes = sender.getAddress();
+		byte[] subnetBytes = new byte[4];
+		short length = receiver.getNetworkPrefixLength();
+		int position = 0; 
+		
+		if ( length < 8 )
+		{
+			subnetBytes[0] = 0;
+			subnetBytes[1] = 0;
+			subnetBytes[2] = 0;
+			subnetBytes[3] = (byte) (Math.pow( 2, length ) / 2);
+		}
+		else if ( length < 16 )
+		{
+			subnetBytes[0] = 0;
+			subnetBytes[1] = 0;
+			subnetBytes[2] = (byte) (Math.pow( 2, length ) / 2);
+			subnetBytes[3] = 127;
+		}
+		else if ( length < 24 )
+		{
+			subnetBytes[0] = 0;
+			subnetBytes[1] = (byte) (Math.pow( 2, length ) / 2);
+			subnetBytes[2] = 127;
+			subnetBytes[3] = 127;
+		}
+		else
+		{
+			subnetBytes[0] = (byte) (Math.pow( 2, length ) / 2);
+			subnetBytes[1] = 127;
+			subnetBytes[2] = 127;
+			subnetBytes[3] = 127;
+		}
+		
+		for ( int x = senderBytes.length - 1; x >= 0; x-- ) 
+		{
+		   if ( (senderBytes[x] & subnetBytes[x]) != (receiverBytes[x] & subnetBytes[x]) ) 
+		   {
+              return false;
+           }
+		   
+		   position++;
+        }
+		
+        return true;		
+	}
 
 	public void run() {
 		while (!halt) {
@@ -40,26 +95,23 @@ public class NetworkBroadcastListener extends Thread {
 
 				String rcvString = new String(rcvData);
 
-				if (rcvString.startsWith("CQ,CQ,CQ RGB4 ")) {
-					serverObject.setLatency(System.currentTimeMillis());
+				if (rcvString.startsWith("CQ,CQ,CQ RGB4 ") ) {
+					
+					// HACK not working
+					if (true) {
+					//if ( isOnSubnet( this.realServerAddress, packet.getAddress() ) )
+					   serverObject.setLatency(System.currentTimeMillis());
 
-					Socket socketToClient = new Socket(packet.getAddress(),
+					   Socket socketToClient = new Socket(packet.getAddress(),
 							50000);
-					ObjectOutputStream streamToClient = new ObjectOutputStream(
+					   ObjectOutputStream streamToClient = new ObjectOutputStream(
 							socketToClient.getOutputStream());
-					streamToClient.writeObject(serverObject);
+					   streamToClient.writeObject(serverObject);
 
-					if (serverObject.getIp() == null) {
-						sleep(10); // Wait for the Client to get our IP if we
-									// didn't send it in the package
+					   streamToClient.close();
+					   socketToClient.close();
 					}
-
-					streamToClient.close();
-					socketToClient.close();
 				}
-			} catch (InterruptedException e) {
-				finish();
-				System.out.println(e.getLocalizedMessage());
 			} catch (NullPointerException e) {
 				finish();
 				System.out.println(e.getLocalizedMessage());

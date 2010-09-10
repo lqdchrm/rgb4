@@ -3,18 +3,13 @@ package de.fhtrier.gdig.demos.jumpnrun.common;
 import org.newdawn.slick.SlickException;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Bullet;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Gem;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
-import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
 
 public class GameFactory extends Factory {
 
-	public GameFactory(AssetMgr assets) {
-		super(assets);
-	}
 
 	public int createEntity(EntityType type) {
 		return createEntityById(-1, type);
@@ -38,10 +33,6 @@ public class GameFactory extends Factory {
 			case LEVEL:
 				Level newLevel = new Level(id, this);
 				add(newLevel);
-				return id;
-			case GEM:
-				Gem newGem = new Gem(id, this);
-				add(newGem);
 				return id;
 			case BULLET:
 				Bullet newBullet = new Bullet(id, this);

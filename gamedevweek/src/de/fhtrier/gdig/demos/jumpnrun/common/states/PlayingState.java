@@ -1,5 +1,8 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.states;
 
+import java.awt.GraphicsConfigTemplate;
+
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -7,15 +10,17 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
-import de.fhtrier.gdig.engine.management.AssetMgr;
+import de.fhtrier.gdig.engine.graphics.shader.Shader;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 import de.fhtrier.gdig.engine.physics.CollisionManager;
@@ -23,11 +28,10 @@ import de.fhtrier.gdig.engine.physics.CollisionManager;
 public abstract class PlayingState extends BasicGameState implements
 		INetworkCommandListener
 {
-
-	private AssetMgr assets;
 	private GameFactory factory;
 	private int levelId;
-	private static Image frameBuffer;
+	// TODO Only activate for postprocessing
+	//private static Image frameBuffer;
 		
 	public abstract void cleanup(GameContainer container, StateBasedGame game);
 
@@ -63,34 +67,39 @@ public abstract class PlayingState extends BasicGameState implements
 			throws SlickException {
 		// TODO Auto-generated method stub
 		super.enter(container, game);
-
-		// create assetmgr
-		this.assets = new AssetMgr();
-		this.assets.setAssetPathPrefix(Assets.AssetManagerPath);
-		this.assets.setAssetFallbackPathPrefix(Assets.AssetManagerFallbackPath);	
 		
 		// Factory
-		this.factory = new GameFactory(this.assets);
+		this.factory = new GameFactory();
 
 		// Level
 		this.levelId = factory.createEntity(EntityType.LEVEL);
 		
-		// FrameBuffer
-		frameBuffer = new Image(Settings.SCREENWIDTH, Settings.SCREENHEIGHT);
+		// TODO FrameBuffer - only activate for postprocessing
+		//frameBuffer = new Image(RGB4.SCREENWIDTH, RGB4.SCREENHEIGHT);
 	}
 
 	@Override
 	public void render(final GameContainer container,
 			final StateBasedGame game, final Graphics graphicContext)
 			throws SlickException
-	{		
+	{
 		Level level = getLevel();
 		
 		if (level != null)
 		{
-			level.render(frameBuffer.getGraphics(), frameBuffer);
-			
-			graphicContext.drawImage(frameBuffer, 0, 0);
+			if (!Constants.Debug.shadersActive)
+			{
+				// TODO Only use draw to texture if post processing is
+				// implemented in Level.java
+				// frameBuffer.getGraphics().clear();
+				//level.render(frameBuffer.getGraphics(), frameBuffer);
+				//graphicContext.drawImage(frameBuffer, 0, 0);
+				level.render(graphicContext, null);
+			}
+			else
+			{
+				level.render(graphicContext, null);
+			}
 		}
 	}
 	
@@ -111,11 +120,11 @@ public abstract class PlayingState extends BasicGameState implements
 				container.setFullscreen(!container.isFullscreen());
 			} catch (final SlickException e)
 			{
-
+				Log.error(e);
 			}
-			container.setVSync(true);
-			container.setSmoothDeltas(true);
-			container.setMaximumLogicUpdateInterval(17);
+//			container.setVSync(true);
+//			container.setSmoothDeltas(true);
+//			container.setMaximumLogicUpdateInterval(17);
 			container.setPaused(false);
 		}
 
@@ -130,6 +139,8 @@ public abstract class PlayingState extends BasicGameState implements
 		{
 			level.handleInput(input);
 			level.update(deltaInMillis);
+			
+			EventManager.update();
 			
 			// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2. Zeile
 			// Den Objekten gesagt wird die Kollision zu behandeln.

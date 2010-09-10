@@ -7,7 +7,6 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.newdawn.slick.Game;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
@@ -26,12 +25,14 @@ import de.lessvoid.nifty.tools.resourceloader.ResourceLoader;
 public class ClientCreditsState extends NiftyGameState implements ScreenController {
 
 	private static final String CROSSHAIR_PNG = "crosshair.png";
+
 	private static String menuNiftyXMLFile = "credits.xml";
-	public static String menuAssetPath = Assets.AssetGuiPath;
+	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 	private static String creditsFile = menuAssetPath+"/credits.txt";
 	private static float timePerLine = 1000;
 	private static float currentTimeCounter = timePerLine;
 	private static int currentBlock = 0;
+
 	private StateBasedGame game;
 	
 	private List<String> creditsList;

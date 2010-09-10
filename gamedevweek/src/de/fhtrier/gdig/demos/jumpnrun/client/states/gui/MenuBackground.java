@@ -26,7 +26,7 @@ public class MenuBackground {
 	private MenuBackground()
 	{
 		try {
-			backgroundImage = new Image(Assets.AssetGuiPath+"/menubg_pflanze.png");
+			backgroundImage = new Image(Assets.Config.AssetGuiPath+"/menubg_pflanze.png");
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
