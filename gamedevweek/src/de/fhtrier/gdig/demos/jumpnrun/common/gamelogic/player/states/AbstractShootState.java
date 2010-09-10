@@ -23,6 +23,12 @@ public class AbstractShootState extends AbstractAssetState {
 		anim = e.Assets().getAnimation(e.getAssetId());
 		anim.setLooping(false);
 		anim.setAutoUpdate(true);
+		
+		e = getWeaponGfxEntity();
+
+		anim = e.Assets().getAnimation(e.getAssetId());
+		anim.setLooping(false);
+		anim.setAutoUpdate(true);
 	}
 
 	@Override

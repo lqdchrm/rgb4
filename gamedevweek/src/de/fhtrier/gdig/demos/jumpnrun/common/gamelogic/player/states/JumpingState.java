@@ -23,6 +23,11 @@ public class JumpingState extends AbstractAssetState {
 		
 		anim = e.Assets().getAnimation(e.getAssetId());
 		anim.setLooping(false);
+		
+		e = getWeaponGfxEntity();
+		
+		anim = e.Assets().getAnimation(e.getAssetId());
+		anim.setLooping(false);
 	}
 	
 	@Override

@@ -61,6 +61,10 @@ public abstract class AbstractAssetState {
 		return gfxEntity;
 	}
 	
+	public AssetEntity getWeaponGfxEntity() {
+		return weaponGfxEntity;
+	}
+	
 	public void setGfxEntity(AssetEntity playerGfxEntity, AssetEntity weaponGfxEntity) {
 		this.gfxEntity = playerGfxEntity;
 		this.weaponGfxEntity = weaponGfxEntity;
