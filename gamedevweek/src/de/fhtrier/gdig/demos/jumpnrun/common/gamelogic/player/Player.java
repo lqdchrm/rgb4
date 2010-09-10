@@ -109,9 +109,9 @@ public class Player extends LevelCollidableEntity implements
 	}
 	
 	private void setConditions() {
-		condition.health = 1.0f;
+		condition.health = Constants.GamePlayConstants.startHealthpoints;
 		condition.ammo = 1.0f;
-		condition.damage = 0.2f;
+		condition.damage = Constants.GamePlayConstants.startDamage;
 		condition.color = StateColor.RED; // player gets default-color: red
 		condition.weaponColor = StateColor.RED; // weapon of player get
 		// default-color: red		

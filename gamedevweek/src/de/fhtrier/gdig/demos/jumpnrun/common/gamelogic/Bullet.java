@@ -188,10 +188,10 @@ public class Bullet extends LevelCollidableEntity {
 								EventManager.addEvent(wonEvent);
 							}
 						}
-					} else {
+					} else if (otherPlayer.getPlayerCondition().teamId != owner.getPlayerCondition().teamId || PlayingState.gameType == Constants.GameTypes.deathMatch){
 						// player gets stronger when hit by bullet of the same
 						// color!
-						otherPlayer.getPlayerCondition().health += owner.getPlayerCondition().damage;
+						otherPlayer.getPlayerCondition().health += Constants.GamePlayConstants.healHP;
 					}
 					
 					NetworkComponent.getInstance().sendCommand(new AckPlayerCondition(otherPlayer.getId(), otherPlayer.getPlayerCondition()));

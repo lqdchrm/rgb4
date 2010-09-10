@@ -18,6 +18,12 @@ public class Constants
 		public static int winningKills_TeamDeathmatch = 25;
 		
 		public static boolean friendyFire = true; // if true you can damage team-mates
+		
+		public static float maxHealthpoints = 10.0f;
+		public static float healHP = 0.05f;
+		
+		public static final float startHealthpoints = 1.0f;
+		public static final float startDamage = 0.2f;
 
 		@ShowAsSlider(maxValue = 10000, minValue = 10)
 		public static float shotSpeed = 1000.0f;
