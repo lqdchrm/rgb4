@@ -2,3 +2,4 @@
 ###################
 *.class
 gamedev/.classpath
+.DS_Store
