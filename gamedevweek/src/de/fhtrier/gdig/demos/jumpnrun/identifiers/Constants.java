@@ -15,6 +15,8 @@ public class Constants
 
 		@ShowAsSlider(maxValue = 50, minValue = 1)
 		public static int winningKills = 5;
+		
+		public static boolean friendyFire = true; // if true you can damage team-mates
 
 		@ShowAsSlider(maxValue = 10000, minValue = 10)
 		public static float shotSpeed = 1000.0f;
