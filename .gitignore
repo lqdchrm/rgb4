@@ -2,3 +2,5 @@
 ###################
 *.class
 gamedev/.classpath
+ext/bin
+gamedev/bin

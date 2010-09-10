@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="30" height="30" tilewidth="32" tileheight="32">
-<tileset firstgid="1" name="templatetiles" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="templatetiles" tilewidth="32" tileheight="32">
   <image source="templatetiles.png" trans="ff00ff"/>
- </tileset> 
-<tileset firstgid="257" name="numbers" tilewidth="32" tileheight="32">
+ </tileset>
+ <tileset firstgid="257" name="numbers" tilewidth="32" tileheight="32">
   <image source="numbers.png" trans="ff00ff"/>
  </tileset>
  <layer name="Kachelebene 3" width="30" height="30">
@@ -23,7 +23,7 @@
  </layer>
  <layer name="logic" width="30" height="30">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3WMREAMAwDsaRMCqX8SRWGkzsJwQ8eXMVUr9MFAAA5Z/gX6uF97HDDO/qfE71YEA4AAA==
+   H4sIAAAAAAAAA+3RMQEAIAzEQOoEnIATipJK77t4hpyBDHkxbELtaegvNbehe9S8hm6qWcbPAAAAAP7UJua51xAOAAA=
   </data>
  </layer>
 </map>
