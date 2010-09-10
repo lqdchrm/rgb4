@@ -2,7 +2,6 @@ package de.fhtrier.gdig.demos.jumpnrun;
 
 import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
-import java.awt.Robot;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;

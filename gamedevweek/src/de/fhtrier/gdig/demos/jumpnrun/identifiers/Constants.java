@@ -43,6 +43,10 @@ public class Constants
 		public static float colissionPointDistance = 2.0f;
 
 		public static float playerMaxJumpSpeed = 1000.0f;
+		
+		public static boolean clientSound = true;
+		
+		public static boolean serverSound = true;
 	}
 
 	public static class Debug extends Configuration
@@ -70,6 +74,8 @@ public class Constants
 		public static boolean networkDebug = false;
 		
 		public static boolean factoryDebug = false;
+		
+	
 	}
 	
 	public static class Level extends Configuration
@@ -92,5 +98,9 @@ public class Constants
 		public static String REFCHANGEWEAPON = "KEY_X";
 		public static String REFCHANGECOLOR = "KEY_Y";
 		public static String REFMENU = "KEY_ESCAPE";
+		public static String REFPHRASE1 = "KEY_1";
+		public static String REFPHRASE2 = "KEY_2";
+		public static String REFPHRASE3 = "KEY_3";
+		public static String REFPHRASE4 = "KEY_4";
 	}	
 }

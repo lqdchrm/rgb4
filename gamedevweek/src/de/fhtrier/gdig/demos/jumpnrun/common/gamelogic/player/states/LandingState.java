@@ -43,7 +43,7 @@ public class LandingState extends AbstractAssetState {
 		getAnim();
 		anim.restart();
 		weaponAnim.restart();
-		SoundManager.playSound(Assets.Sounds.PlayerLandSoundId, 1f, 0.1f);
+		SoundManager.playSound(Assets.Sounds.PlayerLandSoundId, 1f, 0.5f);
 	}
 
 	@Override

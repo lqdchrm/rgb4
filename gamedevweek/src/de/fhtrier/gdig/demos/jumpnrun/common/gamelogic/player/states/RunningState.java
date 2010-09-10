@@ -21,7 +21,7 @@ public class RunningState extends AbstractAssetState {
 
 	@Override
 	public void enter() {
-		SoundManager.loopSound(Assets.Sounds.PlayerRunSoundId, 1f, 0.2f);
+		SoundManager.loopSound(Assets.Sounds.PlayerRunSoundId, 1f, 0.5f);
 	}
 
 	@Override

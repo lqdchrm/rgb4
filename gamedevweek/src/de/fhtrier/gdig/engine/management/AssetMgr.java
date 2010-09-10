@@ -33,6 +33,7 @@ public class AssetMgr {
 
 		this.images = new HashMap<Integer, Image>();
 		this.sounds = new HashMap<Integer, Sound>();
+		this.musics = new HashMap<Integer, Music>();
 		this.tiledMaps = new HashMap<Integer, TiledMap>();
 		this.animations = new HashMap<Integer, Animation>();
 		this.particleSystems = new HashMap<Integer, ParticleSystem>();
@@ -113,9 +114,9 @@ public class AssetMgr {
 	public Music storeMusic(int id, String src) throws SlickException {
 		Music song = null;
 		try {
-			song = new Music(combinePathStrings(this.assetPathPrefix, src));
+			song = new Music(combinePathStrings(this.assetPathPrefix, src), true);
 		} catch (Exception e) {
-			song = new Music(combinePathStrings(this.assetFallbackPathPrefix, src));
+			song = new Music(combinePathStrings(this.assetFallbackPathPrefix, src), true);
 		}
 		storeMusic(id, song);
 		return song;
