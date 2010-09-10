@@ -2,8 +2,8 @@ package de.fhtrier.gdig.engine.graphics.shader;
 
 import org.newdawn.slick.geom.Vector2f;
 
-public class BlurShader extends Shader {
-
+public class BlurShader extends Shader
+{
 	private int scrwidth = 0;
 	private int scrheight = 0;
 	
