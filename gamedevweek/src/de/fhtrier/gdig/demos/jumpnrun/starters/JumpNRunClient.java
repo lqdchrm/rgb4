@@ -15,14 +15,15 @@ public class JumpNRunClient {
 	public static void main(String[] args) {
 
 		ClientGame clientGame = new ClientGame();
-		
+
 		// initialize (gfx) settings depending on game type
 		if (clientGame != null) {
 
 			try {
 
 				AppGameContainer gc = new AppGameContainer(clientGame);
-				gc.setDisplayMode(Settings.SCREENWIDTH, Settings.SCREENHEIGHT, false);
+				gc.setDisplayMode(Settings.SCREENWIDTH, Settings.SCREENHEIGHT,
+						false);
 				gc.setVSync(true);
 				gc.setSmoothDeltas(true);
 				gc.setAlwaysRender(true);

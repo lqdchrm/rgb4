@@ -15,7 +15,7 @@ public class NetworkHelper {
 					.getNetworkInterfaces();
 
 			while (en.hasMoreElements()) {
-				NetworkInterface ni = (NetworkInterface) en.nextElement();
+				NetworkInterface ni = en.nextElement();
 
 				for (InterfaceAddress address : ni.getInterfaceAddresses()) {
 					if (address.getAddress().getHostAddress().contains(ip)) {
@@ -29,30 +29,25 @@ public class NetworkHelper {
 		return null;
 	}
 
-	public static List<InterfaceAddress> getInterfaces() 
-	{
-	   List<InterfaceAddress> result = new ArrayList<InterfaceAddress>();
-	   
-	   try 
-	   {
-	      Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
-			
-		  while( en.hasMoreElements() ) 
-		  {
-		     NetworkInterface ni = (NetworkInterface) en.nextElement();
-				
-			 for (InterfaceAddress address : ni.getInterfaceAddresses()) 
-			 {
-			    if ( !address.getAddress().getHostAddress().contains(":") )
-				   result.add( address );
-		     }
-	      }
-	   }
-	   catch (Exception e) 
-	   {
-	     e.printStackTrace();
-	   }
-	
-	   return result;
+	public static List<InterfaceAddress> getInterfaces() {
+		List<InterfaceAddress> result = new ArrayList<InterfaceAddress>();
+
+		try {
+			Enumeration<NetworkInterface> en = NetworkInterface
+					.getNetworkInterfaces();
+
+			while (en.hasMoreElements()) {
+				NetworkInterface ni = en.nextElement();
+
+				for (InterfaceAddress address : ni.getInterfaceAddresses()) {
+					if (!address.getAddress().getHostAddress().contains(":"))
+						result.add(address);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 }

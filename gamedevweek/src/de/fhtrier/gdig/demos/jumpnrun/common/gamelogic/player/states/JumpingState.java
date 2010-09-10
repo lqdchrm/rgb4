@@ -13,18 +13,17 @@ import de.fhtrier.gdig.engine.management.Factory;
 public class JumpingState extends AbstractAssetState {
 
 	private Animation anim;
-	
-	public JumpingState(Player player, Factory factory)
-			throws SlickException {
+
+	public JumpingState(Player player, Factory factory) throws SlickException {
 		super(player, Assets.Player.JumpAnimId,
 				Assets.Player.JumpAnimImagePath, EntityOrder.Player, factory);
-	
+
 		AssetEntity e = getGfxEntity();
-		
+
 		anim = e.Assets().getAnimation(e.getAssetId());
 		anim.setLooping(false);
 	}
-	
+
 	@Override
 	public void enter() {
 		getPlayer().setOnGround(false);
@@ -37,7 +36,7 @@ public class JumpingState extends AbstractAssetState {
 
 	@Override
 	public void update() {
-		
+
 		// check if landed
 		if (getPlayer().isOnGround()) {
 			getPlayer().applyAction(PlayerActions.Land);

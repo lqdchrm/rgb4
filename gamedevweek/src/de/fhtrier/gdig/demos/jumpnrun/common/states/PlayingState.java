@@ -22,30 +22,25 @@ import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 import de.fhtrier.gdig.engine.physics.CollisionManager;
 
 public abstract class PlayingState extends BasicGameState implements
-		INetworkCommandListener
-{
-	private GameFactory factory;
-	private int levelId;
-	private static Image frameBuffer;
+		INetworkCommandListener {
+	protected GameFactory factory;
+	protected int levelId;
+	protected static Image frameBuffer;
 
 	public abstract void cleanup(GameContainer container, StateBasedGame game);
 
-	public GameFactory getFactory()
-	{
+	public GameFactory getFactory() {
 		return this.factory;
 	}
 
 	@Override
-	public int getID()
-	{
+	public int getID() {
 		return GameStates.PLAYING;
 	}
 
-	public Level getLevel()
-	{
+	public Level getLevel() {
 		final Entity level = this.factory.getEntity(this.levelId);
-		if (level instanceof Level)
-		{
+		if (level instanceof Level) {
 			return (Level) level;
 		}
 		return null;
@@ -53,15 +48,13 @@ public abstract class PlayingState extends BasicGameState implements
 
 	@Override
 	public void init(final GameContainer arg0, final StateBasedGame arg1)
-			throws SlickException
-	{
+			throws SlickException {
 
 	}
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game)
-			throws SlickException
-	{
+			throws SlickException {
 		// TODO Auto-generated method stub
 		super.enter(container, game);
 		// <<<<<<< HEAD
@@ -87,22 +80,18 @@ public abstract class PlayingState extends BasicGameState implements
 	@Override
 	public void render(final GameContainer container,
 			final StateBasedGame game, final Graphics graphicContext)
-			throws SlickException
-	{
+			throws SlickException {
 		if (Constants.Debug.doNotRender)
 			return;
 		Level level = getLevel();
 
-		if (level != null)
-		{
-			if (Constants.Debug.shadersActive)
-			{
+		if (level != null) {
+			if (Constants.Debug.shadersActive) {
 				// Other only used for post Processing which is not used
 				level.render(graphicContext, null);
 				// level.render(frameBuffer.getGraphics(), frameBuffer);
 				// graphicContext.drawImage(frameBuffer, 0, 0);
-			} else
-			{
+			} else {
 				level.render(graphicContext, null);
 			}
 		}
@@ -113,18 +102,14 @@ public abstract class PlayingState extends BasicGameState implements
 	@Override
 	public void update(final GameContainer container,
 			final StateBasedGame game, final int deltaInMillis)
-			throws SlickException
-	{
+			throws SlickException {
 		final Input input = container.getInput();
 
-		if (input.isKeyPressed(Input.KEY_F1))
-		{
+		if (input.isKeyPressed(Input.KEY_F1)) {
 			container.setPaused(true);
-			try
-			{
+			try {
 				container.setFullscreen(!container.isFullscreen());
-			} catch (final SlickException e)
-			{
+			} catch (final SlickException e) {
 				Log.error(e);
 			}
 			// container.setVSync(true);
@@ -133,15 +118,13 @@ public abstract class PlayingState extends BasicGameState implements
 			container.setPaused(false);
 		}
 
-		if (input.isKeyPressed(Input.KEY_ESCAPE))
-		{
+		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			onExitKey(container, game);
 		}
 
 		final Level level = this.getLevel();
 
-		if (level != null)
-		{
+		if (level != null) {
 			level.handleInput(input);
 			level.update(deltaInMillis);
 

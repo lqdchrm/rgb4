@@ -1,11 +1,9 @@
 package de.fhtrier.gdig.demos.jumpnrun.identifiers;
 
-public class Assets
-{
+public class Assets {
 
 	// Config
-	public static class Config
-	{
+	public static class Config {
 		public static final String AssetGuiPath = "content/rgb4/gui";
 		public static final String AssetManagerPath = "content/rgb4/publish/";
 		public static final String AssetManagerFallbackPath = "content/rgb4/fallback/";
@@ -13,16 +11,14 @@ public class Assets
 	}
 
 	// Level
-	public static class Level
-	{
+	public static class Level {
 		public static final int BackgroundImageId = 1;
 		public static final int MiddlegroundImageId = 2;
 		public static final int TileMapId = 3;
 	}
 
 	// Player
-	public static class Player
-	{
+	public static class Player {
 		public static final int StandingAnimId = 111;
 		public static final String StandingAnimImagePath = "sprites/player/stehen_128_128_20.png";
 
@@ -56,14 +52,12 @@ public class Assets
 	}
 
 	// Bullet
-	public static class Bullet
-	{
+	public static class Bullet {
 		public static final int AnimId = 21;
 		public static final String AnimPath = "sprites/items/bullet2_64_64_100.png";
 	}
 
-	public static class Weapon
-	{
+	public static class Weapon {
 		// Weapon
 		public static final int AnimId = 22;
 		public static final String AnimImagePath = "sprites/items/waffestehen_128_128_20.png";
@@ -78,8 +72,7 @@ public class Assets
 	public static final String DoomsdayBigExplosionImagePath = "sprites/items/doom.png";
 
 	/* Sounds */
-	public static class Sounds
-	{
+	public static class Sounds {
 		public static final int LevelSoundtrackId = 1;
 		public static final String LevelSoundtrackPath = "sounds/background.ogg";
 

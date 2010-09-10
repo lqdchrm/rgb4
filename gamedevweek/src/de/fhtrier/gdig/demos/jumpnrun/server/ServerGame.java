@@ -21,31 +21,26 @@ import de.fhtrier.gdig.engine.helpers.Configuration;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.NetworkBroadcastListener;
 
-public class ServerGame extends RGB4Game
-{
+public class ServerGame extends RGB4Game {
 	public static int port = 49999;
 	public static InterfaceAddress networkInterface = null;
 	public String serverName = "My Server";
 	private NetworkBroadcastListener netBroadCastListener;
 
-	public ServerGame(String serverName, InterfaceAddress ni, int port)
-	{
+	public ServerGame(String serverName, InterfaceAddress ni, int port) {
 		super(Assets.Config.GameTitle + " (" + serverName + ")");
 		this.serverName = serverName;
 		ServerGame.networkInterface = ni;
 		ServerGame.port = port;
 
 		// TODO read in interface from somewhere
-		if (networkInterface == null)
-		{
+		if (networkInterface == null) {
 			List<InterfaceAddress> networkInterfaces = NetworkHelper
 					.getInterfaces();
 
-			if (networkInterfaces.size() > 0)
-			{
+			if (networkInterfaces.size() > 0) {
 				networkInterface = networkInterfaces.get(0);
-			} else
-			{
+			} else {
 				System.out.println("No network interfaces detected");
 				return;
 			}
@@ -70,8 +65,7 @@ public class ServerGame extends RGB4Game
 	}
 
 	@Override
-	public void initStatesList(GameContainer container) throws SlickException
-	{
+	public void initStatesList(GameContainer container) throws SlickException {
 		addState(new ServerLobbyState(this));
 		addState(new ServerPlayingState());
 	}

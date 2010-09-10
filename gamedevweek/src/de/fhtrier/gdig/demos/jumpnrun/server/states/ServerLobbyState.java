@@ -24,13 +24,13 @@ import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ClientQueryDisconnect;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
 
-public class ServerLobbyState extends BasicGameState  implements
-	INetworkCommandListener {
+public class ServerLobbyState extends BasicGameState implements
+		INetworkCommandListener {
 
 	private ServerGame serverGame;
 	public static HashMap<Integer, NetworkPlayer> players = new HashMap<Integer, NetworkPlayer>();
-	private Queue<INetworkCommand> queue;	
-	
+	private Queue<INetworkCommand> queue;
+
 	public ServerLobbyState(ServerGame serverGame) {
 		this.serverGame = serverGame;
 		queue = new LinkedList<INetworkCommand>();
@@ -65,32 +65,31 @@ public class ServerLobbyState extends BasicGameState  implements
 				}
 			}
 		}
-		
+
 		// clear all commands even if not handled
 		queue.clear();
-		
+
 		// Networkcomponent updaten
 		NetworkComponent.getInstance().update();
 	}
-	
-	
-	
+
 	private void handleProtocolCommands(INetworkCommand data) {
-		if (data instanceof QueryConnect)
-		{
-			String name = ((QueryConnect)data).getPlayerName();
-			NetworkComponent.getInstance().sendCommand(data.getSender(), new AckConnect());
-			players.put(data.getSender(), new NetworkPlayer(name, data.getSender()));
-			NetworkComponent.getInstance().sendCommand(new AckNewPlayerList(players));
+		if (data instanceof QueryConnect) {
+			String name = ((QueryConnect) data).getPlayerName();
+			NetworkComponent.getInstance().sendCommand(data.getSender(),
+					new AckConnect());
+			players.put(data.getSender(),
+					new NetworkPlayer(name, data.getSender()));
+			NetworkComponent.getInstance().sendCommand(
+					new AckNewPlayerList(players));
 		}
-		
-		if (data instanceof ClientQueryDisconnect)
-		{
+
+		if (data instanceof ClientQueryDisconnect) {
 			players.remove(data.getSender());
 			NetworkComponent.getInstance().sendCommand(
 					new AckNewPlayerList(players));
 		}
-		
+
 		if (data instanceof QueryStartGame) {
 			serverGame.enterState(GameStates.PLAYING);
 			NetworkComponent.getInstance().sendCommand(new AckStartGame());
@@ -102,7 +101,7 @@ public class ServerLobbyState extends BasicGameState  implements
 			throws SlickException {
 		super.enter(container, game);
 	}
-	
+
 	@Override
 	public void leave(GameContainer container, StateBasedGame game)
 			throws SlickException {

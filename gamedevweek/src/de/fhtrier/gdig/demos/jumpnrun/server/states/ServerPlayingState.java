@@ -37,16 +37,14 @@ import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
 
-public class ServerPlayingState extends PlayingState
-{
+public class ServerPlayingState extends PlayingState {
 
 	private Queue<INetworkCommand> queue;
 	private ServerData send;
 	public static HashMap<Integer, Integer> networkId2Player = new HashMap<Integer, Integer>();
 	public static HashMap<Integer, Integer> player2NetworkId = new HashMap<Integer, Integer>();
 
-	public ServerPlayingState()
-	{
+	public ServerPlayingState() {
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ServerData();
 	}
@@ -61,14 +59,19 @@ public class ServerPlayingState extends PlayingState
 	//
 	// }
 
-	private boolean handlePlayerActions(QueryAction actionCmd)
-	{
+	@Override
+	public void enter(GameContainer container, StateBasedGame game)
+			throws SlickException {
+		super.enter(container, game);
+		((Level) factory.getEntity(levelId)).serverInit();
+	}
+
+	private boolean handlePlayerActions(QueryAction actionCmd) {
 		Entity e;
 		int playerId = networkId2Player.get(actionCmd.getSender());
 		Player player = (Player) getFactory().getEntity(playerId);
 
-		switch (actionCmd.getAction())
-		{
+		switch (actionCmd.getAction()) {
 		// case DROPGEM:
 		// e = createEntity(EntityType.GEM);
 		//
@@ -120,8 +123,7 @@ public class ServerPlayingState extends PlayingState
 			return true;
 		case UPDATECONDITION:
 			// HACK query for any player
-			if (actionCmd instanceof QueryPlayerCondition)
-			{
+			if (actionCmd instanceof QueryPlayerCondition) {
 
 				QueryPlayerCondition tmpCmd = (QueryPlayerCondition) actionCmd;
 
@@ -141,8 +143,7 @@ public class ServerPlayingState extends PlayingState
 		return false;
 	}
 
-	private Entity createEntity(EntityType type)
-	{
+	private Entity createEntity(EntityType type) {
 		int id = this.getFactory().createEntity(type);
 
 		Entity e = getFactory().getEntity(id);
@@ -158,18 +159,14 @@ public class ServerPlayingState extends PlayingState
 		return e;
 	}
 
-	private boolean handleProtocolCommands(INetworkCommand cmd)
-	{
+	private boolean handleProtocolCommands(INetworkCommand cmd) {
 
 		// QueryJoin
-		if (cmd instanceof QueryJoin)
-		{
+		if (cmd instanceof QueryJoin) {
 
 			// create every (player) entity from server on client
-			for (Entity e : getFactory().getEntities())
-			{
-				if (e.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient)
-				{
+			for (Entity e : getFactory().getEntities()) {
+				if (e.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient) {
 					NetworkComponent.getInstance().sendCommand(cmd.getSender(),
 							new DoCreateEntity(e.getId(), e.getType()));
 				}
@@ -180,8 +177,7 @@ public class ServerPlayingState extends PlayingState
 		}
 
 		// QueryLeave
-		if (cmd instanceof QueryLeave)
-		{
+		if (cmd instanceof QueryLeave) {
 			int playerId = ((QueryLeave) cmd).getPlayerId();
 
 			NetworkComponent.getInstance().sendCommand(
@@ -193,14 +189,12 @@ public class ServerPlayingState extends PlayingState
 		}
 
 		// QueryCreatePlayer
-		if (cmd instanceof QueryCreateEntity)
-		{
+		if (cmd instanceof QueryCreateEntity) {
 
 			EntityType type = ((QueryCreateEntity) cmd).getType();
 
 			// currently, only client creation of player is allowed
-			if (type == EntityType.PLAYER)
-			{
+			if (type == EntityType.PLAYER) {
 				int id = this.getFactory().createEntity(type);
 
 				Player e = (Player) getFactory().getEntity(id);
@@ -226,8 +220,7 @@ public class ServerPlayingState extends PlayingState
 
 				e.getPlayerCondition().name = name;
 
-			} else
-			{
+			} else {
 				throw new RuntimeException(
 						"Client side entity creation only allowed for type PLAYER");
 			}
@@ -235,8 +228,7 @@ public class ServerPlayingState extends PlayingState
 		}
 
 		// QueryAction
-		if (cmd instanceof QueryAction)
-		{
+		if (cmd instanceof QueryAction) {
 			return handlePlayerActions((QueryAction) cmd);
 		}
 
@@ -245,26 +237,20 @@ public class ServerPlayingState extends PlayingState
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
-			int deltaInMillis) throws SlickException
-	{
+			int deltaInMillis) throws SlickException {
 
 		// recv and execute items in queue
-		for (INetworkCommand data : this.queue)
-		{
-			if (data != null && !data.isHandled())
-			{
+		for (INetworkCommand data : this.queue) {
+			if (data != null && !data.isHandled()) {
 
 				// handle client data
-				if (data instanceof ClientData)
-				{
+				if (data instanceof ClientData) {
 					ClientData d = (ClientData) data;
 					Level level = getLevel();
-					if (level != null)
-					{
+					if (level != null) {
 						Entity e = getFactory()
 								.getEntity(d.getNetworkData().id);
-						if (e != null)
-						{
+						if (e != null) {
 							e.applyNetworkData(d.getNetworkData());
 						}
 					}
@@ -272,10 +258,8 @@ public class ServerPlayingState extends PlayingState
 				}
 
 				// handle other commands
-				if (data instanceof ProtocolCommand)
-				{
-					if (handleProtocolCommands(data))
-					{
+				if (data instanceof ProtocolCommand) {
+					if (handleProtocolCommands(data)) {
 						data.setHandled(true);
 					}
 				}
@@ -290,10 +274,8 @@ public class ServerPlayingState extends PlayingState
 		this.send.clear();
 
 		// send entity data every frame
-		for (Entity e : this.getFactory().getEntities())
-		{
-			if (e.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient)
-			{
+		for (Entity e : this.getFactory().getEntities()) {
+			if (e.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient) {
 
 				NetworkData data = e.getNetworkData();
 				this.send.put(data.id, data);
@@ -305,20 +287,17 @@ public class ServerPlayingState extends PlayingState
 	}
 
 	@Override
-	public void notify(INetworkCommand cmd)
-	{
+	public void notify(INetworkCommand cmd) {
 		this.queue.add(cmd);
 	}
 
 	@Override
-	public void cleanup(GameContainer container, StateBasedGame game)
-	{
+	public void cleanup(GameContainer container, StateBasedGame game) {
 		container.exit();
 	}
 
 	@Override
-	public void onExitKey(GameContainer container, StateBasedGame game)
-	{
+	public void onExitKey(GameContainer container, StateBasedGame game) {
 		cleanup(container, game);
 	}
 }

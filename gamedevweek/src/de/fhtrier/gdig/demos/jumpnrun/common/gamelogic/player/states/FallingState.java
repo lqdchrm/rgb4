@@ -11,15 +11,15 @@ import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
 import de.fhtrier.gdig.engine.management.Factory;
 
 public class FallingState extends AbstractAssetState {
-	
+
 	private Animation anim;
-	
-	public FallingState(Player player, Factory factory)
-			throws SlickException {
-		super(player, Assets.Player.FallingAnimId, Assets.Player.FallingImagePath, EntityOrder.Player, factory);
-	
+
+	public FallingState(Player player, Factory factory) throws SlickException {
+		super(player, Assets.Player.FallingAnimId,
+				Assets.Player.FallingImagePath, EntityOrder.Player, factory);
+
 		AssetEntity e = getGfxEntity();
-		
+
 		anim = e.Assets().getAnimation(e.getAssetId());
 		anim.setLooping(false);
 	}
@@ -34,12 +34,12 @@ public class FallingState extends AbstractAssetState {
 	}
 
 	@Override
-	public void update() {	
+	public void update() {
 
 		// check if vel < threshold --> stop falling
 		if (getPlayer().isOnGround()) {
 			getPlayer().applyAction(PlayerActions.Land);
 		}
 	}
-	
+
 }

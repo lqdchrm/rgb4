@@ -15,14 +15,12 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 
-public class ClientGame extends RGB4Game
-{
+public class ClientGame extends RGB4Game {
 	public static int port = 49999;
 	public static String nameOrIp = "localhost";
 	public static boolean isSpectator = false;
 
-	public ClientGame()
-	{
+	public ClientGame() {
 		super(Assets.Config.GameTitle);
 
 		NetworkComponent.createClientInstance();
@@ -39,8 +37,7 @@ public class ClientGame extends RGB4Game
 	}
 
 	@Override
-	public void initStatesList(GameContainer container) throws SlickException
-	{
+	public void initStatesList(GameContainer container) throws SlickException {
 		addState(new ClientMenuState(this));
 		addState(new ClientSelectServerState());
 		addState(new ClientHostServerState(this));

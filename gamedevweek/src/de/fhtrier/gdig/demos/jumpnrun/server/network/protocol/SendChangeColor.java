@@ -6,10 +6,10 @@ public class SendChangeColor extends ProtocolCommand {
 
 	private static final long serialVersionUID = -8901533836906319995L;
 	private int playerId;
-	
-	public SendChangeColor (int playerId) {
+
+	public SendChangeColor(int playerId) {
 		super("SendChangeColor");
-		
+
 		this.playerId = playerId;
 	}
 

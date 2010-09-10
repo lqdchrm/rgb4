@@ -2,8 +2,8 @@ package de.fhtrier.gdig.demos.jumpnrun.common.events;
 
 public abstract class Event {
 	private long id;
-	
-	public Event () {
+
+	public Event() {
 	}
 
 	public void setId(long id) {
@@ -13,7 +13,7 @@ public abstract class Event {
 	public long getId() {
 		return id;
 	}
-	
+
 	/**
 	 * is executed in EventManager of each event
 	 */

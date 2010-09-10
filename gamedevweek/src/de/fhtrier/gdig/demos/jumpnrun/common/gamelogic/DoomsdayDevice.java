@@ -2,16 +2,17 @@ package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
 import java.util.Random;
 
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
-import de.fhtrier.gdig.engine.network.NetworkComponent;
 
-public class DoomsdayDevice extends Entity
-{
+public class DoomsdayDevice extends Entity {
 
 	Random random = new Random();
 	int timeSinceLastExplosion = 0;
@@ -20,28 +21,60 @@ public class DoomsdayDevice extends Entity
 
 	AssetEntity asset;
 
-	int minChargeTime;
-	int maxChargeTime;
+	int minChargeTime = 20;
+	int maxChargeTime = 21;
 	private GameFactory factory;
+	private Level level;
 
-	public DoomsdayDevice(int id, GameFactory factory)
-	{
+	private DomsDayDeviceBigExplosion doomesdaydeviceExplosion;
+
+	public DoomsdayDevice(int id, GameFactory factory) {
 		super(id, EntityType.DOOMSDAYDEVICE);
 		this.factory = factory;
 		// asset = new AssetEntity(iddd, Assets, assets)
 
-		resetChargetime();
 	}
 
-	public void resetChargetime()
-	{
+	public void initServer() {
+		int domsDayDeviceID = factory
+				.createEntity(EntityType.DOOMSDAYDEVICEEXPLOSION);
+		doomesdaydeviceExplosion = (DomsDayDeviceBigExplosion) factory
+				.getEntity(domsDayDeviceID);
+		level.add(doomesdaydeviceExplosion);
+		doomesdaydeviceExplosion.getData()[X] = getData(X);
+		doomesdaydeviceExplosion.getData()[Y] = getData(Y);
+		doomesdaydeviceExplosion.setActive(true);
+		doomesdaydeviceExplosion
+				.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+
+		if (level != null)
+			doomesdaydeviceExplosion.setLevel(level);
+
+		resetChargetime();
+
+	}
+
+	public void resetChargetime() {
 		timeSinceLastExplosion = 0;
 		chargeTime = (random.nextInt(maxChargeTime - minChargeTime) + minChargeTime) * 1000;
 	}
 
 	@Override
-	public void update(int deltaInMillis)
-	{
+	protected void renderImpl(Graphics graphicContext, Image frameBuffer) {
+		// TODO Auto-generated method stub
+		super.renderImpl(graphicContext, frameBuffer);
+		graphicContext.setColor(Color.orange);
+		graphicContext.fillOval(-10, -10, 10, 10);
+	}
+
+	public void setLevel(Level level) {
+		this.level = level;
+		if (doomesdaydeviceExplosion != null)
+			doomesdaydeviceExplosion.setLevel(level);
+	}
+
+	@Override
+	public void update(int deltaInMillis) {
 		super.update(deltaInMillis);
 		if (!isActive())
 			return;
@@ -50,20 +83,8 @@ public class DoomsdayDevice extends Entity
 			explode();
 	}
 
-	private void explode()
-	{
-		int domsDayDeviceID = factory
-				.createEntity(EntityType.DOOMSDAYDEVICEEXPLOSION);
-		Entity doomesdaydevice = factory.getEntity(domsDayDeviceID);
-		add(doomesdaydevice);
-		doomesdaydevice.setActive(true);
-		doomesdaydevice.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
-		doomesdaydevice.getData()[X] = this.getData()[X];
-		doomesdaydevice.getData()[Y] = this.getData()[Y];
-
-		DoCreateEntity command = new DoCreateEntity(domsDayDeviceID,
-				EntityType.DOOMSDAYDEVICEEXPLOSION);
-		NetworkComponent.getInstance().sendCommand(command);
+	private void explode() {
+		doomesdaydeviceExplosion.activate();
 		resetChargetime();
 	}
 

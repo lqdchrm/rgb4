@@ -13,11 +13,9 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.Debug;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.GamePlayConstants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 
-public class RGB4
-{
+public class RGB4 {
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 
 		// Parse Commandline in Constants
 		Debug debug = new Constants.Debug();
@@ -34,26 +32,22 @@ public class RGB4
 		RGB4Game game = Lobby.createGameByArgs(args);
 
 		// initialize (gfx) settings depending on game type
-		if (game != null)
-		{
+		if (game != null) {
 
-			try
-			{
+			try {
 
 				AppGameContainer gc = new AppGameContainer(game);
 				gc.setDisplayMode(Settings.SCREENWIDTH, Settings.SCREENHEIGHT,
 						false);
 
-				if (game instanceof ClientGame)
-				{
+				if (game instanceof ClientGame) {
 					gc.setVSync(true);
 					gc.setSmoothDeltas(true);
 					gc.setAlwaysRender(true);
 					gc.setUpdateOnlyWhenVisible(false);
 					gc.setMaximumLogicUpdateInterval(30);
 					gc.setTargetFrameRate(60);
-				} else
-				{
+				} else {
 					gc.setVSync(false);
 					gc.setSmoothDeltas(false);
 					gc.setAlwaysRender(true);
@@ -61,8 +55,7 @@ public class RGB4
 				}
 
 				gc.start();
-			} catch (SlickException e)
-			{
+			} catch (SlickException e) {
 				e.printStackTrace();
 			}
 		}

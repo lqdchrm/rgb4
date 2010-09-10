@@ -11,95 +11,101 @@ public class InputControl {
 
 	// has to be adapted every time a new command is added or removed
 	private static final int NUMOFREFKEYS = 7;
-		
+
 	// available commands which can be mapped to a key (currently just one)
 	public static final int REFWALKLEFT = 0;
 	public static final int REFWALKRIGHT = 1;
 	public static final int REFJUMP = 2;
 	public static final int REFFIRE = 3;
-	public static final int REFCHANGEWEAPON= 4;
-	public static final int REFCHANGECOLOR= 5;
-	public static final int REFMENU= 6;
-	
+	public static final int REFCHANGEWEAPON = 4;
+	public static final int REFCHANGECOLOR = 5;
+	public static final int REFMENU = 6;
+
 	// Input Types
 	public static final int KEYBOARD = 0;
 	public static final int MOUSE = 1;
 	public static final int CONTROLLER = 2;
-	
+
 	// command states
 	private static boolean[] REFKEYDOWN = new boolean[NUMOFREFKEYS];
 	private static boolean[] REFKEYPRESSED = new boolean[NUMOFREFKEYS];
-	
+
 	// key mapping
 	private static int[] REFCONTROLMAPPING2KEY = new int[NUMOFREFKEYS];
 	private static int[] REFCONTROLMAPPING2KEYTYPE = new int[NUMOFREFKEYS];
-	
+
 	// original Input from slick
 	private static Input CURRENTINPUT;
-	
+
 	public static Input getOriginalInput() {
 		return CURRENTINPUT;
 	}
-	
+
 	public static void updateInputControl(Input input) {
 		CURRENTINPUT = input;
-		
-		for (int i=0; i < NUMOFREFKEYS; i++) {
+
+		for (int i = 0; i < NUMOFREFKEYS; i++) {
 			if (REFCONTROLMAPPING2KEYTYPE[i] == KEYBOARD) {
 				REFKEYDOWN[i] = input.isKeyDown(REFCONTROLMAPPING2KEY[i]);
 				REFKEYPRESSED[i] = input.isKeyPressed(REFCONTROLMAPPING2KEY[i]);
 			} else if (REFCONTROLMAPPING2KEYTYPE[i] == MOUSE) {
-				REFKEYDOWN[i] = input.isMouseButtonDown(REFCONTROLMAPPING2KEY[i]);
-				REFKEYPRESSED[i] = input.isMousePressed(REFCONTROLMAPPING2KEY[i]);
+				REFKEYDOWN[i] = input
+						.isMouseButtonDown(REFCONTROLMAPPING2KEY[i]);
+				REFKEYPRESSED[i] = input
+						.isMousePressed(REFCONTROLMAPPING2KEY[i]);
 			} else if (REFCONTROLMAPPING2KEYTYPE[i] == CONTROLLER) {
-				
+
 				boolean pressed = false;
 				boolean down = false;
-				for (int j=0; j < Controllers.getControllerCount(); j++) {	
-					 try {
-						 pressed = pressed || input.isControlPressed(REFCONTROLMAPPING2KEY[i], j);
-						 down = down || isControllerDown(REFCONTROLMAPPING2KEY[i], j);
-					 } catch (Exception e) {
-						 
-					 }
+				for (int j = 0; j < Controllers.getControllerCount(); j++) {
+					try {
+						pressed = pressed
+								|| input.isControlPressed(
+										REFCONTROLMAPPING2KEY[i], j);
+						down = down
+								|| isControllerDown(REFCONTROLMAPPING2KEY[i], j);
+					} catch (Exception e) {
+
+					}
 				}
-				
+
 				REFKEYDOWN[i] = down;
 				REFKEYPRESSED[i] = pressed;
 			}
-			
+
 		}
 	}
-	
+
 	public static boolean isRefKeyDown(int key) {
-		if (key < 0 || key > NUMOFREFKEYS-1) {
+		if (key < 0 || key > NUMOFREFKEYS - 1) {
 			// Throw Exception?
 		}
-		
+
 		return REFKEYDOWN[key];
 	}
-	
+
 	public static boolean isRefKeyPressed(int key) {
-		if (key < 0 || key > NUMOFREFKEYS-1) {
+		if (key < 0 || key > NUMOFREFKEYS - 1) {
 			// Throw Exception?
 		}
-		
+
 		return REFKEYPRESSED[key];
 	}
-	
-	public static void setKeyMapping (String refKey, int key, int keyType) {
+
+	public static void setKeyMapping(String refKey, int key, int keyType) {
 		try {
-			int refKeyIndex = (Integer) InputControl.class.getDeclaredField(refKey).get(Input.class);
-			
+			int refKeyIndex = (Integer) InputControl.class.getDeclaredField(
+					refKey).get(Input.class);
+
 			REFCONTROLMAPPING2KEY[refKeyIndex] = key;
 			REFCONTROLMAPPING2KEYTYPE[refKeyIndex] = keyType;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void loadKeyMapping ()  {
-				
+
+	public static void loadKeyMapping() {
+
 		try {
 			setStoredKeyMapping("REFWALKLEFT");
 			setStoredKeyMapping("REFWALKRIGHT");
@@ -108,29 +114,32 @@ public class InputControl {
 			setStoredKeyMapping("REFCHANGEWEAPON");
 			setStoredKeyMapping("REFCHANGECOLOR");
 			setStoredKeyMapping("REFMENU");
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static void setStoredKeyMapping(String refKey) {
-		
+
 		try {
-			String keyIndexName = (String) Constants.ControlConfig.class.getDeclaredField(refKey).get(Constants.ControlConfig.class);
+			String keyIndexName = (String) Constants.ControlConfig.class
+					.getDeclaredField(refKey)
+					.get(Constants.ControlConfig.class);
 			Field declaredField = Input.class.getDeclaredField(keyIndexName);
 			declaredField.setAccessible(true);
 			int storedKeyIndex = (Integer) declaredField.get(Input.class);
-			int refKeyIndex = (Integer) InputControl.class.getDeclaredField(refKey).get(InputControl.class);
-			
+			int refKeyIndex = (Integer) InputControl.class.getDeclaredField(
+					refKey).get(InputControl.class);
+
 			REFCONTROLMAPPING2KEY[refKeyIndex] = storedKeyIndex;
 			REFCONTROLMAPPING2KEYTYPE[refKeyIndex] = getInputType(keyIndexName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	private static int getInputType (String key) {
+
+	private static int getInputType(String key) {
 		if (key.startsWith("KEY_")) {
 			return KEYBOARD;
 		} else if (key.startsWith("MOUSE_")) {
@@ -139,8 +148,8 @@ public class InputControl {
 			return CONTROLLER;
 		}
 	}
-	
-	private static boolean isControllerDown (int index, int controllerIndex) {
+
+	private static boolean isControllerDown(int index, int controllerIndex) {
 		switch (index) {
 		case 0:
 			return CURRENTINPUT.isControllerLeft(controllerIndex);
@@ -151,12 +160,11 @@ public class InputControl {
 		case 1:
 			return CURRENTINPUT.isControllerDown(controllerIndex);
 		}
-		
+
 		if (index >= 4) {
-			return CURRENTINPUT.isButtonPressed((index-4), controllerIndex);
+			return CURRENTINPUT.isButtonPressed((index - 4), controllerIndex);
 		}
-		
+
 		return false;
 	}
 }
-

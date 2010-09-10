@@ -6,13 +6,11 @@ import org.newdawn.slick.Color;
 
 import de.fhtrier.gdig.engine.helpers.Configuration;
 
-public class Constants
-{
+public class Constants {
 
 	public static final float EPSILON = 0.0001f;
 
-	public static class GamePlayConstants extends Configuration
-	{
+	public static class GamePlayConstants extends Configuration {
 		public static float gravity = 2000.0f;
 
 		@ShowAsSlider(maxValue = 50, minValue = 1)
@@ -38,8 +36,7 @@ public class Constants
 		public static float playerMaxJumpSpeed = 1000.0f;
 	}
 
-	public static class Debug extends Configuration
-	{
+	public static class Debug extends Configuration {
 
 		@CommandlineParameter("noRender")
 		public static boolean doNotRender = false;
@@ -72,14 +69,12 @@ public class Constants
 		public static boolean factoryDebug = false;
 	}
 
-	public static class Level extends Configuration
-	{
+	public static class Level extends Configuration {
 		public static int collisionLayer = 1;
 		public static int logicLayer = 3;
 	}
 
-	public static class ControlConfig extends Configuration
-	{
+	public static class ControlConfig extends Configuration {
 
 		public static String REFWALKLEFT = "KEY_LEFT";
 		public static String REFWALKRIGHT = "KEY_RIGHT";
@@ -91,8 +86,7 @@ public class Constants
 
 	}
 
-	public static class NetworkConfig extends Configuration
-	{
+	public static class NetworkConfig extends Configuration {
 		@CommandlineParameter("Server")
 		public static boolean isServer;
 		@CommandlineParameter("Spectator")

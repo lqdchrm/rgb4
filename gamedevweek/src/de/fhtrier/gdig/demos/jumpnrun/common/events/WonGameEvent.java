@@ -6,20 +6,22 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoPlaySound;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 
 public class WonGameEvent extends Event {
-	
+
 	private Player winningPlayer;
-	//private Team winningTeam;
-	
-	public WonGameEvent (Player winningPlayer) {
+
+	// private Team winningTeam;
+
+	public WonGameEvent(Player winningPlayer) {
 		super();
-		
+
 		this.winningPlayer = winningPlayer;
 	}
-	
+
 	@Override
-	public void update () {
+	public void update() {
 		System.out.println(winningPlayer.getPlayerCondition().name + " won.");
-		NetworkComponent.getInstance().sendCommand(new DoPlaySound(Assets.Sounds.DoomsdayDeviceSoundId));
+		NetworkComponent.getInstance().sendCommand(
+				new DoPlaySound(Assets.Sounds.DoomsdayDeviceSoundId));
 	}
 
 }

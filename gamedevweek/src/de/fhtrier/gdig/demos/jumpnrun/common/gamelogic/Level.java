@@ -11,12 +11,12 @@ import org.newdawn.slick.tiled.TiledMap;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
+import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.graphics.entities.ImageEntity;
@@ -25,8 +25,7 @@ import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.physics.entities.MoveableEntity;
 
-public class Level extends MoveableEntity
-{
+public class Level extends MoveableEntity {
 
 	public GameFactory factory;
 
@@ -46,10 +45,8 @@ public class Level extends MoveableEntity
 
 	private AssetMgr assets;
 
-	public Level(int id, GameFactory factory) throws SlickException
-	{
+	public Level(int id, GameFactory factory) throws SlickException {
 		super(id, EntityType.LEVEL);
-		level = this;
 		this.currentPlayerId = -1;
 
 		this.factory = factory;
@@ -102,11 +99,9 @@ public class Level extends MoveableEntity
 
 		// HACK determine GID for logic layer
 		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
-		for (int i = 0; i < tiledMap.getTileSetCount(); i++)
-		{
+		for (int i = 0; i < tiledMap.getTileSetCount(); i++) {
 			if (tiledMap.getTileSet(i).lastGID
-					- tiledMap.getTileSet(i).firstGID == 127)
-			{
+					- tiledMap.getTileSet(i).firstGID == 127) {
 				firstLogicGID = tiledMap.getTileSet(i).firstGID;
 			}
 		}
@@ -115,33 +110,27 @@ public class Level extends MoveableEntity
 		calculateTeleportExits();
 	}
 
-	private void calculateSpawnpoints()
-	{
+	private void calculateSpawnpoints() {
 
 		spawnPoints = new ArrayList<ArrayList<SpawnPoint>>();
 
-		for (int i = 0; i < 32; i++)
-		{
+		for (int i = 0; i < 32; i++) {
 			spawnPoints.add(new ArrayList<SpawnPoint>());
 		}
 
 		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
 
-		for (int x = 0; x < tiledMap.getWidth(); x++)
-		{
-			for (int y = 0; y < tiledMap.getHeight(); y++)
-			{
+		for (int x = 0; x < tiledMap.getWidth(); x++) {
+			for (int y = 0; y < tiledMap.getHeight(); y++) {
 				int tileId = tiledMap.getTileId(x, y,
 						Constants.Level.logicLayer);
-				if (tileId == 0)
-				{
+				if (tileId == 0) {
 					continue;
 				}
 				tileId -= firstLogicGID;
 				++tileId;
 				// is a spawnpoint
-				if (tileId < 32)
-				{
+				if (tileId < 32) {
 					spawnPoints.get(tileId - 1).add(
 							new SpawnPoint(tileId, x * tiledMap.getTileWidth(),
 									y * tiledMap.getTileHeight()));
@@ -150,33 +139,27 @@ public class Level extends MoveableEntity
 		}
 	}
 
-	private void calculateTeleportExits()
-	{
+	private void calculateTeleportExits() {
 
 		teleportExitPoints = new ArrayList<ArrayList<SpawnPoint>>();
 
-		for (int i = 0; i < 32; i++)
-		{
+		for (int i = 0; i < 32; i++) {
 			teleportExitPoints.add(new ArrayList<SpawnPoint>());
 		}
 
 		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
 
-		for (int x = 0; x < tiledMap.getWidth(); x++)
-		{
-			for (int y = 0; y < tiledMap.getHeight(); y++)
-			{
+		for (int x = 0; x < tiledMap.getWidth(); x++) {
+			for (int y = 0; y < tiledMap.getHeight(); y++) {
 				int tileId = tiledMap.getTileId(x, y,
 						Constants.Level.logicLayer);
-				if (tileId == 0)
-				{
+				if (tileId == 0) {
 					continue;
 				}
 				tileId -= firstLogicGID;
 				++tileId;
 				// is a teleporterexit
-				if (tileId > 64 && tileId < 96)
-				{
+				if (tileId > 64 && tileId < 96) {
 					teleportExitPoints.get(tileId - 65).add(
 							new SpawnPoint(tileId, x * tiledMap.getTileWidth(),
 									y * tiledMap.getTileHeight()));
@@ -185,53 +168,44 @@ public class Level extends MoveableEntity
 		}
 	}
 
-	public ArrayList<SpawnPoint> getSpawnPoints(int id)
-	{
+	public ArrayList<SpawnPoint> getSpawnPoints(int id) {
 		return spawnPoints.get(id - 1);
 	}
 
-	public SpawnPoint getRandomSpawnPoint(int id)
-	{
+	public SpawnPoint getRandomSpawnPoint(int id) {
 		ArrayList<SpawnPoint> sp = getSpawnPoints(id);
 		return sp.get(rd.nextInt(sp.size()));
 	}
 
-	public SpawnPoint getRandomSpawnPoint()
-	{
+	public SpawnPoint getRandomSpawnPoint() {
 		ArrayList<SpawnPoint> sp = getSpawnPoints(rd
 				.nextInt(spawnPoints.size()));
 		return sp.get(rd.nextInt(sp.size()));
 	}
 
-	public ArrayList<SpawnPoint> getTeleporterExitPoints(int id)
-	{
+	public ArrayList<SpawnPoint> getTeleporterExitPoints(int id) {
 		return teleportExitPoints.get(id - 1);
 	}
 
-	public SpawnPoint getRandomTeleporterExitPoint(int id)
-	{
+	public SpawnPoint getRandomTeleporterExitPoint(int id) {
 		ArrayList<SpawnPoint> sp = getTeleporterExitPoints(id);
 		return sp.get(rd.nextInt(sp.size()));
 	}
 
-	public SpawnPoint getRandomTeleporterExitPoint()
-	{
+	public SpawnPoint getRandomTeleporterExitPoint() {
 		ArrayList<SpawnPoint> sp = getTeleporterExitPoints(rd
 				.nextInt(teleportExitPoints.size()));
 		return sp.get(rd.nextInt(sp.size()));
 	}
 
 	@Override
-	protected void postRender(Graphics graphicContext)
-	{
-		if (isVisible())
-		{
+	protected void postRender(Graphics graphicContext) {
+		if (isVisible()) {
 			ground.Assets().getTiledMap(ground.getAssetId()).render(0, 0, 2);
 		}
 		super.postRender(graphicContext);
 
-		if (Constants.Debug.showDebugOverlay)
-		{
+		if (Constants.Debug.showDebugOverlay) {
 			graphicContext.setColor(Constants.Debug.overlayColor);
 			graphicContext.drawString("NetworkID: "
 					+ NetworkComponent.getInstance().getNetworkId() + "\n"
@@ -249,8 +223,7 @@ public class Level extends MoveableEntity
 							+ e.getData()[ROTATION], 20, 100);
 
 			e = getCurrentPlayer();
-			if (e != null)
-			{
+			if (e != null) {
 				graphicContext.drawString(
 						"Player\n" + "ID: "
 								+ e.getId()
@@ -284,13 +257,11 @@ public class Level extends MoveableEntity
 	}
 
 	@Override
-	public void update(int deltaInMillis)
-	{
+	public void update(int deltaInMillis) {
 
 		super.update(deltaInMillis); // calculate physics
 
-		if (isActive())
-		{
+		if (isActive()) {
 			focusOnPlayer();
 
 			// checkLevelBordersScrolling();
@@ -302,8 +273,7 @@ public class Level extends MoveableEntity
 	/**
 	 * scrolls background layers relative to foreground
 	 */
-	private void parallaxScrollingBackground()
-	{
+	private void parallaxScrollingBackground() {
 		this.middlegroundImage.getData()[X] = -getData()[X] * 0.6f;
 		this.middlegroundImage.getData()[Y] = -getData()[Y];
 		this.backgroundImage.getData()[X] = -getData()[X] * 0.95f;
@@ -314,26 +284,22 @@ public class Level extends MoveableEntity
 	 * Ensures, that we don't scroll across level borders
 	 */
 	// TODO: doesn't work with scaling factor != 1
-	private void checkLevelBordersScrolling()
-	{
+	private void checkLevelBordersScrolling() {
 
 		// Left
-		if (getData()[X] > 0)
-		{
+		if (getData()[X] > 0) {
 			getData()[X] = 0.0f;
 			getVel()[X] = 0.0f;
 		}
 		// Top
-		if (getData()[Y] > 0)
-		{
+		if (getData()[Y] > 0) {
 			getData()[Y] = 0.0f;
 			getVel()[Y] = 0.0f;
 		}
 		// Right
 		if (getData()[X] < -this.groundMap.getWidth()
 
-		* this.groundMap.getTileWidth() + Settings.SCREENWIDTH)
-		{
+		* this.groundMap.getTileWidth() + Settings.SCREENWIDTH) {
 			getData()[X] = -this.groundMap.getWidth()
 					* this.groundMap.getTileWidth() + Settings.SCREENHEIGHT;
 			getVel()[X] = 0.0f;
@@ -341,8 +307,7 @@ public class Level extends MoveableEntity
 		// Bottom
 		if (getData()[Y] < -this.groundMap.getHeight()
 
-		* this.groundMap.getTileHeight() + Settings.SCREENWIDTH)
-		{
+		* this.groundMap.getTileHeight() + Settings.SCREENWIDTH) {
 			getData()[Y] = -this.groundMap.getHeight()
 					* this.groundMap.getTileHeight() + Settings.SCREENHEIGHT;
 			getVel()[Y] = 0.0f;
@@ -352,11 +317,9 @@ public class Level extends MoveableEntity
 	/**
 	 * keep our player in the middle of the screen
 	 */
-	private void focusOnPlayer()
-	{
+	private void focusOnPlayer() {
 		Player player = getCurrentPlayer();
-		if (player != null)
-		{
+		if (player != null) {
 
 			// Focus on Player
 			getData()[X] = Settings.SCREENWIDTH / 2 - player.getData()[X];
@@ -365,92 +328,73 @@ public class Level extends MoveableEntity
 	}
 
 	@Override
-	public void handleInput(Input input)
-	{
-		if (isActive())
-		{
+	public void handleInput(Input input) {
+		if (isActive()) {
 
 			// Left / Right
-			if (!input.isKeyDown(Input.KEY_A) && !input.isKeyDown(Input.KEY_D))
-			{
+			if (!input.isKeyDown(Input.KEY_A) && !input.isKeyDown(Input.KEY_D)) {
 				getVel()[X] = 0.0f;
 			}
-			if (input.isKeyDown(Input.KEY_A))
-			{
+			if (input.isKeyDown(Input.KEY_A)) {
 				getVel()[X] = 600.0f;
 			}
-			if (input.isKeyDown(Input.KEY_D))
-			{
+			if (input.isKeyDown(Input.KEY_D)) {
 				getVel()[X] = -600.0f;
 			}
 
 			// Up / Down
-			if (!input.isKeyDown(Input.KEY_W) && !input.isKeyDown(Input.KEY_S))
-			{
+			if (!input.isKeyDown(Input.KEY_W) && !input.isKeyDown(Input.KEY_S)) {
 				getVel()[Y] = 0.0f;
 			}
 
-			if (input.isKeyDown(Input.KEY_W))
-			{
+			if (input.isKeyDown(Input.KEY_W)) {
 				getVel()[Y] = 600.0f;
 			}
 
-			if (input.isKeyDown(Input.KEY_S))
-			{
+			if (input.isKeyDown(Input.KEY_S)) {
 				getVel()[Y] = -600.0f;
 			}
 
 			// Zoom
-			if (!input.isKeyDown(Input.KEY_R) && !input.isKeyDown(Input.KEY_F))
-			{
+			if (!input.isKeyDown(Input.KEY_R) && !input.isKeyDown(Input.KEY_F)) {
 				getVel()[SCALE_X] = getVel()[SCALE_Y] = 0.0f;
 			}
 
-			if (input.isKeyDown(Input.KEY_R))
-			{
+			if (input.isKeyDown(Input.KEY_R)) {
 				getVel()[SCALE_X] = getVel()[SCALE_Y] = 1;
 			}
 
-			if (input.isKeyDown(Input.KEY_F))
-			{
+			if (input.isKeyDown(Input.KEY_F)) {
 				getVel()[SCALE_X] = getVel()[SCALE_Y] = -1;
 			}
 
 			// Rotation
-			if (!input.isKeyDown(Input.KEY_Q) && !input.isKeyDown(Input.KEY_E))
-			{
+			if (!input.isKeyDown(Input.KEY_Q) && !input.isKeyDown(Input.KEY_E)) {
 				getVel()[ROTATION] = 0.0f;
 			}
 
-			if (input.isKeyDown(Input.KEY_Q))
-			{
+			if (input.isKeyDown(Input.KEY_Q)) {
 				getVel()[ROTATION] = -15;
 			}
-			if (input.isKeyDown(Input.KEY_E))
-			{
+			if (input.isKeyDown(Input.KEY_E)) {
 				getVel()[ROTATION] = 15;
 			}
 		}
 		super.handleInput(input);
 	}
 
-	public TiledMap getMap()
-	{
+	public TiledMap getMap() {
 		return this.groundMap;
 	}
 
-	public Player getCurrentPlayer()
-	{
+	public Player getCurrentPlayer() {
 		return getPlayer(this.currentPlayerId);
 	}
 
-	public void setCurrentPlayer(int playerId)
-	{
-		if (playerId != currentPlayerId)
-		{
+	public void setCurrentPlayer(int playerId) {
+		if (playerId != currentPlayerId) {
 			Player player = getCurrentPlayer();
-			if (player != null)
-			{
+			if (player != null) {
 				player.setActive(false);
 				player.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 			}
@@ -458,34 +402,35 @@ public class Level extends MoveableEntity
 			this.currentPlayerId = playerId;
 
 			player = getPlayer(currentPlayerId);
-			if (player != null)
-			{
+			if (player != null) {
 				player.setUpdateStrategy(EntityUpdateStrategy.ClientToServer);
 				player.setActive(true);
 			}
 		}
 	}
 
-	public Player getPlayer(int id)
-	{
-		if (id == -1)
-		{
+	public Player getPlayer(int id) {
+		if (id == -1) {
 			return null;
 		}
 
 		Entity player = factory.getEntity(id);
-		if (player instanceof Player)
-		{
+		if (player instanceof Player) {
 			return (Player) player;
 		}
 		throw new RuntimeException("id doesn't match requested entity type");
 	}
 
 	@Override
-	public Entity add(Entity e)
-	{
-		e.setLevel(this);
+	public Entity add(Entity e) {
 		Entity result = super.add(e);
+
+		if (e instanceof LevelCollidableEntity) {
+			((LevelCollidableEntity) e).setLevel(this);
+		}
+		if (e instanceof DoomsdayDevice) {
+			((DoomsdayDevice) e).setLevel(this);
+		}
 
 		return result;
 	}
@@ -495,8 +440,7 @@ public class Level extends MoveableEntity
 	 * 
 	 * @return
 	 */
-	public int getWidth()
-	{
+	public int getWidth() {
 		return getMap().getWidth() * getMap().getTileWidth();
 	}
 
@@ -505,33 +449,33 @@ public class Level extends MoveableEntity
 	 * 
 	 * @return
 	 */
-	public int getHeight()
-	{
+	public int getHeight() {
 		return getMap().getHeight() * getMap().getTileHeight();
 	}
 
-	public AssetMgr getAssets()
-	{
+	public AssetMgr getAssets() {
 		return assets;
 	}
 
 	/**
 	 * This is to Inelize Entetys in the Level. only the Server do this.
 	 */
-	public void serverInit()
-	{
+	public void serverInit() {
 		// TODO Wie kann ich mit der Factory DoomsdayDevices erstellen mit
 		// assetfactory und allem drum und dran.
+
 		int domsDayDeviceID = factory.createEntity(EntityType.DOOMSDAYDEVICE);
-		Entity doomesdaydevice = factory.getEntity(domsDayDeviceID);
+		DoomsdayDevice doomesdaydevice = (DoomsdayDevice) factory
+				.getEntity(domsDayDeviceID);
 		add(doomesdaydevice);
 		doomesdaydevice.setActive(true);
 		doomesdaydevice.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
-		doomesdaydevice.getData()[X] = level.getWidth() >> 1;
-		doomesdaydevice.getData()[Y] = level.getHeight() >> 1;
-
-		DoCreateEntity command = new DoCreateEntity(domsDayDeviceID,
-				EntityType.DOOMSDAYDEVICE);
-		NetworkComponent.getInstance().sendCommand(command);
+		doomesdaydevice.getData()[X] = this.getWidth() >> 1;
+		doomesdaydevice.getData()[Y] = this.getHeight() >> 1;
+		doomesdaydevice.initServer();
+		//
+		// DoCreateEntity command = new DoCreateEntity(domsDayDeviceID,
+		// EntityType.DOOMSDAYDEVICE);
+		// NetworkComponent.getInstance().sendCommand(command);
 	}
 }

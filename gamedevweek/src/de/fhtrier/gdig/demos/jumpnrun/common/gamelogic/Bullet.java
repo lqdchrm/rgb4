@@ -18,16 +18,14 @@ import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.physics.CollisionManager;
 import de.fhtrier.gdig.engine.physics.entities.CollidableEntity;
 
-public class Bullet extends LevelCollidableEntity
-{
+public class Bullet extends LevelCollidableEntity {
 
 	public Player owner;
 	public int color;
 	public AnimationEntity bullet;
 	public AssetMgr assets;
 
-	public Bullet(int id, Factory factory) throws SlickException
-	{
+	public Bullet(int id, Factory factory) throws SlickException {
 		super(id, EntityType.BULLET);
 
 		assets = new AssetMgr();
@@ -59,16 +57,13 @@ public class Bullet extends LevelCollidableEntity
 	}
 
 	@Override
-	public boolean handleCollisions()
-	{
-		if (!isActive())
-		{
+	public boolean handleCollisions() {
+		if (!isActive()) {
 			return false;
 		}
 		boolean result = super.handleCollisions();
 
-		if (result)
-		{
+		if (result) {
 			die();
 			return result;
 		}
@@ -76,13 +71,10 @@ public class Bullet extends LevelCollidableEntity
 		List<CollidableEntity> iColideWith = CollisionManager
 				.collidingEntities(this);
 
-		for (CollidableEntity collidableEntity : iColideWith)
-		{
-			if (collidableEntity instanceof Player)
-			{
+		for (CollidableEntity collidableEntity : iColideWith) {
+			if (collidableEntity instanceof Player) {
 				Player otherPlayer = (Player) collidableEntity;
-				if (otherPlayer != owner)
-				{
+				if (otherPlayer != owner) {
 					otherPlayer.doDamage(this.color,
 							owner.getPlayerCondition().damage, owner);
 					die();
@@ -93,8 +85,7 @@ public class Bullet extends LevelCollidableEntity
 		return result;
 	}
 
-	private void die()
-	{
+	private void die() {
 		NetworkComponent.getInstance().sendCommand(
 				new DoRemoveEntity(this.getId()));
 		CollisionManager.removeEntity(this);

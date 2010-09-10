@@ -63,17 +63,17 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 
 	public void onEndScreen() {
 	}
-	
+
 	public void joinGame() {
 		game.enterState(GameStates.SERVER_SELECTION, new FadeOutTransition(),
 				new FadeInTransition());
 	}
-		
-		public void hostGame() {
-			game.enterState(GameStates.SERVER_SETTINGS, new FadeOutTransition(),
-					new FadeInTransition());
-		}
-		
+
+	public void hostGame() {
+		game.enterState(GameStates.SERVER_SETTINGS, new FadeOutTransition(),
+				new FadeInTransition());
+	}
+
 	public void exit() {
 		screen.endScreen(new EndNotify() {
 			public void perform() {
@@ -82,6 +82,7 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 		});
 	}
 
+	@Override
 	public void mouseMoved(final int oldx, final int oldy, final int newx,
 			final int newy) {
 		super.mouseMoved(oldx, oldy, newx, newy);
@@ -91,6 +92,7 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 		}
 	}
 
+	@Override
 	public Nifty getNifty() {
 		return nifty;
 	}

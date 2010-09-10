@@ -18,8 +18,7 @@ import org.newdawn.slick.tiled.TiledMap;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 
-public class AssetMgr
-{
+public class AssetMgr {
 
 	private String assetPathPrefix;
 	private String assetFallbackPathPrefix;
@@ -30,8 +29,7 @@ public class AssetMgr
 	private HashMap<Integer, ParticleSystem> particleSystems;
 	private HashMap<Integer, Music> musics;
 
-	public AssetMgr()
-	{
+	public AssetMgr() {
 
 		this.images = new HashMap<Integer, Image>();
 		this.sounds = new HashMap<Integer, Sound>();
@@ -42,50 +40,40 @@ public class AssetMgr
 		this.assetFallbackPathPrefix = Assets.Config.AssetManagerFallbackPath;
 	}
 
-	public void setAssetFallbackPathPrefix(String path)
-	{
+	public void setAssetFallbackPathPrefix(String path) {
 		this.assetFallbackPathPrefix = path;
 	}
 
-	public void setAssetPathPrefix(String path)
-	{
+	public void setAssetPathPrefix(String path) {
 		this.assetPathPrefix = path;
 
-		if (this.assetFallbackPathPrefix.equals(""))
-		{
+		if (this.assetFallbackPathPrefix.equals("")) {
 			setAssetFallbackPathPrefix(path);
 		}
 	}
 
-	static String combinePathStrings(String prefix, String suffix)
-	{
+	static String combinePathStrings(String prefix, String suffix) {
 
-		if (prefix.endsWith("\\") || prefix.endsWith("/"))
-		{
+		if (prefix.endsWith("\\") || prefix.endsWith("/")) {
 			prefix = prefix.substring(0, prefix.length() - 1);
 		}
 
-		if (suffix.startsWith("\\") || suffix.startsWith("/"))
-		{
+		if (suffix.startsWith("\\") || suffix.startsWith("/")) {
 			suffix = suffix.replaceFirst("[\\\\|/]", "");
 		}
 
 		return prefix + File.separator + suffix;
 	}
 
-	public void storeImage(int id, Image img)
-	{
+	public void storeImage(int id, Image img) {
 		this.images.put(id, img);
 	}
 
-	public Image storeImage(int id, String src) throws SlickException
-	{
+	public Image storeImage(int id, String src) throws SlickException {
 		Image img = null;
-		try
-		{
+		try {
 			img = new Image(combinePathStrings(this.assetPathPrefix, src));
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			img = new Image(combinePathStrings(this.assetFallbackPathPrefix,
 					src));
 		}
@@ -93,24 +81,19 @@ public class AssetMgr
 		return img;
 	}
 
-	public Image getImage(int id)
-	{
+	public Image getImage(int id) {
 		return this.images.get(id);
 	}
 
-	public void storeSound(int id, Sound snd)
-	{
+	public void storeSound(int id, Sound snd) {
 		this.sounds.put(id, snd);
 	}
 
-	public Sound storeSound(int id, String src) throws SlickException
-	{
+	public Sound storeSound(int id, String src) throws SlickException {
 		Sound snd = null;
-		try
-		{
+		try {
 			snd = new Sound(combinePathStrings(this.assetPathPrefix, src));
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			snd = new Sound(combinePathStrings(this.assetFallbackPathPrefix,
 					src));
 		}
@@ -118,24 +101,19 @@ public class AssetMgr
 		return snd;
 	}
 
-	public Sound getSound(int id)
-	{
+	public Sound getSound(int id) {
 		return this.sounds.get(id);
 	}
 
-	public void storeTiledMap(int id, TiledMap map)
-	{
+	public void storeTiledMap(int id, TiledMap map) {
 		this.tiledMaps.put(id, map);
 	}
 
-	public TiledMap storeTiledMap(int id, String src) throws SlickException
-	{
+	public TiledMap storeTiledMap(int id, String src) throws SlickException {
 		TiledMap map = null;
-		try
-		{
+		try {
 			map = new TiledMap(combinePathStrings(this.assetPathPrefix, src));
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			map = new TiledMap(combinePathStrings(this.assetFallbackPathPrefix,
 					src));
 		}
@@ -143,21 +121,17 @@ public class AssetMgr
 		return map;
 	}
 
-	public TiledMap getTiledMap(int id)
-	{
+	public TiledMap getTiledMap(int id) {
 		return this.tiledMaps.get(id);
 	}
 
 	public Animation storeAnimation(int id, String src, int cellWidth,
-			int cellHeight, int duration) throws SlickException
-	{
+			int cellHeight, int duration) throws SlickException {
 		SpriteSheet sheet = null;
-		try
-		{
+		try {
 			sheet = new SpriteSheet(combinePathStrings(this.assetPathPrefix,
 					src), cellWidth, cellHeight);
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			sheet = new SpriteSheet(combinePathStrings(
 					this.assetFallbackPathPrefix, src), cellWidth, cellHeight);
 		}
@@ -167,47 +141,39 @@ public class AssetMgr
 		return anim;
 	}
 
-	public Animation storeAnimation(int id, String src) throws SlickException
-	{
+	public Animation storeAnimation(int id, String src) throws SlickException {
 		StringTokenizer tok = new StringTokenizer(src, "_");
 		int cellWidth = 0;
 		int cellHeight = 0;
 		int duration = 0;
-		try
-		{
+		try {
 			tok.nextToken();
 			cellWidth = Integer.parseInt(tok.nextToken());
 			cellHeight = Integer.parseInt(tok.nextToken());
 			StringTokenizer tok2 = new StringTokenizer(tok.nextToken(), ".");
 			duration = Integer.parseInt(tok2.nextToken());
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			throw new IllegalArgumentException(
 					"Trying to load file in incorrect format? filename_96_96_75.png");
 		}
 		return storeAnimation(id, src, cellWidth, cellHeight, duration);
 	}
 
-	public void storeAnimation(int id, Animation anim)
-	{
+	public void storeAnimation(int id, Animation anim) {
 		this.animations.put(id, anim);
 	}
 
-	public Animation getAnimation(int id)
-	{
+	public Animation getAnimation(int id) {
 		return this.animations.get(id);
 	}
 
 	public ParticleSystem storeParticleSystem(int id, String imgPath,
-			String emitterCfgPath) throws SlickException
-	{
+			String emitterCfgPath) throws SlickException {
 		Image image = null;
-		try
-		{
+		try {
 			image = new Image(
 					combinePathStrings(this.assetPathPrefix, imgPath), false);
-		} catch (Exception e1)
-		{
+		} catch (Exception e1) {
 			image = new Image(combinePathStrings(this.assetFallbackPathPrefix,
 					imgPath), false);
 		}
@@ -215,20 +181,16 @@ public class AssetMgr
 		ParticleSystem system = new ParticleSystem(image);
 
 		ConfigurableEmitter emitter1 = null;
-		try
-		{
+		try {
 			File xmlFile = new File(combinePathStrings(this.assetPathPrefix,
 					emitterCfgPath));
 			emitter1 = ParticleIO.loadEmitter(xmlFile);
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			File xmlFile = new File(combinePathStrings(
 					this.assetFallbackPathPrefix, emitterCfgPath));
-			try
-			{
+			try {
 				emitter1 = ParticleIO.loadEmitter(xmlFile);
-			} catch (IOException e1)
-			{
+			} catch (IOException e1) {
 				throw new IllegalArgumentException(
 						"Wrong cfg file or incorrect path?");
 			}
@@ -238,28 +200,23 @@ public class AssetMgr
 		return system;
 	}
 
-	public void storeParticleSystem(int id, ParticleSystem system)
-	{
+	public void storeParticleSystem(int id, ParticleSystem system) {
 		this.particleSystems.put(id, system);
 	}
 
-	public ParticleSystem getParticleSystem(int id)
-	{
+	public ParticleSystem getParticleSystem(int id) {
 		return this.particleSystems.get(id);
 	}
 
-	public String makePathRelativeToAssetPath(String path)
-	{
+	public String makePathRelativeToAssetPath(String path) {
 		String result = AssetMgr.combinePathStrings(assetPathPrefix, path);
 		File file = new File(result);
 
-		if (!file.exists())
-		{
+		if (!file.exists()) {
 			result = AssetMgr.combinePathStrings(assetFallbackPathPrefix, path);
 			file = new File(result);
 
-			if (!file.exists())
-			{
+			if (!file.exists()) {
 				throw new RuntimeException("File " + path
 						+ " neither found in " + assetPathPrefix + " nor in "
 						+ assetFallbackPathPrefix);
@@ -268,20 +225,16 @@ public class AssetMgr
 		return result;
 	}
 
-	public void storeMusic(int id, Music song)
-	{
+	public void storeMusic(int id, Music song) {
 		this.musics.put(id, song);
 	}
 
-	public Music storeMusic(int id, String src) throws SlickException
-	{
+	public Music storeMusic(int id, String src) throws SlickException {
 		Music song = null;
-		try
-		{
+		try {
 			song = new Music(combinePathStrings(this.assetPathPrefix, src));
 
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			song = new Music(combinePathStrings(this.assetFallbackPathPrefix,
 					src));
 		}
@@ -289,8 +242,7 @@ public class AssetMgr
 		return song;
 	}
 
-	public Music getMusic(int id)
-	{
+	public Music getMusic(int id) {
 		return this.musics.get(id);
 	}
 }

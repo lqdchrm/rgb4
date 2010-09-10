@@ -11,13 +11,11 @@ import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
 import de.fhtrier.gdig.engine.management.Factory;
 import de.fhtrier.gdig.engine.sound.SoundManager;
 
-public class LandingState extends AbstractAssetState
-{
+public class LandingState extends AbstractAssetState {
 
 	private Animation anim;
 
-	public LandingState(Player player, Factory factory) throws SlickException
-	{
+	public LandingState(Player player, Factory factory) throws SlickException {
 		super(player, Assets.Player.LandAnimId,
 				Assets.Player.LandAnimImagePath, EntityOrder.Player, factory);
 
@@ -28,25 +26,21 @@ public class LandingState extends AbstractAssetState
 	}
 
 	@Override
-	public void enter()
-	{
+	public void enter() {
 		anim.restart();
 		SoundManager.playSound(Assets.Sounds.PlayerLandSoundId, 1f, 0.1f);
 	}
 
 	@Override
-	public void leave()
-	{
+	public void leave() {
 
 	}
 
 	@Override
-	public void update()
-	{
+	public void update() {
 
 		// check for anim end
-		if (anim.isStopped())
-		{
+		if (anim.isStopped()) {
 			getPlayer().applyAction(PlayerActions.DoNothing);
 		}
 	}

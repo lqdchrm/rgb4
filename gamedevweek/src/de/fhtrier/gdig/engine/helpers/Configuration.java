@@ -35,9 +35,6 @@ import javax.swing.event.ChangeListener;
 
 import com.sun.org.apache.xpath.internal.compiler.Keywords;
 
-import de.fhtrier.gdig.engine.helpers.Configuration.CommandlineParameter;
-import de.fhtrier.gdig.engine.helpers.Configuration.DefaultTrue;
-
 /**
  * This abstract class allows you to easaly configurate your Program. To use its
  * functunalety extends from this Class. Every {@link Keywords int},
@@ -60,8 +57,7 @@ import de.fhtrier.gdig.engine.helpers.Configuration.DefaultTrue;
  * @author Loki
  * 
  */
-public abstract class Configuration
-{
+public abstract class Configuration {
 
 	/**
 	 * den Namen welcher als Kommandozeilen argument übergeben wird.
@@ -70,16 +66,14 @@ public abstract class Configuration
 	 */
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
-	protected @interface CommandlineParameter
-	{
+	protected @interface CommandlineParameter {
 
 		String value();
 	}
 
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
-	protected @interface ShowAsSlider
-	{
+	protected @interface ShowAsSlider {
 
 		int maxValue();
 
@@ -96,23 +90,19 @@ public abstract class Configuration
 	 */
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
-	protected @interface DefaultTrue
-	{
+	protected @interface DefaultTrue {
 	}
 
 	private Map<String, Field> commandMap;
 
-	public Configuration()
-	{
+	public Configuration() {
 
 		commandMap = new HashMap<String, Field>();
 		Field[] declaredFields = getClass().getDeclaredFields();
-		for (Field field : declaredFields)
-		{
+		for (Field field : declaredFields) {
 			CommandlineParameter nameAnnotation = field
 					.getAnnotation(CommandlineParameter.class);
-			if (nameAnnotation != null)
-			{
+			if (nameAnnotation != null) {
 				if (!checkFeasabel(field.getType()))
 					throw new IllegalArgumentException(
 							"Field is not of Supported as Command");
@@ -127,8 +117,7 @@ public abstract class Configuration
 	 * @param object
 	 * @return
 	 */
-	private boolean checkFeasabel(Class<?> object)
-	{
+	private boolean checkFeasabel(Class<?> object) {
 		if (object == String.class)
 			return true;
 		if (object == int.class)
@@ -144,13 +133,10 @@ public abstract class Configuration
 		return false;
 	}
 
-	public void save(OutputStream out)
-	{
-		try
-		{
+	public void save(OutputStream out) {
+		try {
 			Properties p = new Properties();
-			for (Field field : getClass().getDeclaredFields())
-			{
+			for (Field field : getClass().getDeclaredFields()) {
 				field.setAccessible(true);
 				if ((field.getModifiers() & Modifier.TRANSIENT) == Modifier.TRANSIENT)
 					continue;
@@ -158,51 +144,39 @@ public abstract class Configuration
 				String value = null;
 
 				Class<?> fieldType = field.getType();
-				if (fieldType == String.class)
-				{
+				if (fieldType == String.class) {
 					value = (String) field.get(this);
-				} else if (fieldType == int.class)
-				{
+				} else if (fieldType == int.class) {
 					value = field.get(this).toString();
-				} else if (fieldType == float.class)
-				{
+				} else if (fieldType == float.class) {
 					value = field.get(this).toString();
-				} else if (fieldType == boolean.class)
-				{
+				} else if (fieldType == boolean.class) {
 					value = field.get(this).toString();
-				} else if (fieldType == InetSocketAddress.class)
-				{
+				} else if (fieldType == InetSocketAddress.class) {
 					value = field.get(this).toString();
-				} else if (fieldType == File.class)
-				{
+				} else if (fieldType == File.class) {
 					value = field.get(this).toString();
-				} else if (fieldType.isEnum())
-				{
+				} else if (fieldType.isEnum()) {
 					Enum string = (Enum) field.get(this);
 					value = string.name();
 				}
 
-				if (value != null)
-				{
+				if (value != null) {
 					p.setProperty(field.getName(), value);
 				}
 				field.setAccessible(false);
 			}
 			p.store(out, "");
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void load(InputStream inStream)
-	{
-		try
-		{
+	public void load(InputStream inStream) {
+		try {
 			Properties p = new Properties();
 			p.load(inStream);
-			for (Field field : getClass().getDeclaredFields())
-			{
+			for (Field field : getClass().getDeclaredFields()) {
 				field.setAccessible(true);
 				String value = p.getProperty(field.getName());
 				if ((field.getModifiers() & Modifier.TRANSIENT) == Modifier.TRANSIENT)
@@ -211,22 +185,16 @@ public abstract class Configuration
 					continue;
 
 				Class<?> filedType = field.getType();
-				if (filedType == String.class)
-				{
+				if (filedType == String.class) {
 					field.set(this, value);
-				} else if (filedType == int.class)
-				{
+				} else if (filedType == int.class) {
 					field.set(this, Integer.parseInt(value));
-				} else if (filedType == float.class)
-				{
+				} else if (filedType == float.class) {
 					field.set(this, Float.parseFloat(value));
-				} else if (filedType == boolean.class)
-				{
+				} else if (filedType == boolean.class) {
 					field.set(this, Boolean.parseBoolean(value));
-				} else if (filedType == InetSocketAddress.class)
-				{
-					if (value.contains(":"))
-					{
+				} else if (filedType == InetSocketAddress.class) {
+					if (value.contains(":")) {
 						String[] split = value.split(":");
 						if (split.length != 2)
 							throw new IllegalArgumentException(
@@ -234,18 +202,15 @@ public abstract class Configuration
 						InetSocketAddress inetSocketAddress = new InetSocketAddress(
 								split[0], Integer.parseInt(split[1]));
 						field.set(this, inetSocketAddress);
-					} else
-					{
+					} else {
 						InetSocketAddress inetSocketAddress = new InetSocketAddress(
 								value, 0);
 						field.set(this, inetSocketAddress);
 					}
 
-				} else if (filedType == File.class)
-				{
+				} else if (filedType == File.class) {
 					field.set(this, new File(value));
-				} else if (filedType.isEnum())
-				{
+				} else if (filedType.isEnum()) {
 					Class<? extends Enum> type = (Class<? extends Enum>) field
 							.getType();
 					Enum selectedEnum = Enum.valueOf(type, value);
@@ -253,45 +218,34 @@ public abstract class Configuration
 				}
 				field.setAccessible(false);
 			}
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void parseCommandLine(String[] args)
-	{
-		try
-		{
-			for (int i = 0; i < args.length; ++i)
-			{
+	public void parseCommandLine(String[] args) {
+		try {
+			for (int i = 0; i < args.length; ++i) {
 				if (!args[i].startsWith("--"))
 					continue;
 
 				Field field = this.commandMap.get(args[i].substring(2));
-				if (field != null)
-				{
+				if (field != null) {
 					++i;
 					Class<?> filedType = field.getType();
-					if (filedType == String.class)
-					{
+					if (filedType == String.class) {
 						field.set(this, args[i]);
-					} else if (filedType == int.class)
-					{
+					} else if (filedType == int.class) {
 						field.set(this, Integer.parseInt(args[i]));
-					} else if (filedType == float.class)
-					{
+					} else if (filedType == float.class) {
 						field.set(this, Float.parseFloat(args[i]));
-					} else if (filedType == boolean.class)
-					{
+					} else if (filedType == boolean.class) {
 						--i;
 						DefaultTrue shuldBeFalse = field
 								.getAnnotation(DefaultTrue.class);
 						field.set(this, shuldBeFalse == null);
-					} else if (filedType == InetSocketAddress.class)
-					{
-						if (args[i].contains(":"))
-						{
+					} else if (filedType == InetSocketAddress.class) {
+						if (args[i].contains(":")) {
 							String[] split = args[i].split(":");
 							if (split.length != 2)
 								throw new IllegalArgumentException(
@@ -299,17 +253,14 @@ public abstract class Configuration
 							InetSocketAddress inetSocketAddress = new InetSocketAddress(
 									split[0], Integer.parseInt(split[1]));
 							field.set(this, inetSocketAddress);
-						} else
-						{
+						} else {
 							InetSocketAddress inetSocketAddress = new InetSocketAddress(
 									args[i], 0);
 							field.set(this, inetSocketAddress);
 						}
-					} else if (filedType == File.class)
-					{
+					} else if (filedType == File.class) {
 						field.set(this, new File(args[i]));
-					} else if (filedType.isEnum())
-					{
+					} else if (filedType.isEnum()) {
 						Class<? extends Enum> type = (Class<? extends Enum>) field
 								.getType();
 						Enum selectedEnum = Enum.valueOf(type, args[i]);
@@ -318,25 +269,21 @@ public abstract class Configuration
 				}
 
 			}
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public void showEditor(String strTitle)
-	{
+	public void showEditor(String strTitle) {
 		showEditor(strTitle, new JPanel[] { getEdittingPanel() });
 	}
 
-	public static void showEditor(String strTitle, JPanel[] panels)
-	{
+	public static void showEditor(String strTitle, JPanel[] panels) {
 		showEditor(strTitle, panels, null);
 	}
 
 	public static void showEditor(String strTitle, JPanel[] panels,
-			Point location)
-	{
+			Point location) {
 		JFrame f = new JFrame(strTitle);
 		if (location != null)
 			f.setLocation(location);
@@ -346,8 +293,7 @@ public abstract class Configuration
 		BoxLayout boxLayout = new BoxLayout(p, BoxLayout.X_AXIS);
 		p.setLayout(boxLayout);
 
-		for (JPanel jPanel : panels)
-		{
+		for (JPanel jPanel : panels) {
 			p.add(jPanel);
 		}
 		f.add(new JScrollPane(p));
@@ -355,92 +301,75 @@ public abstract class Configuration
 		f.setVisible(true);
 	}
 
-	public JPanel getEdittingPanel()
-	{
+	public JPanel getEdittingPanel() {
 
-		try
-		{
+		try {
 			JPanel panel = new JPanel();
 			panel.setBorder(BorderFactory.createTitledBorder(getClass()
 					.getSimpleName()));
 			BoxLayout boxLayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
 			panel.setLayout(boxLayout);
 
-			for (final Field field : getClass().getDeclaredFields())
-			{
+			for (final Field field : getClass().getDeclaredFields()) {
 				field.setAccessible(true);
 				Object value = field.get(this);
 				JLabel jLabel = new JLabel(field.getName());
 				panel.add(jLabel);
 
 				Class<?> filedType = field.getType();
-				if (filedType == String.class)
-				{
+				if (filedType == String.class) {
 
 					final JTextField jTextField = new JTextField((String) value);
-					jTextField.addActionListener(new ActionListener()
-					{
+					jTextField.addActionListener(new ActionListener() {
 
 						@Override
-						public void actionPerformed(ActionEvent e)
-						{
-							try
-							{
+						public void actionPerformed(ActionEvent e) {
+							try {
 								field.setAccessible(true);
 								field.set(Configuration.this,
 										jTextField.getText());
 								field.setAccessible(false);
-							} catch (IllegalArgumentException e1)
-							{
+							} catch (IllegalArgumentException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
-							} catch (IllegalAccessException e1)
-							{
+							} catch (IllegalAccessException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 						}
 					});
 					panel.add(jTextField);
-				} else if (field.getType().isEnum())
-				{
+				} else if (field.getType().isEnum()) {
 					Object[] enumConstants = field.getType().getEnumConstants();
 					final JComboBox combo = new JComboBox(enumConstants);
 					panel.add(combo);
 					// Todo
-					combo.addActionListener(new ActionListener()
-					{
+					combo.addActionListener(new ActionListener() {
 
 						@Override
-						public void actionPerformed(ActionEvent e)
-						{
+						public void actionPerformed(ActionEvent e) {
 							Class<? extends Enum> type = (Class<? extends Enum>) field
 									.getType();
 							Enum selectedEnum = Enum.valueOf(type, combo
 									.getSelectedItem().toString());
-							try
-							{
+							try {
 								field.setAccessible(true);
 								field.set(Configuration.this, selectedEnum);
 								field.setAccessible(false);
-							} catch (IllegalArgumentException e1)
-							{
+							} catch (IllegalArgumentException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
-							} catch (IllegalAccessException e1)
-							{
+							} catch (IllegalAccessException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 
 						}
 					});
-				} else if (filedType == int.class)
-				{
+				} else if (filedType == int.class) {
 					ShowAsSlider showSlider = field
 							.getAnnotation(ShowAsSlider.class);
-					if (showSlider != null)
-					{
+					if (showSlider != null) {
 						int maxValue = showSlider.maxValue();
 						int minValue = showSlider.minValue();
 						final JSlider jSlider = new JSlider(minValue, maxValue,
@@ -449,26 +378,21 @@ public abstract class Configuration
 						final JLabel anzeige = new JLabel(Integer.valueOf(
 								jSlider.getValue()).toString());
 						panel.add(anzeige);
-						jSlider.addChangeListener(new ChangeListener()
-						{
+						jSlider.addChangeListener(new ChangeListener() {
 
 							@Override
-							public void stateChanged(ChangeEvent arg0)
-							{
-								try
-								{
+							public void stateChanged(ChangeEvent arg0) {
+								try {
 									field.setAccessible(true);
 									anzeige.setText(Integer.valueOf(
 											jSlider.getValue()).toString());
 									field.set(Configuration.this,
 											jSlider.getValue());
 									field.setAccessible(false);
-								} catch (IllegalArgumentException e)
-								{
+								} catch (IllegalArgumentException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
-								} catch (IllegalAccessException e)
-								{
+								} catch (IllegalAccessException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
@@ -476,8 +400,7 @@ public abstract class Configuration
 							}
 						});
 
-					} else
-					{
+					} else {
 						SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(
 								((Integer) value).intValue(),
 								Integer.MIN_VALUE, Integer.MAX_VALUE, 1);
@@ -486,25 +409,20 @@ public abstract class Configuration
 						panel.add(jSpinner);
 						jSpinner.setPreferredSize(new Dimension(60, jSpinner
 								.getPreferredSize().height));
-						jSpinner.addChangeListener(new ChangeListener()
-						{
+						jSpinner.addChangeListener(new ChangeListener() {
 
 							@Override
-							public void stateChanged(ChangeEvent e)
-							{
-								try
-								{
+							public void stateChanged(ChangeEvent e) {
+								try {
 									field.setAccessible(true);
 									field.set(Configuration.this,
 											((Integer) jSpinner.getValue())
 													.intValue());
 									field.setAccessible(false);
-								} catch (IllegalArgumentException e1)
-								{
+								} catch (IllegalArgumentException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
-								} catch (IllegalAccessException e1)
-								{
+								} catch (IllegalAccessException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
@@ -512,12 +430,10 @@ public abstract class Configuration
 							}
 						});
 					}
-				} else if (filedType == float.class)
-				{
+				} else if (filedType == float.class) {
 					ShowAsSlider showSlider = field
 							.getAnnotation(ShowAsSlider.class);
-					if (showSlider != null)
-					{
+					if (showSlider != null) {
 						int maxValue = showSlider.maxValue();
 						int minValue = showSlider.minValue();
 						final JSlider jSlider = new JSlider(minValue, maxValue,
@@ -526,14 +442,11 @@ public abstract class Configuration
 						final JLabel anzeige = new JLabel(Integer.valueOf(
 								jSlider.getValue()).toString());
 						panel.add(anzeige);
-						jSlider.addChangeListener(new ChangeListener()
-						{
+						jSlider.addChangeListener(new ChangeListener() {
 
 							@Override
-							public void stateChanged(ChangeEvent arg0)
-							{
-								try
-								{
+							public void stateChanged(ChangeEvent arg0) {
+								try {
 									field.setAccessible(true);
 									field.set(Configuration.this, Integer
 											.valueOf(jSlider.getValue())
@@ -541,12 +454,10 @@ public abstract class Configuration
 									anzeige.setText(Integer.valueOf(
 											jSlider.getValue()).toString());
 									field.setAccessible(false);
-								} catch (IllegalArgumentException e)
-								{
+								} catch (IllegalArgumentException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
-								} catch (IllegalAccessException e)
-								{
+								} catch (IllegalAccessException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
@@ -554,10 +465,9 @@ public abstract class Configuration
 							}
 						});
 
-					} else
-					{
+					} else {
 						SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(
-								(double) ((Float) value).floatValue(),
+								((Float) value).floatValue(),
 								-Double.MAX_VALUE, Double.MAX_VALUE, 1);
 						final JSpinner jSpinner = new JSpinner(
 								spinnerNumberModel);
@@ -567,25 +477,20 @@ public abstract class Configuration
 						jSpinner.setEditor(editor);
 						jSpinner.setPreferredSize(new Dimension(60, jSpinner
 								.getPreferredSize().height));
-						jSpinner.addChangeListener(new ChangeListener()
-						{
+						jSpinner.addChangeListener(new ChangeListener() {
 
 							@Override
-							public void stateChanged(ChangeEvent e)
-							{
-								try
-								{
+							public void stateChanged(ChangeEvent e) {
+								try {
 									field.setAccessible(true);
 									field.set(Configuration.this,
 											((Double) jSpinner.getValue())
 													.floatValue());
 									field.setAccessible(false);
-								} catch (IllegalArgumentException e1)
-								{
+								} catch (IllegalArgumentException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
-								} catch (IllegalAccessException e1)
-								{
+								} catch (IllegalAccessException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
@@ -593,37 +498,30 @@ public abstract class Configuration
 							}
 						});
 					}
-				} else if (filedType == boolean.class)
-				{
+				} else if (filedType == boolean.class) {
 					final JCheckBox jCheckBox = new JCheckBox();
 					Boolean b = (Boolean) field.get(this);
 					jCheckBox.setSelected(b);
 					panel.add(jCheckBox);
-					jCheckBox.addActionListener(new ActionListener()
-					{
+					jCheckBox.addActionListener(new ActionListener() {
 
 						@Override
-						public void actionPerformed(ActionEvent e)
-						{
-							try
-							{
+						public void actionPerformed(ActionEvent e) {
+							try {
 								field.setAccessible(true);
 								field.set(Configuration.this,
 										(jCheckBox.isSelected()));
 								field.setAccessible(false);
-							} catch (IllegalArgumentException e1)
-							{
+							} catch (IllegalArgumentException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
-							} catch (IllegalAccessException e1)
-							{
+							} catch (IllegalAccessException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 						}
 					});
-				} else
-				{
+				} else {
 					panel.remove(jLabel);
 				}
 				// if (filedType == InetSocketAddress.class)
@@ -637,8 +535,7 @@ public abstract class Configuration
 				field.setAccessible(false);
 			}
 			return panel;
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}

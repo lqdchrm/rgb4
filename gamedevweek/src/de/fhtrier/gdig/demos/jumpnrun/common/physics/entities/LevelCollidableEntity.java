@@ -14,10 +14,10 @@ import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.physics.Collisions;
 import de.fhtrier.gdig.engine.physics.entities.CollidableEntity;
 
-public class LevelCollidableEntity extends CollidableEntity
-{
+public class LevelCollidableEntity extends CollidableEntity {
 
 	protected TiledMap map;
+	protected Level level;
 
 	private boolean leftCollision = false;
 	private boolean rightCollision = false;
@@ -32,8 +32,7 @@ public class LevelCollidableEntity extends CollidableEntity
 	 * Custom entity class which implements level collisions (ugly ?) needs to
 	 * have TiledMap and Bounds set before you should call something
 	 */
-	public LevelCollidableEntity(int id, EntityType type)
-	{
+	public LevelCollidableEntity(int id, EntityType type) {
 		super(id, type);
 	}
 
@@ -44,8 +43,7 @@ public class LevelCollidableEntity extends CollidableEntity
 	 * 
 	 * @return transformed Shape
 	 */
-	private Shape getTransformedBounds()
-	{
+	public Shape getTransformedBounds() {
 		return this.getBounds().transform(
 				Transform.createTranslateTransform(this.getData()[Entity.X],
 						this.getData()[Entity.Y]));
@@ -57,15 +55,12 @@ public class LevelCollidableEntity extends CollidableEntity
 	 * @return hasCollided
 	 */
 	@Override
-	public boolean handleCollisions()
-	{
-		if (!isActive())
-		{
+	public boolean handleCollisions() {
+		if (!isActive()) {
 			return false;
 		}
 
-		if (Constants.Debug.showCollisions)
-		{
+		if (Constants.Debug.showCollisions) {
 			markCollisionTiles(12);
 		}
 
@@ -74,11 +69,9 @@ public class LevelCollidableEntity extends CollidableEntity
 		boolean collided = false;
 
 		// do it two times: one for each direction
-		for (int i = 0; i < 2; i++)
-		{
+		for (int i = 0; i < 2; i++) {
 
-			if (this.map != null && this.getBounds() != null)
-			{
+			if (this.map != null && this.getBounds() != null) {
 
 				Shape bbEntity = this.getTransformedBounds();
 
@@ -100,11 +93,9 @@ public class LevelCollidableEntity extends CollidableEntity
 						/ this.map.getTileHeight() + 1);
 
 				for (int y = Math.max(0, topTile); y < Math.min(
-						this.map.getHeight(), bottomTile); y++)
-				{
+						this.map.getHeight(), bottomTile); y++) {
 					for (int x = Math.max(0, leftTile); x < Math.min(
-							this.map.getWidth(), rightTile); x++)
-					{
+							this.map.getWidth(), rightTile); x++) {
 
 						// items
 						final int tileId = this.map.getTileId(x, y,
@@ -116,32 +107,27 @@ public class LevelCollidableEntity extends CollidableEntity
 								this.map.getTileWidth(),
 								this.map.getTileHeight());
 
-						if (tileId > 0)
-						{
+						if (tileId > 0) {
 							collided |= collisionWithTile(bbTile);
 						}
 
 						int actionTileId = this.map.getTileId(x, y,
 								Constants.Level.logicLayer);
 
-						if (actionTileId > 0)
-						{
+						if (actionTileId > 0) {
 							float[] intersectionDepth = Collisions
 									.getIntersectionDepth(bbTile,
 											this.getTransformedBounds());
 							if (level != null
-									&& (intersectionDepth[Entity.X] != 0 || intersectionDepth[Entity.Y] != 0))
-							{
+									&& (intersectionDepth[Entity.X] != 0 || intersectionDepth[Entity.Y] != 0)) {
 
-								if (Constants.Debug.tileMapLogicDebug)
-								{
+								if (Constants.Debug.tileMapLogicDebug) {
 									Log.debug("Colission with: " + actionTileId);
 								}
 
 								actionTileId -= level.firstLogicGID;
 								++actionTileId;
-								if (actionTileId > 32 && actionTileId <= 64)
-								{
+								if (actionTileId > 32 && actionTileId <= 64) {
 									SpawnPoint randomTeleporterExitPoint = level
 											.getRandomTeleporterExitPoint(actionTileId - 32);
 									this.getData()[Entity.X] = randomTeleporterExitPoint.x;
@@ -154,21 +140,16 @@ public class LevelCollidableEntity extends CollidableEntity
 			}
 
 			if (collided
-					&& (correction[Entity.X] != 0 || correction[Entity.Y] != 0))
-			{
+					&& (correction[Entity.X] != 0 || correction[Entity.Y] != 0)) {
 				// correct position
 				if (Math.abs(correction[Entity.X]) <= Math
-						.abs(correction[Entity.Y]))
-				{
-					if (leftCollision || rightCollision || !isOnGround())
-					{
+						.abs(correction[Entity.Y])) {
+					if (leftCollision || rightCollision || !isOnGround()) {
 						this.getData()[Entity.X] += correction[Entity.X];
 						this.getVel()[Entity.X] = 0.0f;
 					}
-				} else
-				{
-					if (topCollision || bottomCollision)
-					{
+				} else {
+					if (topCollision || bottomCollision) {
 						this.getData()[Entity.Y] += correction[Entity.Y];
 						this.getVel()[Entity.Y] = 0.0f;
 					}
@@ -187,8 +168,7 @@ public class LevelCollidableEntity extends CollidableEntity
 	 *            The Tile to check collision with
 	 * @return Returns if Entity collides with bbTile
 	 */
-	private boolean collisionWithTile(Shape bbTile)
-	{
+	private boolean collisionWithTile(Shape bbTile) {
 
 		Shape bbEntity = this.getTransformedBounds();
 
@@ -202,8 +182,7 @@ public class LevelCollidableEntity extends CollidableEntity
 				+ Constants.GamePlayConstants.colissionPointDistance,
 				bbEntity.getCenterY());
 
-		if (bbEntity.getHeight() >= bbTile.getHeight() * 2)
-		{
+		if (bbEntity.getHeight() >= bbTile.getHeight() * 2) {
 			leftCollision |= bbTile.contains(bbEntity.getMinX()
 					- Constants.GamePlayConstants.colissionPointDistance,
 					bbEntity.getMaxY() - bbTile.getHeight() / 2);
@@ -234,8 +213,7 @@ public class LevelCollidableEntity extends CollidableEntity
 				bbEntity.getMaxY()
 						+ Constants.GamePlayConstants.colissionPointDistance);
 
-		if (bbEntity.getWidth() >= bbTile.getWidth() * 2)
-		{
+		if (bbEntity.getWidth() >= bbTile.getWidth() * 2) {
 			topCollision |= bbTile
 					.contains(
 							bbEntity.getMaxX() - bbTile.getWidth() / 2,
@@ -264,12 +242,10 @@ public class LevelCollidableEntity extends CollidableEntity
 		final float absDepthX = Math.abs(depth[Entity.X]);
 		final float absDepthY = Math.abs(depth[Entity.Y]);
 
-		if (absDepthX > 0 || absDepthY > 0)
-		{
+		if (absDepthX > 0 || absDepthY > 0) {
 			collided = true;
 			if (absDepthX + absDepthY > Math.abs(correction[Entity.X])
-					+ Math.abs(correction[Entity.Y]))
-			{
+					+ Math.abs(correction[Entity.Y])) {
 				correction[Entity.X] = depth[Entity.X];
 				correction[Entity.Y] = depth[Entity.Y];
 			}
@@ -277,28 +253,23 @@ public class LevelCollidableEntity extends CollidableEntity
 		return collided;
 	}
 
-	public boolean isLeftCollision()
-	{
+	public boolean isLeftCollision() {
 		return leftCollision;
 	}
 
-	public boolean isRightCollision()
-	{
+	public boolean isRightCollision() {
 		return rightCollision;
 	}
 
-	public boolean isTopCollision()
-	{
+	public boolean isTopCollision() {
 		return topCollision;
 	}
 
-	public boolean isBottomCollision()
-	{
+	public boolean isBottomCollision() {
 		return bottomCollision;
 	}
 
-	public boolean isOnGround()
-	{
+	public boolean isOnGround() {
 		if (bottomLeftCollision && bottomRightCollision)
 			return true;
 		if (!bottomCollision && bottomLeftCollision && leftCollision)
@@ -315,11 +286,9 @@ public class LevelCollidableEntity extends CollidableEntity
 	 * for all tiles
 	 */
 	@Deprecated
-	public void markCollisionTiles(final int offset)
-	{
+	public void markCollisionTiles(final int offset) {
 
-		if (this.map != null && this.getBounds() != null)
-		{
+		if (this.map != null && this.getBounds() != null) {
 
 			// Player BoundingBox
 			Shape bbEntity = getTransformedBounds();
@@ -335,19 +304,15 @@ public class LevelCollidableEntity extends CollidableEntity
 					/ map.getTileHeight())) - 1;
 
 			// mark Collision Tiles
-			for (int y = topTile - 1; y <= bottomTile + 1; y++)
-			{
+			for (int y = topTile - 1; y <= bottomTile + 1; y++) {
 
-				if (y < 0 || y >= this.map.getHeight())
-				{
+				if (y < 0 || y >= this.map.getHeight()) {
 					continue;
 				}
 
-				for (int x = leftTile - 1; x <= rightTile + 1; x++)
-				{
+				for (int x = leftTile - 1; x <= rightTile + 1; x++) {
 
-					if (x < 0 || x >= this.map.getWidth())
-					{
+					if (x < 0 || x >= this.map.getWidth()) {
 						continue;
 					}
 
@@ -355,8 +320,7 @@ public class LevelCollidableEntity extends CollidableEntity
 					// TODO read from special layer
 					final int tileId = this.map.getTileId(x, y,
 							Constants.Level.collisionLayer);
-					if (tileId > 0)
-					{
+					if (tileId > 0) {
 
 						// Bounding box for current tile
 						Rectangle bbTile = new Rectangle(
@@ -364,18 +328,14 @@ public class LevelCollidableEntity extends CollidableEntity
 								y * map.getTileHeight(), map.getTileWidth(),
 								map.getTileHeight());
 
-						if (bbEntity.intersects(bbTile))
-						{
+						if (bbEntity.intersects(bbTile)) {
 							// mark tile
-							if (tileId < offset)
-							{
+							if (tileId < offset) {
 								this.map.setTileId(x, y, 0, tileId + offset);
 							}
-						} else
-						{
+						} else {
 							// unmark tile
-							if (tileId > offset)
-							{
+							if (tileId > offset) {
 								this.map.setTileId(x, y, 0, tileId - offset);
 							}
 						}
@@ -385,19 +345,16 @@ public class LevelCollidableEntity extends CollidableEntity
 		}
 	}
 
-	public void setMap(final TiledMap map)
-	{
+	public void setMap(final TiledMap map) {
 		this.map = map;
 	}
 
-	public void setOnGround(final boolean onGround)
-	{
+	public void setOnGround(final boolean onGround) {
 		this.bottomCollision = bottomLeftCollision = bottomRightCollision = onGround;
 	}
 
-	public void setLevel(Level level)
-	{
-		super.setLevel(level);
+	public void setLevel(Level level) {
+		this.level = level;
 		this.map = level.getMap();
 	}
 }

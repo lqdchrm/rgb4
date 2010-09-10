@@ -13,7 +13,7 @@ import de.fhtrier.gdig.engine.sound.SoundManager;
 public class AbstractShootState extends AbstractAssetState {
 
 	private Animation anim;
-	
+
 	public AbstractShootState(Player player, int animAssetId,
 			String animAssetPath, int entityOrder, Factory factory)
 			throws SlickException {
@@ -47,6 +47,6 @@ public class AbstractShootState extends AbstractAssetState {
 	@Override
 	public void leave() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

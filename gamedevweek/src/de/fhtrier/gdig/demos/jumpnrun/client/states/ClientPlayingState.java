@@ -52,13 +52,11 @@ import de.fhtrier.gdig.engine.physics.CollisionManager;
 import de.fhtrier.gdig.engine.physics.entities.CollidableEntity;
 import de.fhtrier.gdig.engine.sound.SoundManager;
 
-enum LocalState
-{
+enum LocalState {
 	JOINING, CREATINGPLAYER, PLAYING, DISCONNECTING, EXITING
 }
 
-public class ClientPlayingState extends PlayingState
-{
+public class ClientPlayingState extends PlayingState {
 
 	private LocalState localState;
 
@@ -67,16 +65,14 @@ public class ClientPlayingState extends PlayingState
 	private ServerData recv;
 	private ClientData send;
 
-	public ClientPlayingState()
-	{
+	public ClientPlayingState() {
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ClientData();
 	}
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game)
-			throws SlickException
-	{
+			throws SlickException {
 		// TODO Auto-generated method stub
 		super.enter(container, game);
 
@@ -90,28 +86,23 @@ public class ClientPlayingState extends PlayingState
 		SoundManager.init();
 	}
 
-	private boolean handleProtocolCommands(INetworkCommand cmd)
-	{
+	private boolean handleProtocolCommands(INetworkCommand cmd) {
 
 		// AckJoin tells us, we have successfully joined the game
-		if (cmd instanceof AckJoin)
-		{
-			if (localState != LocalState.JOINING)
-			{
+		if (cmd instanceof AckJoin) {
+			if (localState != LocalState.JOINING) {
 				throw new RuntimeException("Local state was "
 						+ localState.name() + " but should be "
 						+ LocalState.JOINING.name());
 			}
 
-			if (!ClientGame.isSpectator)
-			{
+			if (!ClientGame.isSpectator) {
 				// Joining successful -> create player
 				// ask for player to be created by the server
 				NetworkComponent.getInstance().sendCommand(
 						new QueryCreateEntity(EntityType.PLAYER));
 				setState(LocalState.CREATINGPLAYER);
-			} else
-			{
+			} else {
 				// we are only spectator -> don't create player
 				setState(LocalState.PLAYING);
 			}
@@ -122,10 +113,8 @@ public class ClientPlayingState extends PlayingState
 			return true;
 		}
 
-		if (cmd instanceof AckLeave)
-		{
-			if (localState != LocalState.DISCONNECTING)
-			{
+		if (cmd instanceof AckLeave) {
+			if (localState != LocalState.DISCONNECTING) {
 				throw new RuntimeException("Local state was "
 						+ localState.name() + " but should be "
 						+ LocalState.DISCONNECTING.name());
@@ -140,8 +129,7 @@ public class ClientPlayingState extends PlayingState
 		// DoCreatePlayer tells us to create a player, e.g. because someone
 		// has
 		// joined
-		if (cmd instanceof DoCreateEntity)
-		{
+		if (cmd instanceof DoCreateEntity) {
 			DoCreateEntity dce = (DoCreateEntity) cmd;
 
 			// Create Entity
@@ -153,8 +141,7 @@ public class ClientPlayingState extends PlayingState
 			getLevel().add(getFactory().getEntity(id));
 
 			// HACK special treatment for players
-			if (e instanceof Player)
-			{
+			if (e instanceof Player) {
 				NetworkComponent.getInstance().sendCommand(
 						new QueryPlayerCondition(id));
 			}
@@ -163,16 +150,14 @@ public class ClientPlayingState extends PlayingState
 
 		// DoRemoveEntity tells us to drop an Entity, e.g. because someone has
 		// left
-		if (cmd instanceof DoRemoveEntity)
-		{
+		if (cmd instanceof DoRemoveEntity) {
 			DoRemoveEntity dre = (DoRemoveEntity) cmd;
 
 			// Remove entity
 			int id = dre.getEntityId();
 
 			if (getLevel().getCurrentPlayer() != null
-					&& id == getLevel().getCurrentPlayer().getId())
-			{
+					&& id == getLevel().getCurrentPlayer().getId()) {
 				getLevel().setCurrentPlayer(-1);
 			}
 
@@ -189,8 +174,7 @@ public class ClientPlayingState extends PlayingState
 		}
 
 		// DoPlaySound... well it just does what it says
-		if (cmd instanceof DoPlaySound)
-		{
+		if (cmd instanceof DoPlaySound) {
 			DoPlaySound dps = (DoPlaySound) cmd;
 
 			SoundManager.playSound(dps.getSoundAssetId());
@@ -198,10 +182,8 @@ public class ClientPlayingState extends PlayingState
 		}
 
 		// AckCreatePlayer tells us which player is our's
-		if (cmd instanceof AckCreatePlayer)
-		{
-			if (localState != LocalState.CREATINGPLAYER)
-			{
+		if (cmd instanceof AckCreatePlayer) {
+			if (localState != LocalState.CREATINGPLAYER) {
 				throw new RuntimeException("Local state was "
 						+ localState.name() + " but should be "
 						+ LocalState.CREATINGPLAYER.name());
@@ -223,8 +205,7 @@ public class ClientPlayingState extends PlayingState
 			return true;
 		}
 
-		if (cmd instanceof SendKill)
-		{
+		if (cmd instanceof SendKill) {
 			SendKill killCommand = (SendKill) cmd;
 
 			Event dieEvent = new PlayerDiedEvent(getLevel().getPlayer(
@@ -238,8 +219,7 @@ public class ClientPlayingState extends PlayingState
 			return true;
 		}
 
-		if (cmd instanceof SendWon)
-		{
+		if (cmd instanceof SendWon) {
 			SendWon wonCommand = (SendWon) cmd;
 
 			Event winEvent = new WonGameEvent(getLevel().getPlayer(
@@ -248,8 +228,7 @@ public class ClientPlayingState extends PlayingState
 			return true;
 		}
 
-		if (cmd instanceof SendChangeColor)
-		{
+		if (cmd instanceof SendChangeColor) {
 			SendChangeColor colorChange = (SendChangeColor) cmd;
 
 			Player player = getLevel().getPlayer(colorChange.getPlayerId());
@@ -257,8 +236,7 @@ public class ClientPlayingState extends PlayingState
 			return true;
 		}
 
-		if (cmd instanceof SendChangeWeaponColor)
-		{
+		if (cmd instanceof SendChangeWeaponColor) {
 			SendChangeWeaponColor colorChange = (SendChangeWeaponColor) cmd;
 
 			Player player = getLevel().getPlayer(colorChange.getPlayerId());
@@ -266,8 +244,7 @@ public class ClientPlayingState extends PlayingState
 			return true;
 		}
 
-		if (cmd instanceof AckPlayerCondition)
-		{
+		if (cmd instanceof AckPlayerCondition) {
 			AckPlayerCondition sspn = (AckPlayerCondition) cmd;
 
 			Player player = getLevel().getPlayer(sspn.getPlayerId());
@@ -280,18 +257,13 @@ public class ClientPlayingState extends PlayingState
 
 	@Override
 	public void update(GameContainer container, StateBasedGame game,
-			int deltaInMillis) throws SlickException
-	{
+			int deltaInMillis) throws SlickException {
 
 		// apply protocol commands
-		for (INetworkCommand cmd : queue)
-		{
-			if (!cmd.isHandled())
-			{
-				if (cmd instanceof ProtocolCommand)
-				{
-					if (handleProtocolCommands(cmd))
-					{
+		for (INetworkCommand cmd : queue) {
+			if (!cmd.isHandled()) {
+				if (cmd instanceof ProtocolCommand) {
+					if (handleProtocolCommands(cmd)) {
 						cmd.setHandled(true);
 					}
 				}
@@ -302,19 +274,15 @@ public class ClientPlayingState extends PlayingState
 		queue.clear();
 
 		// apply game data received from server
-		if (localState == LocalState.PLAYING)
-		{
+		if (localState == LocalState.PLAYING) {
 
 			// do stuff with received data
-			if (this.recv != null)
-			{
-				for (Entry<Integer, NetworkData> e : this.recv.entrySet())
-				{
+			if (this.recv != null) {
+				for (Entry<Integer, NetworkData> e : this.recv.entrySet()) {
 
 					Entity ent = this.getFactory().getEntity(e.getKey());
 					if (ent != null
-							&& ent.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient)
-					{
+							&& ent.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient) {
 						ent.applyNetworkData(e.getValue());
 					}
 				}
@@ -331,8 +299,7 @@ public class ClientPlayingState extends PlayingState
 		super.update(container, game, deltaInMillis);
 
 		// send local data to server
-		if (localState == LocalState.PLAYING)
-		{
+		if (localState == LocalState.PLAYING) {
 			// // if we have a player, send updates to the server
 			// Level level = getLevel();
 			// if (level != null) {
@@ -343,10 +310,8 @@ public class ClientPlayingState extends PlayingState
 			// }
 
 			// for all entites with strategy clienttoserver do
-			for (Entity e : this.getFactory().getEntities())
-			{
-				if (e.getUpdateStrategy() == EntityUpdateStrategy.ClientToServer)
-				{
+			for (Entity e : this.getFactory().getEntities()) {
+				if (e.getUpdateStrategy() == EntityUpdateStrategy.ClientToServer) {
 					this.send.setNetworkData(e.getNetworkData());
 					NetworkComponent.getInstance().sendCommand(this.send);
 				}
@@ -356,36 +321,29 @@ public class ClientPlayingState extends PlayingState
 		// trigger sending and receiving
 		NetworkComponent.getInstance().update();
 
-		if (localState == LocalState.EXITING)
-		{
+		if (localState == LocalState.EXITING) {
 			container.exit();
 		}
 	}
 
 	@Override
-	public void notify(INetworkCommand cmd)
-	{
+	public void notify(INetworkCommand cmd) {
 
-		if (cmd instanceof ServerData)
-		{
+		if (cmd instanceof ServerData) {
 			// PlayerData is continuously overwritten
 			this.recv = (ServerData) cmd;
-		} else
-		{
+		} else {
 			// ProtocolCommands have to be queued -> no loss
 			this.queue.add(cmd);
 		}
 	}
 
-	void setState(LocalState state)
-	{
-		if (state == null)
-		{
+	void setState(LocalState state) {
+		if (state == null) {
 			throw new IllegalArgumentException("state must not be null");
 		}
 
-		if (Constants.Debug.networkDebug)
-		{
+		if (Constants.Debug.networkDebug) {
 			Log.debug("PlayingState: Changed state from "
 					+ ((localState == null) ? "null" : localState.name())
 					+ " to " + state.name());
@@ -394,16 +352,14 @@ public class ClientPlayingState extends PlayingState
 	}
 
 	@Override
-	public void cleanup(GameContainer container, StateBasedGame game)
-	{
+	public void cleanup(GameContainer container, StateBasedGame game) {
 		NetworkComponent.getInstance().sendCommand(
 				new QueryLeave(getLevel().getCurrentPlayer().getId()));
 		setState(LocalState.DISCONNECTING);
 	}
 
 	@Override
-	public void onExitKey(GameContainer container, StateBasedGame game)
-	{
+	public void onExitKey(GameContainer container, StateBasedGame game) {
 		game.enterState(GameStates.MENU, new FadeOutTransition(),
 				new FadeInTransition());
 	}
