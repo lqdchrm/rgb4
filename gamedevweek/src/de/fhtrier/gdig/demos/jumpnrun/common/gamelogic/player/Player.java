@@ -78,9 +78,9 @@ public class Player extends LevelCollidableEntity implements
 	// carries current Asset
 	private AbstractAssetState currentPlayerAsset;
 
-	// old Stuff
-	private Entity playerGroup;
+	// particles
 	private ParticleEntity weaponParticles;
+	
 	private AssetMgr assets;
 
 	// initialization
@@ -143,26 +143,6 @@ public class Player extends LevelCollidableEntity implements
 
 	private void initGraphics() throws SlickException {
 
-		int groupId = factory.createEntity(EntityOrder.Player,
-				EntityType.HELPER);
-		playerGroup = factory.getEntity(groupId);
-
-		// particles
-		assets.storeParticleSystem(this.getId(),
-				Assets.Weapon.ParticleEffectImgPath,
-				Assets.Weapon.ParticleEffectCfgPath);
-		weaponParticles = factory.createParticleEntity(
-				0, this.getId(), assets);
-
-		//playerGroup.add(weaponParticles);
-
-		// Position correction for particleEffects
-		// TODO: take weapon cords
-		weaponParticles.getData()[Entity.X] = 122;
-		weaponParticles.getData()[Entity.Y] = 165;
-
-		add(playerGroup);
-
 		// shader
 		if (playerGlow == null)
 		{
@@ -177,12 +157,26 @@ public class Player extends LevelCollidableEntity implements
 			weaponGlow = new Image(
 					assets.makePathRelativeToAssetPath(Assets.Weapon.GlowImagePath));
 		}
+		
+		// weaponparticles
+		assets.storeParticleSystem(this.getId(),
+				Assets.Weapon.ParticleEffectImgPath,
+				Assets.Weapon.ParticleEffectCfgPath);
+		weaponParticles = factory.createParticleEntity(
+				0, this.getId(), assets);
+
+		//playerGroup.add(weaponParticles);
+
+		// Position correction for particleEffects
+		// TODO: take weapon cords
+		weaponParticles.getData()[Entity.X] = 122;
+		weaponParticles.getData()[Entity.Y] = 165;
+		
+		weaponParticles.setVisible(true);
 
 		// make entities visible
 		setVisible(true);
 		
-		weaponParticles.setVisible(true);
-
 		// order
 		this.setOrder(EntityOrder.Player);
 	}
@@ -422,7 +416,6 @@ public class Player extends LevelCollidableEntity implements
 	// render
 	@Override
 	public void renderImpl(final Graphics g, Image frameBuffer) {
-		this.weaponParticles.render(g, frameBuffer);
 		currentPlayerAsset.render(g, frameBuffer);
 	
 		super.renderImpl(g, frameBuffer);
