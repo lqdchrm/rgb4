@@ -170,8 +170,7 @@ public class ClientLobbyState extends NiftyGameState implements
 	private void selectLevel(NetworkLevel networkLevel) {
 		this.currentLevel = networkLevel;
 		guiCurrentLevelRenderer.setText(networkLevel.getLevelName());
-		// TODO: SET ASSET-PATH:
-		// Assets.AssetManagerPath = networkLevel.getAssetPath();
+		Assets.Config.AssetManagerPath = networkLevel.getAssetPath();
 	}
 
 	private void drawPlayers(Collection<NetworkPlayer> players) {
