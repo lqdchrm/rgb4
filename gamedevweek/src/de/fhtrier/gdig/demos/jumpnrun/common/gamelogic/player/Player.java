@@ -1,5 +1,6 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -48,7 +49,7 @@ public class Player extends LevelCollidableEntity implements
 	// Shader stuff
 	private static Image playerGlow = null;
 	private static Image weaponGlow = null;
-	private static Shader playerShader = null;
+	private static Shader colorGlowShader;
 
 	// helpers
 	private Factory factory;
@@ -157,11 +158,14 @@ public class Player extends LevelCollidableEntity implements
 		// weapon.setVisible(true);
 
 		// shader
-		if (playerShader == null && Constants.Debug.shadersActive) {
-			playerShader = new Shader(
-					assets.makePathRelativeToAssetPath(Assets.PlayerVertexShaderPath),
-					assets.makePathRelativeToAssetPath(Assets.PlayerPixelShaderPath));
-
+		if (playerGlow == null)
+		{
+			if (Constants.Debug.shadersActive)
+			{
+				colorGlowShader = new Shader(assets.makePathRelativeToAssetPath(Assets.PlayerVertexShaderPath),
+						assets.makePathRelativeToAssetPath(Assets.PlayerPixelShaderPath));
+			}
+			
 			playerGlow = new Image(
 					assets.makePathRelativeToAssetPath(Assets.PlayerGlowImagePath));
 			weaponGlow = new Image(
@@ -422,44 +426,52 @@ public class Player extends LevelCollidableEntity implements
 	@Override
 	protected void preRender(Graphics graphicContext) {
 		super.preRender(graphicContext);
-
-		if (Constants.Debug.shadersActive) {
-			Shader.pushShader(playerShader);
-			Shader.activateAdditiveBlending();
-			float weaponGlowSize = 0.2f + this.getPlayerCondition().ammo * 0.8f;
-			float glowSize = 0.2f + this.getPlayerCondition().health * 0.8f;
-
-			float weaponX = this.getData(CENTER_X);
-			float weaponY = this.getData(CENTER_Y) - weaponGlow.getHeight()
-					* weaponGlowSize / 2 + 40;
-
-			int lookDirection = 1;
-
-			if (this.getPlayerCondition().shootDirection == PlayerActionState.Left
-					.ordinal())
-				lookDirection = -1;
-
-			playerShader.setValue("playercolor", StateColor.constIntoColor(this
-					.getPlayerCondition().weaponColor));
-
-			graphicContext.drawImage(weaponGlow, weaponX, weaponY, weaponX
-					+ weaponGlow.getWidth() * lookDirection, weaponY
-					+ weaponGlow.getHeight() * weaponGlowSize, 0, 0,
-					weaponGlow.getWidth(), weaponGlow.getHeight());
-
-			playerShader.setValue("playercolor",
-					StateColor.constIntoColor(this.getPlayerCondition().color));
-			graphicContext.drawImage(playerGlow, this.getData(CENTER_X)
-					- playerGlow.getWidth() * glowSize / 2,
-					this.getData(CENTER_Y) - playerGlow.getHeight() * glowSize
-							/ 2, this.getData(CENTER_X) + playerGlow.getWidth()
-							* glowSize / 2,
-					this.getData(CENTER_Y) + playerGlow.getHeight() * glowSize
-							/ 2, 0, 0, playerGlow.getWidth(),
-					playerGlow.getHeight());
-
-			Shader.activateDefaultBlending();
+		
+		if (Constants.Debug.shadersActive)
+		{
+			Shader.pushShader(colorGlowShader);
 		}
+		
+		Shader.activateAdditiveBlending();
+		float weaponGlowSize = 0.6f + this.getPlayerCondition().ammo * 0.4f;
+		float glowSize = 0.1f + this.getPlayerCondition().health * 0.9f;
+		
+		Color playerCol = StateColor.constIntoColor(this.getPlayerCondition().color);
+		Color weaponCol = StateColor.constIntoColor(this.getPlayerCondition().weaponColor);
+		
+		// TODO find active Animation-Asset and setTintColor(playerCol)
+		
+		float weaponX = this.getData(CENTER_X);
+		float weaponY = this.getData(CENTER_Y) - weaponGlow.getHeight() * weaponGlowSize / 2 + 40;
+		int lookDirection = 1;
+
+		if (this.getPlayerCondition().shootDirection == PlayerActionState.Left.ordinal())
+			lookDirection = -1;
+		
+		if (Constants.Debug.shadersActive)
+		{
+			colorGlowShader.setValue("playercolor", weaponCol);
+		}
+		
+		graphicContext.drawImage(weaponGlow, weaponX, weaponY, weaponX
+				+ weaponGlow.getWidth() * lookDirection, weaponY
+				+ weaponGlow.getHeight() * weaponGlowSize, 0, 0,
+				weaponGlow.getWidth(), weaponGlow.getHeight(), weaponCol);
+		
+		if (Constants.Debug.shadersActive)
+		{
+			colorGlowShader.setValue("playercolor", playerCol);
+		}
+		graphicContext.drawImage(playerGlow, this.getData(CENTER_X)
+				- playerGlow.getWidth() * glowSize / 2,
+				this.getData(CENTER_Y) - playerGlow.getHeight() * glowSize
+						/ 2, this.getData(CENTER_X) + playerGlow.getWidth()
+						* glowSize / 2,
+				this.getData(CENTER_Y) + playerGlow.getHeight() * glowSize
+						/ 2, 0, 0, playerGlow.getWidth(),
+				playerGlow.getHeight(), playerCol);
+
+		Shader.activateDefaultBlending();
 
 	}
 
@@ -549,6 +561,11 @@ public class Player extends LevelCollidableEntity implements
 
 	public void setLevel(final Level level) {
 		this.setMap(level.getMap());
+	}
+	
+	public static Shader getPlayerShader()
+	{
+		return colorGlowShader; 
 	}
 
 	@Override

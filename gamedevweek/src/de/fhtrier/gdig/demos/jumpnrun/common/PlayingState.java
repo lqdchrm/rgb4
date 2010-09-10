@@ -11,6 +11,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import de.fhtrier.gdig.demos.jumpnrun.RGB4;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
@@ -26,7 +27,8 @@ public abstract class PlayingState extends BasicGameState implements
 	private AssetMgr assets;
 	private GameFactory factory;
 	private int levelId;
-	private static Image frameBuffer;
+	// TODO Only activate for postprocessing
+	//private static Image frameBuffer;
 		
 	public abstract void cleanup(GameContainer container, StateBasedGame game);
 
@@ -67,8 +69,8 @@ public abstract class PlayingState extends BasicGameState implements
 		// Level
 		this.levelId = factory.createEntity(EntityType.LEVEL);
 		
-		// FrameBuffer
-		frameBuffer = new Image(RGB4.SCREENWIDTH, RGB4.SCREENHEIGHT);
+		// TODO FrameBuffer - only activate for postprocessing
+		//frameBuffer = new Image(RGB4.SCREENWIDTH, RGB4.SCREENHEIGHT);
 	}
 
 	@Override
@@ -80,9 +82,18 @@ public abstract class PlayingState extends BasicGameState implements
 		
 		if (level != null)
 		{
-			level.render(frameBuffer.getGraphics(), frameBuffer);
-			
-			graphicContext.drawImage(frameBuffer, 0, 0);
+			if (!Constants.Debug.shadersActive)
+			{
+				// TODO Only use draw to texture if post processing is
+				// implemented in Level.java
+				//level.render(frameBuffer.getGraphics(), frameBuffer);
+				//graphicContext.drawImage(frameBuffer, 0, 0);
+				level.render(graphicContext, null);
+			}
+			else
+			{
+				level.render(graphicContext, null);
+			}
 		}
 	}
 	

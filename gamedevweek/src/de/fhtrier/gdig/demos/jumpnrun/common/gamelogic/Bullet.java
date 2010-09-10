@@ -2,6 +2,7 @@ package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
 import java.util.List;
 
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
@@ -57,6 +58,18 @@ public class Bullet extends LevelCollidableEntity {
 
 		// setup
 		setVisible(true);
+	}
+	
+	@Override
+	protected void preRender(Graphics graphicContext)
+	{
+		super.preRender(graphicContext);
+	}
+	
+	@Override
+	protected void postRender(Graphics graphicContext) {
+		// TODO Auto-generated method stub
+		super.postRender(graphicContext);
 	}
 
 	@Override
