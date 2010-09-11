@@ -20,6 +20,16 @@ public class ShootStandingState extends AbstractShootState {
 				factory);
 
 	}
+	
+	@Override
+	public void enter () {
+		getPlayer().getWeaponParticleEntity().getData()[Entity.Y] = 155;
+	}
+	
+	@Override
+	public void leave () {
+		getPlayer().getWeaponParticleEntity().getData()[Entity.Y] = 165;
+	}
 
 	@Override
 	public void update() {

@@ -24,7 +24,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreatePlayer;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckPlayerCondition;
@@ -49,15 +49,12 @@ public class ServerPlayingState extends PlayingState {
 	public ServerPlayingState() throws SlickException {
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ServerData();
-		
-		if(Constants.GamePlayConstants.serverSound)
-		{
-			SoundManager.init();
-			SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
-			SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
-			SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 50000, 0.2f, false);
-		}		
-		
+
+		SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
+		SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
+		SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 50000, 0.2f,
+				false);
+
 	}
 
 	private boolean handlePlayerActions(QueryAction actionCmd) {
@@ -90,23 +87,25 @@ public class ServerPlayingState extends PlayingState {
 
 			bullet.color = state.weaponColor;
 			// set player pos as gem pos
-			bullet.getData()[Entity.X] =
-				(player.getData()[Entity.X] + player.getData()[Entity.CENTER_X]) +
-				(bullet.getData()[Entity.CENTER_X] - Assets.Weapon.weaponXOffset) * player.getData()[Entity.SCALE_X];
+			bullet.getData()[Entity.X] = (player.getData()[Entity.X] + player
+					.getData()[Entity.CENTER_X])
+					+ (bullet.getData()[Entity.CENTER_X] - Assets.Weapon.weaponXOffset)
+					* player.getData()[Entity.SCALE_X];
 
-			bullet.getData()[Entity.Y] =
-			player.getData()[Entity.Y] + player.getData()[Entity.CENTER_Y] -
-			bullet.getData()[Entity.CENTER_Y] + Assets.Weapon.weaponYOffset;
-			
+			bullet.getData()[Entity.Y] = player.getData()[Entity.Y]
+					+ player.getData()[Entity.CENTER_Y]
+					- bullet.getData()[Entity.CENTER_Y]
+					+ Assets.Weapon.weaponYOffset;
+
 			bullet.getVel()[Entity.X] = player.getVel()[Entity.X]
-			        + (player.getData()[Entity.SCALE_X] == -1 ? Constants.GamePlayConstants.shotSpeed
-			                                            	: -Constants.GamePlayConstants.shotSpeed);
-			
-			if(player.getData()[Entity.SCALE_X] == -1) // Right
-			bullet.getData()[Entity.SCALE_X] = -1;
-			
-			else if(player.getData()[Entity.SCALE_X] == 1) // Left
-			bullet.getData()[Entity.SCALE_X] = 1;
+					+ (player.getData()[Entity.SCALE_X] == -1 ? Constants.GamePlayConstants.shotSpeed
+							: -Constants.GamePlayConstants.shotSpeed);
+
+			if (player.getData()[Entity.SCALE_X] == -1) // Right
+				bullet.getData()[Entity.SCALE_X] = -1;
+
+			else if (player.getData()[Entity.SCALE_X] == 1) // Left
+				bullet.getData()[Entity.SCALE_X] = 1;
 
 			return true;
 		case PLAYERCOLOR:
@@ -197,7 +196,7 @@ public class ServerPlayingState extends PlayingState {
 			if (type == EntityType.PLAYER) {
 				int id = this.getFactory().createEntity(type);
 
-				Player e = (Player)getFactory().getEntity(id);
+				Player e = (Player) getFactory().getEntity(id);
 				e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 				getLevel().add(e);
 
@@ -208,19 +207,21 @@ public class ServerPlayingState extends PlayingState {
 				// if query requested new player assume that's the one to be
 				// controlled by client
 				NetworkComponent.getInstance().sendCommand(cmd.getSender(),
-						new AckCreatePlayer(id));
+						new AckCreateEntity(id));
 
 				// remember, which networkId identifies which player
 				networkId2Player.put(cmd.getSender(), id);
 				player2NetworkId.put(id, cmd.getSender());
-				
-				String name = ServerLobbyState.players.get(cmd.getSender()).getPlayerName();
 
-				int teamID = ServerLobbyState.players.get(cmd.getSender()).getTeamId();
-				
+				String name = ServerLobbyState.players.get(cmd.getSender())
+						.getPlayerName();
+
+				int teamID = ServerLobbyState.players.get(cmd.getSender())
+						.getTeamId();
+
 				e.getPlayerCondition().name = name;
 				e.getPlayerCondition().teamId = teamID;
-				
+
 			} else {
 				throw new RuntimeException(
 						"Client side entity creation only allowed for type PLAYER");

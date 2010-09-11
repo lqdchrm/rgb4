@@ -2,7 +2,6 @@ package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import java.io.File;
 
-import org.lwjgl.input.Mouse;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -37,24 +36,30 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 	public ClientMenuState(final StateBasedGame newGame) throws SlickException {
 		super(GameStates.MENU);
 		game = newGame;
+
 		// add asset-folder to the ResourceLocators of nifty and slick2d
 		ResourceLoader.addResourceLocation(new FileSystemLocation(new File(
 				menuAssetPath)));
+
 		org.newdawn.slick.util.ResourceLoader
-				.addResourceLocation(new org.newdawn.slick.util.FileSystemLocation(
-						new File(menuAssetPath)));
+		.addResourceLocation(new org.newdawn.slick.util.FileSystemLocation(
+				new File(menuAssetPath)));
+
+
 		// read the nifty-xml-fiel
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
+
 		// show the mouse
 		enableMouseImage(new Image(
 				ResourceLoader.getResourceAsStream(CROSSHAIR_PNG),
 				CROSSHAIR_PNG, false));
 		
-		// init Sound
-		SoundManager.init();
+		// play menu background Sound
 		SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0f);
 		SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f, false);
+
+
 	}
 
 	public void bind(final Nifty newNifty, final Screen newScreen) {
@@ -71,20 +76,18 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 	}
 
 	public void onEndScreen() {
+		SoundManager
+				.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0f, false);
+		SoundManager.stopMusic(Assets.Sounds.MenuSoundtrackId);
 	}
-	
-	
-	
+
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
-		try
-		{
+		try {
 			MenuBackground.getInstance().render(container, game, g);
 			super.render(container, game, g);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -93,12 +96,12 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 		game.enterState(GameStates.SERVER_SELECTION, new FadeOutTransition(),
 				new FadeInTransition());
 	}
-		
-		public void hostGame() {
-			game.enterState(GameStates.SERVER_SETTINGS, new FadeOutTransition(),
-					new FadeInTransition());
-		}
-		
+
+	public void hostGame() {
+		game.enterState(GameStates.SERVER_SETTINGS, new FadeOutTransition(),
+				new FadeInTransition());
+	}
+
 	public void exit() {
 		screen.endScreen(new EndNotify() {
 			public void perform() {
@@ -106,13 +109,11 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 			}
 		});
 	}
-	
-	public void credits()
-	{
+
+	public void credits() {
 		game.enterState(GameStates.CLIENT_CREDITS, new FadeOutTransition(),
 				new FadeInTransition());
 	}
-	
 
 	public void mouseMoved(final int oldx, final int oldy, final int newx,
 			final int newy) {

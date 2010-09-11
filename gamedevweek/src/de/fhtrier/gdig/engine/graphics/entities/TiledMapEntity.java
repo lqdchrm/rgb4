@@ -13,8 +13,8 @@ public class TiledMapEntity extends AssetEntity {
 	@Override
 	public void renderImpl(Graphics graphicContext, Image frameBuffer) {
 		if (isVisible()) {
-			Assets().getTiledMap(getAssetId()).render(0, 0, 0);
-			Assets().getTiledMap(getAssetId()).render(0, 0, 1);
+			getAssetMgr().getTiledMap(getAssetId()).render(0, 0, 0);
+			getAssetMgr().getTiledMap(getAssetId()).render(0, 0, 1);
 		}
 		super.renderImpl(graphicContext, frameBuffer);
 	}
