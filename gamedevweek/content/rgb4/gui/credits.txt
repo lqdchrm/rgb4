@@ -1,18 +1,15 @@
-##Credits.png
+##rgb4_logo_trimmed.png,397px,162px
 
 #Programming
-TEst1
-
-Test2
-
-Test3
+Robert
+Tobias
+Tom
+... bitte auffuellen ...
 
 #Graphics
-Test 1
-Test 2
-Test 3
+Benni
+Benni
 
 #Music
+Don't have a clue!
 
-Test1
-Test2

@@ -101,6 +101,12 @@
 	<style id="level-list">
 		<attributes backgroundColor="#000e"/>
 	</style>
+	
+	<style id="scroller">
+		<effect>
+           <onActive name="autoScroll" length="90000" start="0" end="-3100" inherit="true" onEndEffect="scrollEnd()" neverStopRendering="true" />
+		</effect>
+	</style>
 
 	<style id="lobby-text">
 		<attributes font="verdana-24-regular.fnt" focusable="false" />

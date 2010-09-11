@@ -2,51 +2,54 @@ package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.StringTokenizer;
 
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.controls.dynamic.CustomControlCreator;
+import de.lessvoid.nifty.controls.dynamic.ImageCreator;
 import de.lessvoid.nifty.controls.dynamic.LabelCreator;
-import de.lessvoid.nifty.controls.dynamic.attributes.ControlEffectAttributes;
 import de.lessvoid.nifty.elements.Element;
-import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import de.lessvoid.nifty.slick.NiftyGameState;
 import de.lessvoid.nifty.tools.resourceloader.FileSystemLocation;
 import de.lessvoid.nifty.tools.resourceloader.ResourceLoader;
 
+/**
+ * 
+ * credits: edit content/.../gui/credits.txt
+ * 
+ * ##test.png,200px,100px : loads picture from gui-dir with size 200,100
+ * #Blabla : Glow-Text-Font
+ * Hola : normal text
+ * 
+ * In order to change the length of the scroller edit in rgb-style.xml the scroller-style
+ * 
+ * @author ttrocha
+ *
+ */
 public class ClientCreditsState extends NiftyGameState implements ScreenController {
-
-	private static final String CROSSHAIR_PNG = "crosshair.png";
 
 	private static String menuNiftyXMLFile = "credits.xml";
 	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 	private static String creditsFile = menuAssetPath+"/credits.txt";
 	private static float timePerLine = 1000;
-	private static float currentTimeCounter = timePerLine;
-	private static int currentBlock = 0;
-	private Element creditsPanel;
-
 	private StateBasedGame game;
+	private Element creditsPanel;
 	
-	private List<Cred> creditsList;
 	
 	public ClientCreditsState()
 	{
 		super(GameStates.CLIENT_CREDITS);
-		creditsList = new ArrayList<Cred>();
 	}
 	
 	@Override
@@ -65,27 +68,91 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 		// read the nifty-xml-fiel
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
+
+
+	}
+
+	
+	
+
+	
+	
+	@Override
+	public void keyPressed(int key, char c) {
+		super.keyPressed(key, c);
+		if (key==Input.KEY_ESCAPE)
+		{
+			game.enterState(GameStates.MENU, new FadeOutTransition(), new FadeInTransition());
+		}
+	}
+
+	private int amountMarkerElements(String st)
+	{
+		int count=0;
+		if (st.equals(""))
+			return 0;
+		while (count<st.length() && st.charAt(count)=='#')
+		{
+			count++;
+		}
+		return count;
+	}
+	
+	@Override
+	public void bind(Nifty nifty, Screen screen) {
+		creditsPanel = screen.findElementByName("credits");		
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(creditsFile)));
 			String line;
 			int count = 0;
 			while ((line=br.readLine())!=null)
 			{
-				Cred c = new CredText(line);
-				c.x = 0;
-				c.y = (count++)*20;
-				creditsList.add(c);
+				int markElements = amountMarkerElements(line);
+				String trimmedLine = line.substring(markElements);
+
+				if (markElements < 2)
+				{
+					LabelCreator creator = new LabelCreator(count+"creds", trimmedLine);
+					if (markElements==0)
+						creator.setStyle("lobby-text");
+					else if (markElements==1)
+						creator.setStyle("header-label");
+					creator.setAlign("center");
+					creator.setWidth("100%");
+					creator.setHeight("10%");
+					creator.create(nifty, nifty.getCurrentScreen(), creditsPanel);
+				}
+				else if (markElements == 2)
+				{
+					ImageCreator image = new ImageCreator("img"+count);
+					StringTokenizer stk = new StringTokenizer(trimmedLine,",");
+					image.setFilename(Assets.Config.AssetGuiPath+"/"+stk.nextToken());
+					if (stk.hasMoreTokens())
+					{
+						image.setWidth(stk.nextToken());
+						if (stk.hasMoreTokens())
+						{
+							image.setHeight(stk.nextToken());
+						}
+						else
+						{
+							image.setHeight("20%");
+						}
+					}
+					else
+					{
+						image.setHeight("20%");
+						image.setWidth("100%");
+					}
+					image.setAlign("center");
+					image.create(nifty, nifty.getCurrentScreen(),creditsPanel);
+				}
+
+				count++;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-	}
-
-	@Override
-	public void bind(Nifty nifty, Screen screen) {
-		creditsPanel = screen.findElementByName("credits");		
-
 	}
 
 	@Override
@@ -95,63 +162,14 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 
 	@Override
 	public void onStartScreen() {
-		if (nifty.getCurrentScreen().getScreenId().equals("start"))
-		{
-			nifty.gotoScreen("1");
-		}
+
 		
 	}
 	
-	
-	@Override
-	public void update(GameContainer container, StateBasedGame game, int delta)
-			throws SlickException {
-		super.update(container, game, delta);
-		for (Cred c : creditsList)
-		{
-			c.y-=delta;
-			c.render(container.getGraphics());
-		}
-	}
 	
 
 	
-	abstract public class Cred
-	{
-		public int x,y;
-		abstract public void render(Graphics g);
-	}
-	
-	public class CredText extends Cred
-	{
-		public String text;
-		public CredText(String text)
-		{
-			this.text=text;
-		}
-		@Override
-		public void render(Graphics g) {
-			g.drawString(text, x,y);
-		}
-		
-	}
-	
-	public class CredImage extends Cred
-	{
-		public Image image;
-		public CredImage(String imageFile)
-		{
-			try {
-				image = new Image(imageFile);
-			} catch (SlickException e) {
-				e.printStackTrace();
-			}
-		}
-		@Override
-		public void render(Graphics g) {
-			g.drawImage(image, x,y );
-		}
-	}
+
 
 	
 	
