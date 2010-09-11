@@ -13,8 +13,8 @@ public class Team {
 	private int kills;
 	private int deaths;
 	
-	public static Team Team1 = new Team();
-	public static Team Team2 = new Team();
+	public static Team team1 = new Team();
+	public static Team team2 = new Team();
 	
 	public Team () throws IllegalArgumentException {
 		playerIdList = new ArrayList<Integer> ();
@@ -29,18 +29,18 @@ public class Team {
 	
 	public static Team getTeamById (int teamId) {
 		switch (teamId) {
-		case 1: return Team1;
-		case 2: return Team2;
+		case 1: return team1;
+		case 2: return team2;
 		}
 		return null;
 	}
 	
 	public void addPlayer (int playerId) {
-		playerIdList.add (new Integer(playerId));
+		playerIdList.add (playerId);
 	}
 	
 	public void addPlayer (Player player) {
-		playerIdList.add (new Integer(player.getId()));
+		playerIdList.add (player.getId());
 	}
 	
 	public void removePlayer (int playerId) {

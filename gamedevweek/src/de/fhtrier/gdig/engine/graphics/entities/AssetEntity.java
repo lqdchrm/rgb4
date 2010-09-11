@@ -19,7 +19,7 @@ public class AssetEntity extends Entity {
 		this.setVisible(false);
 	}
 
-	public AssetMgr Assets() {
+	public AssetMgr getAssetMgr() {
 		return this.assets;
 	}
 

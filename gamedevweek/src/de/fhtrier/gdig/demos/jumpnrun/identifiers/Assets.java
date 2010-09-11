@@ -20,7 +20,6 @@ public class Assets {
 	public static class Player {
 		public static final int aStandingAnimId = 111;
 		public static final int bStandingAnimId = 311;
-		public static String StandingAnimImagePath;
 		public static final String aStandingAnimImagePath = "sprites/player/astehen_128_128_15.png";
 		public static final String bStandingAnimImagePath = "sprites/player/bstehen_128_128_15.png";
 

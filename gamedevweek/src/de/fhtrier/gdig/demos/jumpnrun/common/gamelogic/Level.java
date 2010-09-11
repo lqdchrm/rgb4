@@ -88,7 +88,7 @@ public class Level extends MoveableEntity {
 		setVisible(true);
 
 		// HACK determine GID for logic layer
-		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
+		TiledMap tiledMap = ground.getAssetMgr().getTiledMap(ground.getAssetId());
 		for (int i = 0; i < tiledMap.getTileSetCount(); i++) {
 			if (tiledMap.getTileSet(i).lastGID
 					- tiledMap.getTileSet(i).firstGID == 127) {
@@ -160,7 +160,7 @@ public class Level extends MoveableEntity {
 			spawnPoints.add(new ArrayList<SpawnPoint>());
 		}
 
-		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
+		TiledMap tiledMap = ground.getAssetMgr().getTiledMap(ground.getAssetId());
 
 		for (int x = 0; x < tiledMap.getWidth(); x++) {
 			for (int y = 0; y < tiledMap.getHeight(); y++) {
@@ -189,7 +189,7 @@ public class Level extends MoveableEntity {
 			teleportExitPoints.add(new ArrayList<SpawnPoint>());
 		}
 
-		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
+		TiledMap tiledMap = ground.getAssetMgr().getTiledMap(ground.getAssetId());
 
 		for (int x = 0; x < tiledMap.getWidth(); x++) {
 			for (int y = 0; y < tiledMap.getHeight(); y++) {
@@ -243,13 +243,13 @@ public class Level extends MoveableEntity {
 	@Override
 	protected void postRender(Graphics graphicContext) {
 		if (isVisible()) {
-			ground.Assets().getTiledMap(ground.getAssetId()).render(0, 0, 2);
+			ground.getAssetMgr().getTiledMap(ground.getAssetId()).render(0, 0, 2);
 		}
 		super.postRender(graphicContext);
 
 		graphicContext.setColor(Constants.Debug.overlayColor);
-		graphicContext.drawString("Team 1: " + Team.Team1.getKills()
-				+ "\nTeam 2: " + Team.Team2.getKills(), 200, 20);
+		graphicContext.drawString("Team 1: " + Team.team1.getKills()
+				+ "\nTeam 2: " + Team.team2.getKills(), 200, 20);
 
 		if (Constants.Debug.showDebugOverlay) {
 			graphicContext.setColor(Constants.Debug.overlayColor);
@@ -310,7 +310,7 @@ public class Level extends MoveableEntity {
 		if (isActive()) {
 			focusOnPlayer();
 
-			// checkLevelBordersScrolling();
+			checkLevelBordersScrolling();
 
 			parallaxScrollingBackground();
 		}
@@ -352,13 +352,13 @@ public class Level extends MoveableEntity {
 		if (getData()[X] < -this.groundMap.getWidth()
 				* this.groundMap.getTileWidth() + Settings.SCREENWIDTH) {
 			getData()[X] = -this.groundMap.getWidth()
-					* this.groundMap.getTileWidth() + Settings.SCREENHEIGHT;
+					* this.groundMap.getTileWidth() + Settings.SCREENWIDTH;
 			getVel()[X] = 0.0f;
 		}
 		// Bottom
 		if (getData()[Y] < -this.groundMap.getHeight()
 
-		* this.groundMap.getTileHeight() + Settings.SCREENWIDTH) {
+		* this.groundMap.getTileHeight() + Settings.SCREENHEIGHT) {
 			getData()[Y] = -this.groundMap.getHeight()
 					* this.groundMap.getTileHeight() + Settings.SCREENHEIGHT;
 			getVel()[Y] = 0.0f;
@@ -373,8 +373,8 @@ public class Level extends MoveableEntity {
 		if (player != null) {
 
 			// Focus on Player
-			getData()[X] = Settings.SCREENWIDTH / 2 - player.getData()[X];
-			getData()[Y] = Settings.SCREENHEIGHT / 2 - player.getData()[Y];
+			getData()[X] = Settings.SCREENWIDTH / 2.0f - player.getData()[X];
+			getData()[Y] = Settings.SCREENHEIGHT / 2.0f - player.getData()[Y];
 		}
 	}
 

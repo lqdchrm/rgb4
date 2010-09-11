@@ -22,13 +22,13 @@ public class AbstractShootState extends AbstractAssetState {
 		
 		AssetEntity e = getGfxEntity();
 
-		anim = e.Assets().getAnimation(e.getAssetId());
+		anim = e.getAssetMgr().getAnimation(e.getAssetId());
 		anim.setLooping(false);
 		anim.setAutoUpdate(true);
 		
 		e = getWeaponGfxEntity();
 
-		weaponAnim = e.Assets().getAnimation(e.getAssetId());
+		weaponAnim = e.getAssetMgr().getAnimation(e.getAssetId());
 		weaponAnim.setLooping(false);
 		weaponAnim.setAutoUpdate(true);
 	}
@@ -36,7 +36,7 @@ public class AbstractShootState extends AbstractAssetState {
 	public void getAnim () {
 		AssetEntity e = getGfxEntity();
 
-		anim = e.Assets().getAnimation(e.getAssetId());
+		anim = e.getAssetMgr().getAnimation(e.getAssetId());
 		anim.setLooping(false);
 		anim.setAutoUpdate(true);
 	}

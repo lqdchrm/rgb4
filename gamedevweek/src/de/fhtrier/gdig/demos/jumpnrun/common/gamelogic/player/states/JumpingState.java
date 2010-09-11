@@ -21,19 +21,19 @@ public class JumpingState extends AbstractAssetState {
 	
 		AssetEntity e = getGfxEntity();
 		
-		anim = e.Assets().getAnimation(e.getAssetId());
+		anim = e.getAssetMgr().getAnimation(e.getAssetId());
 		anim.setLooping(false);
 		
 		e = getWeaponGfxEntity();
 		
-		weaponAnim = e.Assets().getAnimation(e.getAssetId());
+		weaponAnim = e.getAssetMgr().getAnimation(e.getAssetId());
 		weaponAnim.setLooping(false);
 	}
 	
 	public void getAnim() {
 		AssetEntity e = getGfxEntity();
 		
-		anim = e.Assets().getAnimation(e.getAssetId());
+		anim = e.getAssetMgr().getAnimation(e.getAssetId());
 		anim.setLooping(false);
 	}
 	

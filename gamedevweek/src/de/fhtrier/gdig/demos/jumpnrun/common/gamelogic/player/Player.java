@@ -374,7 +374,7 @@ public class Player extends LevelCollidableEntity implements
 			state.weaponColor = StateColor.RED;
 		}
 		
-		ParticleSystem particleSystem = weaponParticles.Assets()
+		ParticleSystem particleSystem = weaponParticles.getAssetMgr()
 				.getParticleSystem(this.getId());
 		ConfigurableEmitter emitter = (ConfigurableEmitter) particleSystem
 				.getEmitter(0);
@@ -490,7 +490,7 @@ public class Player extends LevelCollidableEntity implements
 						.constIntoColor(condition.color));
 			} else {
 				graphicContext
-						.setColor(Constants.GamePlayConstants.DefaultPlayerTextColor);
+						.setColor(Constants.GamePlayConstants.defaultPlayerTextColor);
 			}
 			graphicContext.drawString(condition.name, x, y);
 		}
