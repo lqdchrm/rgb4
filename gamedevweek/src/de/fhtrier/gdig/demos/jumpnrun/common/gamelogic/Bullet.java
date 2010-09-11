@@ -53,7 +53,7 @@ public class Bullet extends LevelCollidableEntity {
 
 		bullet.setVisible(true);
 		add(bullet);
-		
+
 		// physics
 		// X Y OX OY SX SY ROT
 		initData(new float[] { 200, 200, 14, 32, 1, 1, 0 }); // pos +
@@ -67,24 +67,27 @@ public class Bullet extends LevelCollidableEntity {
 		setBounds(new Rectangle(10, 28, 8, 8)); // bounding box
 
 		CollisionManager.addEntity(this);
-		
-		if (bulletGlow == null)
-		{
+
+		if (bulletGlow == null) {
 			bulletGlow = new Image(
-					assets.makePathRelativeToAssetPath(Assets.Bullet.GlowImagePath));
+					assets.getPathRelativeToAssetPath(Assets.Bullet.GlowImagePath));
 		}
-		
+
 		// setup
 		setVisible(true);
 	}
-	
+
 	@Override
 	public void applyNetworkData(NetworkData networkData) {
 		super.applyNetworkData(networkData);
-		
-		this.color = ((BulletData)networkData).getColor();
+
+		if (networkData instanceof BulletData) {
+			this.color = ((BulletData) networkData).getColor();
+		} else {
+			throw new RuntimeException("Wrong package received");
+		}
 	}
-	
+
 	@Override
 	protected NetworkData _createNetworkData() {
 		return new BulletData(getId());
@@ -97,37 +100,34 @@ public class Bullet extends LevelCollidableEntity {
 
 		return result;
 	}
-	
+
 	@Override
-	protected void preRender(Graphics graphicContext)
-	{
+	protected void preRender(Graphics graphicContext) {
 		super.preRender(graphicContext);
-		
+
 		Color bulletCol = StateColor.constIntoColor(this.color);
-		
-		if (Constants.Debug.shadersActive)
-		{
+
+		if (Constants.Debug.shadersActive) {
 			Shader.pushShader(Player.getColorGlowShader());
 			Player.getColorGlowShader().setValue("playercolor", bulletCol);
 		}
-		
+
 		graphicContext.setColor(Color.white);
 		Shader.activateAdditiveBlending();
-		
-		graphicContext.drawImage(bulletGlow, this.getData(CENTER_X)-bulletGlow.getWidth()/2,
-				this.getData(CENTER_Y)-bulletGlow.getHeight()/2);
-		
+
+		graphicContext.drawImage(bulletGlow, this.getData(CENTER_X)
+				- bulletGlow.getWidth() / 2.0f, this.getData(CENTER_Y)
+				- bulletGlow.getHeight() / 2.0f);
+
 		Shader.activateDefaultBlending();
-		
-		if (Constants.Debug.shadersActive)
-		{
+
+		if (Constants.Debug.shadersActive) {
 			Shader.popShader();
 		}
 	}
-	
+
 	@Override
-	protected void postRender(Graphics graphicContext)
-	{
+	protected void postRender(Graphics graphicContext) {
 		super.postRender(graphicContext);
 	}
 
@@ -149,42 +149,52 @@ public class Bullet extends LevelCollidableEntity {
 		for (CollidableEntity collidableEntity : iColideWith) {
 			if (collidableEntity instanceof Player) {
 				Player otherPlayer = (Player) collidableEntity;
-				if (otherPlayer != owner && otherPlayer.getPlayerCondition().health > Constants.EPSILON 
-						&& (Constants.GamePlayConstants.friendyFire == true || // Friendly Fire or
-						owner.getPlayerCondition().teamId != otherPlayer.getPlayerCondition().teamId)) // Enemy
+				if (otherPlayer != owner
+						&& otherPlayer.getPlayerCondition().health > Constants.EPSILON
+						&& (Constants.GamePlayConstants.friendyFire == true || // Friendly
+																				// Fire
+																				// or
+						owner.getPlayerCondition().teamId != otherPlayer
+								.getPlayerCondition().teamId)) // Enemy
 				{
 					if (otherPlayer.getPlayerCondition().color != this.color) {
 						otherPlayer.getPlayerCondition().health -= owner
 								.getPlayerCondition().damage;
-						
 
 						if (otherPlayer.getPlayerCondition().health <= Constants.EPSILON) {
-							NetworkComponent.getInstance().sendCommand(new SendKill(otherPlayer.getId(),owner.getId()));
-							
-							Event dieEvent = new PlayerDiedEvent(otherPlayer,owner);
+							NetworkComponent.getInstance().sendCommand(
+									new SendKill(otherPlayer.getId(), owner
+											.getId()));
+
+							Event dieEvent = new PlayerDiedEvent(otherPlayer,
+									owner);
 							dieEvent.update();
 						}
-						
+
 						if (PlayingState.gameType == Constants.GameTypes.deathMatch) {
 							if (owner.getPlayerStats().getKills() >= Constants.GamePlayConstants.winningKills_Deathmatch) {
-								NetworkComponent.getInstance().sendCommand(new SendWon(owner.getId(),SendWon.winnerType_Player));
-								
-								Event wonEvent = new WonGameEvent (owner);
+								NetworkComponent.getInstance().sendCommand(
+										new SendWon(owner.getId(),
+												SendWon.winnerType_Player));
+
+								Event wonEvent = new WonGameEvent(owner);
 								EventManager.addEvent(wonEvent);
 							}
-						}
-						else if (PlayingState.gameType == Constants.GameTypes.teamDeathMatch) {
+						} else if (PlayingState.gameType == Constants.GameTypes.teamDeathMatch) {
 							// TODO: do it not hardcoded
-							if (Team.Team1.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
-								NetworkComponent.getInstance().sendCommand(new SendWon(Team.Team1.id,SendWon.winnerType_Team));
-								
-								Event wonEvent = new WonGameEvent (Team.Team1);
+							if (Team.team1.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
+								NetworkComponent.getInstance().sendCommand(
+										new SendWon(Team.team1.id,
+												SendWon.winnerType_Team));
+
+								Event wonEvent = new WonGameEvent(Team.team1);
 								EventManager.addEvent(wonEvent);
-							}
-							else if (Team.Team2.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
-								NetworkComponent.getInstance().sendCommand(new SendWon(Team.Team2.id,SendWon.winnerType_Team));
-								
-								Event wonEvent = new WonGameEvent (Team.Team1);
+							} else if (Team.team2.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
+								NetworkComponent.getInstance().sendCommand(
+										new SendWon(Team.team2.id,
+												SendWon.winnerType_Team));
+
+								Event wonEvent = new WonGameEvent(Team.team1);
 								EventManager.addEvent(wonEvent);
 							}
 						}
@@ -192,11 +202,14 @@ public class Bullet extends LevelCollidableEntity {
 						// player gets stronger when hit by bullet of the same
 						// color!
 						otherPlayer.getPlayerCondition().health += Constants.GamePlayConstants.healHP;
-						if (otherPlayer.getPlayerCondition().health > Constants.GamePlayConstants.maxHealthpoints) otherPlayer.getPlayerCondition().health = Constants.GamePlayConstants.maxHealthpoints;
+						if (otherPlayer.getPlayerCondition().health > Constants.GamePlayConstants.maxHealthpoints) 
+							otherPlayer.getPlayerCondition().health = Constants.GamePlayConstants.maxHealthpoints;
 					}
-					
-					NetworkComponent.getInstance().sendCommand(new AckPlayerCondition(otherPlayer.getId(), otherPlayer.getPlayerCondition()));
-					
+
+					NetworkComponent.getInstance().sendCommand(
+							new AckPlayerCondition(otherPlayer.getId(),
+									otherPlayer.getPlayerCondition()));
+
 					this.die();
 				}
 			}

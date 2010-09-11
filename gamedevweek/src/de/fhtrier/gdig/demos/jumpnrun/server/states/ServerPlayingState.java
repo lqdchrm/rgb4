@@ -24,7 +24,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreatePlayer;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckPlayerCondition;
@@ -208,7 +208,7 @@ public class ServerPlayingState extends PlayingState {
 				// if query requested new player assume that's the one to be
 				// controlled by client
 				NetworkComponent.getInstance().sendCommand(cmd.getSender(),
-						new AckCreatePlayer(id));
+						new AckCreateEntity(id));
 
 				// remember, which networkId identifies which player
 				networkId2Player.put(cmd.getSender(), id);

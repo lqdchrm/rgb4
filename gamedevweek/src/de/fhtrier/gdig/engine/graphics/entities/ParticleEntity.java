@@ -16,9 +16,9 @@ public class ParticleEntity extends AssetEntity {
 	@Override
 	public void renderImpl(Graphics graphicContext, Image frameBuffer) {
 		if (isVisible()) {
-			ParticleSystem system = Assets().getParticleSystem(getAssetId());
+			ParticleSystem system = getAssetMgr().getParticleSystem(getAssetId());
 			// TODO do update somewhere else
-			system.update(5);
+			system.update(20);
 			system.render();
 		}
 		super.renderImpl(graphicContext, frameBuffer);

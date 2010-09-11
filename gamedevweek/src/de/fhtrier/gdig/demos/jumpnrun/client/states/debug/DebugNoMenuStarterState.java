@@ -20,10 +20,10 @@ import de.fhtrier.gdig.engine.network.NetworkComponent;
 public class DebugNoMenuStarterState extends BasicGameState implements INetworkCommandListener {
 
 
-	private final int NOT_CONNECTED = 1;
-	private final int CONNECTING = 2;
-	private final int CONNECTED = 3;
-	private final int REQUESTED_GAME_START = 4;
+	private static final int NOT_CONNECTED = 1;
+	private static final int CONNECTING = 2;
+	private static final int CONNECTED = 3;
+	private static final int REQUESTED_GAME_START = 4;
 	
 	private int status = NOT_CONNECTED;
 	

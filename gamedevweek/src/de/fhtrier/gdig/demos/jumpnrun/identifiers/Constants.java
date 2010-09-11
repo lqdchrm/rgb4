@@ -39,7 +39,7 @@ public class Constants
 		public static float playerGroundDrag = 0.005f;
 		public static float playerAirDrag = 0.000001f;
 
-		public static Color DefaultPlayerTextColor = Color.white;
+		public static Color defaultPlayerTextColor = Color.white;
 
 		public static float weaponGlowFalloff = 1.5f;
 
@@ -52,7 +52,7 @@ public class Constants
 		
 		public static boolean clientSound = true;
 		
-		public static boolean serverSound = true;
+		public static boolean serverSound = false;
 	}
 
 	public static class Debug extends Configuration

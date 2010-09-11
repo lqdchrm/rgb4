@@ -16,6 +16,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.StateColor;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.AbstractAssetState;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.DyingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.FallingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.JumpingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.LandingState;
@@ -72,6 +73,7 @@ public class Player extends LevelCollidableEntity implements
 	private LandingState stateLanding;
 	private FallingState stateFalling;
 	private ShootFallingState stateShootFalling;
+	private DyingState stateDying;
 
 	private PlayerActionFSM fsmAction;
 	private PlayerOrientationFSM fsmOrientation;
@@ -79,9 +81,9 @@ public class Player extends LevelCollidableEntity implements
 	// carries current Asset
 	private AbstractAssetState currentPlayerAsset;
 
-	// old Stuff
-	private Entity playerGroup;
+	// particles
 	private ParticleEntity weaponParticles;
+	
 	private AssetMgr assets;
 
 	// initialization
@@ -141,49 +143,43 @@ public class Player extends LevelCollidableEntity implements
 		stateLanding = new LandingState(this, factory);
 		stateFalling = new FallingState(this, factory);
 		stateShootFalling = new ShootFallingState(this, factory);
+		stateDying = new DyingState(this, factory);
 	}
 
 	private void initGraphics() throws SlickException {
-
-		int groupId = factory.createEntity(EntityOrder.Player,
-				EntityType.HELPER);
-		playerGroup = factory.getEntity(groupId);
-
-		// particles
-		assets.storeParticleSystem(Assets.Weapon.ParticleEffect,
-				Assets.Weapon.ParticleEffectImgPath,
-				Assets.Weapon.ParticleEffectCfgPath);
-		weaponParticles = factory.createParticleEntity(
-				Assets.Weapon.ParticleEffect, Assets.Weapon.ParticleEffect,
-				assets);
-
-		playerGroup.add(weaponParticles);
-
-		// Position correction for particleEffects
-		// TODO: take weapon cords
-		weaponParticles.getData()[Entity.X] = 40;
-		weaponParticles.getData()[Entity.Y] = 110;
-
-		add(playerGroup);
 
 		// shader
 		if (playerGlow == null) {
 			if (Constants.Debug.shadersActive) {
 				colorGlowShader = new Shader(
-						assets.makePathRelativeToAssetPath(Assets.Player.VertexShaderPath),
-						assets.makePathRelativeToAssetPath(Assets.Player.PixelShaderPath));
+						assets.getPathRelativeToAssetPath(Assets.Player.VertexShaderPath),
+						assets.getPathRelativeToAssetPath(Assets.Player.PixelShaderPath));
 			}
 
 			playerGlow = new Image(
-					assets.makePathRelativeToAssetPath(Assets.Player.GlowImagePath));
+					assets.getPathRelativeToAssetPath(Assets.Player.GlowImagePath));
 			weaponGlow = new Image(
-					assets.makePathRelativeToAssetPath(Assets.Weapon.GlowImagePath));
+					assets.getPathRelativeToAssetPath(Assets.Weapon.GlowImagePath));
 		}
+		
+		// weaponparticles
+		assets.storeParticleSystem(this.getId(),
+				Assets.Weapon.ParticleEffectImgPath,
+				Assets.Weapon.ParticleEffectCfgPath);
+		weaponParticles = factory.createParticleEntity(
+				0, this.getId(), assets);
+
+		//playerGroup.add(weaponParticles);
+
+		// Position correction for particleEffects
+		// TODO: take weapon cords
+		weaponParticles.getData()[Entity.X] = 122;
+		weaponParticles.getData()[Entity.Y] = 165;
+		
+		weaponParticles.setVisible(true);
 
 		// make entities visible
 		setVisible(true);
-
-		weaponParticles.setVisible(false);
 
 		// order
 		this.setOrder(EntityOrder.Player);
@@ -324,16 +320,8 @@ public class Player extends LevelCollidableEntity implements
 				NetworkComponent.getInstance().sendCommand(
 						new QueryAction(PlayerNetworkAction.WEAPONCOLOR));
 
-				SoundManager.playSound(Assets.Sounds.WeaponChangeColorSoundID,
-						1f, 0.2f);
+				SoundManager.playSound(Assets.Sounds.WeaponChangeColorSoundID, 1f, 0.2f);
 
-				ParticleSystem particleSystem = weaponParticles.Assets()
-						.getParticleSystem(Assets.Weapon.ParticleEffect);
-				ConfigurableEmitter emitter = (ConfigurableEmitter) particleSystem
-						.getEmitter(0);
-				ColorRecord cr = (ColorRecord) emitter.colors.get(2);
-
-				cr.col = StateColor.constIntoColor(state.weaponColor);
 			}
 
 			// Player Phrases
@@ -385,24 +373,24 @@ public class Player extends LevelCollidableEntity implements
 		if (state.weaponColor > StateColor.BLUE) {
 			state.weaponColor = StateColor.RED;
 		}
+		
+		ParticleSystem particleSystem = weaponParticles.getAssetMgr()
+				.getParticleSystem(this.getId());
+		ConfigurableEmitter emitter = (ConfigurableEmitter) particleSystem
+				.getEmitter(0);
+		ColorRecord cr = (ColorRecord) emitter.colors.get(2);
+		
+		cr.col = StateColor.constIntoColor(state.weaponColor);
 	}
 
 	public void die() {
-		// TODO: Implement dying animation etc.
-		SoundManager.playSound(Assets.Sounds.PlayerDyingSoundId, 1.0f, 0.3f);
-		this.respawn(); // FIXME: Do we want to respawn immediately?
-		this.stats.increaseDeaths();
-		Team.getTeamById(this.getPlayerCondition().teamId).increaseDeaths();
+		this.applyAction(PlayerActions.Die);
 	}
 
 	public void respawn() {
 		setConditions();
 
 		initData(new float[] { 200, 200, 65, 70, 1, 1, 0 });
-
-		// TODO Reset Player state
-		// setState(PlayerActionState.RunRight);
-		// setState(PlayerActionState.Idle);
 	}
 
 	@Override
@@ -420,14 +408,12 @@ public class Player extends LevelCollidableEntity implements
 
 		graphicContext.setColor(Color.white);
 		Shader.activateAdditiveBlending();
-		//Shader.activateDefaultBlending();
 		float weaponGlowSize = 0.6f + this.getPlayerCondition().ammo * 0.4f;
 		float glowSize = 0.1f + this.getPlayerCondition().health * 0.9f;
 
 		// TODO find active Animation-Asset and setTintColor(playerCol)
 
 		float weaponX = this.getData(CENTER_X);
-
 		float weaponY = this.getData(CENTER_Y) - weaponGlow.getHeight() * weaponGlowSize / 2 + 40;
 
 		float weaponBrightness = StateColor.constIntoBrightness(this.getPlayerCondition().weaponColor);		
@@ -469,17 +455,11 @@ public class Player extends LevelCollidableEntity implements
 		}
 		
 		Shader.activateDefaultBlending();
-		// deactivate shader
-//		if (Constants.Debug.shadersActive) {
-//			Shader.popShader();
-//		}
-
 	}
 
 	// render
 	@Override
 	public void renderImpl(final Graphics g, Image frameBuffer) {
-
 		currentPlayerAsset.render(g, frameBuffer);
 
 		super.renderImpl(g, frameBuffer);
@@ -488,9 +468,7 @@ public class Player extends LevelCollidableEntity implements
 	@Override
 	protected void postRender(Graphics graphicContext) {
 
-		//Shader.activateDefaultBlending();
-		
-//		// deactivate shader
+		// deactivate shader
 		if (Constants.Debug.shadersActive) {
 			Shader.popShader();
 		}
@@ -512,7 +490,7 @@ public class Player extends LevelCollidableEntity implements
 						.constIntoColor(condition.color));
 			} else {
 				graphicContext
-						.setColor(Constants.GamePlayConstants.DefaultPlayerTextColor);
+						.setColor(Constants.GamePlayConstants.defaultPlayerTextColor);
 			}
 			graphicContext.drawString(condition.name, x, y);
 		}
@@ -631,6 +609,9 @@ public class Player extends LevelCollidableEntity implements
 		case FallShooting:
 			setState(stateShootFalling);
 			break;
+		case Dying:
+			setState(stateDying);
+			break;
 		default:
 			if (Constants.Debug.finiteStateMachineDebug) {
 				Log.error("FSM: state " + state + "unhandled");
@@ -640,5 +621,9 @@ public class Player extends LevelCollidableEntity implements
 
 	public AssetMgr getAssetMgr() {
 		return assets;
+	}
+	
+	public ParticleEntity getWeaponParticleEntity() {
+		return this.weaponParticles;
 	}
 }

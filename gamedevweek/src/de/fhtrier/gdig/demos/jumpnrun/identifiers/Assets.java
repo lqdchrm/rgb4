@@ -5,13 +5,14 @@ public class Assets {
 	// Config
 	public static class Config {
 		public static final String AssetGuiPath = "content/rgb4/gui";
-		public static String AssetManagerPath = "content/rgb4/level1/";
+		public static String AssetManagerPath = "content/rgb4/default/";
 		public static final String AssetManagerFallbackPath = "content/rgb4/fallback/";
 		public static String GameTitle = "RGB 4 - Der Letzte macht das Licht aus";
 	}
 
 	// Level
 	public static class Level {
+		public static String AssetLevelPath = "content/rgb4";
 		public static final int TileMapId = 3;
 		public static final int TileMapRenderOrder = 10;
 	}
@@ -20,7 +21,6 @@ public class Assets {
 	public static class Player {
 		public static final int aStandingAnimId = 111;
 		public static final int bStandingAnimId = 311;
-		public static String StandingAnimImagePath;
 		public static final String aStandingAnimImagePath = "sprites/player/astehen_128_128_15.png";
 		public static final String bStandingAnimImagePath = "sprites/player/bstehen_128_128_15.png";
 
@@ -64,6 +64,16 @@ public class Assets {
 		public static final String aFallShootingImagePath = "sprites/player/aschussspringen_128_128_15.png";
 		public static final String bFallShootingImagePath = "sprites/player/bschussspringen_128_128_15.png";
 
+		public static final int aTodAnimId = 120;
+		public static final int bTodAnimId = 320;
+		public static final String aTodImagePath = "sprites/player/atod_128_128_15.png";
+		public static final String bTodImagePath = "sprites/player/btod_128_128_15.png";
+		
+		public static final int aSchmerzAnimId = 121;
+		public static final int bSchmerzAnimId = 321;
+		public static final String aSchmerzImagePath = "sprites/player/aschmerz_128_128_15.png";
+		public static final String bSchmerzImagePath = "sprites/player/bschmerz_128_128_15.png";
+		
 		public static final String VertexShaderPath = "shader/simple.vert";
 		public static final String PixelShaderPath = "shader/playercolor.frag";
 		public static final String GlowImagePath = "shader/playerglow.png";
@@ -104,15 +114,17 @@ public class Assets {
 		public static final int FallShootingAnimId = 219;
 		public static final String FallShootingImagePath = "sprites/player/weaponschussspringen_128_128_15.png";
 		
+		public static final int DyingAnimId = 220;
+		public static final String DyingImagePath = "sprites/player/weapontod_128_128_15.png";
+		
 		// Weapon
 		public static final int AnimId = 22;
 		public static final int WeaponRenderOrder = 9;
-		public static final String AnimImagePath = "sprites/items/waffestehen_128_128_20.png";
 		public static final int ParticleEffect = 200;
-		public static final String ParticleEffectImgPath = "sprites/player/weaponparticle.png";
-		public static final String ParticleEffectCfgPath = "sprites/player/weaponparticleemitter3.xml";
+		public static final String ParticleEffectImgPath = "sprites/player/weaponparticle6.png";
+		public static final String ParticleEffectCfgPath = "sprites/player/weaponparticleemitter7.xml";
 		public static final float weaponXOffset = 35;		
-		public static final float weaponYOffset = 35;	
+		public static final float weaponYOffset = 35;
 		public static final String GlowImagePath = "shader/weaponglow.png";
 	}
 

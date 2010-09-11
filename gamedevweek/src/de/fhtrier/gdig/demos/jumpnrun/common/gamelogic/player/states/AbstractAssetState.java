@@ -10,6 +10,7 @@ import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
 import de.fhtrier.gdig.engine.graphics.shader.Shader;
+import de.fhtrier.gdig.engine.graphics.entities.ParticleEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
 
@@ -21,12 +22,14 @@ public abstract class AbstractAssetState {
 	private AssetEntity bGfxEntity;
 	
 	private AssetEntity weaponGfxEntity;
+	private ParticleEntity weaponParticles;
 	
 	public AbstractAssetState(Player player, int playerAAnimAssetId, int playerBAnimAssetId, String aPlayerAnimAssetPath, String bPlayerAnimAssetPath, int weaponAnimAssetId, String weaponAnimAssetPath, int entityOrder, Factory factory) throws SlickException {
 
 		AssetMgr assets = player.getAssetMgr();
 		this.player = player;
 		this.factory = factory;
+		this.weaponParticles = player.getWeaponParticleEntity();
 		
 		assets.storeAnimation(playerAAnimAssetId, aPlayerAnimAssetPath);
 		assets.storeAnimation(playerBAnimAssetId, bPlayerAnimAssetPath);
@@ -68,20 +71,22 @@ public abstract class AbstractAssetState {
 	}
 
 	public void render(Graphics g, Image frameBuffer) {
-		
+
+		weaponParticles.render(g, frameBuffer);
+
 		Shader.pushShader(Player.getColorGlowShader());
-		
 		Player.getColorGlowShader().setValue("playercolor", player.getPlayerCondition().weaponColor);
 		weaponGfxEntity.render(g, frameBuffer);
-
 		Shader.popShader();
 		
 		getGfxEntity().render(g, frameBuffer);
 	}
 	
 	public AssetEntity getGfxEntity() {
-		if (player.getPlayerCondition().teamId == 1)
+		if (player.getPlayerCondition().teamId == 1) {
 			return aGfxEntity;
+		}
+
 		return bGfxEntity;
 	}
 	
@@ -105,6 +110,10 @@ public abstract class AbstractAssetState {
 	
 	public Player getPlayer() {
 		return player;
+	}
+	
+	public ParticleEntity getWeaponParticles () {
+		return weaponParticles;
 	}
 	
 	@Override
