@@ -606,7 +606,8 @@ public class Player extends LevelCollidableEntity implements
 
 				if (this.getPlayerCondition().health <= Constants.EPSILON) {
 					NetworkComponent.getInstance().sendCommand(
-							new SendKill(this.getId(), killer.getId()));
+							new SendKill(this.getId(), killer != null ? killer
+									.getId() : -1));
 
 					Event dieEvent = new PlayerDiedEvent(this, killer);
 					dieEvent.update();

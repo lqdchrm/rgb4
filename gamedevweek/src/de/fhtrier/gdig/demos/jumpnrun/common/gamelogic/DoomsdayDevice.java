@@ -2,8 +2,6 @@ package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
 import java.util.Random;
 
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
@@ -75,13 +73,6 @@ public class DoomsdayDevice extends Entity {
 
 		resetChargetime();
 
-	}
-
-	@Override
-	protected void renderImpl(Graphics graphicContext, Image frameBuffer) {
-		// TODO Auto-generated method stub
-		super.renderImpl(graphicContext, frameBuffer);
-		graphicContext.fillRect(-10, -10, 20, 20);
 	}
 
 	public void resetChargetime() {
