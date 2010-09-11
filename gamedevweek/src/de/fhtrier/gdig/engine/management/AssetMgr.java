@@ -17,6 +17,7 @@ import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.tiled.TiledMap;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
+import de.fhtrier.gdig.engine.helpers.AStarTiledMap;
 
 public class AssetMgr {
 
@@ -130,12 +131,12 @@ public class AssetMgr {
 		this.tiledMaps.put(id, map);
 	}
 
-	public TiledMap storeTiledMap(int id, String src) throws SlickException {
-		TiledMap map = null;
+	public AStarTiledMap storeTiledMap(int id, String src) throws SlickException {
+		AStarTiledMap map = null;
 		try {
-			map = new TiledMap(combinePathStrings(this.assetPathPrefix, src));
+			map = new AStarTiledMap(combinePathStrings(this.assetPathPrefix, src));
 		} catch (Exception e) {
-			map = new TiledMap(combinePathStrings(this.assetFallbackPathPrefix,
+			map = new AStarTiledMap(combinePathStrings(this.assetFallbackPathPrefix,
 					src));
 		}
 		storeTiledMap(id, map);
