@@ -51,10 +51,10 @@ public class ServerGame extends RGB4Game {
 				"1.0", port, networkInterface );
 		netBroadCastListener.start();
 
-		Constants.GamePlayConstants c = new Constants.GamePlayConstants();
-		Constants.Debug d = new Debug();
-		d.showEditor("Server",
-				new JPanel[] { d.getEdittingPanel(), c.getEdittingPanel() });
+//		Constants.GamePlayConstants c = new Constants.GamePlayConstants();
+//		Constants.Debug d = new Debug();
+//		d.showEditor("Server",
+//				new JPanel[] { d.getEdittingPanel(), c.getEdittingPanel() });
 	}
 
 	@Override

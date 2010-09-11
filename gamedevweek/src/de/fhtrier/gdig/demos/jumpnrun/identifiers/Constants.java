@@ -53,7 +53,7 @@ public class Constants
 	{
 		public static boolean showDebugOverlay = false;
 		
-		public static boolean drawBounds = true;
+		public static boolean drawBounds = false;
 		
 		public static Color boundColor = Color.green;
 		public static Color overlayColor = Color.white;
