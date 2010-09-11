@@ -35,6 +35,9 @@ import javax.swing.event.ChangeListener;
 
 import com.sun.org.apache.xpath.internal.compiler.Keywords;
 
+import de.fhtrier.gdig.engine.helpers.Configuration.CommandlineParameter;
+import de.fhtrier.gdig.engine.helpers.Configuration.DefaultTrue;
+
 /**
  * This abstract class allows you to easaly configurate your Program. To use its
  * functunalety extends from this Class. Every {@link Keywords int},
@@ -91,6 +94,18 @@ public abstract class Configuration {
 	@Target(ElementType.FIELD)
 	@Retention(RetentionPolicy.RUNTIME)
 	protected @interface DefaultTrue {
+	}
+
+	/**
+	 * This Annotation allows you to suppress the apearing of this Field in the
+	 * Editor window.
+	 * 
+	 * @author Loki
+	 * 
+	 */
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	protected @interface DontShowInEditor {
 	}
 
 	private Map<String, Field> commandMap;
@@ -317,7 +332,12 @@ public abstract class Configuration {
 				panel.add(jLabel);
 
 				Class<?> filedType = field.getType();
-				if (filedType == String.class) {
+				DontShowInEditor dontShowInEditor = field
+						.getAnnotation(DontShowInEditor.class);
+				if (dontShowInEditor != null) {
+					panel.remove(jLabel);
+
+				} else if (filedType == String.class) {
 
 					final JTextField jTextField = new JTextField((String) value);
 					jTextField.addActionListener(new ActionListener() {
