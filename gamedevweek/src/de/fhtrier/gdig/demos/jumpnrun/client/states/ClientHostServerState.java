@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintStream;
 import java.net.InterfaceAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,16 +58,20 @@ public class ClientHostServerState extends NiftyGameState implements
 
 	public ClientHostServerState(final StateBasedGame game) {
 		super(GameStates.SERVER_SETTINGS);
+		
 		this.game = game;
+		
 		// add asset-folder to the ResourceLocators of nifty and slick2d
 		ResourceLoader.addResourceLocation(new FileSystemLocation(new File(
 				menuAssetPath)));
 		org.newdawn.slick.util.ResourceLoader
 				.addResourceLocation(new org.newdawn.slick.util.FileSystemLocation(
 						new File(menuAssetPath)));
+		
 		// read the nifty-xml-fiel
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
+		
 		// show the mouse
 		try {
 			enableMouseImage(new Image(
@@ -159,8 +162,9 @@ public class ClientHostServerState extends NiftyGameState implements
 				serverStarting = true;
 				String interfaceA = interfaces.get(selectedInterfaceIndex)
 						.getAddress().getHostAddress().replace('/', ' ').trim();
-				// ProcessBuilder pb = new ProcessBuilder("bash",
-				// "server.bat",serverNameControl.getText(),interfaceA,portControl.getText());
+
+				// Here we do some magic to spawn a server process 
+				// TODO check if it's really working
 				ProcessBuilder pb = new ProcessBuilder("java",
 						"-Djava.library.path=./lib/native", "-jar",
 						"server/server.jar", serverNameControl.getText(),
@@ -185,6 +189,12 @@ public class ClientHostServerState extends NiftyGameState implements
 										return;
 								}
 							} catch (IOException e) {
+							} finally {
+								try {
+									r.close();
+								} catch (IOException e) {
+
+								}
 							}
 						};
 					};
@@ -198,17 +208,14 @@ public class ClientHostServerState extends NiftyGameState implements
 						}
 					});
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
-				// TODO spawn server
 
 				// connect as client master
 				connect();
 			}
 		} else {
-			Log.debug("Allready tried creating a server");
+			Log.debug("Already tried creating a server");
 		}
 	}
 
@@ -231,9 +238,9 @@ public class ClientHostServerState extends NiftyGameState implements
 	}
 
 	public void drawInterfaces() {
-		// interfaces.add("server "+new Date().getTime());
 		clearList(guiInterfacePanel);
 		interfaceButtons.clear();
+
 		for (int i = 0; i < interfaces.size(); i++) {
 			InterfaceAddress iA = interfaces.get(i);
 			CreateButtonControl createButton = new CreateButtonControl("button"

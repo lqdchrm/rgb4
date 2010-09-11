@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.engine.network.impl;
+﻿package de.fhtrier.gdig.engine.network.impl;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -28,13 +28,16 @@ public class ClientHandler extends Thread {
 	public ClientHandler(Socket s, NetworkComponentImpl netComp,
 			int clientNetworkId) {
 		this.s = s;
-
-		try {
-			this.s.setTcpNoDelay(true);
-		} catch (SocketException e) {
-			System.out.println("Could not set TCP_NODELAY Flag");
+		
+		try
+		{
+		   this.s.setTcpNoDelay( true );
 		}
-
+		catch( SocketException e )
+		{
+           Log.error( "Could not set TCP_NODELAY Flag" );			
+		}
+		
 		this.netComp = netComp;
 		this.clientNetworkId = clientNetworkId;
 		this.doClose = false;
@@ -44,7 +47,6 @@ public class ClientHandler extends Thread {
 			this.in = new ObjectInputStream(s.getInputStream());
 		} catch (IOException e) {
 			Log.error("Getting streams from client failed.");
-			e.printStackTrace();
 		}
 	}
 
@@ -62,9 +64,9 @@ public class ClientHandler extends Thread {
 			this.out.close();
 			this.s.close();
 		} catch (SocketException e) {
-			System.out.println("Client disconnected unexpectedly");
+		    Log.debug( "Client disconnected unexpectedly" );
 		} catch (EOFException e) {
-			// ??WTF??
+			//??WTF??
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {

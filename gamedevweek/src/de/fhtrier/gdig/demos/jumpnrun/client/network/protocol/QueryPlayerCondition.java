@@ -12,7 +12,7 @@ public class QueryPlayerCondition extends QueryAction {
 	private int playerId;
 
 	public QueryPlayerCondition(int id) {
-		super(PlayerNetworkAction.UPDATECONDITION);
+		super(PlayerNetworkAction.QUERYPLAYERCONDITION);
 		this.playerId = id;
 	}
 

@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.server;
+﻿package de.fhtrier.gdig.demos.jumpnrun.server;
 
 import java.net.InterfaceAddress;
 import java.util.List;
@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 
+import de.fhtrier.gdig.demos.jumpnrun.common.GameSoundManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.RGB4Game;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
@@ -27,8 +28,10 @@ public class ServerGame extends RGB4Game {
 	public String serverName = "My Server";
 	private NetworkBroadcastListener netBroadCastListener;
 
-	public ServerGame(String serverName, InterfaceAddress ni, int port) {
+	public ServerGame(String serverName, InterfaceAddress ni, int port) throws SlickException {
 		super(Assets.Config.GameTitle + " (" + serverName + ")");
+		// do network stuff
+		
 		this.serverName = serverName;
 		ServerGame.networkInterface = ni;
 		ServerGame.port = port;
@@ -49,19 +52,20 @@ public class ServerGame extends RGB4Game {
 		NetworkComponent.createServerInstance();
 		NetworkComponent.getInstance().addListener(this);
 		NetworkComponent.getInstance().startListening(networkInterface, port);
-
+		
 		netBroadCastListener = new NetworkBroadcastListener(serverName, "map1",
 				"1.0", port, networkInterface);
 		netBroadCastListener.start();
 
-		GamePlayConstants gamePlayConstants = new Constants.GamePlayConstants();
-		Debug debug = new Constants.Debug();
-		ControlConfig controlConfig = new Constants.ControlConfig();
-		Configuration.showEditor(
-				"Server",
-				new JPanel[] { gamePlayConstants.getEdittingPanel(),
-						debug.getEdittingPanel(),
-						controlConfig.getEdittingPanel() });
+		// create SoundManager
+		GameSoundManager.init(false);
+
+		
+		Constants.GamePlayConstants c = new Constants.GamePlayConstants();
+		Constants.Debug d = new Debug();
+		Constants.SoundConfig s = new Constants.SoundConfig();
+		d.showEditor("Server",
+				new JPanel[] { d.getEdittingPanel(), c.getEdittingPanel(), s.getEdittingPanel() });
 	}
 
 	@Override

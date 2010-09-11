@@ -18,7 +18,6 @@ public class NetworkComponentServer extends NetworkComponentImpl {
 
 	protected SortedMap<Integer, ClientHandler> clients;
 	private NetworkConnectionListener networkConnectionListener;
-	private NetworkBroadcastListener networkBroadcastListener;
 
 	private static int networkIds = 1;
 
@@ -39,7 +38,6 @@ public class NetworkComponentServer extends NetworkComponentImpl {
 	@Override
 	public void stopListening() {
 		this.networkConnectionListener.stopNetworkConnectionListener();
-		this.networkBroadcastListener.finish();
 	}
 
 	@Override

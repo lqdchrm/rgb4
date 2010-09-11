@@ -16,25 +16,25 @@ public class LandingState extends AbstractAssetState {
 	private Animation anim;
 	private Animation weaponAnim;
 	
-	public LandingState(Player player, Factory factory)
+	public LandingState(int stateId, Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.aLandAnimId, Assets.Player.bLandAnimId, Assets.Player.aLandAnimImagePath, Assets.Player.bLandAnimImagePath, Assets.Weapon.LandAnimId, Assets.Weapon.LandAnimImagePath, EntityOrder.Player, factory);
+		super(stateId, player, Assets.Player.aLandAnimId, Assets.Player.bLandAnimId, Assets.Player.aLandAnimImagePath, Assets.Player.bLandAnimImagePath, Assets.Weapon.LandAnimId, Assets.Weapon.LandAnimImagePath, EntityOrder.Player, factory);
 	
 		AssetEntity e = getGfxEntity();
 		
-		anim = e.Assets().getAnimation(e.getAssetId());
+		anim = e.getAssetMgr().getAnimation(e.getAssetId());
 		anim.setLooping(false);
 		
 		e = getWeaponGfxEntity();
 		
-		weaponAnim = e.Assets().getAnimation(e.getAssetId());
+		weaponAnim = e.getAssetMgr().getAnimation(e.getAssetId());
 		weaponAnim.setLooping(false);
 	}
 	
 	public void getAnim() {
 		AssetEntity e = getGfxEntity();
 		
-		anim = e.Assets().getAnimation(e.getAssetId());
+		anim = e.getAssetMgr().getAnimation(e.getAssetId());
 		anim.setLooping(false);
 	}
 

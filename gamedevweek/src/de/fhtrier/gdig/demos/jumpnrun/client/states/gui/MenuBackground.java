@@ -8,7 +8,6 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 import de.fhtrier.gdig.engine.graphics.shader.Shader;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 
@@ -40,8 +39,8 @@ public class MenuBackground {
 			AssetMgr amgr = new AssetMgr();
 			backgroundImage = new Image(Assets.Config.AssetGuiPath+"/menubg_pflanze.png");
 			bgglowImage = new Image(Assets.Config.AssetGuiPath+"/menubg_pflanze_glow.png");
-			menuShader = new Shader(amgr.makePathRelativeToAssetPath("shader/simple.vert"),
-					amgr.makePathRelativeToAssetPath("shader/menucolor.frag"));
+			menuShader = new Shader(amgr.getPathRelativeToAssetPath("shader/simple.vert"),
+					amgr.getPathRelativeToAssetPath("shader/menucolor.frag"));
 			col = new Color(2, 0, 0, 0.5f);
 		} catch (SlickException e) {
 			e.printStackTrace();

@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.identifiers;
+﻿package de.fhtrier.gdig.demos.jumpnrun.identifiers;
 
 import java.net.InetSocketAddress;
 
@@ -22,7 +22,7 @@ public class Constants {
 		@ShowAsSlider(maxValue = 10000, minValue = 10)
 		public static float shotSpeed = 1000.0f;
 		public static float shotCooldown = 100.0f;
-
+		
 		public static float playerWalkSpeed = 4000.0f;
 		public static float playerJumpSpeed = 1000.0f;
 		public static float playerMaxSpeed = 850.0f;
@@ -33,7 +33,7 @@ public class Constants {
 		public static float playerGroundDrag = 0.005f;
 		public static float playerAirDrag = 0.000001f;
 
-		public static Color DefaultPlayerTextColor = Color.white;
+		public static Color defaultPlayerTextColor = Color.white;
 
 		public static float weaponGlowFalloff = 1.5f;
 
@@ -44,25 +44,32 @@ public class Constants {
 
 		public static float playerMaxJumpSpeed = 1000.0f;
 		
-		public static boolean clientSound = true;
+		public static long playerReviveDelayInMillis = 3000;
+
+		public static float initialPlayerHealth = 1.0f;
 		
-		public static boolean serverSound = true;
+		public static float maxPlayerHealth = 2.0f;
 	}
 
-	public static class Debug extends Configuration {
 
+	public static class SoundConfig extends Configuration {
+		public static boolean musicEnabled = true;
+		public static boolean isMuted = false;
+		public static boolean soundEnabled = true;
+	}
+	public static class Debug extends Configuration {
 		@CommandlineParameter("noRender")
 		public static boolean doNotRender = false;
 
 		public static boolean showDebugOverlay = false;
-
-		public static boolean drawBounds = true;
-
+		
+		public static boolean drawBounds = false;
+		
 		public static Color boundColor = Color.green;
 		public static Color overlayColor = Color.white;
-
+		
 		public static boolean showCollisions = false;
-
+		
 		@CommandlineParameter("noShader")
 		@DefaultTrue
 		public static boolean shadersActive = true;
@@ -73,16 +80,16 @@ public class Constants {
 		public static boolean forceNoFBO = false;
 
 		public static boolean finiteStateMachineDebug = false;
-
-		public static boolean guiDebug = false;
-
-		public static boolean networkDebug = false;
-
-		public static boolean factoryDebug = false;
 		
-	
+		public static boolean guiDebug = false;
+		
+		// network
+		public static boolean networkDebug = false;
+		public static boolean showProtocolCommandsOnly = false;
+		
+		public static boolean factoryDebug = false;
 	}
-
+	
 	public static class Level extends Configuration {
 		public static int collisionLayer = 1;
 		public static int logicLayer = 3;
@@ -94,7 +101,7 @@ public class Constants {
 	}
 	
 	public static class ControlConfig extends Configuration {
-
+		
 		public static String REFWALKLEFT = "KEY_LEFT";
 		public static String REFWALKRIGHT = "KEY_RIGHT";
 		public static String REFJUMP = "KEY_UP";

@@ -1,7 +1,6 @@
-package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
+﻿package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 import org.newdawn.slick.Graphics;
@@ -32,8 +31,6 @@ public class Level extends MoveableEntity {
 
 	public GameFactory factory;
 
-	private HashMap<Integer, Float> scrollingLayers;
-
 	private TiledMap groundMap;
 	private TiledMapEntity ground;
 	public int firstLogicGID;
@@ -58,8 +55,6 @@ public class Level extends MoveableEntity {
 	public Level(int id, GameFactory factory) throws SlickException {
 		super(id, EntityType.LEVEL);
 
-		this.scrollingLayers = new HashMap<Integer, Float>();
-
 		this.currentPlayerId = -1;
 
 		this.factory = factory;
@@ -76,7 +71,7 @@ public class Level extends MoveableEntity {
 		this.ground.setVisible(true);
 		this.ground.setActive(true);
 		add(this.ground);
-
+		
 		// physics
 		setData(new float[] { 0, 0, 0, 0, 1, 1, 0 });
 
@@ -91,7 +86,7 @@ public class Level extends MoveableEntity {
 		setVisible(true);
 
 		// HACK determine GID for logic layer
-		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
+		TiledMap tiledMap = ground.getAssetMgr().getTiledMap(ground.getAssetId());
 		for (int i = 0; i < tiledMap.getTileSetCount(); i++) {
 			if (tiledMap.getTileSet(i).lastGID
 					- tiledMap.getTileSet(i).firstGID == 127) {
@@ -102,14 +97,15 @@ public class Level extends MoveableEntity {
 		calculateLogicPoints();
 	}
 
-	MoveableEntity createBackgroundLayer(int numTiles, int AssetId,
-			String AssetPath) throws SlickException {
+	MoveableEntity createBackgroundLayer(int numTiles, int AssetId, String AssetPath)
+			throws SlickException {
+
 		// Background far
 		MoveableEntity result = new MoveableEntity(AssetId, EntityType.HELPER);
 		int xOffset = 0;
 
 		for (int i = 0; i < numTiles; i++) {
-			String strFile = (assets.makePathRelativeToAssetPath(AssetPath
+			String strFile = (assets.getPathRelativeToAssetPath(AssetPath
 					+ "_0" + (i + 1) + "." + Level1.FileExt));
 			Image img = new Image(strFile);
 
@@ -193,7 +189,7 @@ public class Level extends MoveableEntity {
 			teleportExitPoints.add(new ArrayList<LogicPoint>());
 		}
 
-		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
+		TiledMap tiledMap = ground.getAssetMgr().getTiledMap(ground.getAssetId());
 
 		for (int x = 0; x < tiledMap.getWidth(); x++) {
 			for (int y = 0; y < tiledMap.getHeight(); y++) {
@@ -221,18 +217,18 @@ public class Level extends MoveableEntity {
 						Log.debug("Teleporter entry " + tileId + " at: " + x
 								+ ", " + y);
 					}
-				}
+			}
 
 				// is a teleporterexit
 				if (tileId > 64 && tileId <= 96) {
 					if (Constants.Debug.tileMapLogicDebug) {
 						Log.debug("Teleporter exit " + tileId + " at: " + x
 								+ ", " + y);
-					}
+		}
 					teleportExitPoints.get(tileId - 65).add(
 							new LogicPoint(tileId, x * tiledMap.getTileWidth(),
 									y * tiledMap.getTileHeight()));
-				}
+	}
 
 				// is doomsday Device
 				if (tileId == 97) {
@@ -251,15 +247,15 @@ public class Level extends MoveableEntity {
 					if (Constants.Debug.tileMapLogicDebug) {
 						Log.debug("Teleporter animation " + tileId + " at: "
 								+ x + ", " + y);
-					}
+		}
 
 					teleportAnimations.add(new LogicPoint(tileId, x
 							* tiledMap.getTileWidth(), y
 							* tiledMap.getTileHeight()));
 				}
+				}
 			}
 		}
-	}
 
 	public ArrayList<LogicPoint> getSpawnPoints(int id) {
 		return spawnPoints.get(id - 1);
@@ -294,13 +290,13 @@ public class Level extends MoveableEntity {
 	@Override
 	protected void postRender(Graphics graphicContext) {
 		if (isVisible()) {
-			ground.Assets().getTiledMap(ground.getAssetId()).render(0, 0, 2);
+			ground.getAssetMgr().getTiledMap(ground.getAssetId()).render(0, 0, 2);
 		}
 		super.postRender(graphicContext);
 
 		graphicContext.setColor(Constants.Debug.overlayColor);
-		graphicContext.drawString("Team 1: " + Team.Team1.getKills()
-				+ "\nTeam 2: " + Team.Team2.getKills(), 200, 20);
+		graphicContext.drawString("Team 1: " + Team.team1.getKills()
+				+ "\nTeam 2: " + Team.team2.getKills(), 200, 20);
 
 		if (Constants.Debug.showDebugOverlay) {
 			graphicContext.setColor(Constants.Debug.overlayColor);
@@ -361,7 +357,7 @@ public class Level extends MoveableEntity {
 		if (isActive()) {
 			focusOnPlayer();
 
-			// checkLevelBordersScrolling();
+			checkLevelBordersScrolling();
 
 			parallaxScrollingBackground();
 		}
@@ -401,16 +397,15 @@ public class Level extends MoveableEntity {
 		}
 		// Right
 		if (getData()[X] < -this.groundMap.getWidth()
-
-		* this.groundMap.getTileWidth() + Settings.SCREENWIDTH) {
+				* this.groundMap.getTileWidth() + Settings.SCREENWIDTH) {
 			getData()[X] = -this.groundMap.getWidth()
-					* this.groundMap.getTileWidth() + Settings.SCREENHEIGHT;
+					* this.groundMap.getTileWidth() + Settings.SCREENWIDTH;
 			getVel()[X] = 0.0f;
 		}
 		// Bottom
 		if (getData()[Y] < -this.groundMap.getHeight()
 
-		* this.groundMap.getTileHeight() + Settings.SCREENWIDTH) {
+		* this.groundMap.getTileHeight() + Settings.SCREENHEIGHT) {
 			getData()[Y] = -this.groundMap.getHeight()
 					* this.groundMap.getTileHeight() + Settings.SCREENHEIGHT;
 			getVel()[Y] = 0.0f;
@@ -425,8 +420,8 @@ public class Level extends MoveableEntity {
 		if (player != null) {
 
 			// Focus on Player
-			getData()[X] = Settings.SCREENWIDTH / 2 - player.getData()[X];
-			getData()[Y] = Settings.SCREENHEIGHT / 2 - player.getData()[Y];
+			getData()[X] = Settings.SCREENWIDTH / 2.0f - player.getData()[X];
+			getData()[Y] = Settings.SCREENHEIGHT / 2.0f - player.getData()[Y];
 		}
 	}
 
@@ -528,6 +523,7 @@ public class Level extends MoveableEntity {
 	public Entity add(Entity e) {
 		Entity result = super.add(e);
 
+		// tell player that he belongs to level
 		if (e instanceof LevelCollidableEntity) {
 			((LevelCollidableEntity) e).setLevel(this);
 		}

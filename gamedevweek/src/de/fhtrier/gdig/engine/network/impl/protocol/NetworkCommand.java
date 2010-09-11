@@ -30,6 +30,11 @@ public class NetworkCommand implements INetworkCommand {
 
 	@Override
 	public void setHandled(boolean handled) {
-		handled = true;
+		this.handled = handled;
+	}
+	
+	@Override
+	public String toString() {
+		return "Sender: " + sender + " | " + "Handled: " + handled;
 	}
 }

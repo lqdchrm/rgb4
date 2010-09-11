@@ -2,7 +2,6 @@ package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,6 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.dynamic.LabelCreator;
-import de.lessvoid.nifty.controls.dynamic.attributes.ControlEffectAttributes;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import de.lessvoid.nifty.slick.NiftyGameState;
@@ -24,8 +22,6 @@ import de.lessvoid.nifty.tools.resourceloader.ResourceLoader;
 
 public class ClientCreditsState extends NiftyGameState implements ScreenController {
 
-	private static final String CROSSHAIR_PNG = "crosshair.png";
-
 	private static String menuNiftyXMLFile = "credits.xml";
 	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 	private static String creditsFile = menuAssetPath+"/credits.txt";
@@ -33,8 +29,6 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 	private static float currentTimeCounter = timePerLine;
 	private static int currentBlock = 0;
 
-	private StateBasedGame game;
-	
 	private List<String> creditsList;
 	
 	public ClientCreditsState()
@@ -47,8 +41,6 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		super.init(container, game);
-		
-		this.game = game;
 		
 		// add asset-folder to the ResourceLocators of nifty and slick2d
 		ResourceLoader.addResourceLocation(new FileSystemLocation(new File(
@@ -103,13 +95,4 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 			currentTimeCounter-=delta;
 		}
 	}
-	
-	public void addNextCreditsLine()
-	{
-		String line = creditsList.get(++currentBlock);
-		LabelCreator labelCreator = new LabelCreator(currentBlock+"", line);
-		
-	}
-	
-	
 }

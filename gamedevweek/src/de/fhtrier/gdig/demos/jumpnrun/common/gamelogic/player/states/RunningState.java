@@ -13,20 +13,22 @@ import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class RunningState extends AbstractAssetState {
 
-	public RunningState(Player player, Factory factory)
+	public RunningState(int stateId, Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.aRunningAnimId, Assets.Player.bRunningAnimId,
+		super(stateId, player, Assets.Player.aRunningAnimId, Assets.Player.bRunningAnimId,
 				Assets.Player.aRunningImagePath, Assets.Player.bRunningImagePath, Assets.Weapon.RunningAnimId, Assets.Weapon.RunningImagePath, EntityOrder.Player, factory);
 	}
 
 	@Override
 	public void enter() {
-		SoundManager.loopSound(Assets.Sounds.PlayerRunSoundId, 1f, 0.5f);
+		SoundManager.loopSound(Assets.Sounds.PlayerRunSoundId, 1f, 0.2f);
+		getPlayer().getWeaponParticleEntity().getData()[Entity.Y] = 155;
 	}
 
 	@Override
 	public void leave() {
 		SoundManager.stopSound(Assets.Sounds.PlayerRunSoundId);
+		getPlayer().getWeaponParticleEntity().getData()[Entity.Y] = 165;
 	}
 
 	@Override

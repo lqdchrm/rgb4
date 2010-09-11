@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers;
+﻿package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers;
 
 //public class PlayerActions {
 //	public static final int StartShooting = 0;
@@ -16,5 +16,17 @@ package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifier
 //}
 
 public enum PlayerActions {
-	StartShooting, StopShooting, StartRunning, StopRunning, Jump, Fall, Land, Up, Left, Right, DoNothing
+	StartShooting,
+	StopShooting,
+	StartRunning,
+	StopRunning,
+	Jump,
+	Fall,
+	Land,
+	Up,
+	Left,
+	Right,
+	DoNothing,
+	Die,
+	Revive
 };

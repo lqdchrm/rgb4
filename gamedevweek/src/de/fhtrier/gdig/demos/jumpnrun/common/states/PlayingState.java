@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.common.states;
+﻿package de.fhtrier.gdig.demos.jumpnrun.common.states;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -57,19 +57,19 @@ public abstract class PlayingState extends BasicGameState implements
 			throws SlickException {
 		gameType = Constants.GameTypes.teamDeathMatch; // TODO: change it!
 	}
-
+	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		// TODO Auto-generated method stub
 		super.enter(container, game);
-
+		
 		// Factory
 		this.factory = new GameFactory();
 
 		// Level
 		this.levelId = factory.createEntity(EntityType.LEVEL);
-
+		
 		
 		// TODO FrameBuffer - only activate for postprocessing
 		//frameBuffer = new Image(RGB4.SCREENWIDTH, RGB4.SCREENHEIGHT);
@@ -99,7 +99,7 @@ public abstract class PlayingState extends BasicGameState implements
 			}
 		}
 	}
-
+	
 	public abstract void notify(INetworkCommand cmd);
 
 	@Override
@@ -115,9 +115,6 @@ public abstract class PlayingState extends BasicGameState implements
 			} catch (final SlickException e) {
 				Log.error(e);
 			}
-			// container.setVSync(true);
-			// container.setSmoothDeltas(true);
-			// container.setMaximumLogicUpdateInterval(17);
 			container.setPaused(false);
 		}
 
@@ -130,13 +127,14 @@ public abstract class PlayingState extends BasicGameState implements
 		if (level != null) {
 			level.handleInput(input);
 			level.update(deltaInMillis);
-
-			EventManager.update();
-
+			
+			
 			// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2. Zeile
 			// Den Objekten gesagt wird die Kollision zu behandeln.
 			CollisionManager.update();
 			level.handleCollisions();
+		
+			EventManager.update();
 		}
 	}
 

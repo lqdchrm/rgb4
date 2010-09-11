@@ -18,8 +18,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 
 public class RGB4 {
 
-	public static void main(String[] args) {
-
+	public static void main(String[] args) throws SlickException {
 
 		// Parse Commandline in Constants
 		Debug debug = new Constants.Debug();
@@ -29,9 +28,10 @@ public class RGB4 {
 		controlConfig.parseCommandLine(args);
 		gamePlayConstants.parseCommandLine(args);
 
+	
 		if (Constants.Debug.forceNoFBO)
 			GraphicsFactory.setUseFBO(false);
-
+		
 
 		// create game
 		RGB4Game game = Lobby.createGameByArgs(args);
@@ -66,7 +66,7 @@ public class RGB4 {
 					Settings.SCREENHEIGHT = 960;
 				}
 				
-				fullscreen = false;
+				fullscreen = true;
 			}
 
 			try {

@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.engine.management;
+﻿package de.fhtrier.gdig.engine.management;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,10 +24,10 @@ public class AssetMgr {
 	private String assetFallbackPathPrefix;
 	private HashMap<Integer, Image> images;
 	private HashMap<Integer, Sound> sounds;
+	private HashMap<Integer, Music> musics;
 	private HashMap<Integer, TiledMap> tiledMaps;
 	private HashMap<Integer, Animation> animations;
 	private HashMap<Integer, ParticleSystem> particleSystems;
-	private HashMap<Integer, Music> musics;
 
 	public AssetMgr() {
 
@@ -71,14 +71,12 @@ public class AssetMgr {
 	}
 
 	public Image storeImage(int id, String src) throws SlickException {
-		Image img = null;
-		try {
-			img = new Image(combinePathStrings(this.assetPathPrefix, src));
-		} catch (Exception e) {
-			img = new Image(combinePathStrings(this.assetFallbackPathPrefix,
-					src));
-		}
+
+		String strFile = getPathRelativeToAssetPath(src);
+
+		Image img = new Image(strFile);
 		storeImage(id, img);
+
 		return img;
 	}
 
@@ -91,13 +89,10 @@ public class AssetMgr {
 	}
 
 	public Sound storeSound(int id, String src) throws SlickException {
-		Sound snd = null;
-		try {
-			snd = new Sound(combinePathStrings(this.assetPathPrefix, src));
-		} catch (Exception e) {
-			snd = new Sound(combinePathStrings(this.assetFallbackPathPrefix,
-					src));
-		}
+
+		String strFile = getPathRelativeToAssetPath(src);
+
+		Sound snd = new Sound(strFile);
 		storeSound(id, snd);
 		return snd;
 	}
@@ -106,18 +101,30 @@ public class AssetMgr {
 		return this.sounds.get(id);
 	}
 	
+	public void storeMusic(int id, Music song) {
+		this.musics.put(id, song);
+	}
+
+	public Music storeMusic(int id, String src) throws SlickException {
+
+		String strFile = getPathRelativeToAssetPath(src);
+		Music song = new Music(strFile, true);
+		storeMusic(id, song);
+		return song;
+	}
+
+	public Music getMusic(int id) {
+		return this.musics.get(id);
+	}
+
 	public void storeTiledMap(int id, TiledMap map) {
 		this.tiledMaps.put(id, map);
 	}
 
 	public TiledMap storeTiledMap(int id, String src) throws SlickException {
-		TiledMap map = null;
-		try {
-			map = new TiledMap(combinePathStrings(this.assetPathPrefix, src));
-		} catch (Exception e) {
-			map = new TiledMap(combinePathStrings(this.assetFallbackPathPrefix,
-					src));
-		}
+
+		String strFile = getPathRelativeToAssetPath(src);
+		TiledMap map = new TiledMap(strFile);
 		storeTiledMap(id, map);
 		return map;
 	}
@@ -128,27 +135,23 @@ public class AssetMgr {
 
 	public Animation storeAnimation(int id, String src, int cellWidth,
 			int cellHeight, int duration) throws SlickException {
-		SpriteSheet sheet = null;
-		try {
-			sheet = new SpriteSheet(combinePathStrings(this.assetPathPrefix,
-					src), cellWidth, cellHeight);
-		} catch (Exception e) {
-			sheet = new SpriteSheet(combinePathStrings(
-					this.assetFallbackPathPrefix, src), cellWidth, cellHeight);
-		}
 
+		String strFile = getPathRelativeToAssetPath(src);
+
+		SpriteSheet sheet = new SpriteSheet(strFile, cellWidth, cellHeight);
 		Animation anim = new Animation(sheet, duration);
 		storeAnimation(id, anim);
 		return anim;
 	}
-
+	
 	public Animation storeAnimation(int id, String src) throws SlickException {
 		StringTokenizer tok = new StringTokenizer(src, "_");
 		int cellWidth = 0;
 		int cellHeight = 0;
 		int duration = 0;
+
 		try {
-			tok.nextToken();
+		tok.nextToken();
 			cellWidth = Integer.parseInt(tok.nextToken());
 			cellHeight = Integer.parseInt(tok.nextToken());
 			StringTokenizer tok2 = new StringTokenizer(tok.nextToken(), ".");
@@ -167,56 +170,47 @@ public class AssetMgr {
 	public Animation getAnimation(int id) {
 		return this.animations.get(id);
 	}
-
+	
 	public ParticleSystem storeParticleSystem(int id, String imgPath,
 			String emitterCfgPath) throws SlickException {
-		Image image = null;
-		try {
-			image = new Image(
-					combinePathStrings(this.assetPathPrefix, imgPath), false);
-		} catch (Exception e1) {
-			image = new Image(combinePathStrings(this.assetFallbackPathPrefix,
-					imgPath), false);
-		}
-
-		ParticleSystem system = new ParticleSystem(image);
-
-		ConfigurableEmitter emitter1 = null;
-		try {
-			File xmlFile = new File(combinePathStrings(this.assetPathPrefix,
-					emitterCfgPath));
-			emitter1 = ParticleIO.loadEmitter(xmlFile);
-		} catch (Exception e) {
-			File xmlFile = new File(combinePathStrings(
-					this.assetFallbackPathPrefix, emitterCfgPath));
-			try {
-				emitter1 = ParticleIO.loadEmitter(xmlFile);
+		
+		String strImgFile = getPathRelativeToAssetPath(imgPath);
+		String strEmitterFile = getPathRelativeToAssetPath(emitterCfgPath);
+		
+		Image image = new Image(strImgFile, false);
+        ParticleSystem system = new ParticleSystem(image);  
+          
+        ConfigurableEmitter emitter1 = null;
+        try {
+			File xmlFile = new File(strEmitterFile);
+			emitter1 = ParticleIO.loadEmitter(xmlFile);			
 			} catch (IOException e1) {
-				throw new IllegalArgumentException(
-						"Wrong cfg file or incorrect path?");
+			throw new IllegalArgumentException("Wrong cfg file?");
 			}
-		}
+ 
 		system.addEmitter(emitter1);
+		
 		storeParticleSystem(id, system);
+		
 		return system;
 	}
-
+	
 	public void storeParticleSystem(int id, ParticleSystem system) {
 		this.particleSystems.put(id, system);
 	}
-
+	
 	public ParticleSystem getParticleSystem(int id) {
 		return this.particleSystems.get(id);
 	}
-
-	public String makePathRelativeToAssetPath(String path) {
+	
+	public String getPathRelativeToAssetPath(String path) {
 		String result = AssetMgr.combinePathStrings(assetPathPrefix, path);
 		File file = new File(result);
-
+		
 		if (!file.exists()) {
 			result = AssetMgr.combinePathStrings(assetFallbackPathPrefix, path);
 			file = new File(result);
-
+			
 			if (!file.exists()) {
 				throw new RuntimeException("File " + path
 						+ " neither found in " + assetPathPrefix + " nor in "
@@ -224,24 +218,5 @@ public class AssetMgr {
 			}
 		}
 		return result;
-	}
-
-	public void storeMusic(int id, Music song) {
-		this.musics.put(id, song);
-	}
-
-	public Music storeMusic(int id, String src) throws SlickException {
-		Music song = null;
-		try {
-			song = new Music(combinePathStrings(this.assetPathPrefix, src), true);
-		} catch (Exception e) {
-			song = new Music(combinePathStrings(this.assetFallbackPathPrefix, src), true);
-		}
-		storeMusic(id, song);
-		return song;
-	}
-	
-	public Music getMusic(int id) {
-		return this.musics.get(id);
 	}
 }

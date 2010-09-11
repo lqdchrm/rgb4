@@ -1,5 +1,6 @@
 package de.fhtrier.gdig.engine.graphics.entities;
 
+import org.newdawn.slick.Animation;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
@@ -14,9 +15,13 @@ public class AnimationEntity extends AssetEntity {
 	@Override
 	public void renderImpl(Graphics graphicContext, Image frameBuffer) {
 		if (isVisible()) {
-			graphicContext.drawAnimation(Assets().getAnimation(getAssetId()),
+			graphicContext.drawAnimation(getAnimationAsset(),
 					0, 0, this.getColorTint());
 		}
 		super.renderImpl(graphicContext, frameBuffer);
+	}
+	
+	public Animation getAnimationAsset() {
+		return getAssetMgr().getAnimation(getAssetId());
 	}
 }
