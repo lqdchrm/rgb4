@@ -43,7 +43,7 @@ public class LevelCollidableEntity extends CollidableEntity {
 	 * 
 	 * @return transformed Shape
 	 */
-	private Shape getTransformedBounds() {
+	public Shape getTransformedBounds() {
 		return this.getBounds().transform(
 				Transform.createTranslateTransform(this.getData()[Entity.X],
 						this.getData()[Entity.Y]));

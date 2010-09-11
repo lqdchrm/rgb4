@@ -1,0 +1,13 @@
+the background assets consists of a series of horizontal aligned images with the following naming scheme:
+
+[name]_[t]+[blur_factor]_[num].png
+
+i.e.:
+
+saeulen_vorne_t4_02.png is
+- the second file
+- with blur factor 4
+- [t]extured version
+- of the [saeulen_vorne] series
+
+

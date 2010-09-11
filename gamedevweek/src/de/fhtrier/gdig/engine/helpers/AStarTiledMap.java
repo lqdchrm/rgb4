@@ -2,6 +2,7 @@ package de.fhtrier.gdig.engine.helpers;
 
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
+import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.pathfinding.AStarPathFinder;
 import org.newdawn.slick.util.pathfinding.Mover;
 import org.newdawn.slick.util.pathfinding.Path;
@@ -26,7 +27,6 @@ public class AStarTiledMap extends TiledMap implements TileBasedMap {
 
 
 	public int getHeightInTiles() {
-		// TODO Auto-generated method stub
 		return height;
 	}
 
@@ -57,7 +57,7 @@ public class AStarTiledMap extends TiledMap implements TileBasedMap {
 	
 	public void initAStarPathFinder()
 	{
-		finder = new AStarPathFinder(this, 500, false);
+		finder = new AStarPathFinder(this, 1500, false);
 		mover = new Mover() {
 		};
 	}
@@ -79,12 +79,28 @@ public class AStarTiledMap extends TiledMap implements TileBasedMap {
 		return 1;
 	}
 
+	
+
+	@Override
+	public int getTileId(int x, int y, int layerIndex) {
+		if (x<0||x>getWidthInTiles())
+			return 0;
+		if (y<0||y>getHeightInTiles())
+			return 0;
+		return super.getTileId(x, y, layerIndex);
+	}
+
+
+
+
 
 
 	@Override
 	public boolean blocked(PathFindingContext arg0, int x, int y) {
-		return this.getTileId(x, y,
-				Constants.Level.collisionLayer)!=0;
+		int id = this.getTileId(x, y,Constants.Level.collisionLayer);
+		Log.debug("x:"+x+" y:"+y+" id:"+id);
+		return id>0;
+//		return false;
 	}
 
 	

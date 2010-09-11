@@ -16,6 +16,8 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Bullet;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Rocket;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Rocket.RocketStrategy;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.PlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
@@ -24,7 +26,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreatePlayer;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckPlayerCondition;
@@ -34,6 +36,7 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeColor;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeWeaponColor;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
+import de.fhtrier.gdig.engine.helpers.AStarTiledMap;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
@@ -85,7 +88,7 @@ public class ServerPlayingState extends PlayingState {
 			// set values
 			Bullet bullet = (Bullet) e;
 			bullet.owner = player;
-
+			
 			PlayerCondition state = player.getPlayerCondition();
 
 			bullet.color = state.weaponColor;
@@ -108,6 +111,34 @@ public class ServerPlayingState extends PlayingState {
 			else if(player.getData()[Entity.SCALE_X] == 1) // Left
 			bullet.getData()[Entity.SCALE_X] = 1;
 
+			return true;
+		case SHOOT_ROCKET:
+			e = createEntity(EntityType.ROCKET);
+
+			// set values
+			Rocket rocket = (Rocket) e;
+			rocket.owner = player;
+			rocket.map = (AStarTiledMap)getLevel().getMap();
+			
+			PlayerCondition playerCond = player.getPlayerCondition();
+
+			rocket.color = playerCond.weaponColor;
+			// set player pos as gem pos
+
+			rocket.getData()[Entity.X] = player.getData()[Entity.X];
+			rocket.getData()[Entity.Y] = player.getData()[Entity.Y];
+//			rocket.getData()[Entity.X] =
+//				(player.getData()[Entity.X] + player.getData()[Entity.CENTER_X]) +
+//				(rocket.getData()[Entity.CENTER_X] - Assets.Weapon.weaponXOffset) * player.getData()[Entity.SCALE_X];
+//
+//			rocket.getData()[Entity.Y] =
+//			player.getData()[Entity.Y] + player.getData()[Entity.CENTER_Y] -
+//			rocket.getData()[Entity.CENTER_Y] + Assets.Weapon.weaponYOffset;
+			
+
+			
+			rocket.shootAtClosestPlayer(RocketStrategy.NEXT_ENEMY_TEAM);
+			
 			return true;
 		case PLAYERCOLOR:
 			player.nextColor();
@@ -208,7 +239,7 @@ public class ServerPlayingState extends PlayingState {
 				// if query requested new player assume that's the one to be
 				// controlled by client
 				NetworkComponent.getInstance().sendCommand(cmd.getSender(),
-						new AckCreatePlayer(id));
+						new AckCreateEntity(id));
 
 				// remember, which networkId identifies which player
 				networkId2Player.put(cmd.getSender(), id);

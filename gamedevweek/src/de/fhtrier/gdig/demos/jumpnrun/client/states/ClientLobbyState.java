@@ -1,7 +1,6 @@
 package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,7 +13,6 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.tests.GUITest;
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetLevel;
@@ -58,10 +56,9 @@ public class ClientLobbyState extends NiftyGameState implements
 	private HashMap<Integer, NetworkPlayer> players;
 	private ArrayList<NetworkLevel> levels;
 	private int currentTeam = 1;
-	
+
 	private StateBasedGame game;
 	private boolean isGameCreator = false;
-	private NetworkLevel currentLevel;
 
 	// gui-elements
 	private Element guiListTeam1;
@@ -69,15 +66,15 @@ public class ClientLobbyState extends NiftyGameState implements
 	private Element guiLevelList;
 	private TextRenderer guiCurrentLevelRenderer;
 	private Element guiButtonPanel;
-	
-	public String formatLevelname (String levelName) {
+
+	public String formatLevelname(String levelName) {
 		String helpString = levelName.substring(6);
-		
+
 		if (!helpString.equals(""))
 			return helpString;
 		return levelName;
 	}
-	
+
 	public void readLevels(File dir, ArrayList<NetworkLevel> levels) {
 
 		File[] files = dir.listFiles();
@@ -85,7 +82,8 @@ public class ClientLobbyState extends NiftyGameState implements
 			for (int i = 0; i < files.length; i++) {
 				String fileName = files[i].getName();
 				if (files[i].isDirectory() && fileName.startsWith("Level")) {
-					levels.add(new NetworkLevel(i, "content/rgb4/"+fileName, formatLevelname(fileName)));
+					levels.add(new NetworkLevel(i, Assets.Level.AssetLevelPath
+							+ fileName, formatLevelname(fileName)));
 				}
 			}
 		}
@@ -97,15 +95,9 @@ public class ClientLobbyState extends NiftyGameState implements
 		players = new HashMap<Integer, NetworkPlayer>();
 
 		levels = new ArrayList<NetworkLevel>();
-		
-		// TODO get path from assets
-		File dir = new File("content/rgb4");
+
+		File dir = new File(Assets.Level.AssetLevelPath);
 		readLevels(dir, levels);
-		
-		/*levels.add(new NetworkLevel(0, "content/jumpnrun/default/", "Level 12"));
-		levels.add(new NetworkLevel(1, "content/jumpnrun/default/", "Level 234"));
-		levels.add(new NetworkLevel(2, "content/jumpnrun/default/",
-				"Level 32222"));*/
 	}
 
 	public boolean isGameCreator() {
@@ -119,19 +111,22 @@ public class ClientLobbyState extends NiftyGameState implements
 	@Override
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
-		// TODO Auto-generated method stub
 		super.init(container, game);
 
 		this.game = game;
+
 		// add asset-folder to the ResourceLocators of nifty and slick2d
 		ResourceLoader.addResourceLocation(new FileSystemLocation(new File(
 				menuAssetPath)));
+		
 		org.newdawn.slick.util.ResourceLoader
 				.addResourceLocation(new org.newdawn.slick.util.FileSystemLocation(
 						new File(menuAssetPath)));
+
 		// read the nifty-xml-fiel
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
+	
 		// show the mouse
 		enableMouseImage(new Image(
 				ResourceLoader.getResourceAsStream(CROSSHAIR_PNG),
@@ -152,7 +147,6 @@ public class ClientLobbyState extends NiftyGameState implements
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int d)
 			throws SlickException {
-		// TODO Auto-generated method stub
 		super.update(container, game, d);
 
 		// recv and execute items in queue
@@ -196,7 +190,6 @@ public class ClientLobbyState extends NiftyGameState implements
 	}
 
 	private void selectLevel(NetworkLevel networkLevel) {
-		this.currentLevel = networkLevel;
 		guiCurrentLevelRenderer.setText(networkLevel.getLevelName());
 		Assets.Config.AssetManagerPath = networkLevel.getAssetPath();
 	}
@@ -205,16 +198,6 @@ public class ClientLobbyState extends NiftyGameState implements
 		clearList(guiListTeam1);
 		clearList(guiListTeam2);
 		for (NetworkPlayer player : players) {
-			// get template from XML ( <controlDefinition name='playerContrl'> )
-			// CustomControlCreator lC = new
-			// CustomControlCreator("playerControl");
-			// lC.setWidth("100%");
-			// lC.setHeight("30px");
-			// lC.setAlign("left");
-			// Element element = lC.create(nifty, nifty.getCurrentScreen(),
-			// guiPlayerList);
-			// element.findElementByName("playername").getRenderer(TextRenderer.class).setText();
-			// fill in the name
 			LabelCreator label = new LabelCreator(player.getPlayerName());
 			label.setAlign("left");
 			if (player.getTeamId() == 1) {
@@ -315,12 +298,11 @@ public class ClientLobbyState extends NiftyGameState implements
 		if (Constants.Debug.guiDebug) {
 			Log.debug("Choose Team:" + teamID);
 		}
-		
-		if (currentTeam!=Integer.parseInt(teamID))
-		{
+
+		if (currentTeam != Integer.parseInt(teamID)) {
 			NetworkComponent.getInstance().sendCommand(
 					new QuerySetTeam(Integer.parseInt(teamID)));
-			currentTeam=Integer.parseInt(teamID);
+			currentTeam = Integer.parseInt(teamID);
 		}
 	}
 

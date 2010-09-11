@@ -26,5 +26,7 @@ public enum PlayerActions {
 	Up,
 	Left,
 	Right,
-	DoNothing
+	DoNothing,
+	Die,
+	Revive
 };

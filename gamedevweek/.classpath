@@ -10,7 +10,7 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="ext/lib/native"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="/ext/lib/slick.jar" sourcepath="/ext/slick/src">
+	<classpathentry exported="true" kind="lib" path="/ext/lib/slick.jar" sourcepath="/Slick">
 		<attributes>
 			<attribute name="javadoc_location" value="file://${workspace_loc}/ext/slick/javadoc/"/>
 		</attributes>

@@ -33,7 +33,7 @@ public class Constants
 		public static float playerGroundDrag = 0.005f;
 		public static float playerAirDrag = 0.000001f;
 
-		public static Color DefaultPlayerTextColor = Color.white;
+		public static Color defaultPlayerTextColor = Color.white;
 
 		public static float weaponGlowFalloff = 1.5f;
 
@@ -44,21 +44,21 @@ public class Constants
 
 		public static float playerMaxJumpSpeed = 1000.0f;
 		
-		public static boolean clientSound = true;
+		public static boolean clientSound = false;
 		
-		public static boolean serverSound = true;
+		public static boolean serverSound = false;
 	}
 
 	public static class Debug extends Configuration
 	{
-		public static boolean showDebugOverlay = false;
+		public static boolean showDebugOverlay = true;
 		
 		public static boolean drawBounds = true;
 		
 		public static Color boundColor = Color.green;
 		public static Color overlayColor = Color.white;
 		
-		public static boolean showCollisions = false;
+		public static boolean showCollisions = true;
 		
 		public static boolean shadersActive = true;
 		public static boolean shadersAutoDisable = true;

@@ -33,7 +33,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreatePlayer;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckPlayerCondition;
@@ -171,10 +171,18 @@ public class ClientPlayingState extends PlayingState {
 			// robindi: Bugfix, removeEntity from CollisionManager!
 			CollisionManager.removeEntity((CollidableEntity) getFactory().getEntity(id));
 			
-			getLevel().remove(getFactory().getEntity(id));
-
-			// remove Entity recursively from Factory
-			getFactory().removeEntity(id, true);
+			
+			Entity entityToRemove = getFactory().getEntity(id);				
+			if (entityToRemove==null && Constants.Debug.networkDebug)
+			{
+				Log.error("Tried to remove Entity with id="+id+" but this id was not known to factory!!!");
+			}
+			else
+			{
+				getLevel().remove(entityToRemove);
+				// remove Entity recursively from Factory
+				getFactory().removeEntity(id, true);
+			}
 
 			return true;
 		}
@@ -188,18 +196,18 @@ public class ClientPlayingState extends PlayingState {
 		}
 
 		// AckCreatePlayer tells us which player is our's
-		if (cmd instanceof AckCreatePlayer) {
+		if (cmd instanceof AckCreateEntity) {
 			if (localState != LocalState.CREATINGPLAYER) {
 				throw new RuntimeException("Local state was "
 						+ localState.name() + " but should be "
 						+ LocalState.CREATINGPLAYER.name());
 			}
-			AckCreatePlayer acp = (AckCreatePlayer) cmd;
-			int playerId = acp.getPlayerId();
+			AckCreateEntity acp = (AckCreateEntity) cmd;
+			int playerId = acp.getEntityId();
 
 			Entity player = getFactory().getEntity(playerId);
 
-			this.getLevel().setCurrentPlayer(acp.getPlayerId());
+			this.getLevel().setCurrentPlayer(acp.getEntityId());
 
 			Level level = getLevel();
 			SpawnPoint randomSpawnPoint = level.getRandomSpawnPoint(1);
