@@ -9,11 +9,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.tests.GUITest;
 import org.newdawn.slick.util.Log;
 
@@ -35,6 +37,7 @@ import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
 import de.fhtrier.gdig.engine.network.impl.protocol.ServerAckDisconnect;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.button.CreateButtonControl;
 import de.lessvoid.nifty.controls.dynamic.CustomControlCreator;
@@ -184,7 +187,8 @@ public class ClientLobbyState extends NiftyGameState implements
 			players = ((AckNewPlayerList) cmd).getPlayerList();
 			drawPlayers(players.values());
 		} else if (cmd instanceof AckStartGame) {
-			game.enterState(GameStates.PLAYING);
+			SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 500, 0f, true);
+			game.enterState(GameStates.PLAYING, new FadeOutTransition(new Color(0,0,0,0), 500), null);
 		} else if (cmd instanceof ServerAckDisconnect) {
 			if (Constants.Debug.networkDebug) {
 				Log.debug("Player left server!");

@@ -46,7 +46,7 @@ public class Constants
 		
 		public static boolean clientSound = true;
 		
-		public static boolean serverSound = true;
+		public static boolean serverSound = false;
 	}
 
 	public static class Debug extends Configuration

@@ -53,7 +53,8 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 		
 		// init Sound
 		SoundManager.init();
-
+		SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0f);
+		SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f, false);
 	}
 
 	public void bind(final Nifty newNifty, final Screen newScreen) {
@@ -67,8 +68,6 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 			// screen.findElementByName("newGame").setFocus();
 		}
 		screen.getFocusHandler().setKeyFocus(null);
-		SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0f);
-		SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f, false);
 	}
 
 	public void onEndScreen() {
@@ -101,8 +100,6 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 		}
 		
 	public void exit() {
-		SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0f, false);
-		SoundManager.stopMusic(Assets.Sounds.MenuSoundtrackId);
 		screen.endScreen(new EndNotify() {
 			public void perform() {
 				game.getContainer().exit();
