@@ -40,6 +40,12 @@ public class DoomsdayDevice extends Entity {
 				Assets.Level.DoomsdayDevice.DoomsdayDeviceAnimationPath);
 		ddAnimation = factory.createAnimationEntity(EntityOrder.LevelObject,
 				Assets.Level.DoomsdayDevice.DoomsdayDeviceId, assets);
+		ddAnimation.getData()[X] = -ddAnimation.Assets()
+				.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId)
+				.getCurrentFrame().getWidth() >> 1;
+		ddAnimation.getData()[Y] = -ddAnimation.Assets()
+				.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId)
+				.getCurrentFrame().getHeight();
 		ddAnimation.setVisible(true);
 		add(ddAnimation);
 
