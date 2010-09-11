@@ -49,23 +49,23 @@ public class ServerPlayingState extends PlayingState {
 	public ServerPlayingState() throws SlickException {
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ServerData();
-		
-		if(Constants.GamePlayConstants.serverSound)
-		{
+
+		if (Constants.GamePlayConstants.serverSound) {
 			SoundManager.init();
 			SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
 			SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
-			SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 50000, 0.2f, false);
-		}		
-		
+			SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 50000,
+					0.2f, false);
+		}
+
 	}
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		super.enter(container, game);
-
-		((Level) factory.getEntity(levelId)).init(this instanceof ServerPlayingState);
+		((Level) factory.getEntity(levelId))
+				.init(this instanceof ServerPlayingState);
 	}
 
 	private boolean handlePlayerActions(QueryAction actionCmd) {
@@ -98,14 +98,16 @@ public class ServerPlayingState extends PlayingState {
 
 			bullet.color = state.weaponColor;
 			// set player pos as gem pos
-			bullet.getData()[Entity.X] =
-				(player.getData()[Entity.X] + player.getData()[Entity.CENTER_X]) +
-				(bullet.getData()[Entity.CENTER_X] - Assets.Weapon.weaponXOffset) * player.getData()[Entity.SCALE_X];
+			bullet.getData()[Entity.X] = (player.getData()[Entity.X] + player
+					.getData()[Entity.CENTER_X])
+					+ (bullet.getData()[Entity.CENTER_X] - Assets.Weapon.weaponXOffset)
+					* player.getData()[Entity.SCALE_X];
 
-			bullet.getData()[Entity.Y] =
-			player.getData()[Entity.Y] + player.getData()[Entity.CENTER_Y] -
-			bullet.getData()[Entity.CENTER_Y] + Assets.Weapon.weaponYOffset;
-			
+			bullet.getData()[Entity.Y] = player.getData()[Entity.Y]
+					+ player.getData()[Entity.CENTER_Y]
+					- bullet.getData()[Entity.CENTER_Y]
+					+ Assets.Weapon.weaponYOffset;
+
 			bullet.getVel()[Entity.X] = player.getVel()[Entity.X]
 					+ (player.getData()[Entity.SCALE_X] == -1 ? Constants.GamePlayConstants.shotSpeed
 							: -Constants.GamePlayConstants.shotSpeed);
@@ -221,14 +223,16 @@ public class ServerPlayingState extends PlayingState {
 				// remember, which networkId identifies which player
 				networkId2Player.put(cmd.getSender(), id);
 				player2NetworkId.put(id, cmd.getSender());
-				
-				String name = ServerLobbyState.players.get(cmd.getSender()).getPlayerName();
 
-				int teamID = ServerLobbyState.players.get(cmd.getSender()).getTeamId();
-				
+				String name = ServerLobbyState.players.get(cmd.getSender())
+						.getPlayerName();
+
+				int teamID = ServerLobbyState.players.get(cmd.getSender())
+						.getTeamId();
+
 				e.getPlayerCondition().name = name;
 				e.getPlayerCondition().teamId = teamID;
-				
+
 			} else {
 				throw new RuntimeException(
 						"Client side entity creation only allowed for type PLAYER");

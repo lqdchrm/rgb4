@@ -23,7 +23,6 @@ import de.fhtrier.gdig.engine.management.AssetMgr;
 
 public class DomsDayDeviceBigExplosion extends Entity {
 
-	private GameFactory factory;
 	private Options options;
 	private boolean isActive = false;
 
@@ -48,7 +47,6 @@ public class DomsDayDeviceBigExplosion extends Entity {
 	public DomsDayDeviceBigExplosion(int id, GameFactory factory)
 			throws IOException {
 		super(id, EntityType.DOOMSDAYDEVICEEXPLOSION);
-		this.factory = factory;
 
 		try {
 			asset.storeImage(Assets.DoomsdayBigExplosionImageId,
@@ -84,8 +82,10 @@ public class DomsDayDeviceBigExplosion extends Entity {
 		Color constIntoColor = StateColor.constIntoColor(damageColor);
 		graphicContext.drawImage(asset
 				.getImage(Assets.DoomsdayBigExplosionImageId), -maxRadius,
-				-maxRadius, maxRadius, maxRadius, 0, 0, 1000, 1000, new Color(
-						constIntoColor.r, constIntoColor.g, constIntoColor.b,
+				-maxRadius, maxRadius, maxRadius, 0, 0,
+				asset.getImage(Assets.DoomsdayBigExplosionImageId).getWidth(),
+				asset.getImage(Assets.DoomsdayBigExplosionImageId).getHeight(),
+				new Color(constIntoColor.r, constIntoColor.g, constIntoColor.b,
 						0.5f));
 		graphicContext.flush();
 	}
@@ -98,14 +98,6 @@ public class DomsDayDeviceBigExplosion extends Entity {
 
 		if (!isActive())
 			return;
-		// if (timeScinclastChangeColor < options.timeToChangeColor) {
-		// timeScinclastChangeColor += deltaInMillis;
-		// } else {
-		// timeScinclastChangeColor = 0;
-		// damageColor = damageColor << 1;
-		// if (damageColor > StateColor.BLUE)
-		// damageColor = StateColor.RED;
-		// }
 
 		if (level == null)
 			return;
@@ -113,9 +105,9 @@ public class DomsDayDeviceBigExplosion extends Entity {
 		if (!isActive)
 			return;
 
-		if(options.timeToDatonate>timeScincActivation)
-		return;
-		timeScincActivation+=deltaInMillis;
+		timeScincActivation += deltaInMillis;
+		if (options.timeToDatonate > timeScincActivation)
+			return;
 		this.maxRadius += options.speed * secs;
 		this.minRadius = Math.max(maxRadius - options.size, 0);
 
@@ -154,15 +146,6 @@ public class DomsDayDeviceBigExplosion extends Entity {
 						+ player.getPlayerCondition().health);
 			}
 		}
-
-		float max = Math.max(Math.abs(minRadius + getData()[X]),
-				Math.abs(minRadius - getData()[X]));
-		int minX = (int) (getData()[X] - minRadius);
-		int maxX = (int) (getData()[X] + minRadius);
-		int minY = (int) (getData()[Y] - minRadius);
-		int maxY = (int) (getData()[Y] + minRadius);
-		int levelWidth = level.getWidth();
-		int levelHeight = level.getHeight();
 
 		float left = -getData()[X];
 		float right = level.getWidth() - getData()[X];

@@ -14,7 +14,6 @@ import org.newdawn.slick.util.Log;
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
-import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
@@ -23,7 +22,6 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Level1;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
-import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
 import de.fhtrier.gdig.engine.graphics.entities.ImageEntity;
 import de.fhtrier.gdig.engine.graphics.entities.TiledMapEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
@@ -45,7 +43,7 @@ public class Level extends MoveableEntity {
 	private int currentPlayerId;
 
 	private ArrayList<ArrayList<LogicPoint>> teleportExitPoints;
-	
+
 	private ArrayList<LogicPoint> doomsdayDevices;
 	private ArrayList<LogicPoint> teleportAnimations;
 
@@ -78,7 +76,7 @@ public class Level extends MoveableEntity {
 		this.ground.setVisible(true);
 		this.ground.setActive(true);
 		add(this.ground);
-		
+
 		// physics
 		setData(new float[] { 0, 0, 0, 0, 1, 1, 0 });
 
@@ -104,9 +102,8 @@ public class Level extends MoveableEntity {
 		calculateLogicPoints();
 	}
 
-MoveableEntity createBackgroundLayer(int numTiles, int AssetId, String AssetPath)
-			throws SlickException {
-
+	MoveableEntity createBackgroundLayer(int numTiles, int AssetId,
+			String AssetPath) throws SlickException {
 		// Background far
 		MoveableEntity result = new MoveableEntity(AssetId, EntityType.HELPER);
 		int xOffset = 0;
@@ -135,50 +132,52 @@ MoveableEntity createBackgroundLayer(int numTiles, int AssetId, String AssetPath
 	private void loadBackgroundLayers() throws SlickException {
 
 		// Background far
-		layerBackgroundFar = createBackgroundLayer(Level1.numBackgroundTiles, Level1.ImageBackgroundFarId,
-				Level1.ImageBackgroundFarPath);
+		layerBackgroundFar = createBackgroundLayer(Level1.numBackgroundTiles,
+				Level1.ImageBackgroundFarId, Level1.ImageBackgroundFarPath);
 		layerBackgroundFar.setVisible(true);
 		layerBackgroundFar.setOrder(Level1.ImageBackgroundFarRenderOrder);
 		add(layerBackgroundFar);
 
 		// Background
-		layerBackground = createBackgroundLayer(Level1.numBackgroundTiles, Level1.ImageBackgroundId,
-				Level1.ImageBackgroundPath);
+		layerBackground = createBackgroundLayer(Level1.numBackgroundTiles,
+				Level1.ImageBackgroundId, Level1.ImageBackgroundPath);
 		layerBackground.setVisible(true);
 		layerBackground.setOrder(Level1.ImageBackgroundRenderOrder);
 		add(layerBackground);
 
 		// LayerForeground
-		layerForeground = createBackgroundLayer(Level1.numBackgroundTiles, Level1.ImageForegroundId,
-				Level1.ImageForegroundPath);
+		layerForeground = createBackgroundLayer(Level1.numBackgroundTiles,
+				Level1.ImageForegroundId, Level1.ImageForegroundPath);
 		layerForeground.setVisible(true);
 		layerForeground.setOrder(Level1.ImageForegroundRenderOrder);
 		add(layerForeground);
 	}
 
-	private void placeTeleportAnimations(boolean isServer) {
-		
+	private void placeTeleportAnimations() {
+
 		for (LogicPoint lp : teleportAnimations) {
 			int teleporterid = factory.createEntity(EntityType.TELEPORTER);
 			Entity teleporter = factory.getEntity(teleporterid);
 			teleporter.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 			add(teleporter);
-			teleporter.getData()[Entity.X] = lp.x; //-teleporter.Assets().getImage(0).getWidth();
-			teleporter.getData()[Entity.Y] = lp.y; //-teleporter.Assets().getImage(0).getHeight();
+			teleporter.getData()[Entity.X] = lp.x; // -teleporter.Assets().getImage(0).getWidth();
+			teleporter.getData()[Entity.Y] = lp.y; // -teleporter.Assets().getImage(0).getHeight();
 		}
 	}
 
-	private void placeDoomsdayDevices(boolean isServer) {
+	private void placeDoomsdayDevices() {
 		for (LogicPoint lp : doomsdayDevices) {
-			int domsDayDeviceID = factory.createEntity(EntityType.DOOMSDAYDEVICE);
+			int domsDayDeviceID = factory
+					.createEntity(EntityType.DOOMSDAYDEVICE);
 			DoomsdayDevice doomesdaydevice = (DoomsdayDevice) factory
 					.getEntity(domsDayDeviceID);
 			add(doomesdaydevice);
-			doomesdaydevice.setActive(isServer);
-			doomesdaydevice.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+			doomesdaydevice.setActive(true);
+			doomesdaydevice
+					.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 			doomesdaydevice.getData()[X] = lp.x;
 			doomesdaydevice.getData()[Y] = lp.y;
-			doomesdaydevice.initServer(isServer);
+			doomesdaydevice.initServer();
 		}
 	}
 
@@ -193,7 +192,7 @@ MoveableEntity createBackgroundLayer(int numTiles, int AssetId, String AssetPath
 			spawnPoints.add(new ArrayList<LogicPoint>());
 			teleportExitPoints.add(new ArrayList<LogicPoint>());
 		}
-		
+
 		TiledMap tiledMap = ground.Assets().getTiledMap(ground.getAssetId());
 
 		for (int x = 0; x < tiledMap.getWidth(); x++) {
@@ -207,55 +206,56 @@ MoveableEntity createBackgroundLayer(int numTiles, int AssetId, String AssetPath
 				++tileId;
 				// is a spawnpoint
 				if (tileId <= 32) {
-					if (Constants.Debug.tileMapLogicDebug)
-					{
-						Log.debug("SpawnPoint " + tileId + " at: " + x + ", " + y );
+					if (Constants.Debug.tileMapLogicDebug) {
+						Log.debug("SpawnPoint " + tileId + " at: " + x + ", "
+								+ y);
 					}
 					spawnPoints.get(tileId - 1).add(
 							new LogicPoint(tileId, x * tiledMap.getTileWidth(),
 									y * tiledMap.getTileHeight()));
 				}
-				
+
 				// is teleport entry
-				if (tileId > 32 && tileId <= 64)
-				{
-					if (Constants.Debug.tileMapLogicDebug)
-					{
-						Log.debug("Teleporter entry " + tileId + " at: " + x + ", " + y );
+				if (tileId > 32 && tileId <= 64) {
+					if (Constants.Debug.tileMapLogicDebug) {
+						Log.debug("Teleporter entry " + tileId + " at: " + x
+								+ ", " + y);
 					}
 				}
-				
+
 				// is a teleporterexit
 				if (tileId > 64 && tileId <= 96) {
-					if (Constants.Debug.tileMapLogicDebug)
-					{
-						Log.debug("Teleporter exit " + tileId + " at: " + x + ", " + y );
+					if (Constants.Debug.tileMapLogicDebug) {
+						Log.debug("Teleporter exit " + tileId + " at: " + x
+								+ ", " + y);
 					}
 					teleportExitPoints.get(tileId - 65).add(
 							new LogicPoint(tileId, x * tiledMap.getTileWidth(),
 									y * tiledMap.getTileHeight()));
 				}
-				
+
 				// is doomsday Device
-				if (tileId == 97)
-				{
-					if (Constants.Debug.tileMapLogicDebug)
-					{
-						Log.debug("Doomsday device " + tileId + " at: " + x + ", " + y );
+				if (tileId == 97) {
+					if (Constants.Debug.tileMapLogicDebug) {
+						Log.debug("Doomsday device " + tileId + " at: " + x
+								+ ", " + y);
 					}
-					
-					doomsdayDevices.add(new LogicPoint(tileId, x * tiledMap.getTileWidth(), y * tiledMap.getTileHeight()));
+
+					doomsdayDevices.add(new LogicPoint(tileId, x
+							* tiledMap.getTileWidth(), y
+							* tiledMap.getTileHeight()));
 				}
-				
+
 				// is teleport animation Device
-				if (tileId == 98)
-				{
-					if (Constants.Debug.tileMapLogicDebug)
-					{
-						Log.debug("Teleporter animation " + tileId + " at: " + x + ", " + y );
+				if (tileId == 98) {
+					if (Constants.Debug.tileMapLogicDebug) {
+						Log.debug("Teleporter animation " + tileId + " at: "
+								+ x + ", " + y);
 					}
-					
-					teleportAnimations.add(new LogicPoint(tileId, x * tiledMap.getTileWidth(), y * tiledMap.getTileHeight()));
+
+					teleportAnimations.add(new LogicPoint(tileId, x
+							* tiledMap.getTileWidth(), y
+							* tiledMap.getTileHeight()));
 				}
 			}
 		}
@@ -562,14 +562,16 @@ MoveableEntity createBackgroundLayer(int numTiles, int AssetId, String AssetPath
 
 	/**
 	 * This is to Inelize Entetys in the Level. only the Server do this.
-	 * @param isServer TODO
+	 * 
+	 * @param isServer
+	 *            TODO
 	 */
 	public void init(boolean isServer) {
 		// TODO Wie kann ich mit der Factory DoomsdayDevices erstellen mit
 		// assetfactory und allem drum und dran.
-		
-		placeDoomsdayDevices(isServer);
-		placeTeleportAnimations(isServer);
+
+		placeDoomsdayDevices();
+		placeTeleportAnimations();
 		//
 		// DoCreateEntity command = new DoCreateEntity(domsDayDeviceID,
 		// EntityType.DOOMSDAYDEVICE);

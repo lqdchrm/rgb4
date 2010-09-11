@@ -2,7 +2,6 @@ package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
 import java.util.Random;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -40,16 +39,10 @@ public class DoomsdayDevice extends Entity {
 
 		// gfx
 		assets.storeAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId,
-							  Assets.Level.DoomsdayDevice.DoomsdayDeviceAnimationPath);
+				Assets.Level.DoomsdayDevice.DoomsdayDeviceAnimationPath);
 		ddAnimation = factory.createAnimationEntity(EntityOrder.LevelObject,
 				Assets.Level.DoomsdayDevice.DoomsdayDeviceId, assets);
-
 		ddAnimation.setVisible(true);
-//		ddAnimation.getData()[Entity.X] = -ddAnimation.Assets()
-//			.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId).getImage(0).getWidth()/2.0f;
-//		ddAnimation.getData()[Entity.Y] = -ddAnimation.Assets()
-//		.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId).getImage(0).getHeight()/2.0f;
-
 		add(ddAnimation);
 
 		// setup
@@ -57,7 +50,7 @@ public class DoomsdayDevice extends Entity {
 
 	}
 
-	public void initServer(boolean isServer) {
+	public void initServer() {
 		int domsDayDeviceID = factory
 				.createEntity(EntityType.DOOMSDAYDEVICEEXPLOSION);
 		doomesdaydeviceExplosion = (DomsDayDeviceBigExplosion) factory
@@ -67,11 +60,13 @@ public class DoomsdayDevice extends Entity {
 		doomesdaydeviceExplosion.getData()[Y] = getData(Y);
 
 		doomesdaydeviceExplosion.getData()[Entity.X] += ddAnimation.Assets()
-		.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId).getImage(0).getWidth()/2.0f;
-		doomesdaydeviceExplosion.getData()[Entity.Y]+= ddAnimation.Assets()
-	.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId).getImage(0).getHeight()/2.0f;
-		
-		doomesdaydeviceExplosion.setActive(isServer);
+				.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId)
+				.getImage(0).getWidth() / 2.0f;
+		doomesdaydeviceExplosion.getData()[Entity.Y] += ddAnimation.Assets()
+				.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId)
+				.getImage(0).getHeight() / 2.0f;
+
+		doomesdaydeviceExplosion.setActive(true);
 		doomesdaydeviceExplosion
 				.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 
@@ -81,14 +76,18 @@ public class DoomsdayDevice extends Entity {
 		resetChargetime();
 
 	}
-	
-	
+
+	@Override
+	protected void renderImpl(Graphics graphicContext, Image frameBuffer) {
+		// TODO Auto-generated method stub
+		super.renderImpl(graphicContext, frameBuffer);
+		graphicContext.fillRect(-10, -10, 20, 20);
+	}
 
 	public void resetChargetime() {
 		timeSinceLastExplosion = 0;
 		chargeTime = (random.nextInt(maxChargeTime - minChargeTime) + minChargeTime) * 1000;
 	}
-
 
 	public void setLevel(Level level) {
 		this.level = level;
@@ -107,6 +106,7 @@ public class DoomsdayDevice extends Entity {
 	}
 
 	private void explode() {
+		System.out.println("EXPLOAD");
 		int r = random.nextInt(3);
 		switch (r) {
 		case 0:

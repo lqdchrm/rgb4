@@ -113,7 +113,7 @@ public class Player extends LevelCollidableEntity implements
 		condition = new PlayerCondition();
 		condition.name = "XXX";
 		condition.teamId = 1;
-		
+
 		setConditions();
 	}
 
@@ -429,7 +429,7 @@ public class Player extends LevelCollidableEntity implements
 
 		graphicContext.setColor(Color.white);
 		Shader.activateAdditiveBlending();
-		//Shader.activateDefaultBlending();
+		// Shader.activateDefaultBlending();
 		float weaponGlowSize = 0.6f + this.getPlayerCondition().ammo * 0.4f;
 		float glowSize = 0.1f + this.getPlayerCondition().health * 0.9f;
 
@@ -437,26 +437,29 @@ public class Player extends LevelCollidableEntity implements
 
 		float weaponX = this.getData(CENTER_X);
 
-		float weaponY = this.getData(CENTER_Y) - weaponGlow.getHeight() * weaponGlowSize / 2 + 40;
+		float weaponY = this.getData(CENTER_Y) - weaponGlow.getHeight()
+				* weaponGlowSize / 2 + 40;
 
-		float weaponBrightness = StateColor.constIntoBrightness(this.getPlayerCondition().weaponColor);		
-		
-		if (Constants.Debug.shadersActive)
-		{
-			weaponCol.a = Constants.GamePlayConstants.weaponGlowFalloff * weaponBrightness;
+		float weaponBrightness = StateColor.constIntoBrightness(this
+				.getPlayerCondition().weaponColor);
+
+		if (Constants.Debug.shadersActive) {
+			weaponCol.a = Constants.GamePlayConstants.weaponGlowFalloff
+					* weaponBrightness;
 			colorGlowShader.setValue("playercolor", weaponCol);
 		}
 
 		graphicContext.drawImage(weaponGlow, weaponX, weaponY, weaponX
-				- weaponGlow.getWidth(), weaponY
-				+ weaponGlow.getHeight() * weaponGlowSize, 0, 0,
-				weaponGlow.getWidth(), weaponGlow.getHeight(), weaponCol);
+				- weaponGlow.getWidth(), weaponY + weaponGlow.getHeight()
+				* weaponGlowSize, 0, 0, weaponGlow.getWidth(),
+				weaponGlow.getHeight(), weaponCol);
 
-		float brightness = StateColor.constIntoBrightness(this.getPlayerCondition().color);
-		
-		if (Constants.Debug.shadersActive)
-		{
-			playerCol.a = Constants.GamePlayConstants.playerGlowFalloff * brightness;
+		float brightness = StateColor.constIntoBrightness(this
+				.getPlayerCondition().color);
+
+		if (Constants.Debug.shadersActive) {
+			playerCol.a = Constants.GamePlayConstants.playerGlowFalloff
+					* brightness;
 			colorGlowShader.setValue("playercolor", playerCol);
 		}
 
@@ -467,21 +470,19 @@ public class Player extends LevelCollidableEntity implements
 				+ playerGlow.getHeight() * glowSize / 2, 0, 0,
 				playerGlow.getWidth(), playerGlow.getHeight(), playerCol);
 
-		if (Constants.Debug.shadersActive)
-		{
-			
-			playerCol = new Color(playerCol.r + brightness,
-					playerCol.g + brightness,
-					playerCol.b + brightness);
+		if (Constants.Debug.shadersActive) {
+
+			playerCol = new Color(playerCol.r + brightness, playerCol.g
+					+ brightness, playerCol.b + brightness);
 			playerCol.a = 1f;
 			colorGlowShader.setValue("playercolor", playerCol);
 		}
-		
+
 		Shader.activateDefaultBlending();
 		// deactivate shader
-//		if (Constants.Debug.shadersActive) {
-//			Shader.popShader();
-//		}
+		// if (Constants.Debug.shadersActive) {
+		// Shader.popShader();
+		// }
 
 	}
 
@@ -497,9 +498,9 @@ public class Player extends LevelCollidableEntity implements
 	@Override
 	protected void postRender(Graphics graphicContext) {
 
-		//Shader.activateDefaultBlending();
-		
-//		// deactivate shader
+		// Shader.activateDefaultBlending();
+
+		// // deactivate shader
 		if (Constants.Debug.shadersActive) {
 			Shader.popShader();
 		}
@@ -595,56 +596,62 @@ public class Player extends LevelCollidableEntity implements
 	 * @return true if Player Died, else false.
 	 */
 	public boolean doDamage(int colorolor, float damage, Player killer) {
-		boolean died=false;
-		if (
-				 (Constants.GamePlayConstants.friendyFire == true || // Friendly Fire or
-				killer.getPlayerCondition().teamId != this.getPlayerCondition().teamId)) // Enemy
+		boolean died = false;
+		if ((Constants.GamePlayConstants.friendyFire == true || // Friendly Fire
+																// or
+		killer.getPlayerCondition().teamId != this.getPlayerCondition().teamId)) // Enemy
 		{
 			if (this.getPlayerCondition().color != colorolor) {
-				this.getPlayerCondition().health -= killer
-						.getPlayerCondition().damage;
-				
+				this.getPlayerCondition().health -= damage;
 
 				if (this.getPlayerCondition().health <= Constants.EPSILON) {
-					NetworkComponent.getInstance().sendCommand(new SendKill(this.getId(),killer.getId()));
-					
-					Event dieEvent = new PlayerDiedEvent(this,killer);
+					NetworkComponent.getInstance().sendCommand(
+							new SendKill(this.getId(), killer.getId()));
+
+					Event dieEvent = new PlayerDiedEvent(this, killer);
 					dieEvent.update();
-					died=true;
+					died = true;
 				}
-				
+
 				if (PlayingState.gameType == Constants.GameTypes.deathMatch) {
 					if (killer.getPlayerStats().getKills() >= Constants.GamePlayConstants.winningKills_Deathmatch) {
-						NetworkComponent.getInstance().sendCommand(new SendWon(killer.getId(),SendWon.winnerType_Player));
-						
-						Event wonEvent = new WonGameEvent (killer);
+						NetworkComponent.getInstance().sendCommand(
+								new SendWon(killer.getId(),
+										SendWon.winnerType_Player));
+
+						Event wonEvent = new WonGameEvent(killer);
 						EventManager.addEvent(wonEvent);
 					}
-				}
-				else if (PlayingState.gameType == Constants.GameTypes.teamDeathMatch) {
+				} else if (PlayingState.gameType == Constants.GameTypes.teamDeathMatch) {
 					// TODO: do it not hardcoded
 					if (Team.Team1.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
-						NetworkComponent.getInstance().sendCommand(new SendWon(Team.Team1.id,SendWon.winnerType_Team));
-						
-						Event wonEvent = new WonGameEvent (Team.Team1);
+						NetworkComponent.getInstance().sendCommand(
+								new SendWon(Team.Team1.id,
+										SendWon.winnerType_Team));
+
+						Event wonEvent = new WonGameEvent(Team.Team1);
 						EventManager.addEvent(wonEvent);
-					}
-					else if (Team.Team2.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
-						NetworkComponent.getInstance().sendCommand(new SendWon(Team.Team2.id,SendWon.winnerType_Team));
-						
-						Event wonEvent = new WonGameEvent (Team.Team1);
+					} else if (Team.Team2.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
+						NetworkComponent.getInstance().sendCommand(
+								new SendWon(Team.Team2.id,
+										SendWon.winnerType_Team));
+
+						Event wonEvent = new WonGameEvent(Team.Team1);
 						EventManager.addEvent(wonEvent);
 					}
 				}
 			} else {
 				// player gets stronger when hit by bullet of the same
 				// color!
-				this.getPlayerCondition().health += killer.getPlayerCondition().damage/2;
-				if (this.getPlayerCondition().health > 2.0f) this.getPlayerCondition().health = 2.0f;
+				this.getPlayerCondition().health += damage / 2;
+				if (this.getPlayerCondition().health > 2.0f)
+					this.getPlayerCondition().health = 2.0f;
 			}
-			
-			NetworkComponent.getInstance().sendCommand(new AckPlayerCondition(this.getId(), this.getPlayerCondition()));
-			
+
+			NetworkComponent.getInstance().sendCommand(
+					new AckPlayerCondition(this.getId(), this
+							.getPlayerCondition()));
+
 		}
 		return died;
 	}
@@ -654,10 +661,9 @@ public class Player extends LevelCollidableEntity implements
 		this.condition = playerCondition;
 
 	}
-	
-	public static Shader getColorGlowShader()
-	{
-		return colorGlowShader; 
+
+	public static Shader getColorGlowShader() {
+		return colorGlowShader;
 	}
 
 	@Override
