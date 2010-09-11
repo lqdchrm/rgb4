@@ -15,10 +15,11 @@ public class AbstractShootState extends AbstractAssetState {
 	private Animation anim;
 	private Animation weaponAnim;
 	
-	public AbstractShootState(Player player, int playerAnimAssetId,
-			String playerAnimAssetPath, int weaponAnimAssetId, String weaponAnimAssetPath, int entityOrder, Factory factory)
+	public AbstractShootState(Player player, int aPlayerAnimAssetId, int bPlayerAnimAssetId,
+			String aPlayerAnimAssetPath, String bPlayerAnimAssetPath, int weaponAnimAssetId, String weaponAnimAssetPath, int entityOrder, Factory factory)
 			throws SlickException {
-		super(player, playerAnimAssetId, playerAnimAssetPath, weaponAnimAssetId, weaponAnimAssetPath, entityOrder, factory);
+		super(player, aPlayerAnimAssetId, bPlayerAnimAssetId, aPlayerAnimAssetPath, bPlayerAnimAssetPath, weaponAnimAssetId, weaponAnimAssetPath, entityOrder, factory);
+		
 		AssetEntity e = getGfxEntity();
 
 		anim = e.Assets().getAnimation(e.getAssetId());
@@ -31,16 +32,24 @@ public class AbstractShootState extends AbstractAssetState {
 		weaponAnim.setLooping(false);
 		weaponAnim.setAutoUpdate(true);
 	}
+	
+	public void getAnim () {
+		AssetEntity e = getGfxEntity();
+
+		anim = e.Assets().getAnimation(e.getAssetId());
+		anim.setLooping(false);
+		anim.setAutoUpdate(true);
+	}
 
 	@Override
 	public void enter() {
+		getAnim ();
 		if (anim.isStopped()) {
 			anim.restart();
 			weaponAnim.restart();
 		}
 
-		// SoundManager.playSound(Assets.PlayerRunSoundId, 1f, 0.2f);
-		SoundManager.playSound(Assets.Sounds.BulletSoundId, 1f, 0.2f);
+		SoundManager.playSound(Assets.Sounds.PlayerShootSoundId, 1f, 0.5f);
 
 	}
 

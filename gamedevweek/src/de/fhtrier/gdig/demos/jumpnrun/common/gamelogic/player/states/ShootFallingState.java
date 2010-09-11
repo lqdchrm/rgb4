@@ -6,15 +6,26 @@ import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActions;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
+import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.management.Factory;
 
 public class ShootFallingState extends AbstractShootState {
 	
 	public ShootFallingState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.FallShootingAnimId, Assets.Player.FallShootingImagePath, Assets.Weapon.FallShootingAnimId, Assets.Weapon.FallShootingImagePath, EntityOrder.Player, factory);
+		super(player, Assets.Player.aFallShootingAnimId, Assets.Player.bFallShootingAnimId, Assets.Player.aFallShootingImagePath, Assets.Player.bFallShootingImagePath, Assets.Weapon.FallShootingAnimId, Assets.Weapon.FallShootingImagePath, EntityOrder.Player, factory);
 	}
 
+	@Override
+	public void enter () {
+		getPlayer().getWeaponParticleEntity().getData()[Entity.Y] = 155;
+	}
+	
+	@Override
+	public void leave () {
+		getPlayer().getWeaponParticleEntity().getData()[Entity.Y] = 165;
+	}
+	
 	@Override
 	public void update() {	
 		super.update();

@@ -14,11 +14,20 @@ public class ShootRunningState extends AbstractShootState {
 
 	public ShootRunningState(Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.ShootRunningAnimId,
-				Assets.Player.ShootRunningImagePath, Assets.Weapon.ShootRunningAnimId,
+		super(player, Assets.Player.aShootRunningAnimId, Assets.Player.bShootRunningAnimId,
+				Assets.Player.aShootRunningImagePath, Assets.Player.bShootRunningImagePath, Assets.Weapon.ShootRunningAnimId,
 				Assets.Weapon.ShootRunningImagePath, EntityOrder.Player, factory);
 	}
 
+	@Override
+	public void enter () {
+		getPlayer().getWeaponParticleEntity().getData()[Entity.Y] = 155;
+	}
+	
+	@Override
+	public void leave () {
+		getPlayer().getWeaponParticleEntity().getData()[Entity.Y] = 165;
+	}
 
 	@Override
 	public void update() {

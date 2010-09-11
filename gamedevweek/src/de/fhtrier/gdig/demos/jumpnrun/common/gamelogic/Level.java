@@ -13,6 +13,7 @@ import org.newdawn.slick.tiled.TiledMap;
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
+import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
@@ -72,7 +73,7 @@ public class Level extends MoveableEntity {
 		this.ground.setVisible(true);
 		this.ground.setActive(true);
 		add(this.ground);
-
+		
 		// physics
 		setData(new float[] { 0, 0, 0, 0, 1, 1, 0 });
 

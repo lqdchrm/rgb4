@@ -1,11 +1,7 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.states;
 
-import java.awt.GraphicsConfigTemplate;
-
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
@@ -18,18 +14,22 @@ import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
-import de.fhtrier.gdig.engine.graphics.shader.Shader;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 import de.fhtrier.gdig.engine.physics.CollisionManager;
+
 
 public abstract class PlayingState extends BasicGameState implements
 		INetworkCommandListener
 {
 	private GameFactory factory;
 	private int levelId;
+	
+	/**
+	 * has to be something like winningKills_Deathmatch in Constants.GamePlayConstants
+	 */
+	public static int gameType;
 	// TODO Only activate for postprocessing
 	//private static Image frameBuffer;
 		
@@ -59,7 +59,7 @@ public abstract class PlayingState extends BasicGameState implements
 	@Override
 	public void init(final GameContainer arg0, final StateBasedGame arg1)
 			throws SlickException {
-
+		gameType = Constants.GameTypes.teamDeathMatch; // TODO: change it!
 	}
 	
 	@Override

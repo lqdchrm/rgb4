@@ -8,7 +8,6 @@ import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.lang.Math;
 
 import de.fhtrier.gdig.engine.network.NetworkServerObject;
 
