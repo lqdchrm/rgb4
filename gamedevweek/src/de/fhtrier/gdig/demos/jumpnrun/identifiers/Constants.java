@@ -43,17 +43,25 @@ public class Constants
 		public static float colissionPointDistance = 2.0f;
 
 		public static float playerMaxJumpSpeed = 1000.0f;
-		
-		public static boolean clientSound = true;
-		
-		public static boolean serverSound = false;
+
+		public static long playerReviveDelayInMillis = 3000;
+
+		public static float initialPlayerHealth = 1.0f;
+
+		public static float maxPlayerHealth = 2.0f;
+	}
+	
+	public static class SoundConfig extends Configuration {
+		public static boolean musicEnabled = true;
+		public static boolean isMuted = false;
+		public static boolean soundEnabled = true;
 	}
 
 	public static class Debug extends Configuration
 	{
 		public static boolean showDebugOverlay = false;
 		
-		public static boolean drawBounds = true;
+		public static boolean drawBounds = false;
 		
 		public static Color boundColor = Color.green;
 		public static Color overlayColor = Color.white;
@@ -71,11 +79,11 @@ public class Constants
 		
 		public static boolean guiDebug = false;
 		
+		// network
 		public static boolean networkDebug = false;
+		public static boolean showProtocolCommandsOnly = false;
 		
 		public static boolean factoryDebug = false;
-		
-	
 	}
 	
 	public static class Level extends Configuration

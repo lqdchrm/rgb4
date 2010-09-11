@@ -42,9 +42,8 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 				menuAssetPath)));
 
 		org.newdawn.slick.util.ResourceLoader
-		.addResourceLocation(new org.newdawn.slick.util.FileSystemLocation(
-				new File(menuAssetPath)));
-
+				.addResourceLocation(new org.newdawn.slick.util.FileSystemLocation(
+						new File(menuAssetPath)));
 
 		// read the nifty-xml-fiel
 		fromXml(menuNiftyXMLFile,
@@ -56,12 +55,9 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 				CROSSHAIR_PNG, false));
 
 		// init Sound
-		if (Constants.GamePlayConstants.clientSound) {
-			SoundManager.init();
-			SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0f);
-			SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f,
-					false);
-		}
+		SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0f);
+		SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f,
+				false);
 	}
 
 	public void bind(final Nifty newNifty, final Screen newScreen) {

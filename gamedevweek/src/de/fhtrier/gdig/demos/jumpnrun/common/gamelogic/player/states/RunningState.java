@@ -13,9 +13,9 @@ import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class RunningState extends AbstractAssetState {
 
-	public RunningState(Player player, Factory factory)
+	public RunningState(int stateId, Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.aRunningAnimId, Assets.Player.bRunningAnimId,
+		super(stateId, player, Assets.Player.aRunningAnimId, Assets.Player.bRunningAnimId,
 				Assets.Player.aRunningImagePath, Assets.Player.bRunningImagePath, Assets.Weapon.RunningAnimId, Assets.Weapon.RunningImagePath, EntityOrder.Player, factory);
 	}
 

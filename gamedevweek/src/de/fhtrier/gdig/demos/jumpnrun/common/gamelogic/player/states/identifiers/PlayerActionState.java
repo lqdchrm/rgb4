@@ -9,9 +9,10 @@ public enum PlayerActionState {
 	Jumping,
 	ShootJumping,
 	Falling,
-	FallShooting,
+	ShootFalling,
 	Landing,
 	Left,
 	Right,
-	Dying
+	Dying,
+	Reviving
 }
