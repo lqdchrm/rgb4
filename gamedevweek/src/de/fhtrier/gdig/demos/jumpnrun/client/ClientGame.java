@@ -24,7 +24,9 @@ public class ClientGame extends RGB4Game {
 
 	public ClientGame() {
 		super(Assets.Config.GameTitle);
-
+		
+		System.setProperty("java.util.logging.config.file", "content/logging.properties");
+		
 		NetworkComponent.createClientInstance();
 		NetworkComponent.getInstance().addListener(this);
 
