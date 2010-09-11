@@ -3,6 +3,7 @@ package de.fhtrier.gdig.demos.jumpnrun.client.states;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import org.newdawn.slick.GameContainer;
@@ -42,10 +43,9 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 	private static String menuNiftyXMLFile = "credits.xml";
 	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 	private static String creditsFile = menuAssetPath+"/credits.txt";
-	private static float timePerLine = 1000;
 	private StateBasedGame game;
 	private Element creditsPanel;
-	
+
 	
 	public ClientCreditsState()
 	{
@@ -57,8 +57,6 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 			throws SlickException {
 		super.init(container, game);
 		
-		this.game = game;
-		
 		// add asset-folder to the ResourceLocators of nifty and slick2d
 		ResourceLoader.addResourceLocation(new FileSystemLocation(new File(
 				menuAssetPath)));
@@ -68,15 +66,12 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 		// read the nifty-xml-fiel
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
-
+		
+		this.game = game;
 
 	}
 
-	
-	
 
-	
-	
 	@Override
 	public void keyPressed(int key, char c) {
 		super.keyPressed(key, c);
@@ -157,20 +152,10 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 
 	@Override
 	public void onEndScreen() {
-
 	}
 
 	@Override
 	public void onStartScreen() {
-
-		
 	}
-	
-	
 
-	
-
-
-	
-	
 }

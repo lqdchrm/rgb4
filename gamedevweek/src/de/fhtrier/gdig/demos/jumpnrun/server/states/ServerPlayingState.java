@@ -20,6 +20,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Rocket;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Rocket.RocketStrategy;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.PlayerCondition;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.QueryRespawn;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
@@ -29,11 +30,9 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeColor;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeWeaponColor;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendPlayerCondition;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.helpers.AStarTiledMap;
@@ -52,15 +51,11 @@ public class ServerPlayingState extends PlayingState {
 	public ServerPlayingState() throws SlickException {
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ServerData();
-		
-		if(Constants.GamePlayConstants.serverSound)
-		{
-			SoundManager.init();
-			SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
-			SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
-			SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 50000, 0.2f, false);
-		}		
-		
+
+		SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
+		SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
+		SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 50000, 0.2f,
+				false);
 	}
 
 	private boolean handlePlayerActions(QueryAction actionCmd) {
@@ -69,47 +64,35 @@ public class ServerPlayingState extends PlayingState {
 		Player player = (Player) getFactory().getEntity(playerId);
 
 		switch (actionCmd.getAction()) {
-		// case DROPGEM:
-		// e = createEntity(EntityType.GEM);
-		//
-		// // set values
-		// MoveableEntity gem = (MoveableEntity) e;
-		//
-		// // set player pos as gem pos
-		// gem.getData()[Entity.X] = player.getData()[Entity.X];
-		// gem.getData()[Entity.Y] = player.getData()[Entity.Y];
-		// gem.getVel()[Entity.X] = player.getVel()[Entity.X];
-		// gem.getVel()[Entity.Y] = player.getVel()[Entity.Y] - 50.0f;
-		//
-		// return true;
 		case SHOOT:
 			e = createEntity(EntityType.BULLET);
 
 			// set values
 			Bullet bullet = (Bullet) e;
 			bullet.owner = player;
-			
-			PlayerCondition state = player.getPlayerCondition();
+			bullet.color = player.getWeaponColor();
 
-			bullet.color = state.weaponColor;
 			// set player pos as gem pos
-			bullet.getData()[Entity.X] =
-				(player.getData()[Entity.X] + player.getData()[Entity.CENTER_X]) +
-				(bullet.getData()[Entity.CENTER_X] - Assets.Weapon.weaponXOffset) * player.getData()[Entity.SCALE_X];
+			bullet.getData()[Entity.X] = (player.getData()[Entity.X] + player
+					.getData()[Entity.CENTER_X])
+					+ (bullet.getData()[Entity.CENTER_X] - Assets.Weapon.weaponXOffset)
+					* player.getData()[Entity.SCALE_X];
 
-			bullet.getData()[Entity.Y] =
-			player.getData()[Entity.Y] + player.getData()[Entity.CENTER_Y] -
-			bullet.getData()[Entity.CENTER_Y] + Assets.Weapon.weaponYOffset;
-			
+			bullet.getData()[Entity.Y] = player.getData()[Entity.Y]
+					+ player.getData()[Entity.CENTER_Y]
+					- bullet.getData()[Entity.CENTER_Y]
+					+ Assets.Weapon.weaponYOffset;
+
 			bullet.getVel()[Entity.X] = player.getVel()[Entity.X]
-			        + (player.getData()[Entity.SCALE_X] == -1 ? Constants.GamePlayConstants.shotSpeed
-			                                            	: -Constants.GamePlayConstants.shotSpeed);
+					+ (player.getData()[Entity.SCALE_X] == -1 ? Constants.GamePlayConstants.shotSpeed
+							: -Constants.GamePlayConstants.shotSpeed);
 			
-			if(player.getData()[Entity.SCALE_X] == -1) // Right
-			bullet.getData()[Entity.SCALE_X] = -1;
-			
-			else if(player.getData()[Entity.SCALE_X] == 1) // Left
-			bullet.getData()[Entity.SCALE_X] = 1;
+			if (player.getData()[Entity.SCALE_X] == -1) // Right
+				bullet.getData()[Entity.SCALE_X] = -1;
+
+
+			else if (player.getData()[Entity.SCALE_X] == 1) // Left
+				bullet.getData()[Entity.SCALE_X] = 1;
 
 			return true;
 		case SHOOT_ROCKET:
@@ -120,9 +103,7 @@ public class ServerPlayingState extends PlayingState {
 			rocket.owner = player;
 			rocket.map = (AStarTiledMap)getLevel().getMap();
 			
-			PlayerCondition playerCond = player.getPlayerCondition();
-
-			rocket.color = playerCond.weaponColor;
+			rocket.color = player.getWeaponColor();
 			// set player pos as gem pos
 
 			rocket.getData()[Entity.X] = player.getData()[Entity.X];
@@ -140,19 +121,18 @@ public class ServerPlayingState extends PlayingState {
 			rocket.shootAtClosestPlayer(RocketStrategy.NEXT_ENEMY_TEAM);
 			
 			return true;
-		case PLAYERCOLOR:
-			player.nextColor();
-			NetworkComponent.getInstance().sendCommand(
-					new SendChangeColor(player.getId()));
+		case RESPAWN:
+			if (actionCmd instanceof QueryRespawn) {
+				QueryRespawn tmpCmd = (QueryRespawn) actionCmd;
 
-			return true;
-		case WEAPONCOLOR:
-			player.nextWeaponColor();
-			NetworkComponent.getInstance().sendCommand(
-					new SendChangeWeaponColor(player.getId()));
+				int tmpId = tmpCmd.getPlayerId();
+				Player tmpPlayer = (Player) getFactory().getEntity(tmpId);
 
-			return true;
-		case UPDATECONDITION:
+				tmpPlayer.getPlayerCondition().setHealth(
+						Constants.GamePlayConstants.initialPlayerHealth);
+			}
+			break;
+		case QUERYPLAYERCONDITION:
 			// HACK query for any player
 			if (actionCmd instanceof QueryPlayerCondition) {
 
@@ -163,7 +143,7 @@ public class ServerPlayingState extends PlayingState {
 
 				NetworkComponent.getInstance().sendCommand(
 						actionCmd.getSender(),
-						new AckPlayerCondition(tmpId, tmpPlayer
+						new SendPlayerCondition(tmpId, tmpPlayer
 								.getPlayerCondition()));
 
 				return true;
@@ -228,7 +208,7 @@ public class ServerPlayingState extends PlayingState {
 			if (type == EntityType.PLAYER) {
 				int id = this.getFactory().createEntity(type);
 
-				Player e = (Player)getFactory().getEntity(id);
+				Player e = (Player) getFactory().getEntity(id);
 				e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 				getLevel().add(e);
 
@@ -244,14 +224,16 @@ public class ServerPlayingState extends PlayingState {
 				// remember, which networkId identifies which player
 				networkId2Player.put(cmd.getSender(), id);
 				player2NetworkId.put(id, cmd.getSender());
-				
-				String name = ServerLobbyState.players.get(cmd.getSender()).getPlayerName();
 
-				int teamID = ServerLobbyState.players.get(cmd.getSender()).getTeamId();
-				
-				e.getPlayerCondition().name = name;
-				e.getPlayerCondition().teamId = teamID;
-				
+				String name = ServerLobbyState.players.get(cmd.getSender())
+						.getPlayerName();
+
+				int teamID = ServerLobbyState.players.get(cmd.getSender())
+						.getTeamId();
+
+				e.getPlayerCondition().setName(name);
+				e.getPlayerCondition().setTeamId(teamID);
+
 			} else {
 				throw new RuntimeException(
 						"Client side entity creation only allowed for type PLAYER");

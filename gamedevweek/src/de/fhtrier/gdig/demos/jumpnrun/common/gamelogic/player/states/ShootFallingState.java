@@ -11,18 +11,20 @@ import de.fhtrier.gdig.engine.management.Factory;
 
 public class ShootFallingState extends AbstractShootState {
 	
-	public ShootFallingState(Player player, Factory factory)
+	public ShootFallingState(int stateId, Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.aFallShootingAnimId, Assets.Player.bFallShootingAnimId, Assets.Player.aFallShootingImagePath, Assets.Player.bFallShootingImagePath, Assets.Weapon.FallShootingAnimId, Assets.Weapon.FallShootingImagePath, EntityOrder.Player, factory);
+		super(stateId, player, Assets.Player.aFallShootingAnimId, Assets.Player.bFallShootingAnimId, Assets.Player.aFallShootingImagePath, Assets.Player.bFallShootingImagePath, Assets.Weapon.FallShootingAnimId, Assets.Weapon.FallShootingImagePath, EntityOrder.Player, factory);
 	}
 
 	@Override
 	public void enter () {
+		super.enter();
 		getPlayer().getWeaponParticleEntity().getData()[Entity.Y] = 155;
 	}
 	
 	@Override
 	public void leave () {
+		super.leave();
 		getPlayer().getWeaponParticleEntity().getData()[Entity.Y] = 165;
 	}
 	

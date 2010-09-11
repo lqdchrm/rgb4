@@ -12,20 +12,22 @@ import de.fhtrier.gdig.engine.management.Factory;
 
 public class ShootRunningState extends AbstractShootState {
 
-	public ShootRunningState(Player player, Factory factory)
+	public ShootRunningState(int stateId, Player player, Factory factory)
 			throws SlickException {
-		super(player, Assets.Player.aShootRunningAnimId, Assets.Player.bShootRunningAnimId,
+		super(stateId, player, Assets.Player.aShootRunningAnimId, Assets.Player.bShootRunningAnimId,
 				Assets.Player.aShootRunningImagePath, Assets.Player.bShootRunningImagePath, Assets.Weapon.ShootRunningAnimId,
 				Assets.Weapon.ShootRunningImagePath, EntityOrder.Player, factory);
 	}
 
 	@Override
 	public void enter () {
+		super.enter();
 		getPlayer().getWeaponParticleEntity().getData()[Entity.Y] = 155;
 	}
 	
 	@Override
 	public void leave () {
+		super.leave();
 		getPlayer().getWeaponParticleEntity().getData()[Entity.Y] = 165;
 	}
 

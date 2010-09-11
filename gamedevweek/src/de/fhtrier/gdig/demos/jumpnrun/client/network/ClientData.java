@@ -18,4 +18,10 @@ public class ClientData extends NetworkCommand implements Serializable {
 	public NetworkData getNetworkData() {
 		return this.networkData;
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + " | " +
+		((networkData != null) ? networkData.toString() : "");
+	}
 }

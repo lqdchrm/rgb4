@@ -7,6 +7,7 @@ import org.newdawn.slick.util.Log;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
+import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
 
 public abstract class RGB4Game extends StateBasedGame implements
 		INetworkCommandListener {
@@ -20,7 +21,14 @@ public abstract class RGB4Game extends StateBasedGame implements
 	public void notify(final INetworkCommand cmd) {
 
 		if (Constants.Debug.networkDebug) {
-			Log.debug("Server-Process:" + cmd);
+			
+			if (Constants.Debug.showProtocolCommandsOnly) {
+				if (cmd instanceof ProtocolCommand) {
+					Log.debug("Network-Process: " + cmd.toString());
+				}
+			} else {
+				Log.debug("Network-Process:" + cmd.toString());
+			}
 		}
 
 		final GameState currentState = this.getCurrentState();

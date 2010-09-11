@@ -8,7 +8,6 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 import de.fhtrier.gdig.engine.graphics.shader.Shader;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 
