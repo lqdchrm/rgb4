@@ -33,6 +33,13 @@
 		</effect>
 	</style>
 
+	<style id="fader">
+		<effect>
+			<onStartScreen name="fade" start="#0" end="#f"	length="1500" startDelay="100"/>
+			<onEndScreen name="fade"  start="#f" end="#0"	length="1500"/>
+		</effect>
+	</style>
+
 	<style id="standard-action">
 		<attributes></attributes>
 		<effect>

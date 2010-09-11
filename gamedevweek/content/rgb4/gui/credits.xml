@@ -15,20 +15,44 @@
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 
 
-	<screen id="start" controller="de.fhtrier.gdig.demos.jumpnrun.client.states.ClientCreditsState">
-		
-	
-		<layer id="layer" childLayout="center">
-			<panel width="100%" height="100%" childLayout="vertical">
-				<label style="lobby-text" text="HAllo" valign="center" align="center">
+	<controlDefinition name="credtext">
+			<panel id="top" height="10%" width="100%" childLayout="center">
+				<label id="ct" text="test" align="center"
+					valign="center">
 					<effect>
-						<onActive name="move" direction="down" mode="out"
-							length="1500" startDelay="0"/>
+						<onActive name="move" direction="top" mode="out"
+							length="3500" startDelay="0"/>
 					</effect>
-				</label>				
+				</label>
+			</panel>			
+	</controlDefinition>
+
+	<screen id="start" controller="de.fhtrier.gdig.demos.jumpnrun.client.states.ClientCreditsState">
+		<layer id="layer" childLayout="center">
+			<panel id="credits" height="100%" width="100%" childLayout="center">
+				<image id="logo" filename="rgb_logo.png" align="center"
+					valign="center">
+					<effect>
+						<onStartScreen name="fade" start="#0" end="#f"	length="1500" startDelay="100"/>
+						<onEndScreen name="fade"  start="#f" end="#0"	length="1500"/>
+					</effect>
+				</image>
 			</panel>
 		</layer>		
 	</screen>
+	
+	<screen id="0" controller="de.fhtrier.gdig.demos.jumpnrun.client.states.ClientCreditsState">
+		<layer id="layer" childLayout="center">
+			<panel id="credits" height="100%" width="100%" childLayout="vertical">
+				<panel height="10%"/>
+				<label height="10%" text="Programming" style="fader"/>
+				<label height="10%" align="center"  text="Robert" style="fader"/>
+				<label height="10%" align="center" text="Robert" style="fader"/>
+				<label height="10%" align="center"  text="Robert" style="fader"/>
+			</panel>
+		</layer>		
+	</screen>
+
 
 
 

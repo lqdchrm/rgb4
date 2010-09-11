@@ -8,14 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.controls.dynamic.CustomControlCreator;
 import de.lessvoid.nifty.controls.dynamic.LabelCreator;
 import de.lessvoid.nifty.controls.dynamic.attributes.ControlEffectAttributes;
+import de.lessvoid.nifty.elements.Element;
+import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import de.lessvoid.nifty.slick.NiftyGameState;
@@ -32,15 +37,16 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 	private static float timePerLine = 1000;
 	private static float currentTimeCounter = timePerLine;
 	private static int currentBlock = 0;
+	private Element creditsPanel;
 
 	private StateBasedGame game;
 	
-	private List<String> creditsList;
+	private List<Cred> creditsList;
 	
 	public ClientCreditsState()
 	{
 		super(GameStates.CLIENT_CREDITS);
-		creditsList = new ArrayList<String>();
+		creditsList = new ArrayList<Cred>();
 	}
 	
 	@Override
@@ -62,9 +68,13 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new File(creditsFile)));
 			String line;
+			int count = 0;
 			while ((line=br.readLine())!=null)
 			{
-				creditsList.add(line);
+				Cred c = new CredText(line);
+				c.x = 0;
+				c.y = (count++)*20;
+				creditsList.add(c);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -74,18 +84,21 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 
 	@Override
 	public void bind(Nifty nifty, Screen screen) {
-		
+		creditsPanel = screen.findElementByName("credits");		
+
 	}
 
 	@Override
 	public void onEndScreen() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onStartScreen() {
-		// TODO Auto-generated method stub
+		if (nifty.getCurrentScreen().getScreenId().equals("start"))
+		{
+			nifty.gotoScreen("1");
+		}
 		
 	}
 	
@@ -94,22 +107,52 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 	public void update(GameContainer container, StateBasedGame game, int delta)
 			throws SlickException {
 		super.update(container, game, delta);
-		if (currentTimeCounter <= 0)
+		for (Cred c : creditsList)
 		{
-//			addNextBlock();
-		}
-		else
-		{
-			currentTimeCounter-=delta;
+			c.y-=delta;
+			c.render(container.getGraphics());
 		}
 	}
 	
-	public void addNextCreditsLine()
+
+	
+	abstract public class Cred
 	{
-		String line = creditsList.get(++currentBlock);
-		LabelCreator labelCreator = new LabelCreator(currentBlock+"", line);
+		public int x,y;
+		abstract public void render(Graphics g);
+	}
+	
+	public class CredText extends Cred
+	{
+		public String text;
+		public CredText(String text)
+		{
+			this.text=text;
+		}
+		@Override
+		public void render(Graphics g) {
+			g.drawString(text, x,y);
+		}
 		
 	}
+	
+	public class CredImage extends Cred
+	{
+		public Image image;
+		public CredImage(String imageFile)
+		{
+			try {
+				image = new Image(imageFile);
+			} catch (SlickException e) {
+				e.printStackTrace();
+			}
+		}
+		@Override
+		public void render(Graphics g) {
+			g.drawImage(image, x,y );
+		}
+	}
+
 	
 	
 }
