@@ -14,21 +14,25 @@ public class Teleporter extends Entity {
 
 	public AssetMgr assets;
 	public AnimationEntity teleporterAnimation;
-	
+
 	public Teleporter(int id, Factory factory) throws SlickException {
 		super(id, EntityType.TELEPORTER);
 		assets = new AssetMgr();
 
 		// gfx
 		assets.storeAnimation(Assets.Level.Teleporter.TeleporterId,
-							  Assets.Level.Teleporter.TeleporterAnimationPath);
-		teleporterAnimation = factory.createAnimationEntity(EntityOrder.LevelObject,
-				Assets.Level.Teleporter.TeleporterId, assets);
-		teleporterAnimation.getData()[Entity.X] = -teleporterAnimation.Assets()
-			.getAnimation(Assets.Level.Teleporter.TeleporterId).getImage(0).getWidth()/2.0f;
-		teleporterAnimation.getData()[Entity.Y] = -teleporterAnimation.Assets()
-			.getAnimation(Assets.Level.Teleporter.TeleporterId).getImage(0).getHeight()/2.0f;
-
+				Assets.Level.Teleporter.TeleporterAnimationPath);
+		teleporterAnimation = factory.createAnimationEntity(
+				EntityOrder.LevelObject, Assets.Level.Teleporter.TeleporterId,
+				assets);
+		teleporterAnimation.getData()[Entity.X] = -teleporterAnimation
+				.getAssetMgr()
+				.getAnimation(Assets.Level.Teleporter.TeleporterId).getImage(0)
+				.getWidth() / 2.0f;
+		teleporterAnimation.getData()[Entity.Y] = -teleporterAnimation
+				.getAssetMgr()
+				.getAnimation(Assets.Level.Teleporter.TeleporterId).getImage(0)
+				.getHeight() / 2.0f;
 
 		teleporterAnimation.setVisible(true);
 		add(teleporterAnimation);

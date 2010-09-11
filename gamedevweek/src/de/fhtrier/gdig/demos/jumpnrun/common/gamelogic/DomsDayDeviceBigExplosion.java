@@ -142,8 +142,7 @@ public class DomsDayDeviceBigExplosion extends Entity {
 			if (playerdistance >= minDistance && playerdistance <= maxDistance) {
 				if (!player.doDamage(damageColor, 0.5f, null))
 					hitedPlayer.add(player);
-				System.out.println("Tirift "
-						+ player.getPlayerCondition().health);
+
 			}
 		}
 

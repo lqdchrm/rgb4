@@ -1,4 +1,4 @@
-﻿package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player;
+package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player;
 
 import java.util.HashMap;
 
@@ -15,13 +15,15 @@ import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
+<<<<<<< HEAD
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.LogicPoint;
+=======
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
+>>>>>>> roessgro/master
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.StateColor;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.AbstractAssetState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.DyingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.FallingState;
@@ -45,6 +47,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.GamePlayConstants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoPlaySound;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
@@ -85,9 +88,9 @@ public class Player extends LevelCollidableEntity implements
 	private ShootFallingState stateShootFalling;
 	private DyingState stateDying;
 	private RevivingState stateReviving;
-
+	
 	private HashMap<Integer, AbstractAssetState> id2PlayerState;
-
+	
 	private PlayerActionFSM fsmAction;
 	private PlayerOrientationFSM fsmOrientation;
 
@@ -99,7 +102,7 @@ public class Player extends LevelCollidableEntity implements
 
 	// we have our own asset manager -> no sharing of animations
 	private AssetMgr assets;
-
+	
 	// color
 	int playerColor;
 	int weaponColor;
@@ -119,20 +122,39 @@ public class Player extends LevelCollidableEntity implements
 		// startup
 		setState(stateStanding);
 	}
-
+	
 	private void initCondition() {
-		condition = new PlayerCondition(this.getId(), "XXX", 1,
-				Constants.GamePlayConstants.initialPlayerHealth, 1.0f, 0.2f);
+<<<<<<< HEAD
+		condition = new PlayerCondition();
+		condition.name = "XXX";
+		condition.teamId = 1;
+
+		setConditions();
+	}
+
+	private void setConditions() {
+		condition.health = 1.0f;
+		condition.ammo = 1.0f;
+		condition.damage = 0.2f;
+		condition.color = StateColor.RED; // player gets default-color: red
+		condition.weaponColor = StateColor.RED; // weapon of player get
+		// default-color: red
+	}
+
+	private void initStats() {
+		stats = new PlayerStats();
+=======
+		condition = new PlayerCondition(this.getId(), "XXX", 1, Constants.GamePlayConstants.initialPlayerHealth, 1.0f, 0.2f);
 		setPlayerColor(StateColor.RED); // player gets default-color: red
-		setWeaponColor(StateColor.RED); // weapon of player get default-color:
-										// red
+		setWeaponColor(StateColor.RED); // weapon of player get default-color: red
+>>>>>>> roessgro/master
 	}
 
 	private void initStates() throws SlickException {
 
 		// lookup
 		this.id2PlayerState = new HashMap<Integer, AbstractAssetState>();
-
+		
 		// statemachines for logic
 		this.fsmAction = new PlayerActionFSM();
 		this.fsmAction.add(this);
@@ -141,29 +163,18 @@ public class Player extends LevelCollidableEntity implements
 		this.fsmOrientation.add(this);
 
 		// some states
-		stateStanding = new StandingState(PlayerActionState.Standing.ordinal(),
-				this, factory);
-		stateShootStanding = new ShootStandingState(
-				PlayerActionState.ShootStanding.ordinal(), this, factory);
-		stateRunning = new RunningState(PlayerActionState.Running.ordinal(),
-				this, factory);
-		stateShootRunning = new ShootRunningState(
-				PlayerActionState.ShootRunning.ordinal(), this, factory);
-		stateJumping = new JumpingState(PlayerActionState.Jumping.ordinal(),
-				this, factory);
-		stateShootJumping = new ShootJumpingState(
-				PlayerActionState.ShootJumping.ordinal(), this, factory);
-		stateLanding = new LandingState(PlayerActionState.Landing.ordinal(),
-				this, factory);
-		stateFalling = new FallingState(PlayerActionState.Falling.ordinal(),
-				this, factory);
-		stateShootFalling = new ShootFallingState(
-				PlayerActionState.ShootFalling.ordinal(), this, factory);
-		stateDying = new DyingState(PlayerActionState.Dying.ordinal(), this,
-				factory);
-		stateReviving = new RevivingState(PlayerActionState.Reviving.ordinal(),
-				this, factory);
-
+		stateStanding = new StandingState(PlayerActionState.Standing.ordinal(), this, factory);
+		stateShootStanding = new ShootStandingState(PlayerActionState.ShootStanding.ordinal(), this, factory);
+		stateRunning = new RunningState(PlayerActionState.Running.ordinal(), this, factory);
+		stateShootRunning = new ShootRunningState(PlayerActionState.ShootRunning.ordinal(), this, factory);
+		stateJumping = new JumpingState(PlayerActionState.Jumping.ordinal(), this, factory);
+		stateShootJumping = new ShootJumpingState(PlayerActionState.ShootJumping.ordinal(), this, factory);
+		stateLanding = new LandingState(PlayerActionState.Landing.ordinal(), this, factory);
+		stateFalling = new FallingState(PlayerActionState.Falling.ordinal(), this, factory);
+		stateShootFalling = new ShootFallingState(PlayerActionState.ShootFalling.ordinal(), this, factory);
+		stateDying = new DyingState(PlayerActionState.Dying.ordinal(), this, factory);
+		stateReviving = new RevivingState(PlayerActionState.Reviving.ordinal(), this, factory);
+	
 		id2PlayerState.put(stateStanding.getStateId(), stateStanding);
 		id2PlayerState.put(stateShootStanding.getStateId(), stateShootStanding);
 		id2PlayerState.put(stateRunning.getStateId(), stateRunning);
@@ -175,9 +186,9 @@ public class Player extends LevelCollidableEntity implements
 		id2PlayerState.put(stateShootFalling.getStateId(), stateShootFalling);
 		id2PlayerState.put(stateDying.getStateId(), stateDying);
 		id2PlayerState.put(stateReviving.getStateId(), stateReviving);
-
+	
 	}
-
+	
 	private void initGraphics() throws SlickException {
 
 		// shader
@@ -244,14 +255,13 @@ public class Player extends LevelCollidableEntity implements
 		super.applyNetworkData(networkData);
 
 		if (networkData instanceof PlayerData) {
-
+			
 			PlayerData pd = (PlayerData) networkData;
-
-			this.currentPlayerAsset = id2PlayerState.get(pd
-					.getAnimationEntityId());
+			
+			this.currentPlayerAsset = id2PlayerState.get(pd.getAnimationEntityId());
 			setPlayerColor(pd.getColor());
 			setWeaponColor(pd.getWeaponColor());
-
+			
 		} else {
 			throw new IllegalArgumentException(
 					"wrong network data type received");
@@ -334,6 +344,7 @@ public class Player extends LevelCollidableEntity implements
 			if (InputControl.isRefKeyPressed(InputControl.REFJUMP)) {
 				if (this.isOnGround()) {
 					getVel()[Entity.Y] = -Constants.GamePlayConstants.playerJumpSpeed;
+					getVel()[Entity.Y] = -Constants.GamePlayConstants.playerJumpSpeed;
 					applyAction(PlayerActions.Jump);
 					SoundManager.playSound(Assets.Sounds.PlayerJumpSoundId, 1f,
 							0.5f);
@@ -397,12 +408,12 @@ public class Player extends LevelCollidableEntity implements
 	}
 
 	public void nextColor() {
-
+		
 		int tmp = getPlayerColor() << 1;
 		if (tmp > StateColor.BLUE) {
 			tmp = StateColor.RED;
 		}
-
+		
 		setPlayerColor(tmp);
 	}
 
@@ -415,7 +426,7 @@ public class Player extends LevelCollidableEntity implements
 
 		setWeaponColor(tmp);
 	}
-
+	
 	private void setParticleColor(int color) {
 		ParticleSystem particleSystem = weaponParticles.getAssetMgr()
 				.getParticleSystem(this.getId());
@@ -431,20 +442,21 @@ public class Player extends LevelCollidableEntity implements
 	}
 
 	public void respawn() {
-		LogicPoint randomSpawnPoint = level.getRandomSpawnPoint(1);
+		SpawnPoint randomSpawnPoint = level.getRandomSpawnPoint(1);
 		getData()[Entity.X] = randomSpawnPoint.x;
-		getData()[Entity.Y] = randomSpawnPoint.y;
-
-		NetworkComponent.getInstance().sendCommand(
-				new QueryRespawn(this.getId()));
+		getData()[Entity.Y] = randomSpawnPoint.y;		
+		
+		NetworkComponent.getInstance().sendCommand(new QueryRespawn(this.getId()));
 	}
 
 	@Override
 	protected void preRender(Graphics graphicContext) {
 		super.preRender(graphicContext);
 
-		Color playerCol = StateColor.constIntoColor(getPlayerColor());
-		Color weaponCol = StateColor.constIntoColor(getWeaponColor());
+		Color playerCol = StateColor
+				.constIntoColor(getPlayerColor());
+		Color weaponCol = StateColor
+				.constIntoColor(getWeaponColor());
 
 		if (Constants.Debug.shadersActive) {
 			Shader.pushShader(colorGlowShader);
@@ -452,17 +464,31 @@ public class Player extends LevelCollidableEntity implements
 
 		graphicContext.setColor(Color.white);
 		Shader.activateAdditiveBlending();
+<<<<<<< HEAD
+		// Shader.activateDefaultBlending();
+		float weaponGlowSize = 0.6f + this.getPlayerCondition().ammo * 0.4f;
+		float glowSize = 0.1f + this.getPlayerCondition().health * 0.9f;
+=======
 		float weaponGlowSize = 0.6f + this.getPlayerCondition().getAmmo() * 0.4f;
 		float glowSize = 0.1f + this.getPlayerCondition().getHealth() * 0.9f;
+>>>>>>> roessgro/master
 
 		// TODO find active Animation-Asset and setTintColor(playerCol)
 
 		float weaponX = this.getData(CENTER_X);
+<<<<<<< HEAD
+
 		float weaponY = this.getData(CENTER_Y) - weaponGlow.getHeight()
 				* weaponGlowSize / 2 + 40;
 
-		float weaponBrightness = StateColor
-				.constIntoBrightness(getWeaponColor());
+		float weaponBrightness = StateColor.constIntoBrightness(this
+				.getPlayerCondition().weaponColor);
+=======
+		float weaponY = this.getData(CENTER_Y) - weaponGlow.getHeight()
+				* weaponGlowSize / 2 + 40;
+
+		float weaponBrightness = StateColor.constIntoBrightness(getWeaponColor());
+>>>>>>> roessgro/master
 
 		if (Constants.Debug.shadersActive) {
 			weaponCol.a = Constants.GamePlayConstants.weaponGlowFalloff
@@ -475,7 +501,12 @@ public class Player extends LevelCollidableEntity implements
 				* weaponGlowSize, 0, 0, weaponGlow.getWidth(),
 				weaponGlow.getHeight(), weaponCol);
 
+<<<<<<< HEAD
+		float brightness = StateColor.constIntoBrightness(this
+				.getPlayerCondition().color);
+=======
 		float brightness = StateColor.constIntoBrightness(getPlayerColor());
+>>>>>>> roessgro/master
 
 		if (Constants.Debug.shadersActive) {
 			playerCol.a = Constants.GamePlayConstants.playerGlowFalloff
@@ -497,6 +528,15 @@ public class Player extends LevelCollidableEntity implements
 			playerCol.a = 1f;
 			colorGlowShader.setValue("playercolor", playerCol);
 		}
+<<<<<<< HEAD
+
+		Shader.activateDefaultBlending();
+		// deactivate shader
+		// if (Constants.Debug.shadersActive) {
+		// Shader.popShader();
+		// }
+=======
+>>>>>>> roessgro/master
 
 		Shader.activateDefaultBlending();
 	}
@@ -512,7 +552,13 @@ public class Player extends LevelCollidableEntity implements
 	@Override
 	protected void postRender(Graphics graphicContext) {
 
+<<<<<<< HEAD
+		// Shader.activateDefaultBlending();
+
+		// // deactivate shader
+=======
 		// deactivate shader
+>>>>>>> roessgro/master
 		if (Constants.Debug.shadersActive) {
 			Shader.popShader();
 		}
@@ -522,8 +568,7 @@ public class Player extends LevelCollidableEntity implements
 		// render player name
 		if (this.condition.getName() != null) {
 			float x = getData()[Entity.X] + playerHalfWidth
-					- graphicContext.getFont().getWidth(condition.getName())
-					/ 2.0f;
+					- graphicContext.getFont().getWidth(condition.getName()) / 2.0f;
 
 			float y = getData()[Entity.Y]
 					- (graphicContext.getFont().getHeight(condition.getName()) * 3);
@@ -537,10 +582,9 @@ public class Player extends LevelCollidableEntity implements
 				graphicContext
 						.setColor(Constants.GamePlayConstants.defaultPlayerTextColor);
 			}
-			graphicContext.drawString(
-					condition.getName() + "\n" + " kills: "
-							+ condition.getKills() + "\n" + "deaths: "
-							+ condition.getDeaths(), x, y);
+			graphicContext.drawString(condition.getName() + "\n" + " kills: "
+					+ condition.getKills() + "\n" + "deaths: " + condition.getDeaths(),
+					x, y);
 		}
 
 	}
@@ -597,6 +641,7 @@ public class Player extends LevelCollidableEntity implements
 		return condition;
 	}
 
+
 	/**
 	 * Does Damage to the Player. If Color equels the Color of the Player he
 	 * gain Life instad of reducing it.
@@ -611,14 +656,12 @@ public class Player extends LevelCollidableEntity implements
 		boolean died = false;
 		if ((Constants.GamePlayConstants.friendyFire == true || // Friendly Fire
 																// or
-		killer.getPlayerCondition().getTeamId() != this.getPlayerCondition()
-				.getTeamId())) // Enemy
+		killer.getPlayerCondition().teamId != this.getPlayerCondition().teamId)) // Enemy
 		{
-			if (this.getPlayerColor() != colorolor) {
-				this.getPlayerCondition().setHealth(
-						getPlayerCondition().getHealth() - damage);
+			if (this.getPlayerCondition().color != colorolor) {
+				this.getPlayerCondition().health -= damage;
 
-				if (this.getPlayerCondition().getHealth() <= Constants.EPSILON) {
+				if (this.getPlayerCondition().health <= Constants.EPSILON) {
 					NetworkComponent.getInstance().sendCommand(
 							new SendKill(this.getId(), killer != null ? killer
 									.getId() : -1));
@@ -629,7 +672,7 @@ public class Player extends LevelCollidableEntity implements
 				}
 
 				if (PlayingState.gameType == Constants.GameTypes.deathMatch) {
-					if (killer.getPlayerCondition().getKills() >= Constants.GamePlayConstants.winningKills_Deathmatch) {
+					if (killer.getPlayerStats().getKills() >= Constants.GamePlayConstants.winningKills_Deathmatch) {
 						NetworkComponent.getInstance().sendCommand(
 								new SendWon(killer.getId(),
 										SendWon.winnerType_Player));
@@ -639,58 +682,65 @@ public class Player extends LevelCollidableEntity implements
 					}
 				} else if (PlayingState.gameType == Constants.GameTypes.teamDeathMatch) {
 					// TODO: do it not hardcoded
-					if (Team.team1.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
+					if (Team.Team1.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
 						NetworkComponent.getInstance().sendCommand(
-								new SendWon(Team.team1.id,
+								new SendWon(Team.Team1.id,
 										SendWon.winnerType_Team));
 
-						Event wonEvent = new WonGameEvent(Team.team1);
+						Event wonEvent = new WonGameEvent(Team.Team1);
 						EventManager.addEvent(wonEvent);
-					} else if (Team.team2.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
+					} else if (Team.Team2.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
 						NetworkComponent.getInstance().sendCommand(
-								new SendWon(Team.team2.id,
+								new SendWon(Team.Team2.id,
 										SendWon.winnerType_Team));
 
-						Event wonEvent = new WonGameEvent(Team.team1);
+						Event wonEvent = new WonGameEvent(Team.Team1);
 						EventManager.addEvent(wonEvent);
 					}
 				}
 			} else {
 				// player gets stronger when hit by bullet of the same
 				// color!
-				this.getPlayerCondition().setHealth(
-						getPlayerCondition().getHealth() + damage / 2);
-				if (this.getPlayerCondition().getHealth() > Constants.GamePlayConstants.maxPlayerHealth)
-					this.getPlayerCondition().setHealth(
-							Constants.GamePlayConstants.maxPlayerHealth);
+				this.getPlayerCondition().health += damage / 2;
+				if (this.getPlayerCondition().health > 2.0f)
+					this.getPlayerCondition().health = 2.0f;
 			}
+
+			NetworkComponent.getInstance().sendCommand(
+					new AckPlayerCondition(this.getId(), this
+							.getPlayerCondition()));
 
 		}
 		return died;
 	}
 
 	public void setPlayerCondition(PlayerCondition playerCondition) {
+
 		this.condition = playerCondition;
 
 	}
 
+<<<<<<< HEAD
+=======
+
 	public int getPlayerColor() {
 		return playerColor;
 	}
-
+	
 	public void setPlayerColor(int playerColor) {
 		this.playerColor = playerColor;
 	}
-
+	
 	public int getWeaponColor() {
 		return weaponColor;
 	}
-
+	
 	public void setWeaponColor(int weaponColor) {
 		this.weaponColor = weaponColor;
 		setParticleColor(this.weaponColor);
 	}
-
+	
+>>>>>>> roessgro/master
 	public static Shader getColorGlowShader() {
 		return colorGlowShader;
 	}

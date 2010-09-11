@@ -1,0 +1,36 @@
+package de.fhtrier.gdig.demos.jumpnrun.server.network.protocol;
+
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.PlayerCondition;
+import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
+
+<<<<<<< HEAD:gamedevweek/src/de/fhtrier/gdig/demos/jumpnrun/server/network/protocol/AckPlayerCondition.java
+public class AckPlayerCondition extends ProtocolCommand {
+=======
+public class SendPlayerCondition extends ProtocolCommand {
+	
+>>>>>>> roessgro/master:gamedevweek/src/de/fhtrier/gdig/demos/jumpnrun/server/network/protocol/SendPlayerCondition.java
+
+	private static final long serialVersionUID = 7134864961774169991L;
+	private int playerId;
+	private PlayerCondition condition;
+<<<<<<< HEAD:gamedevweek/src/de/fhtrier/gdig/demos/jumpnrun/server/network/protocol/AckPlayerCondition.java
+
+	public AckPlayerCondition(int playerId, PlayerCondition cond) {
+=======
+	
+	public SendPlayerCondition (int playerId, PlayerCondition cond) {
+>>>>>>> roessgro/master:gamedevweek/src/de/fhtrier/gdig/demos/jumpnrun/server/network/protocol/SendPlayerCondition.java
+		super("AckPlayerCondition");
+
+		this.playerId = playerId;
+		this.condition = cond;
+	}
+
+	public int getPlayerId() {
+		return playerId;
+	}
+
+	public PlayerCondition getPlayerCondition() {
+		return condition;
+	}
+}
