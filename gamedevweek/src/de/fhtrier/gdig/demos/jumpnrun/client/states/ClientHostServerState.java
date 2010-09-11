@@ -185,6 +185,12 @@ public class ClientHostServerState extends NiftyGameState implements
 										return;
 								}
 							} catch (IOException e) {
+							} finally {
+								try {
+									r.close();
+								} catch (IOException e) {
+
+								}
 							}
 						};
 					};

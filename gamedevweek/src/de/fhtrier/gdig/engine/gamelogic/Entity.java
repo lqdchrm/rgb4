@@ -260,7 +260,7 @@ public class Entity implements Identifiable {
 	}
 
 	public Entity replace(final Entity e) {
-		this.childrenInOrder.remove(this.children.get(e.get(this.id)));
+		this.childrenInOrder.remove(this.children.get(e.getId()));
 		this.children.put(e.getId(), e);
 		this.childrenInOrder.add(e);
 		return e;

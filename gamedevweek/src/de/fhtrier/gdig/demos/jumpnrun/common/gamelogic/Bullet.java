@@ -116,8 +116,8 @@ public class Bullet extends LevelCollidableEntity {
 		Shader.activateAdditiveBlending();
 
 		graphicContext.drawImage(bulletGlow, this.getData(CENTER_X)
-				- bulletGlow.getWidth() / 2, this.getData(CENTER_Y)
-				- bulletGlow.getHeight() / 2);
+				- bulletGlow.getWidth() / 2.0f, this.getData(CENTER_Y)
+				- bulletGlow.getHeight() / 2.0f);
 
 		Shader.activateDefaultBlending();
 
