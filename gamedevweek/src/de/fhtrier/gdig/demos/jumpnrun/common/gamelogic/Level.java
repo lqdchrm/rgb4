@@ -108,7 +108,7 @@ public class Level extends MoveableEntity {
 		int xOffset = 0;
 
 		for (int i = 0; i < numTiles; i++) {
-			String strFile = (assets.makePathRelativeToAssetPath(AssetPath
+			String strFile = (assets.getPathRelativeToAssetPath(AssetPath
 					+ "_0" + (i + 1) + "." + Level1.FileExt));
 			Image img = new Image(strFile);
 

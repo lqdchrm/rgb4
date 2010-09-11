@@ -28,7 +28,6 @@ import de.lessvoid.nifty.controls.button.CreateButtonControl;
 import de.lessvoid.nifty.controls.button.controller.ButtonControl;
 import de.lessvoid.nifty.controls.textfield.controller.TextFieldControl;
 import de.lessvoid.nifty.elements.Element;
-import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import de.lessvoid.nifty.slick.NiftyGameState;
@@ -49,21 +48,21 @@ public class ClientSelectServerState extends NiftyGameState implements
 
 	private INetworkLobby networkLobby;
 	private boolean connecting = false;
-	private int counter=0;
-//	private boolean startConnect = false;
+	private int counter = 0;
+	// private boolean startConnect = false;
 	private String currentConnectionIp = null;
 	private int currentConnectionPort = -1;
-	
+
 	private StateBasedGame game;
-	
+
 	// gui-elements
 	private Element guiInterfacePanel;
 	private Element guiServerPanel;
 	private TextFieldControl guiPlayernameTextField;
-	
+
 	private ArrayList<ButtonControl> interfaceButtons = new ArrayList<ButtonControl>();
 	private ArrayList<ButtonControl> serverButtons = new ArrayList<ButtonControl>();
-	
+
 	public ClientSelectServerState() {
 		super(GameStates.SERVER_SELECTION);
 	}
@@ -83,15 +82,16 @@ public class ClientSelectServerState extends NiftyGameState implements
 		interfaceButtons.clear();
 		for (int i = 0; i < interfaces.size(); i++) {
 			InterfaceAddress iA = interfaces.get(i);
-			CreateButtonControl createButton = new CreateButtonControl("button"+counter++);
+			CreateButtonControl createButton = new CreateButtonControl("button"
+					+ counter++);
 			createButton.setHeight("20px");
 			createButton.setWidth("100%");
 			createButton.set("label", iA.getAddress().getCanonicalHostName());
 			createButton.setAlign("left");
 			// TODO setin real values
 			createButton.setInteractOnClick("chooseInterface(" + i + ")");
-			ButtonControl bC = createButton.create(nifty, nifty.getCurrentScreen(),
-					guiInterfacePanel);
+			ButtonControl bC = createButton.create(nifty,
+					nifty.getCurrentScreen(), guiInterfacePanel);
 			interfaceButtons.add(bC);
 		}
 	}
@@ -100,21 +100,25 @@ public class ClientSelectServerState extends NiftyGameState implements
 	public void init(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		super.init(container, game);
-		
+
 		serverList = new ArrayList<NetworkServerObject>();
 		serverMutex = new Semaphore(1);
 
 		this.game = game;
-		
+
 		// add asset-folder to the ResourceLocators of nifty and slick2d
 		ResourceLoader.addResourceLocation(new FileSystemLocation(new File(
 				menuAssetPath)));
+	
 		org.newdawn.slick.util.ResourceLoader
-				.addResourceLocation(new org.newdawn.slick.util.FileSystemLocation(
-						new File(menuAssetPath)));
+		.addResourceLocation(new org.newdawn.slick.util.FileSystemLocation(
+				new File(menuAssetPath)));
+
+
 		// read the nifty-xml-fiel
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
+		
 		// show the mouse
 		enableMouseImage(new Image(
 				ResourceLoader.getResourceAsStream(CROSSHAIR_PNG),
@@ -124,13 +128,10 @@ public class ClientSelectServerState extends NiftyGameState implements
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
-		try
-		{
+		try {
 			MenuBackground.getInstance().render(container, game, g);
 			super.render(container, game, g);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			Log.error(e);
 		}
 	}
@@ -150,33 +151,34 @@ public class ClientSelectServerState extends NiftyGameState implements
 			game.enterState(GameStates.CLIENT_LOBBY);
 			connecting = false;
 		}
-		
+
 		try {
 			serverMutex.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		int count = 0;
-		for ( NetworkServerObject server : serverList )
-		{
-			CreateButtonControl createButton = new CreateButtonControl("mybutton"+count);
+		for (NetworkServerObject server : serverList) {
+			CreateButtonControl createButton = new CreateButtonControl(
+					"mybutton" + count);
 			createButton.setHeight("30px");
 			createButton.setWidth("100%");
-			createButton
-					.set("label", server.getName() + "("+ count+"," + server.getIp() + ")");
+			createButton.set("label", server.getName() + "(" + count + ","
+					+ server.getIp() + ")");
 			createButton.setAlign("left");
 			// TODO setin real values
-			createButton.setInteractOnClick("chooseServer(" +count+ ","+ server.getIp() + ","
-					+ server.getPort() + ")");
-			ButtonControl bC = createButton.create(nifty, nifty.getCurrentScreen(), guiServerPanel);
+			createButton.setInteractOnClick("chooseServer(" + count + ","
+					+ server.getIp() + "," + server.getPort() + ")");
+			ButtonControl bC = createButton.create(nifty,
+					nifty.getCurrentScreen(), guiServerPanel);
 			count++;
 			serverButtons.add(bC);
 		}
-		
+
 		serverList.clear();
-		
+
 		serverMutex.release();
 	}
 
@@ -221,7 +223,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		serverList.add( server );
+		serverList.add(server);
 		serverMutex.release();
 	}
 
@@ -229,46 +231,43 @@ public class ClientSelectServerState extends NiftyGameState implements
 		clearList(guiServerPanel);
 		serverButtons.clear();
 		InterfaceAddress iA = interfaces.get(Integer.parseInt(id));
-		setButton(Integer.parseInt(id), interfaceButtons, new Color(1,0,0,1), new Color(1,1,1,1));
+		setButton(Integer.parseInt(id), interfaceButtons,
+				new Color(1, 0, 0, 1), new Color(1, 1, 1, 1));
 		networkLobby.stopGetServers();
 		networkLobby.getServers(iA);
 		currentConnectionIp = null;
 		currentConnectionPort = -1;
 	}
 
-	public void setButton(int nr,List<ButtonControl> buttons,Color setColor,Color notSetColor)
-	{
-		for (int i=0;i < buttons.size(); i++)
-		{
+	public void setButton(int nr, List<ButtonControl> buttons, Color setColor,
+			Color notSetColor) {
+		for (int i = 0; i < buttons.size(); i++) {
 			ButtonControl b = buttons.get(i);
-			if (i==nr)
+			if (i == nr)
 				b.setColor(setColor);
 			else
 				b.setColor(notSetColor);
 		}
 	}
-	
-	public void chooseServer(String id,String ip, String port) {
+
+	public void chooseServer(String id, String ip, String port) {
 		this.currentConnectionIp = ip;
 		this.currentConnectionPort = Integer.parseInt(port);
 		Log.debug("set server-info to :" + ip + ":" + port);
 		networkLobby.stopGetServers();
-		setButton(Integer.parseInt(id), serverButtons, new Color(1,0,0,1), new Color(1,1,1,1));
-		
+		setButton(Integer.parseInt(id), serverButtons, new Color(1, 0, 0, 1),
+				new Color(1, 1, 1, 1));
+
 	}
 
 	public void connect() {
-		
-		if (currentConnectionIp==null)
-		{
+
+		if (currentConnectionIp == null) {
 			popupNoServer();
 			return;
-		}
-		else if (guiPlayernameTextField.getText().trim().equals(""))
-		{
+		} else if (guiPlayernameTextField.getText().trim().equals("")) {
 			popupNoName();
-		}
-		else if (currentConnectionIp != null && !connecting) {
+		} else if (currentConnectionIp != null && !connecting) {
 			NetworkComponent.getInstance().connect(
 					currentConnectionIp.replace('/', ' ').trim(),
 					currentConnectionPort);
@@ -278,31 +277,27 @@ public class ClientSelectServerState extends NiftyGameState implements
 
 		}
 
-			 
 	}
-	
 
-
-	
 	public void back() {
 		game.enterState(GameStates.MENU);
 	}
 
-	  public void popupNoServer() {
-		    Element element = nifty.createPopupWithId("popupServer");
-		    nifty.showPopup(nifty.getCurrentScreen(), element.getId(), null);
-		    return;
-	  }
+	public void popupNoServer() {
+		Element element = nifty.createPopupWithId("popupServer");
+		nifty.showPopup(nifty.getCurrentScreen(), element.getId(), null);
+		return;
+	}
 
-	  public void popupNoName() {
-		    Element element = nifty.createPopupWithId("popupName");
-		    nifty.showPopup(nifty.getCurrentScreen(), element.getId(), null);
-		    return;
-	  }
-	  
-	  
-	  public void removePopup() {
-	      nifty.closePopup(nifty.getCurrentScreen().getTopMostPopup().getId(), null);
-	  }
+	public void popupNoName() {
+		Element element = nifty.createPopupWithId("popupName");
+		nifty.showPopup(nifty.getCurrentScreen(), element.getId(), null);
+		return;
+	}
+
+	public void removePopup() {
+		nifty.closePopup(nifty.getCurrentScreen().getTopMostPopup().getId(),
+				null);
+	}
 
 }

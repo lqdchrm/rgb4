@@ -70,7 +70,7 @@ public class Bullet extends LevelCollidableEntity {
 
 		if (bulletGlow == null) {
 			bulletGlow = new Image(
-					assets.makePathRelativeToAssetPath(Assets.Bullet.GlowImagePath));
+					assets.getPathRelativeToAssetPath(Assets.Bullet.GlowImagePath));
 		}
 
 		// setup

@@ -152,14 +152,14 @@ public class Player extends LevelCollidableEntity implements
 		if (playerGlow == null) {
 			if (Constants.Debug.shadersActive) {
 				colorGlowShader = new Shader(
-						assets.makePathRelativeToAssetPath(Assets.Player.VertexShaderPath),
-						assets.makePathRelativeToAssetPath(Assets.Player.PixelShaderPath));
+						assets.getPathRelativeToAssetPath(Assets.Player.VertexShaderPath),
+						assets.getPathRelativeToAssetPath(Assets.Player.PixelShaderPath));
 			}
 
 			playerGlow = new Image(
-					assets.makePathRelativeToAssetPath(Assets.Player.GlowImagePath));
+					assets.getPathRelativeToAssetPath(Assets.Player.GlowImagePath));
 			weaponGlow = new Image(
-					assets.makePathRelativeToAssetPath(Assets.Weapon.GlowImagePath));
+					assets.getPathRelativeToAssetPath(Assets.Weapon.GlowImagePath));
 		}
 		
 		// weaponparticles
