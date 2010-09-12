@@ -57,7 +57,7 @@ public class AStarTiledMap extends TiledMap implements TileBasedMap {
 	
 	public void initAStarPathFinder()
 	{
-		finder = new AStarPathFinder(this, 1500, false);
+		finder = new AStarPathFinder(this, 1500, true);
 		mover = new Mover() {
 		};
 	}
