@@ -88,8 +88,8 @@ public class Assets {
 
 	public static class Rocket {
 		public static final int AnimId = 21;
-		public static final String AnimPath = "sprites/items/bullet4_64_64_100.png";
-		public static final String GlowImagePath = "shader/bulletglow.png";
+		public static final String AnimPath = "sprites/items/rotatingglas_64_64_100.png";
+		public static final String GlowImagePath = "shader/rotatingglasglow.png";
 	}
 
 	

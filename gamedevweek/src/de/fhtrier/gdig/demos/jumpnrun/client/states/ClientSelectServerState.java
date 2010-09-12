@@ -165,14 +165,16 @@ public class ClientSelectServerState extends NiftyGameState implements
 					"mybutton" + count);
 			createButton.setHeight("30px");
 			createButton.setWidth("100%");
-			createButton.set("label", server.getName() + "(" + count + ","
-					+ server.getIp() + ")");
+			createButton.set("label", server.getName() + "(" + server.getIp() + ")");
 			createButton.setAlign("left");
 			// TODO setin real values
 			createButton.setInteractOnClick("chooseServer(" + count + ","
 					+ server.getIp() + "," + server.getPort() + ")");
 			ButtonControl bC = createButton.create(nifty,
 					nifty.getCurrentScreen(), guiServerPanel);
+			if (count==0 && currentConnectionIp==null) {
+				chooseServer("0", server.getIp().toString(), Integer.toString(server.getPort()));
+			}
 			count++;
 			serverButtons.add(bC);
 		}

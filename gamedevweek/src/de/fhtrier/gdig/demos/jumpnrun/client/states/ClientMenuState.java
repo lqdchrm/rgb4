@@ -116,10 +116,6 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 	public void mouseMoved(final int oldx, final int oldy, final int newx,
 			final int newy) {
 		super.mouseMoved(oldx, oldy, newx, newy);
-
-		if (Constants.Debug.guiDebug) {
-			Log.debug(oldx + ", " + oldy + ", " + newx + ", " + newy);
-		}
 	}
 
 	public Nifty getNifty() {

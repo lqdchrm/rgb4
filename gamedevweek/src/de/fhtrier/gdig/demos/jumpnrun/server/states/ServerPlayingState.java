@@ -106,8 +106,8 @@ public class ServerPlayingState extends PlayingState {
 			rocket.color = player.getWeaponColor();
 			// set player pos as gem pos
 
-			rocket.getData()[Entity.X] = player.getData()[Entity.X];
-			rocket.getData()[Entity.Y] = player.getData()[Entity.Y];
+			rocket.getData()[Entity.X] = player.getData()[Entity.X] + player.getData()[Entity.CENTER_X];
+			rocket.getData()[Entity.Y] = player.getData()[Entity.Y] + player.getData()[Entity.CENTER_Y];
 //			rocket.getData()[Entity.X] =
 //				(player.getData()[Entity.X] + player.getData()[Entity.CENTER_X]) +
 //				(rocket.getData()[Entity.CENTER_X] - Assets.Weapon.weaponXOffset) * player.getData()[Entity.SCALE_X];

@@ -91,6 +91,8 @@ public class ClientHostServerState extends NiftyGameState implements
 
 		interfaces = NetworkHelper.getInterfaces();
 		drawInterfaces();
+		if (interfaces.size()>0)
+			chooseInterface("0");
 	}
 
 	@Override

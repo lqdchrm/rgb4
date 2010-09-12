@@ -2,15 +2,15 @@ package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
 import java.util.List;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.pathfinding.Path;
 import org.newdawn.slick.util.pathfinding.Path.Step;
-
-import quicktime.std.movies.NextTaskNeededSooner;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
@@ -18,6 +18,8 @@ import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
+import de.fhtrier.gdig.demos.jumpnrun.common.network.BulletData;
+import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
@@ -28,6 +30,7 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
+import de.fhtrier.gdig.engine.graphics.shader.Shader;
 import de.fhtrier.gdig.engine.helpers.AStarTiledMap;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
@@ -50,11 +53,10 @@ public class Rocket extends CollidableEntity {
 	
 	// data about the target
 	protected Player targetPlayer = null;
-	protected float targetLastX = -1;
-	protected float targetLastY = -1;
 
 	// current path the Rocket is flying along
 	protected Path path = null;
+	protected Path newPathFromThread = null;
 	protected Step nextPathStep = null;
 	protected int pathCounter = 0;
 	protected Vector2f direction = new Vector2f();
@@ -69,6 +71,7 @@ public class Rocket extends CollidableEntity {
 	public AssetMgr assets;
 	private static Image bulletGlow;
 	public int color;
+	
 
 	public Rocket(int id, GameFactory factory) throws SlickException {
 		super(id, EntityType.ROCKET);
@@ -76,7 +79,7 @@ public class Rocket extends CollidableEntity {
 		assets = new AssetMgr();
 
 		// gfx
-		assets.storeAnimation(Assets.Bullet.AnimId, Assets.Bullet.AnimPath);
+		assets.storeAnimation(Assets.Bullet.AnimId, Assets.Rocket.AnimPath);
 		bullet = factory.createAnimationEntity(EntityOrder.Bullet,
 				Assets.Bullet.AnimId, assets);
 
@@ -93,13 +96,13 @@ public class Rocket extends CollidableEntity {
 		setVel(new float[] { 0, 0, 0, 0, 0, 0, 0 }); // no speed
 		setAcc(new float[] { 0, 0, 0, 0, 0, 0, 0 }); // gravity
 
-		setBounds(new Rectangle(10, 28, 8, 8)); // bounding box
+		setBounds(new Rectangle(16, 16, 32, 32)); // bounding box
 
 		CollisionManager.addEntity(this);
 
 		if (bulletGlow == null) {
 			bulletGlow = new Image(assets
-					.getPathRelativeToAssetPath(Assets.Bullet.GlowImagePath));
+					.getPathRelativeToAssetPath(Assets.Rocket.GlowImagePath));
 		}
 
 		// setup
@@ -147,14 +150,15 @@ public class Rocket extends CollidableEntity {
 		NetworkComponent.getInstance().sendCommand(
 				new DoRemoveEntity(this.getId()));
 		CollisionManager.removeEntity(this);
+		Log.debug("ROCKET DIED");
 	}
 
 	public void shootAtClosestPlayer(RocketStrategy strategy) {
 
 		switch (strategy) {
 		case NEXT_ENEMY_TEAM:
-			targetPlayer = getClosestPlayer((getData()[X] + 16)
-					/ this.map.getTileWidth(), (getData()[Y] + 16)
+			targetPlayer = getClosestPlayer((getData()[X] + getData()[CENTER_X])
+					/ this.map.getTileWidth(), (getData()[Y] + getData()[CENTER_Y])
 					/ this.map.getTileHeight(), ANY_COLOR, owner
 					.getPlayerCondition().getTeamId());
 			break;
@@ -166,20 +170,23 @@ public class Rocket extends CollidableEntity {
 			return;
 		}
 
-		// calculate path from nearest player to nearest enemy
-		path = map.calculatePath(
-				(int) ((getData()[X] + getData()[CENTER_X]) / map.getTileWidth() ), 
-				(int) ((getData()[Y] + getData()[CENTER_Y]) / map.getTileHeight()), 
-				(int) ((targetPlayer.getData()[X] + targetPlayer.getData()[X]) / map.getTileWidth()), 
-				(int) (((targetPlayer.getData()[Y] + targetPlayer.getData()[Y]) / map.getTileHeight())));
-		
+		calculatePathToCurrentTarget();
 		updateRocketData();
 
 	}
 
 
+	public void calculatePathToCurrentTarget()
+	{
+		path = map.calculatePath(
+				(int) ((getData()[X] + bulletGlow.getWidth()/2) / map.getTileWidth() ), 
+				(int) ((getData()[Y] + bulletGlow.getHeight()/2) / map.getTileHeight()), 
+				(int) ((targetPlayer.getData()[X] + targetPlayer.getData()[CENTER_X]) / map.getTileWidth()), 
+				(int) ((targetPlayer.getData()[Y] + targetPlayer.getData()[CENTER_Y]) / map.getTileHeight()));
+	}
+	
 	/* 
-	 * overrider for different behavior
+	 * overrider for different behaviors
 	 * here: after reaching each path-step check the target players position
 	 * and recalculate path. following always the SAME target player
 	 */
@@ -194,11 +201,7 @@ public class Rocket extends CollidableEntity {
 		if (!path.contains(tileTargetX,tileTargetY))
 		{
 			// TODO: Outsource this to a special low-priortiy calculation thread if performance is bad
-			path = map.calculatePath(
-					(int) ((getData()[X] + getData()[CENTER_X]) / map.getTileWidth() ), 
-					(int) ((getData()[Y] + getData()[CENTER_Y]) / map.getTileHeight()), 
-					(int) ((targetPlayer.getData()[X] + targetPlayer.getData()[X]) / map.getTileWidth()), 
-					(int) (((targetPlayer.getData()[Y] + targetPlayer.getData()[Y]) / map.getTileHeight())));
+			calculatePathToCurrentTarget();
 			pathCounter=0;
 			nextPathStep=null;
 		}
@@ -213,15 +216,12 @@ public class Rocket extends CollidableEntity {
 			return;
 
 		if (nextPathStep == null) {
-			if (path.getLength() > 0) {
-				getData()[X] = path.getStep(0).getX() * map.getTileWidth();
-				getData()[Y] = path.getStep(0).getY() * map.getTileHeight();
-			}
-			pathCounter++;
+			pathCounter=1;
 		}
 
-		if (nextPathStep == null || (pathCounter + 1) < path.getLength()) {
-			nextPathStep = path.getStep(pathCounter++);
+		if (nextPathStep == null || (pathCounter < path.getLength())) {
+			nextPathStep = path.getStep(pathCounter);
+			pathCounter++;
 		} else {
 			path = null;
 			die();
@@ -231,7 +231,6 @@ public class Rocket extends CollidableEntity {
 		targetStep.y = nextPathStep.getY() * map.getTileHeight();
 		direction.x = targetStep.x - getData()[X];
 		direction.y = targetStep.y - getData()[Y];
-		direction.normalise();
 		direction.normalise();
 		getVel()[X] = Constants.GamePlayConstants.shotSpeed * direction.x / 10;
 		getVel()[Y] = Constants.GamePlayConstants.shotSpeed * direction.y / 10;
@@ -274,7 +273,31 @@ public class Rocket extends CollidableEntity {
 			}
 		}
 	}
+	
+	@Override
+	protected NetworkData _createNetworkData() {
+		return new BulletData(getId());
+	}
 
+	@Override
+	public NetworkData getNetworkData() {
+		BulletData result = (BulletData) super.getNetworkData();
+		result.bulletColor = this.color;
+
+		return result;
+	}	
+
+	@Override
+	public void applyNetworkData(NetworkData networkData) {
+		super.applyNetworkData(networkData);
+
+		if (networkData instanceof BulletData) {
+			this.color = ((BulletData) networkData).getColor();
+		} else {
+			throw new RuntimeException("Wrong package received");
+		}
+	}
+	
 	// this is for the moment more or less the logic of the bullet but without checking for 
 	// level-collisions which somehow prevent the pathfinder to work properly. (and as long
 	// as the pathfinder is working that should(<---) be fine
@@ -362,5 +385,25 @@ public class Rocket extends CollidableEntity {
 
 		return result;
 	}
+	
+	@Override
+	protected void preRender(Graphics graphicContext) {
+		super.preRender(graphicContext);
+
+		Color bulletCol = StateColor.constIntoColor(this.color);
+
+		if (Constants.Debug.shadersActive) {
+			Shader.pushShader(Player.getColorGlowShader());
+			Player.getColorGlowShader().setValue("playercolor", bulletCol);
+		}
+
+		graphicContext.setColor(Color.white);
+		graphicContext.drawImage(bulletGlow, 0,0);
+
+		if (Constants.Debug.shadersActive) {
+			Shader.popShader();
+		}
+	}
+	
 
 }
