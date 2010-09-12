@@ -170,7 +170,9 @@ public class ClientLobbyState extends NiftyGameState implements
 
 		if (Constants.Debug.networkDebug) {
 			Log.debug("try to handle:" + cmd);
-		} else if (cmd instanceof AckConnect) {
+		}
+		
+		if (cmd instanceof AckConnect) {
 			if (Constants.Debug.networkDebug) {
 				Log.debug("Client connected to serverlobby");
 			}

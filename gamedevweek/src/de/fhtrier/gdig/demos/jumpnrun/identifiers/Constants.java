@@ -103,6 +103,7 @@ public class Constants
 		public static String REFWALKRIGHT = "KEY_RIGHT";
 		public static String REFJUMP = "KEY_UP";
 		public static String REFFIRE = "KEY_SPACE";
+		public static String REFFIRE2 = "KEY_LCONTROL";
 		public static String REFCHANGEWEAPON = "KEY_X";
 		public static String REFCHANGECOLOR = "KEY_Y";
 		public static String REFMENU = "KEY_ESCAPE";

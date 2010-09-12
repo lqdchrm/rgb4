@@ -110,6 +110,7 @@ public class InputControl {
 			setStoredKeyMapping("REFWALKRIGHT");
 			setStoredKeyMapping("REFJUMP");
 			setStoredKeyMapping("REFFIRE");
+			setStoredKeyMapping("REFFIRE2");
 			setStoredKeyMapping("REFCHANGEWEAPON");
 			setStoredKeyMapping("REFCHANGECOLOR");
 			setStoredKeyMapping("REFMENU");
