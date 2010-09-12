@@ -1,7 +1,6 @@
 package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import java.io.File;
-import java.util.Properties;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;

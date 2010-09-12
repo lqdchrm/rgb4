@@ -1,5 +1,8 @@
 package de.fhtrier.gdig.demos.jumpnrun.client;
 
+import java.io.IOException;
+import java.util.logging.LogManager;
+
 import javax.swing.JPanel;
 
 import org.newdawn.slick.GameContainer;
@@ -27,7 +30,13 @@ public class ClientGame extends RGB4Game {
 		super(Assets.Config.GameTitle);
 		
 		System.setProperty("java.util.logging.config.file", "content/logging.properties");
-		
+		try {
+			LogManager.getLogManager().readConfiguration();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		NetworkComponent.createClientInstance();
 		NetworkComponent.getInstance().addListener(this);
 		
