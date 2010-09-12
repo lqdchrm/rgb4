@@ -15,7 +15,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Settings;
 
 public class RGB4 {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SlickException {
 		if (Constants.Debug.forceNoFBO)
 			GraphicsFactory.setUseFBO(false);
 		

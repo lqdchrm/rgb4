@@ -2,67 +2,46 @@ package de.fhtrier.gdig.engine.sound;
 
 import org.newdawn.slick.SlickException;
 
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 
-public class SoundManager {
+public abstract class SoundManager {
 
 	private AssetMgr assets;
 	
-	private static SoundManager instance = null;
-	
+	protected static SoundManager instance = null;	
 
-	private SoundManager() throws SlickException {
+	protected SoundManager() throws SlickException {
 		this.assets = new AssetMgr();
-		
-		this.assets.storeMusic(Assets.Sounds.LevelSoundtrackId, Assets.Sounds.LevelSoundtrackPath);
-		this.assets.storeMusic(Assets.Sounds.MenuSoundtrackId, Assets.Sounds.MenuSoundtrackPath);
-		
-		this.assets.storeSound(Assets.Sounds.PlayerRunSoundId, Assets.Sounds.PlayerRunSoundPath);
-		this.assets.storeSound(Assets.Sounds.PlayerJumpSoundId, Assets.Sounds.PlayerJumpSoundPath);
-		this.assets.storeSound(Assets.Sounds.PlayerLandSoundId, Assets.Sounds.PlayerLandSoundPath);
-		this.assets.storeSound(Assets.Sounds.PlayerDyingSoundId, Assets.Sounds.PlayerDyingSoundPath);
-		this.assets.storeSound(Assets.Sounds.PlayerShootSoundId, Assets.Sounds.PlayerShootSoundPath);
-		this.assets.storeSound(Assets.Sounds.PlayerGetItemSoundId, Assets.Sounds.PlayerGetItemSoundPath);
-		this.assets.storeSound(Assets.Sounds.PlayerWoundSoundId, Assets.Sounds.PlayerWoundSoundPath);
-		this.assets.storeSound(Assets.Sounds.PlayerJoiningSoundID, Assets.Sounds.PlayerJoiningSoundPath);
-		this.assets.storeSound(Assets.Sounds.PlayerChangeColorSoundID, Assets.Sounds.PlayerChangeColorPath);
-		this.assets.storeSound(Assets.Sounds.PlayerPhrase1SoundID, Assets.Sounds.PlayerPhrase1SoundPath);
-		this.assets.storeSound(Assets.Sounds.PlayerPhrase2SoundID, Assets.Sounds.PlayerPhrase2SoundPath);
-		this.assets.storeSound(Assets.Sounds.PlayerPhrase3SoundID, Assets.Sounds.PlayerPhrase3SoundPath);
-		this.assets.storeSound(Assets.Sounds.PlayerPhrase4SoundID, Assets.Sounds.PlayerPhrase4SoundPath);
-		
-		this.assets.storeSound(Assets.Sounds.BeamSoundId, Assets.Sounds.BeamSoundPath);
-		this.assets.storeSound(Assets.Sounds.DoomsdayDeviceSoundId, Assets.Sounds.DoomsdayDeviceSoundPath);
-		this.assets.storeSound(Assets.Sounds.RocketStartSoundId, Assets.Sounds.RocketStartSoundPath);
-		this.assets.storeSound(Assets.Sounds.RocketExplodeSoundId, Assets.Sounds.RocketExplodeSoundPath);
-		this.assets.storeSound(Assets.Sounds.WeaponChangeColorSoundID, Assets.Sounds.WeaponChangeColorSoundPath);
 	}
 
+	protected abstract boolean isMuted();
+	protected abstract boolean isMusicMuted();
+	protected abstract boolean isSoundMuted();
+	
 	public static void playSound(int id) {
 		
-		if (instance == null)
+		if (instance == null || instance.isMuted() || instance.isSoundMuted())
 			return;
 		
 		SoundManager.getInstance().assets.getSound(id).play();
 	}
 
 	public static void playSound(int id, float pitch, float volume) {
-		if (instance == null)
+		if (instance == null || instance.isMuted() || instance.isSoundMuted())
 			return;
 		
 		SoundManager.getInstance().assets.getSound(id).play(pitch, volume);
 	}
 
 	public static void loopSound(int id) {
-		if (instance == null)
+		if (instance == null || instance.isMuted() || instance.isSoundMuted())
 			return;
 		
 		SoundManager.getInstance().assets.getSound(id).loop();
 	}
 
 	public static void loopSound(int id, float pitch, float volume) {
-		if (instance == null)
+		if (instance == null || instance.isMuted() || instance.isSoundMuted())
 			return;
 		
 		SoundManager.getInstance().assets.getSound(id).loop(pitch, volume);
@@ -83,28 +62,28 @@ public class SoundManager {
 	}
 
 	public static void playMusic(int id) {
-		if (instance == null)
+		if (instance == null || instance.isMuted() || instance.isMusicMuted())
 			return;
 		
 		SoundManager.getInstance().assets.getMusic(id).play();
 	}
 
 	public static void playMusic(int id, float pitch, float volume) {
-		if (instance == null)
+		if (instance == null || instance.isMuted() || instance.isMusicMuted())
 			return;
 		
 		SoundManager.getInstance().assets.getMusic(id).play(pitch, volume);
 	}
 
 	public static void loopMusic(int id) {
-		if (instance == null)
+		if (instance == null || instance.isMuted() || instance.isMusicMuted())
 			return;
 		
 		SoundManager.getInstance().assets.getMusic(id).loop();
 	}
 
 	public static void loopMusic(int id, float pitch, float volume) {
-		if (instance == null)
+		if (instance == null || instance.isMuted() || instance.isMusicMuted())
 			return;
 		
 		SoundManager.getInstance().assets.getMusic(id).loop(pitch, volume);
@@ -132,7 +111,7 @@ public class SoundManager {
 	}
 
 	public static void resumeMusic(int id) {
-		if (instance == null)
+		if (instance == null || instance.isMuted() || instance.isMusicMuted())
 			return;
 		
 		SoundManager.getInstance().assets.getMusic(id).resume();
@@ -182,11 +161,8 @@ public class SoundManager {
 
 		return instance;
 	}
-
-	public static void init() throws SlickException {
-		if (instance == null) {
-			instance = new SoundManager();
-		}
+	
+	public AssetMgr getAssetMgr() {
+		return assets;
 	}
-
 }

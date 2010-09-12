@@ -215,7 +215,7 @@ public class ClientLobbyState extends NiftyGameState implements
 				CreateButtonControl createButton = new CreateButtonControl(
 						"button");
 				createButton.setHeight("30px");
-				createButton.setWidth("150px");
+				createButton.setWidth("90%");
 				createButton.set("label", level.getLevelName());
 				createButton.setAlign("left");
 				// TODO setin real values
@@ -227,6 +227,7 @@ public class ClientLobbyState extends NiftyGameState implements
 				LabelCreator labelCreator = new LabelCreator(
 						level.getLevelName());
 				labelCreator.setAlign("left");
+				labelCreator.setStyle("console-text");
 				labelCreator.create(nifty, nifty.getCurrentScreen(),
 						guiLevelList);
 			}

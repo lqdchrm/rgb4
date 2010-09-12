@@ -18,13 +18,10 @@ import de.fhtrier.gdig.engine.graphics.entities.TiledMapEntity;
 
 public class Factory {
 
-	// private AssetMgr assets;
 	private TreeMap<Integer, Entity> entities;
 	private static int lastId = 0;
 
-	// public Factory(AssetMgr assets) {
 	public Factory() {
-		//this.assets = assets;
 		this.entities = new TreeMap<Integer, Entity>();
 	}
 
@@ -97,10 +94,6 @@ public class Factory {
 	public Entity getEntity(int id) {
 		return entities.get(id);
 	}
-
-//	public AssetMgr getAssetMgr() {
-//		return assets;
-//	}
 
 	public int size() {
 		return entities.size();

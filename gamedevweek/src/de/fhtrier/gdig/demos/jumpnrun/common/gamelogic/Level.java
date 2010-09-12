@@ -1,7 +1,6 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 import org.newdawn.slick.Graphics;
@@ -13,7 +12,6 @@ import org.newdawn.slick.tiled.TiledMap;
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
-import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
@@ -31,8 +29,6 @@ import de.fhtrier.gdig.engine.physics.entities.MoveableEntity;
 public class Level extends MoveableEntity {
 
 	public GameFactory factory;
-
-	private HashMap<Integer, Float> scrollingLayers;
 
 	private TiledMap groundMap;
 	private TiledMapEntity ground;
@@ -54,8 +50,6 @@ public class Level extends MoveableEntity {
 
 	public Level(int id, GameFactory factory) throws SlickException {
 		super(id, EntityType.LEVEL);
-
-		this.scrollingLayers = new HashMap<Integer, Float>();
 
 		this.currentPlayerId = -1;
 
