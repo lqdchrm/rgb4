@@ -57,6 +57,8 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 			throws SlickException {
 		super.init(container, game);
 		
+		this.game = game;
+		
 		// add asset-folder to the ResourceLocators of nifty and slick2d
 		ResourceLoader.addResourceLocation(new FileSystemLocation(new File(
 				menuAssetPath)));
@@ -157,5 +159,4 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 	@Override
 	public void onStartScreen() {
 	}
-
 }

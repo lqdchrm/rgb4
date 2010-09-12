@@ -1,15 +1,7 @@
+#The GDIG Team proudly presented
+
 ##rgb4_logo_trimmed.png,397px,162px
 
-#Programming
-Robert
-Tobias
-Tom
-... bitte auffuellen ...
-
-#Graphics
-Benni
-Benni
-
-#Music
-Don't have a clue!
-
+#Title
+Text
+Text
