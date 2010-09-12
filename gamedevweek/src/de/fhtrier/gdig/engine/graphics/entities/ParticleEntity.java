@@ -9,7 +9,7 @@ import de.fhtrier.gdig.engine.management.AssetMgr;
 
 public class ParticleEntity extends AssetEntity {
 
-	public ParticleEntity (int id, int assetId, AssetMgr assets) {
+	public ParticleEntity(int id, int assetId, AssetMgr assets) {
 		super(id, assetId, assets);
 	}
 
@@ -23,14 +23,14 @@ public class ParticleEntity extends AssetEntity {
 		}
 		super.renderImpl(graphicContext, frameBuffer);
 	}
-	
+
 	@Override
 	protected void preRender(Graphics graphicContext) {
 		super.preRender(graphicContext);
 
 		Shader.pushShader(null);
 	}
-	
+
 	@Override
 	protected void postRender(Graphics graphicContext) {
 

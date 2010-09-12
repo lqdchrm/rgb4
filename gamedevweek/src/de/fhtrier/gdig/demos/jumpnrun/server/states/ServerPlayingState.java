@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.server.states;
+﻿package de.fhtrier.gdig.demos.jumpnrun.server.states;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -47,11 +47,19 @@ public class ServerPlayingState extends PlayingState {
 	public ServerPlayingState() throws SlickException {
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ServerData();
-
-		SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
-		SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
+		
+			SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
+			SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
 		SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 50000, 0.2f,
 				false);
+		}		
+		
+	@Override
+	public void enter(GameContainer container, StateBasedGame game)
+			throws SlickException {
+		super.enter(container, game);
+		((Level) factory.getEntity(levelId))
+				.init(this instanceof ServerPlayingState);
 	}
 
 	private boolean handlePlayerActions(QueryAction actionCmd) {
@@ -78,16 +86,16 @@ public class ServerPlayingState extends PlayingState {
 					+ player.getData()[Entity.CENTER_Y]
 					- bullet.getData()[Entity.CENTER_Y]
 					+ Assets.Weapon.weaponYOffset;
-
+			
 			bullet.getVel()[Entity.X] = player.getVel()[Entity.X]
-					+ (player.getData()[Entity.SCALE_X] == -1 ? Constants.GamePlayConstants.shotSpeed
-							: -Constants.GamePlayConstants.shotSpeed);
-
+			        + (player.getData()[Entity.SCALE_X] == -1 ? Constants.GamePlayConstants.shotSpeed
+			                                            	: -Constants.GamePlayConstants.shotSpeed);
+			
 			if (player.getData()[Entity.SCALE_X] == -1) // Right
-				bullet.getData()[Entity.SCALE_X] = -1;
-
+			bullet.getData()[Entity.SCALE_X] = -1;
+			
 			else if (player.getData()[Entity.SCALE_X] == 1) // Left
-				bullet.getData()[Entity.SCALE_X] = 1;
+			bullet.getData()[Entity.SCALE_X] = 1;
 
 			return true;
 		case RESPAWN:
@@ -193,16 +201,16 @@ public class ServerPlayingState extends PlayingState {
 				// remember, which networkId identifies which player
 				networkId2Player.put(cmd.getSender(), id);
 				player2NetworkId.put(id, cmd.getSender());
-
+				
 				String name = ServerLobbyState.players.get(cmd.getSender())
 						.getPlayerName();
 
 				int teamID = ServerLobbyState.players.get(cmd.getSender())
 						.getTeamId();
-
+				
 				e.getPlayerCondition().setName(name);
 				e.getPlayerCondition().setTeamId(teamID);
-
+				
 			} else {
 				throw new RuntimeException(
 						"Client side entity creation only allowed for type PLAYER");

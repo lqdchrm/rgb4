@@ -33,6 +33,33 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.sun.org.apache.xpath.internal.compiler.Keywords;
+
+import de.fhtrier.gdig.engine.helpers.Configuration.CommandlineParameter;
+import de.fhtrier.gdig.engine.helpers.Configuration.DefaultTrue;
+
+/**
+ * This abstract class allows you to easaly configurate your Program. To use its
+ * functunalety extends from this Class. Every {@link Keywords int},
+ * {@link Keywords boolean}, {@link String}, {@link Keywords float},
+ * {@link Enum} decleared in your class kan be used.
+ * 
+ * Call save to save the configuration to a Stream or load to load your
+ * configuration to a stream. you can also pars commandline Arguments to set
+ * your parameters. To do this you must use the {@link CommandlineParameter}
+ * Annotation. you can now use the argument with --ArgumentName value, which is
+ * specified in the Annotation.
+ * 
+ * Boolean attributes automaticly get set to true when the argument is submitted
+ * without a parameter. To set it to false when the parameter is called, use the
+ * {@link DefaultTrue} annotation.
+ * 
+ * 
+ * 
+ * 
+ * @author Loki
+ * 
+ */
 public abstract class Configuration {
 
 	/**
@@ -54,6 +81,31 @@ public abstract class Configuration {
 		int maxValue();
 
 		int minValue();
+	}
+
+	/**
+	 * Boolean werte welche standardmäßig true sind können mit dieser Annotation
+	 * versehen werden. Hierdurch wird wenn das entsprechende argument gepharst
+	 * wird, anstelle true der wert auf false gesetzt.
+	 * 
+	 * @author Loki
+	 * 
+	 */
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	protected @interface DefaultTrue {
+	}
+
+	/**
+	 * This Annotation allows you to suppress the apearing of this Field in the
+	 * Editor window.
+	 * 
+	 * @author Loki
+	 * 
+	 */
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
+	protected @interface DontShowInEditor {
 	}
 
 	private Map<String, Field> commandMap;
@@ -100,7 +152,7 @@ public abstract class Configuration {
 		try {
 			Properties p = new Properties();
 			for (Field field : getClass().getDeclaredFields()) {
-
+				field.setAccessible(true);
 				if ((field.getModifiers() & Modifier.TRANSIENT) == Modifier.TRANSIENT)
 					continue;
 
@@ -127,6 +179,7 @@ public abstract class Configuration {
 				if (value != null) {
 					p.setProperty(field.getName(), value);
 				}
+				field.setAccessible(false);
 			}
 			p.store(out, "");
 		} catch (Exception e) {
@@ -139,6 +192,7 @@ public abstract class Configuration {
 			Properties p = new Properties();
 			p.load(inStream);
 			for (Field field : getClass().getDeclaredFields()) {
+				field.setAccessible(true);
 				String value = p.getProperty(field.getName());
 				if ((field.getModifiers() & Modifier.TRANSIENT) == Modifier.TRANSIENT)
 					continue;
@@ -177,6 +231,7 @@ public abstract class Configuration {
 					Enum selectedEnum = Enum.valueOf(type, value);
 					field.set(Configuration.this, selectedEnum);
 				}
+				field.setAccessible(false);
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -190,8 +245,8 @@ public abstract class Configuration {
 					continue;
 
 				Field field = this.commandMap.get(args[i].substring(2));
-				++i;
 				if (field != null) {
+					++i;
 					Class<?> filedType = field.getType();
 					if (filedType == String.class) {
 						field.set(this, args[i]);
@@ -201,7 +256,9 @@ public abstract class Configuration {
 						field.set(this, Float.parseFloat(args[i]));
 					} else if (filedType == boolean.class) {
 						--i;
-						field.set(this, true);
+						DefaultTrue shuldBeFalse = field
+								.getAnnotation(DefaultTrue.class);
+						field.set(this, shuldBeFalse == null);
 					} else if (filedType == InetSocketAddress.class) {
 						if (args[i].contains(":")) {
 							String[] split = args[i].split(":");
@@ -236,11 +293,12 @@ public abstract class Configuration {
 		showEditor(strTitle, new JPanel[] { getEdittingPanel() });
 	}
 
-	public void showEditor(String strTitle, JPanel[] panels) {
+	public static void showEditor(String strTitle, JPanel[] panels) {
 		showEditor(strTitle, panels, null);
 	}
 
-	public void showEditor(String strTitle, JPanel[] panels, Point location) {
+	public static void showEditor(String strTitle, JPanel[] panels,
+			Point location) {
 		JFrame f = new JFrame(strTitle);
 		if (location != null)
 			f.setLocation(location);
@@ -268,12 +326,18 @@ public abstract class Configuration {
 			panel.setLayout(boxLayout);
 
 			for (final Field field : getClass().getDeclaredFields()) {
+				field.setAccessible(true);
 				Object value = field.get(this);
 				JLabel jLabel = new JLabel(field.getName());
 				panel.add(jLabel);
 
 				Class<?> filedType = field.getType();
-				if (filedType == String.class) {
+				DontShowInEditor dontShowInEditor = field
+						.getAnnotation(DontShowInEditor.class);
+				if (dontShowInEditor != null) {
+					panel.remove(jLabel);
+
+				} else if (filedType == String.class) {
 
 					final JTextField jTextField = new JTextField((String) value);
 					jTextField.addActionListener(new ActionListener() {
@@ -281,8 +345,10 @@ public abstract class Configuration {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							try {
+								field.setAccessible(true);
 								field.set(Configuration.this,
 										jTextField.getText());
+								field.setAccessible(false);
 							} catch (IllegalArgumentException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -307,7 +373,9 @@ public abstract class Configuration {
 							Enum selectedEnum = Enum.valueOf(type, combo
 									.getSelectedItem().toString());
 							try {
+								field.setAccessible(true);
 								field.set(Configuration.this, selectedEnum);
+								field.setAccessible(false);
 							} catch (IllegalArgumentException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -335,10 +403,12 @@ public abstract class Configuration {
 							@Override
 							public void stateChanged(ChangeEvent arg0) {
 								try {
+									field.setAccessible(true);
 									anzeige.setText(Integer.valueOf(
 											jSlider.getValue()).toString());
 									field.set(Configuration.this,
 											jSlider.getValue());
+									field.setAccessible(false);
 								} catch (IllegalArgumentException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -364,9 +434,11 @@ public abstract class Configuration {
 							@Override
 							public void stateChanged(ChangeEvent e) {
 								try {
+									field.setAccessible(true);
 									field.set(Configuration.this,
 											((Integer) jSpinner.getValue())
 													.intValue());
+									field.setAccessible(false);
 								} catch (IllegalArgumentException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
@@ -395,11 +467,13 @@ public abstract class Configuration {
 							@Override
 							public void stateChanged(ChangeEvent arg0) {
 								try {
+									field.setAccessible(true);
 									field.set(Configuration.this, Integer
 											.valueOf(jSlider.getValue())
 											.floatValue());
 									anzeige.setText(Integer.valueOf(
 											jSlider.getValue()).toString());
+									field.setAccessible(false);
 								} catch (IllegalArgumentException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
@@ -413,7 +487,7 @@ public abstract class Configuration {
 
 					} else {
 						SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(
-								(double) ((Float) value).floatValue(),
+								((Float) value).floatValue(),
 								-Double.MAX_VALUE, Double.MAX_VALUE, 1);
 						final JSpinner jSpinner = new JSpinner(
 								spinnerNumberModel);
@@ -428,9 +502,11 @@ public abstract class Configuration {
 							@Override
 							public void stateChanged(ChangeEvent e) {
 								try {
+									field.setAccessible(true);
 									field.set(Configuration.this,
 											((Double) jSpinner.getValue())
 													.floatValue());
+									field.setAccessible(false);
 								} catch (IllegalArgumentException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
@@ -452,8 +528,10 @@ public abstract class Configuration {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							try {
+								field.setAccessible(true);
 								field.set(Configuration.this,
 										(jCheckBox.isSelected()));
+								field.setAccessible(false);
 							} catch (IllegalArgumentException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -474,6 +552,7 @@ public abstract class Configuration {
 				// {
 				// value = field.get(this).toString();
 				// }
+				field.setAccessible(false);
 			}
 			return panel;
 		} catch (Exception e) {

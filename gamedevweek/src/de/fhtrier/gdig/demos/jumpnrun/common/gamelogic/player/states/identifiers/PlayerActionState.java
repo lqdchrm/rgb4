@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers;
+﻿package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers;
 
 
 public enum PlayerActionState {

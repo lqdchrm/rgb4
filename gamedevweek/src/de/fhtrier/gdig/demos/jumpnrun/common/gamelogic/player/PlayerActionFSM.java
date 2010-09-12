@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player;
+﻿package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActionState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActions;

@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
+﻿package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
 import java.util.ArrayList;
 import java.util.List;

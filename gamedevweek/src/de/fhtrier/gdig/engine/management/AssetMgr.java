@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.engine.management;
+﻿package de.fhtrier.gdig.engine.management;
 
 import java.io.File;
 import java.io.IOException;
@@ -100,7 +100,7 @@ public class AssetMgr {
 	public Sound getSound(int id) {
 		return this.sounds.get(id);
 	}
-
+	
 	public void storeMusic(int id, Music song) {
 		this.musics.put(id, song);
 	}
@@ -143,7 +143,7 @@ public class AssetMgr {
 		storeAnimation(id, anim);
 		return anim;
 	}
-
+	
 	public Animation storeAnimation(int id, String src) throws SlickException {
 		StringTokenizer tok = new StringTokenizer(src, "_");
 		int cellWidth = 0;
@@ -151,7 +151,7 @@ public class AssetMgr {
 		int duration = 0;
 
 		try {
-			tok.nextToken();
+		tok.nextToken();
 			cellWidth = Integer.parseInt(tok.nextToken());
 			cellHeight = Integer.parseInt(tok.nextToken());
 			StringTokenizer tok2 = new StringTokenizer(tok.nextToken(), ".");
@@ -170,47 +170,47 @@ public class AssetMgr {
 	public Animation getAnimation(int id) {
 		return this.animations.get(id);
 	}
-
+	
 	public ParticleSystem storeParticleSystem(int id, String imgPath,
 			String emitterCfgPath) throws SlickException {
-
+		
 		String strImgFile = getPathRelativeToAssetPath(imgPath);
 		String strEmitterFile = getPathRelativeToAssetPath(emitterCfgPath);
-
+		
 		Image image = new Image(strImgFile, false);
-		ParticleSystem system = new ParticleSystem(image);
-
-		ConfigurableEmitter emitter1 = null;
-		try {
+        ParticleSystem system = new ParticleSystem(image);  
+          
+        ConfigurableEmitter emitter1 = null;
+        try {
 			File xmlFile = new File(strEmitterFile);
-			emitter1 = ParticleIO.loadEmitter(xmlFile);
-		} catch (IOException e1) {
+			emitter1 = ParticleIO.loadEmitter(xmlFile);			
+			} catch (IOException e1) {
 			throw new IllegalArgumentException("Wrong cfg file?");
-		}
-
+			}
+ 
 		system.addEmitter(emitter1);
-
+		
 		storeParticleSystem(id, system);
-
+		
 		return system;
 	}
-
+	
 	public void storeParticleSystem(int id, ParticleSystem system) {
 		this.particleSystems.put(id, system);
 	}
-
+	
 	public ParticleSystem getParticleSystem(int id) {
 		return this.particleSystems.get(id);
 	}
-
+	
 	public String getPathRelativeToAssetPath(String path) {
 		String result = AssetMgr.combinePathStrings(assetPathPrefix, path);
 		File file = new File(result);
-
+		
 		if (!file.exists()) {
 			result = AssetMgr.combinePathStrings(assetFallbackPathPrefix, path);
 			file = new File(result);
-
+			
 			if (!file.exists()) {
 				throw new RuntimeException("File " + path
 						+ " neither found in " + assetPathPrefix + " nor in "

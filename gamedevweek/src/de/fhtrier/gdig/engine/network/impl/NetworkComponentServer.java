@@ -30,12 +30,11 @@ public class NetworkComponentServer extends NetworkComponentImpl {
 	}
 
 	@Override
-	public void startListening( InterfaceAddress ni, int port ) 
-	{
-		this.networkConnectionListener.startNetworkConnectionListener( ni, port );
+	public void startListening(InterfaceAddress ni, int port) {
+		this.networkConnectionListener.startNetworkConnectionListener(ni, port);
 
 	}
-	
+
 	@Override
 	public void stopListening() {
 		this.networkConnectionListener.stopNetworkConnectionListener();

@@ -3,7 +3,7 @@ package de.fhtrier.gdig.demos.jumpnrun.server.network.protocol;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
 
 public class SendWon extends ProtocolCommand {
-	
+
 	private static final long serialVersionUID = 5765856843222222L;
 	private int winnerId;
 	private int winnerType;
@@ -12,7 +12,7 @@ public class SendWon extends ProtocolCommand {
 
 	public SendWon(int winnerId, int winnerType) {
 		super("SendWon");
-		
+
 		this.winnerId = winnerId;
 		this.winnerType = winnerType;
 	}

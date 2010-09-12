@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.client;
+﻿package de.fhtrier.gdig.demos.jumpnrun.client;
 
 import java.io.IOException;
 import java.util.logging.LogManager;
@@ -20,7 +20,6 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 
-
 public class ClientGame extends RGB4Game {
 	public static int port = 49999;
 	public static String nameOrIp = "localhost";
@@ -39,7 +38,7 @@ public class ClientGame extends RGB4Game {
 		}
 		NetworkComponent.createClientInstance();
 		NetworkComponent.getInstance().addListener(this);
-		
+
 		GameSoundManager.init(true);
 
 		Constants.GamePlayConstants c1 = new Constants.GamePlayConstants();

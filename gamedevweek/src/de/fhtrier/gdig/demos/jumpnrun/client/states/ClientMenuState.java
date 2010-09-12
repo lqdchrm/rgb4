@@ -115,6 +115,7 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 				new FadeInTransition());
 	}
 
+	@Override
 	public void mouseMoved(final int oldx, final int oldy, final int newx,
 			final int newy) {
 		super.mouseMoved(oldx, oldy, newx, newy);
@@ -124,6 +125,7 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 		}
 	}
 
+	@Override
 	public Nifty getNifty() {
 		return nifty;
 	}
