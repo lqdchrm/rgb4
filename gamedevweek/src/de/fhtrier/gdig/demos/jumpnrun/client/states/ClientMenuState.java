@@ -1,6 +1,7 @@
 package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import java.io.File;
+import java.util.Properties;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -58,6 +59,7 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 		SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0f);
 		SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f,
 				false);
+		
 	}
 
 	public void bind(final Nifty newNifty, final Screen newScreen) {

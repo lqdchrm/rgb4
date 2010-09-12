@@ -83,7 +83,7 @@ public class ClientLobbyState extends NiftyGameState implements
 				String fileName = files[i].getName();
 				if (files[i].isDirectory() && fileName.startsWith("Level")) {
 					levels.add(new NetworkLevel(i, Assets.Level.AssetLevelPath
-							+ fileName, formatLevelname(fileName)));
+							+ "/" + fileName, formatLevelname(fileName)));
 				}
 			}
 		}
@@ -170,7 +170,9 @@ public class ClientLobbyState extends NiftyGameState implements
 
 		if (Constants.Debug.networkDebug) {
 			Log.debug("try to handle:" + cmd);
-		} else if (cmd instanceof AckConnect) {
+		}
+
+		if (cmd instanceof AckConnect) {
 			if (Constants.Debug.networkDebug) {
 				Log.debug("Client connected to serverlobby");
 			}
@@ -185,6 +187,9 @@ public class ClientLobbyState extends NiftyGameState implements
 			}
 			game.enterState(GameStates.SERVER_SELECTION);
 		} else if (cmd instanceof AckSetLevel) {
+			if (Constants.Debug.networkDebug) {
+				Log.debug("Level: " + ((AckSetLevel) cmd).getNetworkLevel().getAssetPath());
+			}
 			selectLevel(((AckSetLevel) cmd).getNetworkLevel());
 		}
 	}

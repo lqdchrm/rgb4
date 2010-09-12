@@ -13,7 +13,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.controls.dynamic.LabelCreator;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import de.lessvoid.nifty.slick.NiftyGameState;

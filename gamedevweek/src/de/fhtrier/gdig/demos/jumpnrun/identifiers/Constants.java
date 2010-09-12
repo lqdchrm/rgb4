@@ -11,7 +11,7 @@ public class Constants
 
 	public static class GamePlayConstants extends Configuration
 	{
-		public static float gravity = 2000.0f;
+		public static float gravity = 1000.0f;
 
 		@ShowAsSlider(maxValue = 50, minValue = 1)
 		public static int winningKills_Deathmatch = 5;
@@ -20,12 +20,12 @@ public class Constants
 		public static boolean friendyFire = true; // if true you can damage team-mates
 
 		@ShowAsSlider(maxValue = 10000, minValue = 10)
-		public static float shotSpeed = 1000.0f;
+		public static float shotSpeed = 600.0f;
 		public static float shotCooldown = 100.0f;
 		
-		public static float playerWalkSpeed = 4000.0f;
+		public static float playerWalkSpeed = 1000.0f;
 		public static float playerJumpSpeed = 1000.0f;
-		public static float playerMaxSpeed = 850.0f;
+		public static float playerMaxSpeed = 550.0f;
 
 		public static float playerIdleTriggerSpeed = 5.0f;
 		public static float playerFallingTriggerSpeed = 500.0f;
