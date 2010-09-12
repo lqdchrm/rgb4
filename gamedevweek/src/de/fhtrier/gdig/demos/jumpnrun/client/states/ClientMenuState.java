@@ -54,10 +54,9 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 				ResourceLoader.getResourceAsStream(CROSSHAIR_PNG),
 				CROSSHAIR_PNG, false));
 
-		// init Sound
+		// play menu background Sound
 		SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0f);
-		SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f,
-				false);
+		SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f, false);
 	}
 
 	public void bind(final Nifty newNifty, final Screen newScreen) {

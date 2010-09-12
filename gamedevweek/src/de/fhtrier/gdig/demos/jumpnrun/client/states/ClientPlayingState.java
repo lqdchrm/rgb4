@@ -161,7 +161,6 @@ public class ClientPlayingState extends PlayingState {
 				getLevel().setCurrentPlayer(-1);
 			}
 
-			// robindi: Bugfix, removeEntity from CollisionManager!
 			CollisionManager.removeEntity((CollidableEntity) getFactory()
 					.getEntity(id));
 

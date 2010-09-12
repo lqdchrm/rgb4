@@ -8,11 +8,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetLevel;
@@ -28,11 +30,13 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckConnect;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckNewPlayerList;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckSetLevel;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckStartGame;
+import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
 import de.fhtrier.gdig.engine.network.impl.protocol.ServerAckDisconnect;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.button.CreateButtonControl;
 import de.lessvoid.nifty.controls.dynamic.CustomControlCreator;
@@ -82,8 +86,10 @@ public class ClientLobbyState extends NiftyGameState implements
 			for (int i = 0; i < files.length; i++) {
 				String fileName = files[i].getName();
 				if (files[i].isDirectory() && fileName.startsWith("Level")) {
-					levels.add(new NetworkLevel(i, Assets.Level.AssetLevelPath
-							+ fileName, formatLevelname(fileName)));
+					levels.add(new NetworkLevel(i, 
+							AssetMgr.combinePathStrings(
+							Assets.Level.AssetLevelPath,
+							fileName), formatLevelname(fileName)));
 				}
 			}
 		}
@@ -170,7 +176,9 @@ public class ClientLobbyState extends NiftyGameState implements
 
 		if (Constants.Debug.networkDebug) {
 			Log.debug("try to handle:" + cmd);
-		} else if (cmd instanceof AckConnect) {
+		}
+		
+		if (cmd instanceof AckConnect) {
 			if (Constants.Debug.networkDebug) {
 				Log.debug("Client connected to serverlobby");
 			}
@@ -178,7 +186,8 @@ public class ClientLobbyState extends NiftyGameState implements
 			players = ((AckNewPlayerList) cmd).getPlayerList();
 			drawPlayers(players.values());
 		} else if (cmd instanceof AckStartGame) {
-			game.enterState(GameStates.PLAYING);
+			SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 500, 0f, true);
+			game.enterState(GameStates.PLAYING, new FadeOutTransition(new Color(0,0,0,0), 500), null);
 		} else if (cmd instanceof ServerAckDisconnect) {
 			if (Constants.Debug.networkDebug) {
 				Log.debug("Player left server!");

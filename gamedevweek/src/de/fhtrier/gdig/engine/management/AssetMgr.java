@@ -53,7 +53,7 @@ public class AssetMgr {
 		}
 	}
 
-	static String combinePathStrings(String prefix, String suffix) {
+	public static String combinePathStrings(String prefix, String suffix) {
 
 		if (prefix.endsWith("\\") || prefix.endsWith("/")) {
 			prefix = prefix.substring(0, prefix.length() - 1);

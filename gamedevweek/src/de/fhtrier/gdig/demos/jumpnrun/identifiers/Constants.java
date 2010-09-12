@@ -52,6 +52,7 @@ public class Constants
 	}
 	
 	public static class SoundConfig extends Configuration {
+		
 		public static boolean musicEnabled = true;
 		public static boolean isMuted = false;
 		public static boolean soundEnabled = true;
