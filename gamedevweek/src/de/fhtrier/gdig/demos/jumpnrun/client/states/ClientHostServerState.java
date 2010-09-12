@@ -166,7 +166,7 @@ public class ClientHostServerState extends NiftyGameState implements
 				// Here we do some magic to spawn a server process 
 				// TODO check if it's really working
 				ProcessBuilder pb = new ProcessBuilder("java",
-						"-Djava.library.path=./lib/native", "-jar",
+						"-Djava.library.path=./server/lib/native", "-jar",
 						"server/server.jar", serverNameControl.getText(),
 						interfaceA, portControl.getText());
 				pb.redirectErrorStream(true);
