@@ -1,18 +1,7 @@
-##Credits.png
+#The GDIG Team proudly presented
 
-#Programming
-TEst1
+##rgb4_logo_trimmed.png,397px,162px
 
-Test2
-
-Test3
-
-#Graphics
-Test 1
-Test 2
-Test 3
-
-#Music
-
-Test1
-Test2
+#Title
+Text
+Text
