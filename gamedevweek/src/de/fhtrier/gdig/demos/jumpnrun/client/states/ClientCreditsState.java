@@ -30,9 +30,19 @@ import de.lessvoid.nifty.tools.resourceloader.ResourceLoader;
  * 
  * credits: edit content/.../gui/credits.txt
  * 
+ * Different-Fonts mapped by the number of #
+ * (see rgb-style.xml and the <style id="credits-n">-descriptions)
+ * 
+ * 
+ * special one is # for loading images
  * ##test.png,200px,100px : loads picture from gui-dir with size 200,100
- * #Blabla : Glow-Text-Font
- * Hola : normal text
+ * 
+ * For now this 4 types are mapped:
+ * Hola
+ * #Blabla 
+ * ###Hola  
+ * ####Hola 
+ *  
  * 
  * In order to change the length of the scroller edit in rgb-style.xml the scroller-style
  * 
@@ -109,19 +119,7 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 				int markElements = amountMarkerElements(line);
 				String trimmedLine = line.substring(markElements);
 
-				if (markElements < 2)
-				{
-					LabelCreator creator = new LabelCreator(count+"creds", trimmedLine);
-					if (markElements==0)
-						creator.setStyle("lobby-text");
-					else if (markElements==1)
-						creator.setStyle("header-label");
-					creator.setAlign("center");
-					creator.setWidth("100%");
-					creator.setHeight("10%");
-					creator.create(nifty, nifty.getCurrentScreen(), creditsPanel);
-				}
-				else if (markElements == 2)
+				if (markElements == 2)
 				{
 					ImageCreator image = new ImageCreator("img"+count);
 					StringTokenizer stk = new StringTokenizer(trimmedLine,",");
@@ -146,7 +144,15 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 					image.setAlign("center");
 					image.create(nifty, nifty.getCurrentScreen(),creditsPanel);
 				}
-
+				else
+				{
+						LabelCreator creator = new LabelCreator(count+"creds", trimmedLine);
+						creator.setStyle("credits-"+markElements);
+						creator.setAlign("center");
+						creator.setWidth("100%");
+						creator.setHeight("10%");
+						creator.create(nifty, nifty.getCurrentScreen(), creditsPanel);
+				}
 				count++;
 			}
 		} catch (Exception e) {
