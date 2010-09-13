@@ -263,13 +263,13 @@ public class Level extends MoveableEntity {
 
 	public LogicPoint getRandomSpawnPoint(int id) {
 		ArrayList<LogicPoint> sp = getSpawnPoints(id);
-		return sp.get(rd.nextInt(sp.size()));
+		return sp.get(Math.abs(rd.nextInt(sp.size())));
 	}
 
 	public LogicPoint getRandomSpawnPoint() {
 		ArrayList<LogicPoint> sp = getSpawnPoints(rd
 				.nextInt(spawnPoints.size()));
-		return sp.get(rd.nextInt(sp.size()));
+		return sp.get(Math.abs(rd.nextInt(sp.size())));
 	}
 
 	public ArrayList<LogicPoint> getTeleporterExitPoints(int id) {

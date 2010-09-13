@@ -14,7 +14,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryConnect;
-import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackground;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
@@ -24,6 +23,7 @@ import de.fhtrier.gdig.engine.network.INetworkLobby;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.NetworkServerObject;
 import de.fhtrier.gdig.engine.network.impl.NetworkLobby;
+import de.lessvoid.nifty.EndNotify;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.button.CreateButtonControl;
 import de.lessvoid.nifty.controls.button.controller.ButtonControl;
@@ -63,6 +63,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 
 	private ArrayList<ButtonControl> interfaceButtons = new ArrayList<ButtonControl>();
 	private ArrayList<ButtonControl> serverButtons = new ArrayList<ButtonControl>();
+	private boolean waitingForTransition;
 
 	public ClientSelectServerState() {
 		super(GameStates.SERVER_SELECTION);
@@ -130,7 +131,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		try {
-			MenuBackground.getInstance().render(container, game, g);
+			MenuBackgroundRenderer.getInstance().render(container, game, g);
 			super.render(container, game, g);
 		} catch (Exception e) {
 			Log.error(e);
@@ -146,11 +147,8 @@ public class ClientSelectServerState extends NiftyGameState implements
 			NetworkComponent.getInstance().update();
 		}
 
-		if (NetworkComponent.getInstance().getNetworkId() != -1) {
-			NetworkComponent.getInstance().sendCommand(
-					new QueryConnect(guiPlayernameTextField.getText()));
-			game.enterState(GameStates.CLIENT_LOBBY);
-			connecting = false;
+		if (NetworkComponent.getInstance().getNetworkId() != -1  && !waitingForTransition) {
+			gotoLobby();
 		}
 
 		try {
@@ -180,8 +178,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 			serverButtons.add(bC);
 		}
 
-		setButton(currentServerId, serverButtons, new Color(1, 0, 0, 1),
-				new Color(1, 1, 1, 1));
+		setButton(currentServerId, serverButtons);
 		
 		serverList.clear();
 
@@ -237,8 +234,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 		clearList(guiServerPanel);
 		serverButtons.clear();
 		InterfaceAddress iA = interfaces.get(Integer.parseInt(id));
-		setButton(Integer.parseInt(id), interfaceButtons,
-				new Color(1, 0, 0, 1), new Color(1, 1, 1, 1));
+		setButton(Integer.parseInt(id), interfaceButtons);
 		networkLobby.stopGetServers();
 		networkLobby.getServers(iA);
 		currentConnectionIp = null;
@@ -246,14 +242,13 @@ public class ClientSelectServerState extends NiftyGameState implements
 		currentServerId=-1;
 	}
 
-	public void setButton(int nr, List<ButtonControl> buttons, Color setColor,
-			Color notSetColor) {
+	public void setButton(int nr, List<ButtonControl> buttons) {
 		for (int i = 0; i < buttons.size(); i++) {
 			ButtonControl b = buttons.get(i);
 			if (i == nr)
-				b.setColor(setColor);
+				b.setColor(Constants.GuiConfig.btnSelectedColor);
 			else
-				b.setColor(notSetColor);
+				b.setColor(Constants.GuiConfig.btnNotSelectedColor);
 		}
 	}
 
@@ -265,8 +260,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 			Log.debug("set server-info to :" + ip + ":" + port);
 		}
 		networkLobby.stopGetServers();
-		setButton(Integer.parseInt(id), serverButtons, new Color(1, 0, 0, 1),
-				new Color(1, 1, 1, 1));
+		setButton(Integer.parseInt(id), serverButtons);
 
 	}
 
@@ -290,7 +284,12 @@ public class ClientSelectServerState extends NiftyGameState implements
 	}
 
 	public void back() {
-		game.enterState(GameStates.MENU);
+		nifty.getCurrentScreen().endScreen(new EndNotify() {
+			@Override
+			public void perform() {
+				game.enterState(GameStates.MENU);
+			}
+		});
 	}
 
 	public void popupNoServer() {
@@ -308,6 +307,23 @@ public class ClientSelectServerState extends NiftyGameState implements
 	public void removePopup() {
 		nifty.closePopup(nifty.getCurrentScreen().getTopMostPopup().getId(),
 				null);
+	}
+	
+	public void gotoLobby()
+	{
+		if (waitingForTransition==false)
+		{
+			waitingForTransition = true;
+			nifty.getCurrentScreen().endScreen(new EndNotify() {
+				public void perform() {
+					game.enterState(GameStates.CLIENT_LOBBY);				
+					NetworkComponent.getInstance().sendCommand(
+							new QueryConnect(guiPlayernameTextField.getText()));
+					connecting = false;
+					waitingForTransition = false;
+				}
+			});
+		}
 	}
 
 }

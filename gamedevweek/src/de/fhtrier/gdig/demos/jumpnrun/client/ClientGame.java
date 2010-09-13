@@ -60,6 +60,7 @@ public class ClientGame extends RGB4Game {
 
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
+		container.setMouseCursor(Assets.Config.AssetGuiPath+"/gui-cursor.png", 16,16);
 		addState(new ClientMenuState(this));
 		addState(new ClientSelectServerState());
 		addState(new ClientHostServerState(this));

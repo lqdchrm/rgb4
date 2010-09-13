@@ -15,6 +15,7 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
+import de.lessvoid.nifty.EndNotify;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.dynamic.ImageCreator;
 import de.lessvoid.nifty.controls.dynamic.LabelCreator;
@@ -45,6 +46,7 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 	private static String creditsFile = menuAssetPath+"/credits.txt";
 	private StateBasedGame game;
 	private Element creditsPanel;
+	private boolean waitingForTransition;
 
 	
 	public ClientCreditsState()
@@ -65,7 +67,7 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 		org.newdawn.slick.util.ResourceLoader
 				.addResourceLocation(new org.newdawn.slick.util.FileSystemLocation(
 						new File(menuAssetPath)));
-		// read the nifty-xml-fiel
+		// read the nifty-xml-file
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
 		
@@ -79,7 +81,7 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 		super.keyPressed(key, c);
 		if (key==Input.KEY_ESCAPE)
 		{
-			game.enterState(GameStates.MENU, new FadeOutTransition(), new FadeInTransition());
+			translateToGamestate(GameStates.MENU);
 		}
 	}
 
@@ -159,4 +161,18 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 	@Override
 	public void onStartScreen() {
 	}
+	
+	public void translateToGamestate(final int gameState)
+	{
+		if (waitingForTransition==false)
+		{
+			waitingForTransition = true;
+			nifty.getCurrentScreen().endScreen(new EndNotify() {
+				public void perform() {
+					game.enterState(gameState);				
+					waitingForTransition = false;
+				}
+			});
+		}
+	}	
 }

@@ -67,7 +67,8 @@
 	</style>
 	
 	<style id="header-label">
-		<attributes font="verdana-24-glow.fnt" focusable="false" align="center" valign="center"/>
+ 		<attributes font="rm_narrowboat_48.fnt" color="#300f" focusable="false" align="center" valign="center"/>  
+<!-- 		<attributes font="verdana-24-glow.fnt" color="#000f" focusable="false" align="center" valign="center"/> -->
 	</style>
 	
 	<style id="standard-panel-background">
@@ -83,6 +84,22 @@
 	</style>
 
 
+	<style id="rgb-header">
+ 		<attributes font="rm_narrowboat_48.fnt" color="#300f" focusable="false"/>  
+	</style>
+
+	<style id="rgb-panel">
+		<attributes backgroundImage="gui-panel.png" imageMode="resize:28,176,28,49,28,176,28,169,28,176,28,26" />
+	</style>
+
+	<style id="rgb-panel-schrottone">
+		<attributes backgroundImage="rgb-panel-color.png" imageMode="resize:55,35,56,96,55,351,56,337,55,351,56,49" />
+	</style>
+	
+	<style id="rgb-section">
+		<attributes backgroundColor="#100a"/>
+	</style>
+
 	<style id="standard-footer">
 		<attributes padding="10px,10px,10px,10px" backgroundColor="#333e" />
 	</style>
@@ -95,11 +112,11 @@
 	</style>
 	
 	<style id="player-list">
-		<attributes backgroundColor="#000e"/>
+		<attributes backgroundColor="#000a"/>
 	</style>
 	
 	<style id="level-list">
-		<attributes backgroundColor="#000e"/>
+		<attributes backgroundColor="#000a"/>
 	</style>
 	
 	<style id="scroller">
@@ -118,21 +135,56 @@
 		-->
 	</style>
 	
-		<style id="console-text">
-			<attributes font="console.fnt" color="#000f" />
-			<effect>
-				<onActive name="textSize" endSize="1.3" />
-			</effect>
-		</style>	
+	<style id="console-text">
+		<attributes font="verdana_16.fnt" color="#000f" />
+	</style>	
 		
   <style id="nifty-button#text">
-    <attributes font="console.fnt" align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="true"/>
+    <attributes font="verdana_16.fnt" align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="true"/>
     <effect>
       <onHover name="saveState" />
-      <onHover name="changeFont" font="verdana-24-glow.fnt" post="false" inherit="false"/>
+<!--     <onHover name="changeFont" font="verdana-24-glow.fnt" post="false" inherit="false"/>  -->
       <onHover name="colorPulsate" startColor="#0000" endColor="#000f" post="false" inherit="false"/>
       <onHover name="renderElement" />
       <onHover name="restoreState" />
     </effect>
-  </style>		
+  </style>	
+  
+  
+  <style id="waiting_for_master">
+    <attributes font="verdana-24-regular.fnt" align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="true"/>
+  </style>
+  
+  <style id="nifty-textfield#panel">
+    <attributes backgroundColor="#100a" childLayout="overlay" height="40px" />
+  </style>
+  
+  <style id="nifty-textfield#field">
+    <attributes childLayout="center" visibleToMouse="true" childClip="true" />
+  </style>
+
+  <style id="nifty-textfield#text">
+    <attributes font="verdana-24-shadow.fnt" visibleToMouse="false" align="left" textHAlign="left" valign="center" />
+  </style>
+  
+ <style id="nifty-textfield#cursor">
+    <attributes filename="gui-cursor-empty.png" valign="top"/>
+    <effect>
+      <onActive name="imageOverlayPulsate" period="500" timeType="infinite" pulsateType="rectangle" filename="gui-cursor.png" post="true"/>
+    </effect>
+  </style>
+  
+  <style id="in-out-transition">
+		<effect>
+			<onStartScreen name="fade" start="#0" end="#f" length="900" inherit="true" />
+			<onEndScreen name="fade" start="#f" end="#0" length="900" inherit="true" />
+		</effect>
+  </style>
+  
+  <style id="out-transition">
+		<effect>
+			<onEndScreen name="fade" start="#f" end="#0" length="900" inherit="true" />
+		</effect>
+  </style>
+  	
 </nifty-styles>

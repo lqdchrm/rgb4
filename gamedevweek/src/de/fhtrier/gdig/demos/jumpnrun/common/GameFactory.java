@@ -56,6 +56,7 @@ public class GameFactory extends Factory {
 				Teleporter teleporter
 					= new Teleporter(id, this);
 				add(teleporter);
+				return id;
 			case ROCKET:
 				Rocket newRocket = new Rocket(id, this);
 				add(newRocket);

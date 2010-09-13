@@ -18,12 +18,12 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryConnect;
-import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackground;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkHelper;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
+import de.lessvoid.nifty.EndNotify;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.button.CreateButtonControl;
 import de.lessvoid.nifty.controls.button.controller.ButtonControl;
@@ -55,6 +55,7 @@ public class ClientHostServerState extends NiftyGameState implements
 	private List<InterfaceAddress> interfaces;
 	private int selectedInterfaceIndex = -1;
 	private List<ButtonControl> interfaceButtons = new ArrayList<ButtonControl>();
+	private boolean waitingForTransition;
 
 	public ClientHostServerState(final StateBasedGame game) {
 		super(GameStates.SERVER_SETTINGS);
@@ -110,14 +111,13 @@ public class ClientHostServerState extends NiftyGameState implements
 		// left intentionally blank
 	}
 
-	public void setButton(int nr, List<ButtonControl> buttons, Color setColor,
-			Color notSetColor) {
+	public void setButton(int nr, List<ButtonControl> buttons) {
 		for (int i = 0; i < buttons.size(); i++) {
 			ButtonControl b = buttons.get(i);
 			if (i == nr)
-				b.setColor(setColor);
+				b.setColor(Constants.GuiConfig.btnSelectedColor);
 			else
-				b.setColor(notSetColor);
+				b.setColor(Constants.GuiConfig.btnNotSelectedColor);
 		}
 	}
 
@@ -143,11 +143,9 @@ public class ClientHostServerState extends NiftyGameState implements
 		if (connecting) {
 			NetworkComponent.getInstance().update();
 		}
-		if (NetworkComponent.getInstance().getNetworkId() != -1) {
-			NetworkComponent.getInstance().sendCommand(
-					new QueryConnect(playerNameControl.getText()));
-			game.enterState(GameStates.CLIENT_LOBBY);
-			connecting = false;
+		if (NetworkComponent.getInstance().getNetworkId() != -1  && !waitingForTransition) {
+			gotoLobby();
+			
 		}
 	}
 
@@ -235,8 +233,13 @@ public class ClientHostServerState extends NiftyGameState implements
 	}
 
 	public void back() {
-		game.enterState(GameStates.MENU, new FadeOutTransition(),
-				new FadeInTransition());
+		nifty.getCurrentScreen().endScreen(new EndNotify() {
+			
+			@Override
+			public void perform() {
+				game.enterState(GameStates.MENU);
+			}
+		});
 	}
 
 	public void drawInterfaces() {
@@ -265,8 +268,7 @@ public class ClientHostServerState extends NiftyGameState implements
 
 		// set interface as active
 		selectedInterfaceIndex = Integer.parseInt(id);
-		setButton(Integer.parseInt(id), interfaceButtons,
-				new Color(1, 0, 0, 1), new Color(1, 1, 1, 1));
+		setButton(Integer.parseInt(id), interfaceButtons);
 	}
 
 	private void clearList(Element e) {
@@ -295,7 +297,7 @@ public class ClientHostServerState extends NiftyGameState implements
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		try {
-			MenuBackground.getInstance().render(container, game, g);
+			MenuBackgroundRenderer.getInstance().render(container, game, g);
 			super.render(container, game, g);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -306,4 +308,21 @@ public class ClientHostServerState extends NiftyGameState implements
 		nifty.closePopup(nifty.getCurrentScreen().getTopMostPopup().getId(),
 				null);
 	}
+	
+	public void gotoLobby()
+	{
+		if (waitingForTransition==false)
+		{
+			waitingForTransition = true;
+			nifty.getCurrentScreen().endScreen(new EndNotify() {
+				public void perform() {
+					game.enterState(GameStates.CLIENT_LOBBY);	
+					NetworkComponent.getInstance().sendCommand(
+							new QueryConnect(playerNameControl.getText()));
+					connecting = false;
+					waitingForTransition = false;
+				}
+			});
+		}
+	}	
 }
