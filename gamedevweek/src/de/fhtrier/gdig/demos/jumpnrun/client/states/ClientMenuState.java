@@ -27,6 +27,8 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 
 	private StateBasedGame game;
 	private Screen screen;
+	
+	private boolean startedMusic = false;
 
 	public ClientMenuState(final StateBasedGame newGame) throws SlickException {
 		super(GameStates.MENU);
@@ -50,9 +52,6 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 				ResourceLoader.getResourceAsStream(CROSSHAIR_PNG),
 				CROSSHAIR_PNG, false));
 		
-		SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0);
-		SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f, false);
-		
 	}
 
 	@Override
@@ -73,18 +72,11 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 	public void onStartScreen() {
 		if (screen.getScreenId().equals("start")) {
 			nifty.gotoScreen("mainMenu");
-		} else if (screen.getScreenId().equals("newGame")) {
-			// screen.findElementByName("newGame").setFocus();
-			SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0);
-			SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f, false);
 		}
 		screen.getFocusHandler().setKeyFocus(null);
 	}
 
 	public void onEndScreen() {
-		SoundManager
-				.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0f, false);
-		SoundManager.stopMusic(Assets.Sounds.MenuSoundtrackId);
 	}
 
 	@Override
@@ -149,5 +141,17 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 		// set on transition-in-out-screen
 		if (!nifty.getCurrentScreen().equals("mainMenu_with_transition"))
 			nifty.gotoScreen("mainMenu_with_transition");
+	}
+	
+	@Override
+	public void update(GameContainer container, StateBasedGame game, int d)
+			throws SlickException {
+		super.update(container, game, d);
+		if (startedMusic==false)
+		{
+			startedMusic = true;
+			SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0);
+			SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f, false);
+		}
 	}
 }
