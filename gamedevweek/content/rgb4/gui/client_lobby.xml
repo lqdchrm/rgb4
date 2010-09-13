@@ -11,13 +11,16 @@
 	<useControls filename="nifty-default-controls.xml" />
 
 	<controlDefinition name="playerControl">
-		<panel width="100%" height="100%" childLayout="horizontal" align="left">
-				<label id="playername" style="lobby-text" text="playername" align="left"/>
+		<panel width="100%" height="100%" childLayout="horizontal"
+			align="left">
+			<label id="playername" style="lobby-text" text="playername"
+				align="left" />
 		</panel>
 	</controlDefinition>
-	
+
 	<controlDefinition name="mybutton">
-		<label id="start_button" text="Start" style="lobby-button" hintText="Start" align="right">
+		<label id="start_button" text="Start" style="lobby-button"
+			hintText="Start" align="right">
 			<interact onClick="startGame()" />
 		</label>
 	</controlDefinition>
@@ -35,86 +38,88 @@
 
 
 		<layer id="host_layer" childLayout="center" align="center"
-			valign="center">
+			valign="center" style="in-out-transition">
 
+			<panel id="overview" style="rgb-panel" width="90%" height="80%"
+				align="center" valign="center" childLayout="vertical">
 
-
-
-
-
-			<panel id="overview" style="lobby-panel-background" width="90%"
-				height="80%" align="center" valign="center" childLayout="vertical">
-
-				<!--  TOP -->
-				<panel id="top" height="10%" width="100%" style="standard-header"
-					childLayout="vertical">
-					<label style="header-label" text="OPTIONS"></label>
+				<panel width="100%" height="10%" childLayout="vertical"
+					valign="center">
+					<label width="100%" height="100%" id="hostGame" text="Choose Server"
+						style="header-label" />
 				</panel>
+				<panel width="100%" height="90%" childLayout="horizontal">
+					<panel width="28px" />
 
-				<!--  MAIN -->
-				<panel id="mainMenu" childLayout="horizontal" width="100%"
-					height="90%">
+					<!--  MAIN -->
+					<panel id="mainMenu" childLayout="horizontal" height="90%">
 
-					<panel id="player_panel" style="standard-panel" width="60%" childLayout="horizontal">
-						<panel width="45%" childLayout="vertical">
-							<label style="lobby-text" text="Team 1:" height="10%" />
-	
-							<panel id="team_1" height="80%" width="100%" style="player-list" align="left" childLayout="vertical">
-								<interact onClick="chooseTeam(1)" />
+						<panel id="player_panel" style="standard-panel" width="60%"
+							childLayout="horizontal">
+							<panel width="45%" childLayout="vertical">
+								<label style="lobby-text" text="Team 1:" height="10%" />
+
+								<panel id="team_1" height="80%" width="100%" style="player-list"
+									align="left" childLayout="vertical">
+									<interact onClick="chooseTeam(1)" />
+								</panel>
+							</panel>
+
+							<panel width="10%" childLayout="vertical" />
+
+							<panel width="45%" childLayout="vertical">
+								<label style="lobby-text" text="Team 2:" height="10%" />
+
+								<panel id="team_2" height="80%" width="100%" style="player-list"
+									align="left" childLayout="vertical">
+									<interact onClick="chooseTeam(2)" />
+								</panel>
 							</panel>
 						</panel>
-						
-						<panel width="10%" childLayout="vertical"/>
-						
-						<panel width="45%" childLayout="vertical">
-							<label style="lobby-text" text="Team 2:" height="10%" />
 
-							<panel id="team_2" height="80%" width="100%" style="player-list" align="left" childLayout="vertical">
-								<interact onClick="chooseTeam(2)" />
+
+						<panel id="level_panel" style="standard-panel" width="40%"
+							childLayout="vertical" padding="10px,10px,10px,10px">
+
+							<panel childLayout="vertical">
+								<label style="lobby-text" text="Current Level:" height="10%" />
 							</panel>
+
+							<panel childLayout="vertical" height="90%">
+								<label id="current_level" style="lobby-text" text="none"
+									height="10%" width="100%" backgroundColor="#000a" />
+
+								<panel height="10px" />
+
+								<panel id="level_list" childLayout="vertical" width="100%"></panel>
+							</panel>
+
 						</panel>
+
 					</panel>
 
-					<panel id="spacer" width="10%"></panel>
-
-					<panel id="level_panel" style="standard-panel" width="30%" childLayout="vertical">
-						
-						<panel childLayout="vertical">
-							<label style="lobby-text" text="Current Level:" height="10%" />
-						</panel>
-	
-						<panel childLayout="vertical" height="90%">
-							<label id="current_level" style="lobby-text" text="none" height="10%" width="150px" backgroundColor="#000a"/>
-						
-							<panel height="10px"/>
-							
-							<panel id="level_list" childLayout="vertical" width="100%"></panel>
-						</panel>
-						
-					</panel>
+					<panel width="26px" />
 
 				</panel>
+
 
 				<!--  BOTTOM -->
-				<panel id="top" height="10%" width="100%" style="standard-footer" childLayout="horizontal">
+				<panel id="top" height="10%" width="100%" style="standard-footer"
+					childLayout="horizontal">
 
 					<panel childLayout="center" align="left" width="50%">
-						<label id="back_button" text="Back" style="lobby-button" align="left"
-							hintText="Back">
+						<label id="back_button" text="Back" style="lobby-button"
+							align="left" hintText="Back">
 							<interact onClick="back()" />
 						</label>
 					</panel>
 
-				
-					<panel id="button-panel" childLayout="center" align="right" width="50%">
-
+					<panel id="button-panel" childLayout="center" align="right"
+						width="50%">
 					</panel>
 				</panel>
 
 			</panel>
-
-
-
 
 
 		</layer>

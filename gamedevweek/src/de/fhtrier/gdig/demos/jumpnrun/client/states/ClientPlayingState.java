@@ -1,8 +1,8 @@
 package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import java.util.LinkedList;
-import java.util.Map.Entry;
 import java.util.Queue;
+import java.util.Map.Entry;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
@@ -21,8 +21,6 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerConditi
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;

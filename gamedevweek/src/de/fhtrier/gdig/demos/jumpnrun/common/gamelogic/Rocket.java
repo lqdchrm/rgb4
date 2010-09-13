@@ -378,9 +378,10 @@ public class Rocket extends CollidableEntity {
 							otherPlayer.getPlayerCondition().setHealth(Constants.GamePlayConstants.maxPlayerHealth);
 					}
 
-					this.die();
+
 				}
 			}
+			this.die();
 		}
 
 		return result;

@@ -14,7 +14,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryConnect;
-import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackground;
+import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackgroundRenderer;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
@@ -24,6 +24,7 @@ import de.fhtrier.gdig.engine.network.INetworkLobby;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.NetworkServerObject;
 import de.fhtrier.gdig.engine.network.impl.NetworkLobby;
+import de.lessvoid.nifty.EndNotify;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.button.CreateButtonControl;
 import de.lessvoid.nifty.controls.button.controller.ButtonControl;
@@ -63,6 +64,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 
 	private ArrayList<ButtonControl> interfaceButtons = new ArrayList<ButtonControl>();
 	private ArrayList<ButtonControl> serverButtons = new ArrayList<ButtonControl>();
+	private boolean waitingForTransition=false;
 
 	public ClientSelectServerState() {
 		super(GameStates.SERVER_SELECTION);
@@ -130,7 +132,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		try {
-			MenuBackground.getInstance().render(container, game, g);
+			MenuBackgroundRenderer.getInstance().render(container, game, g);
 			super.render(container, game, g);
 		} catch (Exception e) {
 			Log.error(e);
@@ -138,7 +140,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 	}
 
 	@Override
-	public void update(GameContainer container, StateBasedGame game, int d)
+	public void update(GameContainer container, final StateBasedGame game, int d)
 			throws SlickException {
 		super.update(container, game, d);
 
@@ -149,15 +151,13 @@ public class ClientSelectServerState extends NiftyGameState implements
 		if (NetworkComponent.getInstance().getNetworkId() != -1) {
 			NetworkComponent.getInstance().sendCommand(
 					new QueryConnect(guiPlayernameTextField.getText()));
-			game.enterState(GameStates.CLIENT_LOBBY);
-			connecting = false;
+			translateToGamestate(GameStates.CLIENT_LOBBY);
 		}
 
 		try {
 			serverMutex.acquire();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.error(e);
 		}
 
 		int count = 0;
@@ -187,12 +187,21 @@ public class ClientSelectServerState extends NiftyGameState implements
 
 		serverMutex.release();
 	}
-
-	@Override
-	public void leave(GameContainer container, StateBasedGame game)
-			throws SlickException {
-		super.leave(container, game);
-	}
+	
+	public void translateToGamestate(final int gameState)
+	{
+		if (waitingForTransition==false)
+		{
+			waitingForTransition = true;
+			nifty.getCurrentScreen().endScreen(new EndNotify() {
+				public void perform() {
+					game.enterState(gameState);				
+					connecting = false;
+					waitingForTransition = false;
+				}
+			});
+		}
+	}	
 
 	@Override
 	public void bind(Nifty nifty, Screen screen) {
@@ -204,8 +213,6 @@ public class ClientSelectServerState extends NiftyGameState implements
 
 	@Override
 	public void onEndScreen() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -223,7 +230,6 @@ public class ClientSelectServerState extends NiftyGameState implements
 
 	@Override
 	public void addServer(NetworkServerObject server) {
-
 		try {
 			serverMutex.acquire();
 		} catch (InterruptedException e) {
@@ -271,7 +277,6 @@ public class ClientSelectServerState extends NiftyGameState implements
 	}
 
 	public void connect() {
-
 		if (currentConnectionIp == null) {
 			popupNoServer();
 			return;
@@ -284,13 +289,11 @@ public class ClientSelectServerState extends NiftyGameState implements
 			connecting = true;
 			currentConnectionIp = null;
 			currentConnectionPort = -1;
-
 		}
-
 	}
 
 	public void back() {
-		game.enterState(GameStates.MENU);
+		translateToGamestate(GameStates.MENU);
 	}
 
 	public void popupNoServer() {

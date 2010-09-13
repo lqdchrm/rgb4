@@ -3,16 +3,17 @@ package de.fhtrier.gdig.demos.jumpnrun.client.states;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.List;
 import java.util.StringTokenizer;
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.state.transition.FadeInTransition;
 import org.newdawn.slick.state.transition.FadeOutTransition;
 
+import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackgroundRenderer;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.lessvoid.nifty.Nifty;
@@ -73,6 +74,15 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 
 	}
 
+
+	
+	
+	@Override
+	public void render(GameContainer container, StateBasedGame game, Graphics g)
+			throws SlickException {
+		MenuBackgroundRenderer.getInstance().render(container, game, g);
+		super.render(container, game, g);
+	}
 
 	@Override
 	public void keyPressed(int key, char c) {

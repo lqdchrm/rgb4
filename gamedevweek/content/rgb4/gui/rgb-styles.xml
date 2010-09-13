@@ -67,7 +67,8 @@
 	</style>
 	
 	<style id="header-label">
-		<attributes font="verdana-24-glow.fnt" focusable="false" align="center" valign="center"/>
+ 		<attributes font="rm_narrowboat_48.fnt" color="#300f" focusable="false" align="center" valign="center"/>  
+<!-- 		<attributes font="verdana-24-glow.fnt" color="#000f" focusable="false" align="center" valign="center"/> -->
 	</style>
 	
 	<style id="standard-panel-background">
@@ -83,6 +84,10 @@
 	</style>
 
 
+	<style id="rgb-panel">
+		<attributes backgroundImage="gui-panel.png" imageMode="resize:28,176,28,49,28,176,28,169,28,176,28,26" />
+	</style>
+
 	<style id="standard-footer">
 		<attributes padding="10px,10px,10px,10px" backgroundColor="#333e" />
 	</style>
@@ -95,11 +100,11 @@
 	</style>
 	
 	<style id="player-list">
-		<attributes backgroundColor="#000e"/>
+		<attributes backgroundColor="#000a"/>
 	</style>
 	
 	<style id="level-list">
-		<attributes backgroundColor="#000e"/>
+		<attributes backgroundColor="#000a"/>
 	</style>
 	
 	<style id="scroller">
@@ -134,5 +139,39 @@
       <onHover name="renderElement" />
       <onHover name="restoreState" />
     </effect>
-  </style>		
+  </style>	
+  
+  
+  <style id="nifty-textfield#panel">
+    <attributes backgroundColor="#100a" childLayout="overlay" height="40px" />
+  </style>
+  
+  <style id="nifty-textfield#field">
+    <attributes childLayout="center" visibleToMouse="true" childClip="true" />
+  </style>
+
+  <style id="nifty-textfield#text">
+    <attributes font="verdana-24-shadow.fnt" visibleToMouse="false" align="left" textHAlign="left" valign="center" />
+  </style>
+  
+ <style id="nifty-textfield#cursor">
+    <attributes filename="gui-cursor-empty.png" valign="top"/>
+    <effect>
+      <onActive name="imageOverlayPulsate" period="500" timeType="infinite" pulsateType="rectangle" filename="gui-cursor.png" post="true"/>
+    </effect>
+  </style>
+  
+  <style id="in-out-transition">
+		<effect>
+			<onStartScreen name="fade" start="#0" end="#f" length="900" inherit="true" />
+			<onEndScreen name="fade" start="#f" end="#0" length="900" inherit="true" />
+		</effect>
+  </style>
+  
+  <style id="out-transition">
+		<effect>
+			<onEndScreen name="fade" start="#f" end="#0" length="900" inherit="true" />
+		</effect>
+  </style>
+  	
 </nifty-styles>

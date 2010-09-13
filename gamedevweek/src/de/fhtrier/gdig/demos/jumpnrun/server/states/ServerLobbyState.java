@@ -14,6 +14,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryConnect;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetLevel;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetTeam;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryStartGame;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.ServerGame;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkLevel;
@@ -108,6 +109,7 @@ public class ServerLobbyState extends BasicGameState  implements
 		else if (data instanceof QuerySetLevel)
 		{
 			currentLevel = ((QuerySetLevel)data).getNetworkLevel();
+			Assets.Config.AssetManagerPath = currentLevel.getAssetPath();
 			NetworkComponent.getInstance().sendCommand(new AckSetLevel(((QuerySetLevel)data).getNetworkLevel()));
 		}
 		

@@ -18,12 +18,13 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryConnect;
-import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackground;
+import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackgroundRenderer;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkHelper;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
+import de.lessvoid.nifty.EndNotify;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.button.CreateButtonControl;
 import de.lessvoid.nifty.controls.button.controller.ButtonControl;
@@ -55,6 +56,7 @@ public class ClientHostServerState extends NiftyGameState implements
 	private List<InterfaceAddress> interfaces;
 	private int selectedInterfaceIndex = -1;
 	private List<ButtonControl> interfaceButtons = new ArrayList<ButtonControl>();
+	private boolean waitingForTransition;
 
 	public ClientHostServerState(final StateBasedGame game) {
 		super(GameStates.SERVER_SETTINGS);
@@ -89,10 +91,13 @@ public class ClientHostServerState extends NiftyGameState implements
 			throws SlickException {
 		super.enter(container, game);
 
-		interfaces = NetworkHelper.getInterfaces();
-		drawInterfaces();
-		if (interfaces.size()>0)
-			chooseInterface("0");
+		if (interfaces==null)
+		{
+			interfaces = NetworkHelper.getInterfaces();
+			drawInterfaces();
+			if (interfaces.size() > 0)
+				chooseInterface("0");
+		}
 	}
 
 	@Override
@@ -131,7 +136,6 @@ public class ClientHostServerState extends NiftyGameState implements
 
 	@Override
 	public void onStartScreen() {
-		// left intentionally blank
 	}
 
 	@Override
@@ -146,11 +150,31 @@ public class ClientHostServerState extends NiftyGameState implements
 		if (NetworkComponent.getInstance().getNetworkId() != -1) {
 			NetworkComponent.getInstance().sendCommand(
 					new QueryConnect(playerNameControl.getText()));
-			game.enterState(GameStates.CLIENT_LOBBY);
-			connecting = false;
+			translateToGamestate(GameStates.CLIENT_LOBBY);
+		}
+		
+		if (selectedInterfaceIndex!=-1)
+		{
+			setButton(selectedInterfaceIndex, interfaceButtons,
+					new Color(1, 0, 0, 1), new Color(1, 1, 1, 1));
 		}
 	}
 
+	public void translateToGamestate(final int gameState)
+	{
+		if (waitingForTransition==false)
+		{
+			waitingForTransition = true;
+			nifty.getCurrentScreen().endScreen(new EndNotify() {
+				public void perform() {
+					game.enterState(gameState);				
+					connecting = false;
+					waitingForTransition = false;
+				}
+			});
+		}
+	}	
+	
 	public void createServer() {
 
 		if (!serverStarting) {
@@ -168,34 +192,35 @@ public class ClientHostServerState extends NiftyGameState implements
 				// Here we do some magic to spawn a server process 
 				// TODO check if it's really working
 				ProcessBuilder pb = new ProcessBuilder("java",
-						"-Djava.library.path=server/lib/native", "-jar",
+						"-Djava.library.path=./server/lib/native", "-jar",
 						"server/server.jar", serverNameControl.getText(),
 						interfaceA, portControl.getText());
 				pb.redirectErrorStream(true);
 
 				try {
 					final Process p = pb.start();
-					Thread t = new Thread() {
-						public void run() {
-							BufferedReader r = new BufferedReader(
-									new InputStreamReader(p.getInputStream()));
 
-							try {
-								while (true) {
-									String s = r.readLine();
-									if (s != null) {
-										if (Constants.Debug.networkDebug) {
-											Log.debug("SERVER PROCESS -- " + s);
-										}
-									} else
-										return;
+					Thread t = new Thread() {
+					public void run() {
+						BufferedReader r = new BufferedReader(
+								new InputStreamReader(p.getInputStream()));
+
+						try {
+							while (true) {
+								String s = r.readLine();
+								if (s != null) {
+									if (Constants.Debug.networkDebug) {
+										Log.debug("SERVER PROCESS -- " + s);
+									}
+								} else
+									return;
 								}
 							} catch (IOException e) {
 							} finally {
 								try {
 									r.close();
 								} catch (IOException e) {
-
+	
 								}
 							}
 						};
@@ -235,8 +260,7 @@ public class ClientHostServerState extends NiftyGameState implements
 	}
 
 	public void back() {
-		game.enterState(GameStates.MENU, new FadeOutTransition(),
-				new FadeInTransition());
+		translateToGamestate(GameStates.MENU);
 	}
 
 	public void drawInterfaces() {
@@ -261,12 +285,13 @@ public class ClientHostServerState extends NiftyGameState implements
 	}
 
 	public void chooseInterface(String id) {
-		// clearList(guiServerPanel);
-
-		// set interface as active
-		selectedInterfaceIndex = Integer.parseInt(id);
-		setButton(Integer.parseInt(id), interfaceButtons,
-				new Color(1, 0, 0, 1), new Color(1, 1, 1, 1));
+		if (selectedInterfaceIndex!=Integer.parseInt(id))
+		{
+			// set interface as active
+			selectedInterfaceIndex = Integer.parseInt(id);
+			setButton(Integer.parseInt(id), interfaceButtons,
+					new Color(1, 0, 0, 1), new Color(1, 1, 1, 1));
+		}
 	}
 
 	private void clearList(Element e) {
@@ -295,7 +320,7 @@ public class ClientHostServerState extends NiftyGameState implements
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		try {
-			MenuBackground.getInstance().render(container, game, g);
+			MenuBackgroundRenderer.getInstance().render(container, game, g);
 			super.render(container, game, g);
 		} catch (Exception e) {
 			e.printStackTrace();

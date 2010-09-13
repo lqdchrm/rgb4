@@ -52,16 +52,16 @@ public class Constants
 	}
 	
 	public static class SoundConfig extends Configuration {
-		public static boolean musicEnabled = true;
-		public static boolean isMuted = false;
-		public static boolean soundEnabled = true;
+		public static boolean musicEnabled = false;
+		public static boolean isMuted = true;
+		public static boolean soundEnabled = false;
 	}
 
 	public static class Debug extends Configuration
 	{
 		public static boolean showDebugOverlay = true;
 		
-		public static boolean drawBounds = false;
+		public static boolean drawBounds = true;
 		
 		public static Color boundColor = Color.green;
 		public static Color overlayColor = Color.white;
@@ -77,7 +77,7 @@ public class Constants
 
 		public static boolean finiteStateMachineDebug = false;
 		
-		public static boolean guiDebug = false;
+		public static boolean guiDebug = true;
 		
 		// network
 		public static boolean networkDebug = false;

@@ -18,7 +18,7 @@ import org.newdawn.slick.util.Log;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetLevel;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetTeam;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryStartGame;
-import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackground;
+import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackgroundRenderer;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
@@ -66,6 +66,7 @@ public class ClientLobbyState extends NiftyGameState implements
 	private Element guiLevelList;
 	private TextRenderer guiCurrentLevelRenderer;
 	private Element guiButtonPanel;
+	private NetworkLevel currentSelectedLevel;
 
 	public String formatLevelname(String levelName) {
 		String helpString = levelName.substring(6);
@@ -76,14 +77,13 @@ public class ClientLobbyState extends NiftyGameState implements
 	}
 
 	public void readLevels(File dir, ArrayList<NetworkLevel> levels) {
-
 		File[] files = dir.listFiles();
 		if (files != null) {
 			for (int i = 0; i < files.length; i++) {
 				String fileName = files[i].getName();
 				if (files[i].isDirectory() && fileName.startsWith("Level")) {
 					levels.add(new NetworkLevel(i, Assets.Level.AssetLevelPath
-							+ fileName, formatLevelname(fileName)));
+							+ "/" + fileName, formatLevelname(fileName)));
 				}
 			}
 		}
@@ -137,7 +137,7 @@ public class ClientLobbyState extends NiftyGameState implements
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		try {
-			MenuBackground.getInstance().render(container, game, g);
+			MenuBackgroundRenderer.getInstance().render(container, game, g);
 			super.render(container, game, g);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,13 +149,13 @@ public class ClientLobbyState extends NiftyGameState implements
 			throws SlickException {
 		super.update(container, game, d);
 
-		// recv and execute items in queue
+		// recv and execute items in queue even if handled! (Is this a hack? 
+		// I want to listen on the ServerAckDisconnect-Command 
 		for (INetworkCommand data : this.queue) {
-			if (data != null && !data.isHandled()) {
+			if (data != null) {
 
 				if (data instanceof ProtocolCommand) {
 					handleProtocolCommands(data);
-					data.setHandled(true);
 				}
 			}
 		}
@@ -179,6 +179,7 @@ public class ClientLobbyState extends NiftyGameState implements
 		} else if (cmd instanceof AckNewPlayerList) {
 			players = ((AckNewPlayerList) cmd).getPlayerList();
 			drawPlayers(players.values());
+			cmd.setHandled(true);
 		} else if (cmd instanceof AckStartGame) {
 			game.enterState(GameStates.PLAYING);
 		} else if (cmd instanceof ServerAckDisconnect) {
@@ -188,12 +189,17 @@ public class ClientLobbyState extends NiftyGameState implements
 			game.enterState(GameStates.SERVER_SELECTION);
 		} else if (cmd instanceof AckSetLevel) {
 			selectLevel(((AckSetLevel) cmd).getNetworkLevel());
+			cmd.setHandled(true);
+			if (Constants.Debug.networkDebug) {
+			        Log.debug("Level: " + ((AckSetLevel) cmd).getNetworkLevel().getAssetPath());
+			} 			
 		}
 	}
 
 	private void selectLevel(NetworkLevel networkLevel) {
 		guiCurrentLevelRenderer.setText(networkLevel.getLevelName());
 		Assets.Config.AssetManagerPath = networkLevel.getAssetPath();
+		this.currentSelectedLevel = networkLevel;
 	}
 
 	private void drawPlayers(Collection<NetworkPlayer> players) {
@@ -219,7 +225,7 @@ public class ClientLobbyState extends NiftyGameState implements
 				createButton.setHeight("30px");
 				createButton.setWidth("90%");
 				createButton.set("label", level.getLevelName());
-				createButton.setAlign("left");
+				createButton.setAlign("center");
 				// TODO setin real values
 				createButton.setInteractOnClick("chooseLevel("
 						+ level.getLevelID() + ")");
@@ -280,9 +286,18 @@ public class ClientLobbyState extends NiftyGameState implements
 					"Waiting for Master to Start!");
 			labelCreator
 					.create(nifty, nifty.getCurrentScreen(), guiButtonPanel);
+			
 		} else {
 			CustomControlCreator button = new CustomControlCreator("mybutton");
 			button.create(nifty, nifty.getCurrentScreen(), guiButtonPanel);
+		
+			// autoselect first level if no current-level is set
+			if (levels.size()>0) {
+				if (currentSelectedLevel==null)
+					chooseLevel(Integer.toString(levels.get(0).getLevelID()));
+				else
+					chooseLevel(Integer.toString(currentSelectedLevel.getLevelID()));
+			}
 		}
 	}
 
