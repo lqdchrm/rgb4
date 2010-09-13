@@ -13,21 +13,23 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkHelper;
 
 public class JumpNRunServer {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NumberFormatException, SlickException {
 		// create game
 		ServerGame serverGame = null;
 
-		switch(args.length) {
+		switch (args.length) {
 		case 0:
 			serverGame = Lobby.configServer();
 			break;
 		case 1:
 			// port only
-			serverGame = new ServerGame("my-server", null, Integer.parseInt(args[0]));
+			serverGame = new ServerGame("my-server", null,
+					Integer.parseInt(args[0]));
 			break;
 		case 2:
 			// name and port
-			serverGame = new ServerGame(args[0], null,  Integer.parseInt(args[1]));
+			serverGame = new ServerGame(args[0], null,
+					Integer.parseInt(args[1]));
 			break;
 		case 3:
 			// name, interfaceip, port
@@ -42,7 +44,8 @@ public class JumpNRunServer {
 			try {
 
 				AppGameContainer gc = new AppGameContainer(serverGame);
-				gc.setDisplayMode(Settings.SCREENWIDTH, Settings.SCREENHEIGHT, false);
+				gc.setDisplayMode(Settings.SCREENWIDTH, Settings.SCREENHEIGHT,
+						false);
 				gc.setVSync(false);
 				gc.setSmoothDeltas(false);
 				gc.setAlwaysRender(true);

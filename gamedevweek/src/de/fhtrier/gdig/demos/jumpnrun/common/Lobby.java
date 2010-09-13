@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.common;
+﻿package de.fhtrier.gdig.demos.jumpnrun.common;
 
 import java.net.InterfaceAddress;
 import java.util.List;
@@ -30,11 +30,11 @@ public class Lobby extends JDialog {
 	private static final long serialVersionUID = -8056874862301688643L;
 
 	private static ServerGame createServer(String serverName,
-			InterfaceAddress ni, int port) {
+			InterfaceAddress ni, int port) throws SlickException {
 		return new ServerGame(serverName, ni, port);
 	}
 
-	public static ClientGame createClient(boolean debug, final String ip, final int port) {
+	public static ClientGame createClient(boolean debug, final String ip, final int port) throws SlickException {
 
 		if (debug) {
 			return new ClientGame()
@@ -54,13 +54,13 @@ public class Lobby extends JDialog {
 		return new ClientGame();
 	}
 
-	public static RGB4Game createGameByArgs(String[] args) {
+	public static RGB4Game createGameByArgs(String[] args) throws SlickException {
 
 		return createGameViaDialog(); // via Dialog
 
 	}
 
-	public static RGB4Game createGameViaDialog() {
+	public static RGB4Game createGameViaDialog() throws SlickException {
 
 		// Ask whether we want to be server
 		Object[] options = { "Server", "Client", "Spectator" };
@@ -82,7 +82,7 @@ public class Lobby extends JDialog {
 		}
 	}
 
-	public static ClientGame configDebugClient() {
+	public static ClientGame configDebugClient() throws SlickException {
 		
 		List<InterfaceAddress> interfaces = NetworkHelper.getInterfaces();
 
@@ -143,7 +143,7 @@ public class Lobby extends JDialog {
 		return createClient(true, ip, port);
 	}
 
-	public static ServerGame configServer() {
+	public static ServerGame configServer() throws NumberFormatException, SlickException {
 		List<InterfaceAddress> interfaces = NetworkHelper.getInterfaces();
 
 		Object[] serverListe = new Object[interfaces.size()];

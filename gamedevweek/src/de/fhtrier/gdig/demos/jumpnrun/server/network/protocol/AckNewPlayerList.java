@@ -8,7 +8,7 @@ import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
 public class AckNewPlayerList extends ProtocolCommand {
 
 	private HashMap<Integer, NetworkPlayer> playerList;
-	
+
 	public HashMap<Integer, NetworkPlayer> getPlayerList() {
 		return playerList;
 	}

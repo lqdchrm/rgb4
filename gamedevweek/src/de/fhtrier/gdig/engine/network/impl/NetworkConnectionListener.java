@@ -21,7 +21,7 @@ public class NetworkConnectionListener extends Thread {
 
 	@Override
 	public void run() {
-		this.ss = initializeSocket( this.networkInterface, this.port);
+		this.ss = initializeSocket(this.networkInterface, this.port);
 		while (true) {
 			Socket s = acceptClients(this.ss);
 			this.networkComponent.addClient(s);

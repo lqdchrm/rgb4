@@ -167,4 +167,3 @@ public class InputControl {
 		return false;
 	}
 }
-

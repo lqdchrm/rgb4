@@ -9,33 +9,37 @@ import de.fhtrier.gdig.engine.management.AssetMgr;
 
 public class ParticleEntity extends AssetEntity {
 
-	public ParticleEntity (int id, int assetId, AssetMgr assets) {
+	public ParticleEntity(int id, int assetId, AssetMgr assets) {
 		super(id, assetId, assets);
 	}
 
 	@Override
 	public void renderImpl(Graphics graphicContext, Image frameBuffer) {
 		if (isVisible()) {
-			ParticleSystem system = getAssetMgr().getParticleSystem(getAssetId());
+			ParticleSystem system = getParticleAsset();
 			// TODO do update somewhere else
 			system.update(20);
 			system.render();
 		}
 		super.renderImpl(graphicContext, frameBuffer);
 	}
-	
+
 	@Override
 	protected void preRender(Graphics graphicContext) {
 		super.preRender(graphicContext);
 
 		Shader.pushShader(null);
 	}
-	
+
 	@Override
 	protected void postRender(Graphics graphicContext) {
 
 		Shader.popShader();
 
 		super.postRender(graphicContext);
+	}
+	
+	public ParticleSystem getParticleAsset() {
+		return getAssetMgr().getParticleSystem(getAssetId());
 	}
 }

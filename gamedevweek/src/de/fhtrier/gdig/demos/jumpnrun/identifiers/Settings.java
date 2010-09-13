@@ -7,7 +7,7 @@ package de.fhtrier.gdig.demos.jumpnrun.identifiers;
  */
 public class Settings
 {
-	public static boolean USE_NATIVE_FULLSCREEN = true;
+	public static boolean USE_NATIVE_FULLSCREEN = false;
 	public static int SCREENWIDTH = 1024;
 	public static int SCREENHEIGHT = 768;
 }

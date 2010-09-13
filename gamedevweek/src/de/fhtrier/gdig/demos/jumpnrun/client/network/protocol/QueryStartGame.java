@@ -13,5 +13,4 @@ public class QueryStartGame extends ProtocolCommand {
 	 */
 	private static final long serialVersionUID = 2366584800396372647L;
 
-	
 }

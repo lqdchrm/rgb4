@@ -1,16 +1,16 @@
 package de.fhtrier.gdig.demos.jumpnrun.identifiers;
 
+import java.net.InetSocketAddress;
+
 import org.newdawn.slick.Color;
 
 import de.fhtrier.gdig.engine.helpers.Configuration;
 
-public class Constants
-{
+public class Constants {
 
 	public static final float EPSILON = 0.0001f;
 
-	public static class GamePlayConstants extends Configuration
-	{
+	public static class GamePlayConstants extends Configuration {
 		public static float gravity = 2000.0f;
 
 		@ShowAsSlider(maxValue = 50, minValue = 1)
@@ -18,12 +18,6 @@ public class Constants
 		public static int winningKills_TeamDeathmatch = 25;
 		
 		public static boolean friendyFire = true; // if true you can damage team-mates
-		
-		public static float maxHealthpoints = 2.0f;
-		public static float healHP = 0.05f;
-		
-		public static final float startHealthpoints = 1.0f;
-		public static final float startDamage = 0.2f;
 
 		@ShowAsSlider(maxValue = 10000, minValue = 10)
 		public static float shotSpeed = 1000.0f;
@@ -50,42 +44,53 @@ public class Constants
 
 		public static float playerMaxJumpSpeed = 1000.0f;
 		
-		public static boolean clientSound = true;
+		public static long playerReviveDelayInMillis = 3000;
+
+		public static float initialPlayerHealth = 1.0f;
 		
-		public static boolean serverSound = false;
+		public static float maxPlayerHealth = 2.0f;
 	}
 
-	public static class Debug extends Configuration
-	{
+
+	public static class SoundConfig extends Configuration {
+		public static boolean musicEnabled = true;
+		public static boolean isMuted = false;
+		public static boolean soundEnabled = true;
+	}
+	public static class Debug extends Configuration {
+		@CommandlineParameter("noRender")
+		public static boolean doNotRender = false;
+
 		public static boolean showDebugOverlay = false;
 		
-		public static boolean drawBounds = true;
+		public static boolean drawBounds = false;
 		
 		public static Color boundColor = Color.green;
 		public static Color overlayColor = Color.white;
 		
 		public static boolean showCollisions = false;
 		
+		@CommandlineParameter("noShader")
+		@DefaultTrue
 		public static boolean shadersActive = true;
 		public static boolean shadersAutoDisable = true;
-		
 		public static boolean tileMapLogicDebug = false;
 
+		@CommandlineParameter("noFBO")
 		public static boolean forceNoFBO = false;
 
 		public static boolean finiteStateMachineDebug = false;
 		
 		public static boolean guiDebug = false;
 		
+		// network
 		public static boolean networkDebug = false;
+		public static boolean showProtocolCommandsOnly = false;
 		
 		public static boolean factoryDebug = false;
-		
-	
 	}
 	
-	public static class Level extends Configuration
-	{
+	public static class Level extends Configuration {
 		public static int collisionLayer = 1;
 		public static int logicLayer = 3;
 	}
@@ -109,4 +114,17 @@ public class Constants
 		public static String REFPHRASE3 = "KEY_3";
 		public static String REFPHRASE4 = "KEY_4";
 	}	
+
+	public static class NetworkConfig extends Configuration {
+		@CommandlineParameter("Server")
+		public static boolean isServer;
+		@CommandlineParameter("Spectator")
+		public static boolean isSpectator;
+		@CommandlineParameter("Client")
+		public static boolean isClient;
+		@CommandlineParameter("Port")
+		public static int port;
+		@CommandlineParameter("Adress")
+		public static InetSocketAddress adress;
+	}
 }

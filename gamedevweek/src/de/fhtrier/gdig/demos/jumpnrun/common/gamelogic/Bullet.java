@@ -21,7 +21,6 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
@@ -150,29 +149,31 @@ public class Bullet extends LevelCollidableEntity {
 			if (collidableEntity instanceof Player) {
 				Player otherPlayer = (Player) collidableEntity;
 				if (otherPlayer != owner
-						&& otherPlayer.getPlayerCondition().health > Constants.EPSILON
+						&& otherPlayer.getPlayerCondition().getHealth() > Constants.EPSILON
 						&& (Constants.GamePlayConstants.friendyFire == true || // Friendly
 																				// Fire
 																				// or
-						owner.getPlayerCondition().teamId != otherPlayer
-								.getPlayerCondition().teamId)) // Enemy
+						owner.getPlayerCondition().getTeamId() != otherPlayer
+								.getPlayerCondition().getTeamId())) // Enemy
 				{
-					if (otherPlayer.getPlayerCondition().color != this.color) {
-						otherPlayer.getPlayerCondition().health -= owner
-								.getPlayerCondition().damage;
+					otherPlayer.doDamage(color, owner.getPlayerCondition().getDamage(), owner);
+					/*if (otherPlayer.getPlayerColor() != this.color) {
+						otherPlayer.getPlayerCondition().setHealth(
+								otherPlayer.getPlayerCondition().getHealth() - owner
+										.getPlayerCondition().getDamage());
 
-						if (otherPlayer.getPlayerCondition().health <= Constants.EPSILON) {
+						if (otherPlayer.getPlayerCondition().getHealth() <= Constants.EPSILON) {
 							NetworkComponent.getInstance().sendCommand(
 									new SendKill(otherPlayer.getId(), owner
 											.getId()));
 
 							Event dieEvent = new PlayerDiedEvent(otherPlayer,
 									owner);
-							dieEvent.update();
+							EventManager.addEvent(dieEvent);
 						}
 
 						if (PlayingState.gameType == Constants.GameTypes.deathMatch) {
-							if (owner.getPlayerStats().getKills() >= Constants.GamePlayConstants.winningKills_Deathmatch) {
+							if (owner.getPlayerCondition().getKills() >= Constants.GamePlayConstants.winningKills_Deathmatch) {
 								NetworkComponent.getInstance().sendCommand(
 										new SendWon(owner.getId(),
 												SendWon.winnerType_Player));
@@ -198,17 +199,15 @@ public class Bullet extends LevelCollidableEntity {
 								EventManager.addEvent(wonEvent);
 							}
 						}
-					} else if (otherPlayer.getPlayerCondition().teamId != owner.getPlayerCondition().teamId || PlayingState.gameType == Constants.GameTypes.deathMatch){
+					} else if (otherPlayer.getPlayerCondition().getTeamId() != owner.getPlayerCondition().getTeamId() || PlayingState.gameType == Constants.GameTypes.deathMatch){
 						// player gets stronger when hit by bullet of the same
 						// color!
-						otherPlayer.getPlayerCondition().health += Constants.GamePlayConstants.healHP;
-						if (otherPlayer.getPlayerCondition().health > Constants.GamePlayConstants.maxHealthpoints) 
-							otherPlayer.getPlayerCondition().health = Constants.GamePlayConstants.maxHealthpoints;
-					}
-
-					NetworkComponent.getInstance().sendCommand(
-							new AckPlayerCondition(otherPlayer.getId(),
-									otherPlayer.getPlayerCondition()));
+						otherPlayer.getPlayerCondition().setHealth(
+								otherPlayer.getPlayerCondition().getHealth() + (owner
+										.getPlayerCondition().getDamage() / 2));
+						if (otherPlayer.getPlayerCondition().getHealth() > Constants.GamePlayConstants.maxPlayerHealth)
+							otherPlayer.getPlayerCondition().setHealth(Constants.GamePlayConstants.maxPlayerHealth);
+					}*/
 
 					this.die();
 				}

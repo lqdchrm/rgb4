@@ -14,8 +14,9 @@ public class QuickDebugStartServer {
 
 	/**
 	 * @param args
+	 * @throws SlickException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SlickException {
 
 		final String serverName = "Testserver";
 		String host = "192.168.2.103";

@@ -3,7 +3,7 @@ package de.fhtrier.gdig.demos.jumpnrun.server.network;
 import java.io.Serializable;
 
 public class NetworkPlayer implements Serializable {
-	
+
 	/**
 	 * 
 	 */
@@ -20,7 +20,7 @@ public class NetworkPlayer implements Serializable {
 	public String getPlayerName() {
 		return playerName;
 	}
-	
+
 	public int getNetworkId() {
 		return networkId;
 	}

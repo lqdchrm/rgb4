@@ -7,10 +7,10 @@ public class SendKill extends ProtocolCommand {
 	private static final long serialVersionUID = -8904733636956319995L;
 	private int playerId;
 	private int killerId;
-	
-	public SendKill (int playerId, int killerId) {
+
+	public SendKill(int playerId, int killerId) {
 		super("SendKill");
-		
+
 		this.playerId = playerId;
 		this.killerId = killerId;
 	}
@@ -18,7 +18,7 @@ public class SendKill extends ProtocolCommand {
 	public int getPlayerId() {
 		return playerId;
 	}
-	
+
 	public int getKillerId() {
 		return killerId;
 	}

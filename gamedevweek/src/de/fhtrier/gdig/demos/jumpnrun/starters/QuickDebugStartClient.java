@@ -13,8 +13,9 @@ public class QuickDebugStartClient {
 
 	/**
 	 * @param args
+	 * @throws SlickException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SlickException {
 
 		String host = "192.168.2.103";
 		final int port = 49999;

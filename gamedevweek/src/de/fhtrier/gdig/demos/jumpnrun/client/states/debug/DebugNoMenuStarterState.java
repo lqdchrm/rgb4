@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.client.states.debug;
+﻿package de.fhtrier.gdig.demos.jumpnrun.client.states.debug;
 
 import java.util.LinkedList;
 import java.util.Queue;

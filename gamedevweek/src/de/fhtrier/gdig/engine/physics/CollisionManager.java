@@ -49,11 +49,10 @@ public class CollisionManager {
 				||
 
 				(CollisionManager.getTransformedBounds(e1)
-						.contains(CollisionManager.getTransformedBounds(e2)))
-				||
+						.contains(CollisionManager.getTransformedBounds(e2))) ||
 
-				(CollisionManager.getTransformedBounds(e2)
-						.contains(CollisionManager.getTransformedBounds(e1))));
+		(CollisionManager.getTransformedBounds(e2).contains(CollisionManager
+				.getTransformedBounds(e1))));
 	}
 
 	/**
@@ -110,18 +109,18 @@ public class CollisionManager {
 	 * 
 	 * @return transformed Shape
 	 */
-	private static Shape getTransformedBounds(final CollidableEntity entety) {
-		Shape rec1 = entety.getBounds().transform(
-				Transform.createTranslateTransform(entety.getData()[Entity.X],
-						entety.getData()[Entity.Y]));
+	private static Shape getTransformedBounds(final CollidableEntity entity) {
+		Shape rec1 = entity.getBounds().transform(
+				Transform.createTranslateTransform(entity.getData()[Entity.X],
+						entity.getData()[Entity.Y]));
 
-		Shape rec2 = entety.getBounds().transform(
+		Shape rec2 = entity.getBounds().transform(
 				Transform.createTranslateTransform(
-						entety.getPrevPos()[Entity.X],
-						entety.getPrevPos()[Entity.Y]));
+						entity.getPrevPos()[Entity.X],
+						entity.getPrevPos()[Entity.Y]));
 
 		// TODO erg currently not used
-		Shape erg = generateSweepShape(rec1, rec2);
+		// Shape erg = generateSweepShape(rec1, rec2);
 
 		return rec1;
 	}
