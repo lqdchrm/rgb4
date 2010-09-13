@@ -271,7 +271,6 @@ public class ClientLobbyState extends NiftyGameState implements
 
 	@Override
 	public void notify(INetworkCommand cmd) {
-		Log.debug("lobby-cmd:"+cmd);
 		queue.add(cmd);
 	}
 
