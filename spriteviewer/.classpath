@@ -5,7 +5,7 @@
 	<classpathentry kind="lib" path="lib/slick.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="spriteviewer/lib/native"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="SpriteViewer/lib/native"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>

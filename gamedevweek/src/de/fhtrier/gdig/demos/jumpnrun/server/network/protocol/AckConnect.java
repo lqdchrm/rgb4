@@ -13,5 +13,4 @@ public class AckConnect extends ProtocolCommand {
 	 */
 	private static final long serialVersionUID = -1387195559348209200L;
 
-	
 }

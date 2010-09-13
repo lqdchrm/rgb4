@@ -6,7 +6,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class WonGameEvent extends Event {
-	
+
 	private Player winningPlayer;
 	private Team winningTeam;
 	

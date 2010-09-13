@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.client.states;
+﻿package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import java.util.LinkedList;
 import java.util.Map.Entry;
@@ -21,8 +21,6 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerConditi
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
@@ -65,7 +63,7 @@ public class ClientPlayingState extends PlayingState {
 	private ServerData recv;
 	private ClientData send;
 
-	public ClientPlayingState() throws SlickException {
+	public ClientPlayingState() {
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ClientData();
 	}
@@ -163,7 +161,7 @@ public class ClientPlayingState extends PlayingState {
 
 			CollisionManager.removeEntity((CollidableEntity) getFactory()
 					.getEntity(id));
-
+			
 			getLevel().remove(getFactory().getEntity(id));
 
 			// remove Entity recursively from Factory
@@ -171,11 +169,11 @@ public class ClientPlayingState extends PlayingState {
 
 			return true;
 		}
-
+		
 		// DoPlaySound... well it just does what it says
 		if (cmd instanceof DoPlaySound) {
 			DoPlaySound dps = (DoPlaySound) cmd;
-
+			
 			SoundManager.playSound(dps.getSoundAssetId());
 			return true;
 		}
@@ -202,7 +200,7 @@ public class ClientPlayingState extends PlayingState {
 
 		if (cmd instanceof SendKill) {
 			SendKill killCommand = (SendKill) cmd;
-
+			
 			Player player = getLevel().getPlayer(killCommand.getPlayerId());
 			player.die();
 
@@ -211,7 +209,7 @@ public class ClientPlayingState extends PlayingState {
 
 		if (cmd instanceof SendWon) {
 			SendWon wonCommand = (SendWon) cmd;
-
+			
 			Event winEvent;
 			if (wonCommand.getWinnerType() == SendWon.winnerType_Player) {
 				winEvent = new WonGameEvent(getLevel().getPlayer(
@@ -220,7 +218,6 @@ public class ClientPlayingState extends PlayingState {
 				winEvent = new WonGameEvent(Team.getTeamById(wonCommand
 						.getWinnerId()));
 			}
-
 			EventManager.addEvent(winEvent);
 			return true;
 		}

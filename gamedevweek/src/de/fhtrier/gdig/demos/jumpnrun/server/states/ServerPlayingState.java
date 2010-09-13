@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.server.states;
+﻿package de.fhtrier.gdig.demos.jumpnrun.server.states;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -52,6 +52,13 @@ public class ServerPlayingState extends PlayingState {
 		SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
 		SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 50000, 0.2f,
 				false);
+	}
+
+	@Override
+	public void enter(GameContainer container, StateBasedGame game)
+			throws SlickException {
+		super.enter(container, game);
+		((Level) factory.getEntity(levelId)).init(true);
 	}
 
 	private boolean handlePlayerActions(QueryAction actionCmd) {

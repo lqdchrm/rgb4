@@ -194,6 +194,9 @@ public class ClientLobbyState extends NiftyGameState implements
 			}
 			game.enterState(GameStates.SERVER_SELECTION);
 		} else if (cmd instanceof AckSetLevel) {
+			if (Constants.Debug.networkDebug) {
+				Log.debug("Level: " + ((AckSetLevel) cmd).getNetworkLevel().getAssetPath());
+			}
 			selectLevel(((AckSetLevel) cmd).getNetworkLevel());
 		}
 	}

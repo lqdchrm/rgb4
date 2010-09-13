@@ -29,16 +29,13 @@ public class ServerHandler extends Thread {
 
 	public ServerHandler(Socket s, NetworkComponentImpl netComp) {
 		this.s = s;
-		
-		try
-		{
-		   this.s.setTcpNoDelay( true );
+
+		try {
+			this.s.setTcpNoDelay(true);
+		} catch (SocketException e) {
+			System.out.println("Could not set TCP_NODELAY Flag");
 		}
-		catch( SocketException e )
-		{
-           System.out.println( "Could not set TCP_NODELAY Flag" );			
-		}
-		
+
 		this.netComp = netComp;
 		this.networkId = -1;
 		try {

@@ -55,7 +55,7 @@ public abstract class NetworkComponent {
 			this.listeners.add(l);
 		}
 	}
-	
+
 	public void removeListener(INetworkCommandListener l) {
 		listeners.remove(l);
 	}
@@ -64,7 +64,7 @@ public abstract class NetworkComponent {
 
 	/* server */
 
-	public abstract void startListening( InterfaceAddress ni, int port);
+	public abstract void startListening(InterfaceAddress ni, int port);
 
 	public abstract void stopListening();
 

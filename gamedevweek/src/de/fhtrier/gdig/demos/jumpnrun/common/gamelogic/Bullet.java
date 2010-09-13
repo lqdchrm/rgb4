@@ -21,7 +21,6 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
