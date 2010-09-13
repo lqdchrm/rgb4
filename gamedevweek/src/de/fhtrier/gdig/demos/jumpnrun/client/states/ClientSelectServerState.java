@@ -189,6 +189,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 	public void leave(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		super.leave(container, game);
+		networkLobby.stopGetServers();
 	}
 
 	@Override
@@ -325,5 +326,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 			});
 		}
 	}
+	
+
 
 }
