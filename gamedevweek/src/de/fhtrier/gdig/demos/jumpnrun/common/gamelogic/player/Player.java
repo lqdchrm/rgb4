@@ -345,7 +345,16 @@ public class Player extends LevelCollidableEntity implements
 				// TODO tell server to create bullet
 				// TODO refactor PlayerAction to PlayerNetworkAction
 				NetworkComponent.getInstance().sendCommand(
-						new QueryAction(PlayerNetworkAction.SHOOT));
+				new QueryAction(PlayerNetworkAction.SHOOT));
+				applyAction(PlayerActions.StartShooting);
+			}
+			
+			if (InputControl.isRefKeyPressed(InputControl.REFFIRE2)) {
+
+				// TODO tell server to create bullet
+				// TODO refactor PlayerAction to PlayerNetworkAction
+				NetworkComponent.getInstance().sendCommand(
+				new QueryAction(PlayerNetworkAction.SHOOT_ROCKET));
 				applyAction(PlayerActions.StartShooting);
 			}
 
@@ -761,4 +770,5 @@ public class Player extends LevelCollidableEntity implements
 	public ParticleEntity getWeaponParticleEntity() {
 		return this.weaponParticles;
 	}
+	
 }

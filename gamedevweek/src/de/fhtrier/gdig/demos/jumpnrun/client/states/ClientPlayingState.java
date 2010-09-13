@@ -159,6 +159,7 @@ public class ClientPlayingState extends PlayingState {
 				getLevel().setCurrentPlayer(-1);
 			}
 
+
 			CollisionManager.removeEntity((CollidableEntity) getFactory()
 					.getEntity(id));
 			
@@ -166,6 +167,23 @@ public class ClientPlayingState extends PlayingState {
 
 			// remove Entity recursively from Factory
 			getFactory().removeEntity(id, true);
+
+//			// robindi: Bugfix, removeEntity from CollisionManager!
+//			CollisionManager.removeEntity((CollidableEntity) getFactory().getEntity(id));
+//			
+//			
+//			Entity entityToRemove = getFactory().getEntity(id);				
+//			if (entityToRemove==null && Constants.Debug.networkDebug)
+//			{
+//				Log.error("Tried to remove Entity with id="+id+" but this id was not known to factory!!!");
+//			}
+//			else
+//			{
+//				getLevel().remove(entityToRemove);
+//				// remove Entity recursively from Factory
+//				getFactory().removeEntity(id, true);
+//			}
+
 
 			return true;
 		}

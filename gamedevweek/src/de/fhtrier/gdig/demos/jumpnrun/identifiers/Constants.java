@@ -5,7 +5,6 @@ import java.net.InetSocketAddress;
 import org.newdawn.slick.Color;
 
 import de.fhtrier.gdig.engine.helpers.Configuration;
-
 public class Constants {
 
 	public static final float EPSILON = 0.0001f;

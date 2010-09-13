@@ -16,6 +16,7 @@ import org.newdawn.slick.util.Log;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryConnect;
 import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackground;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkHelper;
 import de.fhtrier.gdig.engine.network.IAddServerListener;
@@ -49,10 +50,10 @@ public class ClientSelectServerState extends NiftyGameState implements
 	private INetworkLobby networkLobby;
 	private boolean connecting = false;
 	private int counter = 0;
-	// private boolean startConnect = false;
 	private String currentConnectionIp = null;
 	private int currentConnectionPort = -1;
-
+	private int currentServerId = -1;
+	
 	private StateBasedGame game;
 
 	// gui-elements
@@ -165,18 +166,23 @@ public class ClientSelectServerState extends NiftyGameState implements
 					"mybutton" + count);
 			createButton.setHeight("30px");
 			createButton.setWidth("100%");
-			createButton.set("label", server.getName() + "(" + count + ","
-					+ server.getIp() + ")");
+			createButton.set("label", server.getName() + "(" + server.getIp() + ")");
 			createButton.setAlign("left");
 			// TODO setin real values
 			createButton.setInteractOnClick("chooseServer(" + count + ","
 					+ server.getIp() + "," + server.getPort() + ")");
 			ButtonControl bC = createButton.create(nifty,
 					nifty.getCurrentScreen(), guiServerPanel);
+			if (count==0 && currentConnectionIp==null) {
+				chooseServer("0", server.getIp().toString(), Integer.toString(server.getPort()));
+			}
 			count++;
 			serverButtons.add(bC);
 		}
 
+		setButton(currentServerId, serverButtons, new Color(1, 0, 0, 1),
+				new Color(1, 1, 1, 1));
+		
 		serverList.clear();
 
 		serverMutex.release();
@@ -237,6 +243,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 		networkLobby.getServers(iA);
 		currentConnectionIp = null;
 		currentConnectionPort = -1;
+		currentServerId=-1;
 	}
 
 	public void setButton(int nr, List<ButtonControl> buttons, Color setColor,
@@ -253,7 +260,10 @@ public class ClientSelectServerState extends NiftyGameState implements
 	public void chooseServer(String id, String ip, String port) {
 		this.currentConnectionIp = ip;
 		this.currentConnectionPort = Integer.parseInt(port);
-		Log.debug("set server-info to :" + ip + ":" + port);
+		this.currentServerId = Integer.parseInt(id);
+		if (Constants.Debug.guiDebug) {
+			Log.debug("set server-info to :" + ip + ":" + port);
+		}
 		networkLobby.stopGetServers();
 		setButton(Integer.parseInt(id), serverButtons, new Color(1, 0, 0, 1),
 				new Color(1, 1, 1, 1));
