@@ -62,10 +62,6 @@ public class RGB4 {
 			}
 
 			try {
-				fullscreen = false;
-				Settings.SCREENWIDTH = 800;
-				Settings.SCREENHEIGHT = 700;
-
 				AppGameContainer gc = new AppGameContainer(game);
 				gc.setDisplayMode(Settings.SCREENWIDTH, Settings.SCREENHEIGHT,
 						fullscreen);
