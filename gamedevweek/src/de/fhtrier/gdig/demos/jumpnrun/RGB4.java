@@ -28,48 +28,43 @@ public class RGB4 {
 		controlConfig.parseCommandLine(args);
 		gamePlayConstants.parseCommandLine(args);
 
-	
 		if (Constants.Debug.forceNoFBO)
 			GraphicsFactory.setUseFBO(false);
-		
 
 		// create game
 		RGB4Game game = Lobby.createGameByArgs(args);
 
 		// initialize (gfx) settings depending on game type
 		if (game != null) {
-			
+
 			boolean fullscreen = false;
 
 			if (game instanceof ClientGame && Settings.USE_NATIVE_FULLSCREEN) {
-				DisplayMode dm = GraphicsEnvironment.getLocalGraphicsEnvironment()
-						.getDefaultScreenDevice().getDisplayMode();
-				
-				if (dm.getWidth() >= dm.getHeight()*1.7f)
-				{
+				DisplayMode dm = GraphicsEnvironment
+						.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+						.getDisplayMode();
+
+				if (dm.getWidth() >= dm.getHeight() * 1.7f) {
 					Settings.SCREENWIDTH = 1280;
 					Settings.SCREENHEIGHT = 720;
-				}
-				else if (dm.getWidth() >= dm.getHeight()*1.5f)
-				{
+				} else if (dm.getWidth() >= dm.getHeight() * 1.5f) {
 					Settings.SCREENWIDTH = 1280;
 					Settings.SCREENHEIGHT = 800;
-				}
-				else if (dm.getWidth() == 1280 && dm.getHeight() == 1024)
-				{
+				} else if (dm.getWidth() == 1280 && dm.getHeight() == 1024) {
 					Settings.SCREENWIDTH = 1280;
 					Settings.SCREENHEIGHT = 1024;
-				}
-				else if (dm.getWidth() >= 1280)
-				{
+				} else if (dm.getWidth() >= 1280) {
 					Settings.SCREENWIDTH = 1280;
 					Settings.SCREENHEIGHT = 960;
 				}
-				
+
 				fullscreen = true;
 			}
 
 			try {
+				fullscreen = false;
+				Settings.SCREENWIDTH = 800;
+				Settings.SCREENHEIGHT = 700;
 
 				AppGameContainer gc = new AppGameContainer(game);
 				gc.setDisplayMode(Settings.SCREENWIDTH, Settings.SCREENHEIGHT,

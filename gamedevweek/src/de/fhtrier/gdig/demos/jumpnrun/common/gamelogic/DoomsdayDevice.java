@@ -3,7 +3,6 @@ package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 import java.util.Random;
 
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
@@ -106,22 +105,6 @@ public class DoomsdayDevice extends Entity {
 	}
 
 	private void explode() {
-		Log.info("EXPLODE");
-		int r = random.nextInt(3);
-		switch (r) {
-		case 0:
-			doomesdaydeviceExplosion.damageColor = StateColor.RED;
-			break;
-		case 1:
-			doomesdaydeviceExplosion.damageColor = StateColor.BLUE;
-			break;
-		case 2:
-			doomesdaydeviceExplosion.damageColor = StateColor.GREEN;
-			break;
-
-		default:
-			break;
-		}
 		doomesdaydeviceExplosion.activate();
 		resetChargetime();
 	}

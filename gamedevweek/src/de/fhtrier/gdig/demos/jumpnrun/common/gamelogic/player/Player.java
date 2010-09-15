@@ -609,16 +609,20 @@ public class Player extends LevelCollidableEntity implements
 	 */
 	public boolean doDamage(int colorolor, float damage, Player killer) {
 		boolean died = false;
-		if ((Constants.GamePlayConstants.friendyFire == true || // Friendly Fire
-																// or
-		killer.getPlayerCondition().getTeamId() != this.getPlayerCondition()
-				.getTeamId())) // Enemy
+		if (getPlayerCondition().getHealth() <= 0)
+			return false;
+		if (killer == null
+				|| (Constants.GamePlayConstants.friendyFire == true || // Friendly
+																		// Fire
+				// or
+				killer.getPlayerCondition().getTeamId() != this
+						.getPlayerCondition().getTeamId())) // Enemy
 		{
 			if (this.getPlayerColor() != colorolor) {
 				this.getPlayerCondition().setHealth(
 						getPlayerCondition().getHealth() - damage);
 
-				if (this.getPlayerCondition().getHealth() <= Constants.EPSILON) {
+				if (this.getPlayerCondition().getHealth() <= 0) {
 					NetworkComponent.getInstance().sendCommand(
 							new SendKill(this.getId(), killer != null ? killer
 									.getId() : -1));
@@ -629,7 +633,8 @@ public class Player extends LevelCollidableEntity implements
 				}
 
 				if (PlayingState.gameType == Constants.GameTypes.deathMatch) {
-					if (killer.getPlayerCondition().getKills() >= Constants.GamePlayConstants.winningKills_Deathmatch) {
+					if (killer != null
+							&& killer.getPlayerCondition().getKills() >= Constants.GamePlayConstants.winningKills_Deathmatch) {
 						NetworkComponent.getInstance().sendCommand(
 								new SendWon(killer.getId(),
 										SendWon.winnerType_Player));

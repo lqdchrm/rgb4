@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Set;
 
 import org.newdawn.slick.Color;
@@ -38,6 +39,7 @@ public class DomsDayDeviceBigExplosion extends Entity {
 	private int timeScincActivation = 0;
 
 	AssetMgr asset = new AssetMgr();
+	private Random random;
 
 	public void setLevel(Level level) {
 		this.level = level;
@@ -48,6 +50,7 @@ public class DomsDayDeviceBigExplosion extends Entity {
 			throws IOException {
 		super(id, EntityType.DOOMSDAYDEVICEEXPLOSION);
 
+		random = new Random();
 		try {
 			asset.storeImage(Assets.DoomsdayBigExplosionImageId,
 					Assets.DoomsdayBigExplosionImagePath);
@@ -67,6 +70,21 @@ public class DomsDayDeviceBigExplosion extends Entity {
 		maxRadius = 0;
 		timeScincActivation = 0;
 		hitedPlayer.clear();
+		int r = random.nextInt(3);
+		switch (r) {
+		case 0:
+			damageColor = StateColor.RED;
+			break;
+		case 1:
+			damageColor = StateColor.BLUE;
+			break;
+		case 2:
+			damageColor = StateColor.GREEN;
+			break;
+
+		default:
+			break;
+		}
 		setVisible(true);
 		return true;
 	}
