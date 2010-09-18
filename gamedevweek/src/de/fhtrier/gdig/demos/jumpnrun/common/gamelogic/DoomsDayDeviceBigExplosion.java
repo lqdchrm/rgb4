@@ -10,6 +10,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
@@ -21,7 +22,7 @@ import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.helpers.Configuration;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 
-public class DomsDayDeviceBigExplosion extends Entity {
+public class DoomsDayDeviceBigExplosion extends Entity {
 
 	private Options options;
 	private boolean isDDDActive = false;
@@ -43,7 +44,7 @@ public class DomsDayDeviceBigExplosion extends Entity {
 
 	}
 
-	public DomsDayDeviceBigExplosion(int id, GameFactory factory)
+	public DoomsDayDeviceBigExplosion(int id, GameFactory factory)
 			throws SlickException {
 		super(id, EntityType.DOOMSDAYDEVICEEXPLOSION);
 
@@ -149,12 +150,13 @@ public class DomsDayDeviceBigExplosion extends Entity {
 			float playerPosX = player.getTransformedBounds().getCenterX();
 			float playerPosY = player.getTransformedBounds().getCenterY();
 			
-			float playerdistance = (playerPosX - getData()[X])
-							* (playerPosX - getData()[X])
-							+ (playerPosY - getData()[Y])
-							* (playerPosY - getData()[Y]);
+			float playerdistance = 
+				(playerPosX - getData()[X]) * (playerPosX - getData()[X]) +
+				(playerPosY - getData()[Y]) * (playerPosY - getData()[Y]);
 
-			if (playerdistance >= outerRadius-options.hitSizeSqrd && playerdistance <= outerRadius) {
+			float hitDistance = (outerRadius-options.hitSize) * (outerRadius-options.hitSize);
+			
+			if (playerdistance >= hitDistance && playerdistance <= (outerRadius*outerRadius) ) {
 				if (!player.doDamage(damageColor, options.damage, null))
 					hitPlayer.add(player);
 
@@ -215,7 +217,7 @@ public class DomsDayDeviceBigExplosion extends Entity {
 		int timeUntilDetonation = 1230;
 		float size = 400f;
 		float speed = 400f;
-		float hitSizeSqrd = 250f;
+		float hitSize = 120f;
 		float damage = 0.5f;
 	}
 }

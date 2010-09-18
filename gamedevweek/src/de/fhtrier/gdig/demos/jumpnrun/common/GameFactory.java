@@ -3,7 +3,7 @@ package de.fhtrier.gdig.demos.jumpnrun.common;
 import org.newdawn.slick.SlickException;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Bullet;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.DomsDayDeviceBigExplosion;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.DoomsDayDeviceBigExplosion;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.DoomsdayDevice;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Teleporter;
@@ -41,7 +41,7 @@ public class GameFactory extends Factory {
 				add(newBullet);
 				return id;
 			case DOOMSDAYDEVICEEXPLOSION:
-				DomsDayDeviceBigExplosion newDoomsdaydeviceExplosion = new DomsDayDeviceBigExplosion(
+				DoomsDayDeviceBigExplosion newDoomsdaydeviceExplosion = new DoomsDayDeviceBigExplosion(
 						id, this);
 				add(newDoomsdaydeviceExplosion);
 				return id;

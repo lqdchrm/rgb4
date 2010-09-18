@@ -28,7 +28,7 @@ public class DoomsdayDevice extends Entity {
 	private GameFactory factory;
 	private Level level;
 
-	private DomsDayDeviceBigExplosion doomesdaydeviceExplosion;
+	private DoomsDayDeviceBigExplosion doomesdaydeviceExplosion;
 
 	public DoomsdayDevice(int id, GameFactory factory) throws SlickException {
 		super(id, EntityType.DOOMSDAYDEVICE);
@@ -57,7 +57,7 @@ public class DoomsdayDevice extends Entity {
 	public void initServer() {
 		int doomsDayDeviceID = factory
 				.createEntity(EntityType.DOOMSDAYDEVICEEXPLOSION);
-		doomesdaydeviceExplosion = (DomsDayDeviceBigExplosion) factory
+		doomesdaydeviceExplosion = (DoomsDayDeviceBigExplosion) factory
 				.getEntity(doomsDayDeviceID);
 		level.add(doomesdaydeviceExplosion);
 		doomesdaydeviceExplosion.getData()[X] = getData(X);
