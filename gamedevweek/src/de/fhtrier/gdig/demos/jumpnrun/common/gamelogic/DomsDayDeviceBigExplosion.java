@@ -1,6 +1,5 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -12,9 +11,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
-import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.DoomsdayDeviceExplosionData;
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
+import de.fhtrier.gdig.demos.jumpnrun.common.network.DoomsdayDeviceExplosionData;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
@@ -25,18 +24,16 @@ import de.fhtrier.gdig.engine.management.AssetMgr;
 public class DomsDayDeviceBigExplosion extends Entity {
 
 	private Options options;
-	private boolean isActive = false;
+	private boolean isDDDActive = false;
 
 	private Level level;
 
-	private float minRadius = 0;
+	private float outerRadius = 0;
 
-	private float maxRadius = 0;
-
-	private Set<Player> hitedPlayer = new HashSet<Player>();
+	private Set<Player> hitPlayer = new HashSet<Player>();
 
 	public int damageColor = StateColor.RED;
-	private int timeScincActivation = 0;
+	private int timeSinceActivation = 0;
 
 	AssetMgr asset = new AssetMgr();
 	private Random random;
@@ -47,30 +44,32 @@ public class DomsDayDeviceBigExplosion extends Entity {
 	}
 
 	public DomsDayDeviceBigExplosion(int id, GameFactory factory)
-			throws IOException {
+			throws SlickException {
 		super(id, EntityType.DOOMSDAYDEVICEEXPLOSION);
 
 		random = new Random();
-		try {
-			asset.storeImage(Assets.DoomsdayBigExplosionImageId,
-					Assets.DoomsdayBigExplosionImagePath);
-		} catch (SlickException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		asset.storeImage(Assets.DoomsdayBigExplosionImageId,
+				Assets.DoomsdayBigExplosionImagePath);
+
 		options = new Options();
 		options.showEditor("DOOM");
 	}
 
 	public boolean activate() {
-		if (isActive)
+		if (isDDDActive) {
 			return false;
-		isActive = true;
-		minRadius = 0;
-		maxRadius = 0;
-		timeScincActivation = 0;
-		hitedPlayer.clear();
+		}
+
+		isDDDActive = true;
+
+		outerRadius = 0;
+
+		timeSinceActivation = 0;
+		hitPlayer.clear();
+
 		int r = random.nextInt(3);
+
 		switch (r) {
 		case 0:
 			damageColor = StateColor.RED;
@@ -93,19 +92,21 @@ public class DomsDayDeviceBigExplosion extends Entity {
 	protected void renderImpl(Graphics graphicContext, Image frameBuffer) {
 		super.renderImpl(graphicContext, frameBuffer);
 
-		// Hack Position of Doomsdaydevice
-
-		if (!isActive)
+		if (!isDDDActive) {
 			return;
+		}
+
 		Color constIntoColor = StateColor.constIntoColor(damageColor);
 		graphicContext.drawImage(asset
-				.getImage(Assets.DoomsdayBigExplosionImageId), -maxRadius,
-				-maxRadius, maxRadius, maxRadius, 0, 0,
+				.getImage(Assets.DoomsdayBigExplosionImageId), -outerRadius,
+				-outerRadius, outerRadius, outerRadius, 0, 0,
 				asset.getImage(Assets.DoomsdayBigExplosionImageId).getWidth(),
 				asset.getImage(Assets.DoomsdayBigExplosionImageId).getHeight(),
 				new Color(constIntoColor.r, constIntoColor.g, constIntoColor.b,
 						0.5f));
-		graphicContext.flush();
+		
+		// TODO should not be necessary
+		// graphicContext.flush();
 	}
 
 	@Override
@@ -114,72 +115,65 @@ public class DomsDayDeviceBigExplosion extends Entity {
 
 		float secs = deltaInMillis / 1000.0f;
 
-		if (!isActive())
+		if (!isActive() || level == null || !isDDDActive) {
 			return;
+		}
 
-		if (level == null)
+		timeSinceActivation += deltaInMillis;
+
+		if (options.timeUntilDetonation > timeSinceActivation) {
 			return;
+		}
 
-		if (!isActive)
-			return;
+		this.outerRadius += options.speed * secs;
 
-		timeScincActivation += deltaInMillis;
-		if (options.timeToDatonate > timeScincActivation)
-			return;
-		this.maxRadius += options.speed * secs;
-		this.minRadius = Math.max(maxRadius - options.size, 0);
 
-		float maxDistance = maxRadius;
-		// achtung der Kollisions bereich ist 10 nicht 100 pixel breit. (10*10)
-		float minDistance = maxDistance - 100f;
-
-		Set<Entity> children = new HashSet<Entity>(level.getChildren());
-
+		// determine which entities to check
 		Set<Player> players = new HashSet<Player>();
-
 		Queue<Entity> queue = new LinkedList<Entity>();
 
-		queue.addAll(children);
+		queue.addAll(level.getChildren());
 		while (!queue.isEmpty()) {
 			Entity entity = queue.poll();
 			queue.addAll(entity.getChildren());
 			if (entity instanceof Player)
 				players.add((Player) entity);
 		}
+		
+		// check each player for hit and if so, mark it
 		for (Player player : players) {
-			if (hitedPlayer.contains(player))
+			if (hitPlayer.contains(player)) {
 				continue;
+			}
+			
 			float playerPosX = player.getTransformedBounds().getCenterX();
 			float playerPosY = player.getTransformedBounds().getCenterY();
-			float playerdistance = (float) Math
-					.sqrt((playerPosX - getData()[X])
+			
+			float playerdistance = (playerPosX - getData()[X])
 							* (playerPosX - getData()[X])
 							+ (playerPosY - getData()[Y])
-							* (playerPosY - getData()[Y]));
-			// System.out.println(minDistance + " " + maxDistance);
-			if (playerdistance >= minDistance && playerdistance <= maxDistance) {
-				if (!player.doDamage(damageColor, 0.5f, null))
-					hitedPlayer.add(player);
+							* (playerPosY - getData()[Y]);
+
+			if (playerdistance >= outerRadius-options.hitSizeSqrd && playerdistance <= outerRadius) {
+				if (!player.doDamage(damageColor, options.damage, null))
+					hitPlayer.add(player);
 
 			}
 		}
 
+		// Calculate when to wear off
 		float left = -getData()[X];
 		float right = level.getWidth() - getData()[X];
 		float top = -getData()[Y];
 		float bottom = level.getWidth() - getData()[Y];
-
-		float leftTop = left * left + top * top;
-		float leftBottom = left * left + bottom * bottom;
-		float rightTop = right * right + top * top;
-		float rightBottom = right * right + bottom * bottom;
-		float distanceToLastVisible = minRadius * minRadius;
-
-		if (leftTop < distanceToLastVisible
-				&& leftBottom < distanceToLastVisible
-				&& rightBottom < distanceToLastVisible
-				&& rightTop < distanceToLastVisible) {
-			isActive = false;
+		
+		float innerRadiusSqrd = (outerRadius-options.size) * (outerRadius-options.size);
+		float maxLevelDistX = Math.max(left, right);
+		float maxLevelDistY = Math.max(top, bottom);
+		float maxLevelDist = maxLevelDistX * maxLevelDistX + maxLevelDistY * maxLevelDistY;
+		
+		if (innerRadiusSqrd > maxLevelDist) {
+			isDDDActive = false;
 			setVisible(false);
 		}
 	}
@@ -189,10 +183,10 @@ public class DomsDayDeviceBigExplosion extends Entity {
 		DoomsdayDeviceExplosionData result = (DoomsdayDeviceExplosionData) super
 				.getNetworkData();
 		result.damageColor = damageColor;
-		result.data = getData();
-		result.isActive = isActive;
-		result.maxRadius = maxRadius;
-		return super.getNetworkData();
+		result.isActive = isDDDActive;
+		result.outerRadius = outerRadius;
+		
+		return result;
 	}
 
 	@Override
@@ -202,8 +196,8 @@ public class DomsDayDeviceBigExplosion extends Entity {
 			DoomsdayDeviceExplosionData result = (DoomsdayDeviceExplosionData) networkData;
 
 			damageColor = result.damageColor;
-			isActive = result.isActive;
-			maxRadius = result.maxRadius;
+			isDDDActive = result.isActive;
+			outerRadius = result.outerRadius;
 		} else {
 			throw new IllegalArgumentException("Wrong package type received");
 		}
@@ -218,9 +212,10 @@ public class DomsDayDeviceBigExplosion extends Entity {
 		/**
 		 * Time in Millseconds till detonation after Activation.
 		 */
-		int timeToDatonate = 1230;
+		int timeUntilDetonation = 1230;
 		float size = 400f;
 		float speed = 400f;
-
+		float hitSizeSqrd = 250f;
+		float damage = 0.5f;
 	}
 }

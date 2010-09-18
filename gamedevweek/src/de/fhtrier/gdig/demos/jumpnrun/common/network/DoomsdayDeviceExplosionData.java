@@ -1,10 +1,10 @@
-package de.fhtrier.gdig.demos.jumpnrun.client.network.protocol;
+package de.fhtrier.gdig.demos.jumpnrun.common.network;
 
-import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 
 public class DoomsdayDeviceExplosionData extends NetworkData {
 
-	public float maxRadius;
+	private static final long serialVersionUID = -2106837252361280741L;
+	public float outerRadius;
 	public int damageColor;
 	public boolean isActive;
 

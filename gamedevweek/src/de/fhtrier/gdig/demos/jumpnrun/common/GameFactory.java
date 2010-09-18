@@ -1,7 +1,5 @@
 package de.fhtrier.gdig.demos.jumpnrun.common;
 
-import java.io.IOException;
-
 import org.newdawn.slick.SlickException;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Bullet;
@@ -58,9 +56,6 @@ public class GameFactory extends Factory {
 				return id;
 			}
 		} catch (SlickException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

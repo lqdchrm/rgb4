@@ -18,6 +18,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.GameSoundManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.RGB4Game;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
+import de.fhtrier.gdig.engine.helpers.Configuration;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 
 public class ClientGame extends RGB4Game {
@@ -50,7 +51,7 @@ public class ClientGame extends RGB4Game {
 		
 		Constants.SoundConfig c4 = new Constants.SoundConfig();
 		
-		c1.showEditor("ClientSettings",
+		Configuration.showEditor("ClientSettings",
 				new JPanel[] {
 					c1.getEdittingPanel(),
 					c2.getEdittingPanel(),
