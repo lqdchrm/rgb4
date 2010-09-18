@@ -48,8 +48,7 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 		// read the nifty-xml-file
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
-		
-		
+
 		// show the mouse
 		enableMouseImage(new Image(
 				ResourceLoader.getResourceAsStream(CROSSHAIR_PNG),

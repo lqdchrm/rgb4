@@ -36,6 +36,7 @@ public class ClientGame extends RGB4Game {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
 		NetworkComponent.createClientInstance();
 		NetworkComponent.getInstance().addListener(this);
 
