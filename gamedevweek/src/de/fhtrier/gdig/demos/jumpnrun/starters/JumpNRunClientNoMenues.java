@@ -14,8 +14,9 @@ public class JumpNRunClientNoMenues {
 	
 	/**
 	 * @param args
+	 * @throws SlickException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SlickException {
 
 		ClientGame clientGame = Lobby.configDebugClient();
 			

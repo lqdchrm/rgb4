@@ -20,10 +20,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
-import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
@@ -36,13 +33,13 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoPlaySound;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeColor;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeWeaponColor;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
@@ -83,9 +80,6 @@ public class ClientPlayingState extends PlayingState {
 
 		// InputControl initialisieren
 		InputControl.loadKeyMapping();
-
-		// init Sound
-		SoundManager.init();
 	}
 
 	private boolean handleProtocolCommands(INetworkCommand cmd) {
@@ -108,12 +102,11 @@ public class ClientPlayingState extends PlayingState {
 				// we are only spectator -> don't create player
 				setState(LocalState.PLAYING);
 			}
-			
-			
 			SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
 			SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
-			SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 50000, 0.2f, false);
-			
+			SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 50000,
+					0.2f, false);
+
 			return true;
 		}
 
@@ -164,11 +157,11 @@ public class ClientPlayingState extends PlayingState {
 					&& id == getLevel().getCurrentPlayer().getId()) {
 				getLevel().setCurrentPlayer(-1);
 			}
-			
 
 			// robindi: Bugfix, removeEntity from CollisionManager!
-			CollisionManager.removeEntity((CollidableEntity) getFactory().getEntity(id));
-			
+			CollisionManager.removeEntity((CollidableEntity) getFactory()
+					.getEntity(id));
+
 			getLevel().remove(getFactory().getEntity(id));
 
 			// remove Entity recursively from Factory
@@ -176,11 +169,11 @@ public class ClientPlayingState extends PlayingState {
 
 			return true;
 		}
-		
+
 		// DoPlaySound... well it just does what it says
 		if (cmd instanceof DoPlaySound) {
 			DoPlaySound dps = (DoPlaySound) cmd;
-			
+
 			SoundManager.playSound(dps.getSoundAssetId());
 			return true;
 		}
@@ -195,14 +188,10 @@ public class ClientPlayingState extends PlayingState {
 			AckCreateEntity acp = (AckCreateEntity) cmd;
 			int playerId = acp.getEntityId();
 
-			Entity player = getFactory().getEntity(playerId);
+			Player player = (Player)getFactory().getEntity(playerId);
 
 			this.getLevel().setCurrentPlayer(acp.getEntityId());
-
-			Level level = getLevel();
-			SpawnPoint randomSpawnPoint = level.getRandomSpawnPoint(1);
-			player.getData()[Entity.X] = randomSpawnPoint.x;
-			player.getData()[Entity.Y] = randomSpawnPoint.y;
+			player.respawn();
 
 			// we got a player, now we can start :-)
 			setState(LocalState.PLAYING);
@@ -211,27 +200,25 @@ public class ClientPlayingState extends PlayingState {
 
 		if (cmd instanceof SendKill) {
 			SendKill killCommand = (SendKill) cmd;
-			
-			Event dieEvent = new PlayerDiedEvent(getLevel().getPlayer(killCommand.getPlayerId()), getLevel().getPlayer(killCommand.getKillerId()));
-			EventManager.addEvent(dieEvent);
-			
-			Player player = getLevel().getPlayer(killCommand.getPlayerId());
 
+			Player player = getLevel().getPlayer(killCommand.getPlayerId());
 			player.die();
+
 			return true;
 		}
 
 		if (cmd instanceof SendWon) {
 			SendWon wonCommand = (SendWon) cmd;
-			
+
 			Event winEvent;
 			if (wonCommand.getWinnerType() == SendWon.winnerType_Player) {
-				winEvent = new WonGameEvent(getLevel().getPlayer(wonCommand.getWinnerId()));
+				winEvent = new WonGameEvent(getLevel().getPlayer(
+						wonCommand.getWinnerId()));
+			} else { // Team is Winner
+				winEvent = new WonGameEvent(Team.getTeamById(wonCommand
+						.getWinnerId()));
 			}
-			else { // Team is Winner
-				winEvent = new WonGameEvent(Team.getTeamById(wonCommand.getWinnerId()));
-			}
-			
+
 			EventManager.addEvent(winEvent);
 			return true;
 		}
@@ -252,8 +239,8 @@ public class ClientPlayingState extends PlayingState {
 			return true;
 		}
 
-		if (cmd instanceof AckPlayerCondition) {
-			AckPlayerCondition sspn = (AckPlayerCondition) cmd;
+		if (cmd instanceof SendPlayerCondition) {
+			SendPlayerCondition sspn = (SendPlayerCondition) cmd;
 
 			Player player = getLevel().getPlayer(sspn.getPlayerId());
 			player.setPlayerCondition(sspn.getPlayerCondition());

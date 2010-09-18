@@ -14,8 +14,12 @@ public class ImageEntity extends AssetEntity {
 	@Override
 	public void renderImpl(Graphics graphicContext, Image frameBuffer) {
 		if (isVisible()) {
-			graphicContext.drawImage(getAssetMgr().getImage(getAssetId()), 0, 0, this.getColorTint());	// 0 0
+			graphicContext.drawImage(getImageAsset(), 0, 0, this.getColorTint());
 		}
 		super.renderImpl(graphicContext, frameBuffer);
+	}
+	
+	public Image getImageAsset() {
+		return getAssetMgr().getImage(getAssetId());
 	}
 }

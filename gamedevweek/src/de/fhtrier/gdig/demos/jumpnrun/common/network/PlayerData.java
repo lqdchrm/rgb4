@@ -1,19 +1,47 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.network;
 
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActionState;
 
 public class PlayerData extends NetworkData {
+
+
+	private static final long serialVersionUID = -3776997774121122797L;
+
+	private int animationEntityId;
+	public int color;
+	public int weaponColor;
 
 	public PlayerData(int id) {
 		super(id);
 	}
 
-	private static final long serialVersionUID = -3776997774121122797L;
 
-	public PlayerActionState state;
+	public int getAnimationEntityId() {
+		return animationEntityId;
+	}
+	
+	public void setAnimationEntityId(int state) {
+		this.animationEntityId = state;
+	}
+	
+	public int getColor() {
+		return color;
+	}
 
-	public PlayerActionState getState() {
-		return state;
+	public int getWeaponColor() {
+		return weaponColor;
+	}
+	
+	public void setColor(int color) {
+		this.color = color;
+	}
+	
+	public void setWeaponColor(int weaponColor) {
+		this.weaponColor = weaponColor;
+	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + " | Id: " + animationEntityId + " | Color: " + color + " | WeaponColor: " + weaponColor;
 	}
 
 }

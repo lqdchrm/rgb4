@@ -35,7 +35,7 @@ public class ClientHandler extends Thread {
 		}
 		catch( SocketException e )
 		{
-           System.out.println( "Could not set TCP_NODELAY Flag" );			
+           Log.error( "Could not set TCP_NODELAY Flag" );			
 		}
 		
 		this.netComp = netComp;
@@ -47,7 +47,6 @@ public class ClientHandler extends Thread {
 			this.in = new ObjectInputStream(s.getInputStream());
 		} catch (IOException e) {
 			Log.error("Getting streams from client failed.");
-			e.printStackTrace();
 		}
 	}
 
@@ -65,7 +64,7 @@ public class ClientHandler extends Thread {
 			this.out.close();
 			this.s.close();
 		} catch (SocketException e) {
-		    System.out.println( "Client disconnected unexpectedly" );
+		    Log.debug( "Client disconnected unexpectedly" );
 		} catch (EOFException e) {
 			//??WTF??
 		} catch (IOException e) {

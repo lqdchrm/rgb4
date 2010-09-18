@@ -11,6 +11,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.states.ClientLobbyState;
 import de.fhtrier.gdig.demos.jumpnrun.client.states.ClientMenuState;
 import de.fhtrier.gdig.demos.jumpnrun.client.states.ClientPlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.client.states.ClientSelectServerState;
+import de.fhtrier.gdig.demos.jumpnrun.common.GameSoundManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.RGB4Game;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
@@ -22,11 +23,13 @@ public class ClientGame extends RGB4Game {
 	public static String nameOrIp = "localhost";
 	public static boolean isSpectator = false;
 
-	public ClientGame() {
+	public ClientGame() throws SlickException {
 		super(Assets.Config.GameTitle);
 
 		NetworkComponent.createClientInstance();
 		NetworkComponent.getInstance().addListener(this);
+		
+		GameSoundManager.init(true);
 
 		Constants.GamePlayConstants c1 = new Constants.GamePlayConstants();
 
@@ -34,11 +37,15 @@ public class ClientGame extends RGB4Game {
 		
 		Constants.Debug c3 = new Constants.Debug();
 		
+		Constants.SoundConfig c4 = new Constants.SoundConfig();
+		
 		c1.showEditor("ClientSettings",
 				new JPanel[] {
 					c1.getEdittingPanel(),
 					c2.getEdittingPanel(),
-					c3.getEdittingPanel()});
+					c3.getEdittingPanel(),
+					c4.getEdittingPanel()}
+		);
 	}
 
 	@Override

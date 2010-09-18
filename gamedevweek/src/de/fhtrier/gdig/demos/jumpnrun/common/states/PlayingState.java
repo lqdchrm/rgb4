@@ -122,9 +122,6 @@ public abstract class PlayingState extends BasicGameState implements
 			{
 				Log.error(e);
 			}
-//			container.setVSync(true);
-//			container.setSmoothDeltas(true);
-//			container.setMaximumLogicUpdateInterval(17);
 			container.setPaused(false);
 		}
 
@@ -139,13 +136,14 @@ public abstract class PlayingState extends BasicGameState implements
 		{
 			level.handleInput(input);
 			level.update(deltaInMillis);
-			
-			EventManager.update();
+		
 			
 			// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2. Zeile
 			// Den Objekten gesagt wird die Kollision zu behandeln.
 			CollisionManager.update();
 			level.handleCollisions();
+		
+			EventManager.update();
 		}
 	}
 

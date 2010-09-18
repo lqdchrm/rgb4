@@ -43,15 +43,15 @@ public class PlayerActionFSM extends FiniteStateMachine<PlayerActionState, Playe
 		
 		// register: running falling
 		add(PlayerActionState.Running, PlayerActions.Fall, PlayerActionState.Falling);
-		add(PlayerActionState.ShootRunning, PlayerActions.Fall, PlayerActionState.FallShooting);
+		add(PlayerActionState.ShootRunning, PlayerActions.Fall, PlayerActionState.ShootFalling);
 		add(PlayerActionState.Falling, PlayerActions.Land, PlayerActionState.Landing);
-		add(PlayerActionState.FallShooting, PlayerActions.Land, PlayerActionState.Landing);
+		add(PlayerActionState.ShootFalling, PlayerActions.Land, PlayerActionState.Landing);
 		add(PlayerActionState.Standing, PlayerActions.Fall, PlayerActionState.Falling);
-		add(PlayerActionState.ShootStanding, PlayerActions.Fall, PlayerActionState.FallShooting);
+		add(PlayerActionState.ShootStanding, PlayerActions.Fall, PlayerActionState.ShootFalling);
 		
 		// dying
 		add(PlayerActionState.Falling, PlayerActions.Die, PlayerActionState.Dying);
-		add(PlayerActionState.FallShooting, PlayerActions.Die, PlayerActionState.Dying);
+		add(PlayerActionState.ShootFalling, PlayerActions.Die, PlayerActionState.Dying);
 		add(PlayerActionState.Jumping, PlayerActions.Die, PlayerActionState.Dying);
 		add(PlayerActionState.Landing, PlayerActions.Die, PlayerActionState.Dying);
 		add(PlayerActionState.Running, PlayerActions.Die, PlayerActionState.Dying);
@@ -61,7 +61,8 @@ public class PlayerActionFSM extends FiniteStateMachine<PlayerActionState, Playe
 		add(PlayerActionState.Standing, PlayerActions.Die, PlayerActionState.Dying);
 		
 		// recover
-		add(PlayerActionState.Dying, PlayerActions.Revive, PlayerActionState.Standing);
+		add(PlayerActionState.Dying, PlayerActions.Revive, PlayerActionState.Reviving);
+		add(PlayerActionState.Reviving, PlayerActions.DoNothing, PlayerActionState.Standing);
 		
 		//		add(PlayerActionState.Standing, PlayerActions.Fall, PlayerActionState.Falling);
 //		add(PlayerActionState.Running, PlayerActions.Jump, PlayerActionState.Jumping);

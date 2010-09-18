@@ -17,7 +17,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerConditi
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Bullet;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.PlayerCondition;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.QueryRespawn;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
@@ -27,11 +27,9 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckJoin;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckLeave;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeColor;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeWeaponColor;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendPlayerCondition;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
@@ -63,19 +61,6 @@ public class ServerPlayingState extends PlayingState {
 		Player player = (Player) getFactory().getEntity(playerId);
 
 		switch (actionCmd.getAction()) {
-		// case DROPGEM:
-		// e = createEntity(EntityType.GEM);
-		//
-		// // set values
-		// MoveableEntity gem = (MoveableEntity) e;
-		//
-		// // set player pos as gem pos
-		// gem.getData()[Entity.X] = player.getData()[Entity.X];
-		// gem.getData()[Entity.Y] = player.getData()[Entity.Y];
-		// gem.getVel()[Entity.X] = player.getVel()[Entity.X];
-		// gem.getVel()[Entity.Y] = player.getVel()[Entity.Y] - 50.0f;
-		//
-		// return true;
 		case SHOOT:
 			e = createEntity(EntityType.BULLET);
 
@@ -83,9 +68,7 @@ public class ServerPlayingState extends PlayingState {
 			Bullet bullet = (Bullet) e;
 			bullet.owner = player;
 
-			PlayerCondition state = player.getPlayerCondition();
-
-			bullet.color = state.weaponColor;
+			bullet.color = player.getWeaponColor();
 			// set player pos as gem pos
 			bullet.getData()[Entity.X] = (player.getData()[Entity.X] + player
 					.getData()[Entity.CENTER_X])
@@ -108,19 +91,18 @@ public class ServerPlayingState extends PlayingState {
 				bullet.getData()[Entity.SCALE_X] = 1;
 
 			return true;
-		case PLAYERCOLOR:
-			player.nextColor();
-			NetworkComponent.getInstance().sendCommand(
-					new SendChangeColor(player.getId()));
+		case RESPAWN:
+			if (actionCmd instanceof QueryRespawn) {
+				QueryRespawn tmpCmd = (QueryRespawn) actionCmd;
 
-			return true;
-		case WEAPONCOLOR:
-			player.nextWeaponColor();
-			NetworkComponent.getInstance().sendCommand(
-					new SendChangeWeaponColor(player.getId()));
+				int tmpId = tmpCmd.getPlayerId();
+				Player tmpPlayer = (Player) getFactory().getEntity(tmpId);
 
-			return true;
-		case UPDATECONDITION:
+				tmpPlayer.getPlayerCondition().setHealth(
+						Constants.GamePlayConstants.initialPlayerHealth);
+			}
+			break;
+		case QUERYPLAYERCONDITION:
 			// HACK query for any player
 			if (actionCmd instanceof QueryPlayerCondition) {
 
@@ -131,7 +113,7 @@ public class ServerPlayingState extends PlayingState {
 
 				NetworkComponent.getInstance().sendCommand(
 						actionCmd.getSender(),
-						new AckPlayerCondition(tmpId, tmpPlayer
+						new SendPlayerCondition(tmpId, tmpPlayer
 								.getPlayerCondition()));
 
 				return true;
@@ -219,8 +201,8 @@ public class ServerPlayingState extends PlayingState {
 				int teamID = ServerLobbyState.players.get(cmd.getSender())
 						.getTeamId();
 
-				e.getPlayerCondition().name = name;
-				e.getPlayerCondition().teamId = teamID;
+				e.getPlayerCondition().setName(name);
+				e.getPlayerCondition().setTeamId(teamID);
 
 			} else {
 				throw new RuntimeException(
