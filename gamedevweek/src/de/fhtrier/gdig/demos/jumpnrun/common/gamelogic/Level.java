@@ -10,6 +10,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.Log;
 
+import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
@@ -455,44 +456,44 @@ public class Level extends MoveableEntity {
 	public void handleInput(Input input) {
 		if (isActive()) {
 
-//			// Left / Right
-//			if (!input.isKeyDown(Input.KEY_A) && !input.isKeyDown(Input.KEY_D)) {
-//				getVel()[X] = 0.0f;
-//			}
-//			if (input.isKeyDown(Input.KEY_A)) {
-//				getVel()[X] = 600.0f;
-//			}
-//			if (input.isKeyDown(Input.KEY_D)) {
-//				getVel()[X] = -600.0f;
-//			}
-//
-//			// Up / Down
-//			if (!input.isKeyDown(Input.KEY_W) && !input.isKeyDown(Input.KEY_S)) {
-//				getVel()[Y] = 0.0f;
-//			}
-//
-//			if (input.isKeyDown(Input.KEY_W)) {
-//				getVel()[Y] = 600.0f;
-//			}
-//
-//			if (input.isKeyDown(Input.KEY_S)) {
-//				getVel()[Y] = -600.0f;
-//			}
-//
-//			// Zoom
-//			if (!input.isKeyDown(Input.KEY_R) && !input.isKeyDown(Input.KEY_F)) {
-//				getVel()[SCALE_X] = getVel()[SCALE_Y] = 0.0f;
-//			}
-//
-//			if (input.isKeyDown(Input.KEY_R)) {
-//				getVel()[SCALE_X] = getVel()[SCALE_Y] = 1;
-//			}
-//
-//			if (input.isKeyDown(Input.KEY_F)) {
-//				getVel()[SCALE_X] = getVel()[SCALE_Y] = -1;
-//			}
-//
-//			// Rotation
+			// Left / Right
+			if (!InputControl.isRefKeyDown(InputControl.REFSCROLLLEFT) && !InputControl.isRefKeyDown(InputControl.REFSCROLLRIGHT)) {
+				getVel()[X] = 0.0f;
+			}
+			if (InputControl.isRefKeyDown(InputControl.REFSCROLLRIGHT)) {
+				getVel()[X] = 600.0f;
+			}
+			if (InputControl.isRefKeyDown(InputControl.REFSCROLLLEFT)) {
+				getVel()[X] = -600.0f;
+			}
+
+			// Up / Down
+			if (!InputControl.isRefKeyDown(InputControl.REFSCROLLUP) && !InputControl.isRefKeyDown(InputControl.REFSCROLLDOWN)) {
+				getVel()[Y] = 0.0f;
+			}
+
+			if (InputControl.isRefKeyDown(InputControl.REFSCROLLDOWN)) {
+				getVel()[Y] = 600.0f;
+			}
+
+			if (InputControl.isRefKeyDown(InputControl.REFSCROLLUP)) {
+				getVel()[Y] = -600.0f;
+			}
+
+			// Zoom
+			if (!InputControl.isRefKeyDown(InputControl.REFZOOMIN) && !InputControl.isRefKeyDown(InputControl.REFZOOMOUT)) {
+				getVel()[SCALE_X] = getVel()[SCALE_Y] = 0.0f;
+			}
+
+			if (InputControl.isRefKeyDown(InputControl.REFZOOMIN)) {
+				getVel()[SCALE_X] = getVel()[SCALE_Y] = 1;
+			}
+
+			if (InputControl.isRefKeyDown(InputControl.REFZOOMOUT)) {
+				getVel()[SCALE_X] = getVel()[SCALE_Y] = -1;
+			}
+
+			// Rotation
 //			if (!input.isKeyDown(Input.KEY_Q) && !input.isKeyDown(Input.KEY_E)) {
 //				getVel()[ROTATION] = 0.0f;
 //			}

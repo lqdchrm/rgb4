@@ -83,7 +83,7 @@ public abstract class AbstractAssetState {
 		weaponParticles.render(g, frameBuffer);
 
 		Shader.pushShader(Player.getColorGlowShader());
-		Player.getColorGlowShader().setValue("playercolor", player.getWeaponColor());
+//		Player.getColorGlowShader().setValue("playercolor", player.getWeaponColor());
 		weaponGfxEntity.render(g, frameBuffer);
 		Shader.popShader();
 		

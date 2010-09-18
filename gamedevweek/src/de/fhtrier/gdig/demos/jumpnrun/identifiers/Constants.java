@@ -121,6 +121,13 @@ public class Constants {
 		public static String REFPHRASE2 = "KEY_2";
 		public static String REFPHRASE3 = "KEY_3";
 		public static String REFPHRASE4 = "KEY_4";
+		
+		public static String REFSCROLLLEFT = "KEY_J";
+		public static String REFSCROLLRIGHT = "KEY_L";
+		public static String REFSCROLLUP = "KEY_I";
+		public static String REFSCROLLDOWN = "KEY_K";
+		public static String REFZOOMIN = "KEY_COMMA";
+		public static String REFZOOMOUT = "KEY_PERIOD";
 	}	
 
 	public static class NetworkConfig extends Configuration {

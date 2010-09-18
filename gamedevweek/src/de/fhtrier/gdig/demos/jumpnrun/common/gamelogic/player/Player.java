@@ -103,10 +103,11 @@ public class Player extends LevelCollidableEntity implements
 	// color
 	int playerColor;
 	int weaponColor;
+	
 	// delays
-	float fireDelay = 0;
-	float colorChangeDelayPlayer = 0;
-	float colorChangeDelayWeapon = 0;
+	float fireDelay = 0f;
+	float colorChangeDelayPlayer = 0f;
+	float colorChangeDelayWeapon = 0f;
 	
 	// initialization
 	public Player(int id, Factory factory) throws SlickException {
@@ -485,12 +486,10 @@ public class Player extends LevelCollidableEntity implements
 			colorGlowShader.setValue("playercolor", weaponCol);
 		}
 
-//		if(fireDelay == Constants.GamePlayConstants.shotCooldown) {
 		graphicContext.drawImage(weaponGlow, weaponX, weaponY, weaponX
 				- weaponGlow.getWidth(), weaponY + weaponGlow.getHeight()
 				* weaponGlowSize, 0, 0, weaponGlow.getWidth(),
 				weaponGlow.getHeight(), weaponCol);
-//		}
 
 		float brightness = StateColor.constIntoBrightness(getPlayerColor());
 
