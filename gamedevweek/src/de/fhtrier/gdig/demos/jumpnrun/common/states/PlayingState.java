@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.common.states;
+﻿package de.fhtrier.gdig.demos.jumpnrun.common.states;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -14,6 +14,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
+
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
@@ -21,10 +22,9 @@ import de.fhtrier.gdig.engine.physics.CollisionManager;
 
 
 public abstract class PlayingState extends BasicGameState implements
-		INetworkCommandListener
-{
-	private GameFactory factory;
-	private int levelId;
+		INetworkCommandListener {
+	protected GameFactory factory;
+	protected int levelId;
 	
 	/**
 	 * has to be something like winningKills_Deathmatch in Constants.GamePlayConstants
@@ -35,22 +35,18 @@ public abstract class PlayingState extends BasicGameState implements
 		
 	public abstract void cleanup(GameContainer container, StateBasedGame game);
 
-	public GameFactory getFactory()
-	{
+	public GameFactory getFactory() {
 		return this.factory;
 	}
 
 	@Override
-	public int getID()
-	{
+	public int getID() {
 		return GameStates.PLAYING;
 	}
 
-	public Level getLevel()
-	{
+	public Level getLevel() {
 		final Entity level = this.factory.getEntity(this.levelId);
-		if (level instanceof Level)
-		{
+		if (level instanceof Level) {
 			return (Level) level;
 		}
 		return null;
@@ -73,6 +69,7 @@ public abstract class PlayingState extends BasicGameState implements
 
 		// Level
 		this.levelId = factory.createEntity(EntityType.LEVEL);
+		
 		
 		// TODO FrameBuffer - only activate for postprocessing
 		//frameBuffer = new Image(RGB4.SCREENWIDTH, RGB4.SCREENHEIGHT);
@@ -108,35 +105,29 @@ public abstract class PlayingState extends BasicGameState implements
 	@Override
 	public void update(final GameContainer container,
 			final StateBasedGame game, final int deltaInMillis)
-			throws SlickException
-	{
+			throws SlickException {
 		final Input input = container.getInput();
 
-		if (input.isKeyPressed(Input.KEY_F1))
-		{
+		if (input.isKeyPressed(Input.KEY_F1)) {
 			container.setPaused(true);
-			try
-			{
+			try {
 				container.setFullscreen(!container.isFullscreen());
-			} catch (final SlickException e)
-			{
+			} catch (final SlickException e) {
 				Log.error(e);
 			}
 			container.setPaused(false);
 		}
 
-		if (input.isKeyPressed(Input.KEY_ESCAPE))
-		{
+		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
 			onExitKey(container, game);
 		}
 
 		final Level level = this.getLevel();
 
-		if (level != null)
-		{
+		if (level != null) {
 			level.handleInput(input);
 			level.update(deltaInMillis);
-		
+			
 			
 			// Sorgt dafür dass 1. Collisionnen neu berechnet werden, 2. Zeile
 			// Den Objekten gesagt wird die Kollision zu behandeln.

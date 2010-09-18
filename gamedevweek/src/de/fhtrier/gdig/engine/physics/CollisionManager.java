@@ -49,11 +49,10 @@ public class CollisionManager {
 				||
 
 				(CollisionManager.getTransformedBounds(e1)
-						.contains(CollisionManager.getTransformedBounds(e2)))
-				||
+						.contains(CollisionManager.getTransformedBounds(e2))) ||
 
-				(CollisionManager.getTransformedBounds(e2)
-						.contains(CollisionManager.getTransformedBounds(e1))));
+		(CollisionManager.getTransformedBounds(e2).contains(CollisionManager
+				.getTransformedBounds(e1))));
 	}
 
 	/**

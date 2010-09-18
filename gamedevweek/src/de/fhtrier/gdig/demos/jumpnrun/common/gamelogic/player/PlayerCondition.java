@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player;
+﻿package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player;
 
 import java.io.Serializable;
 
@@ -18,7 +18,7 @@ public class PlayerCondition implements Serializable {
 	 * Current Ammunition between 0.0f and 1.0f 1.0f indicating max. Ammunition
 	 */
 	private float ammo; // between 0.0f and 1.0f
-
+	
 	/**
 	 * Damage of player dealt to other players 0.0f and 1.0f
 	 */
@@ -100,18 +100,18 @@ public class PlayerCondition implements Serializable {
 	public int getKills() {
 		return kills;
 	}
-
-
+	
+	
 	public void setDeaths(int deaths) {
 		this.deaths = deaths;
 		broadCast();
 	}
-
-
+	
+	
 	public int getDeaths() {
 		return deaths;
 	}
-
+	
 	private void broadCast() {
 		NetworkComponent.getInstance().sendCommand(new SendPlayerCondition(playerId, this));
 	}

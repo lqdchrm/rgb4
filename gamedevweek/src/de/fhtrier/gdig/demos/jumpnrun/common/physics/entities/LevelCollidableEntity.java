@@ -7,7 +7,7 @@ import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.LogicPoint;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
@@ -43,7 +43,7 @@ public class LevelCollidableEntity extends CollidableEntity {
 	 * 
 	 * @return transformed Shape
 	 */
-	private Shape getTransformedBounds() {
+	public Shape getTransformedBounds() {
 		return this.getBounds().transform(
 				Transform.createTranslateTransform(this.getData()[Entity.X],
 						this.getData()[Entity.Y]));
@@ -120,15 +120,15 @@ public class LevelCollidableEntity extends CollidableEntity {
 											this.getTransformedBounds());
 							if (level != null
 									&& (intersectionDepth[Entity.X] != 0 || intersectionDepth[Entity.Y] != 0)) {
-								
+
 								if (Constants.Debug.tileMapLogicDebug) {
 									Log.debug("Colission with: " + actionTileId);
 								}
-								
+
 								actionTileId -= level.firstLogicGID;
 								++actionTileId;
 								if (actionTileId > 32 && actionTileId <= 64) {
-									SpawnPoint randomTeleporterExitPoint = level
+									LogicPoint randomTeleporterExitPoint = level
 											.getRandomTeleporterExitPoint(actionTileId - 32);
 									this.getData()[Entity.X] = randomTeleporterExitPoint.x;
 									this.getData()[Entity.Y] = randomTeleporterExitPoint.y;

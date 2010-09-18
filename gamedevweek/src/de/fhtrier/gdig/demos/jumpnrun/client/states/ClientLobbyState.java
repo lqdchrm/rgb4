@@ -30,6 +30,7 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckConnect;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckNewPlayerList;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckSetLevel;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckStartGame;
+import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
@@ -85,8 +86,10 @@ public class ClientLobbyState extends NiftyGameState implements
 			for (int i = 0; i < files.length; i++) {
 				String fileName = files[i].getName();
 				if (files[i].isDirectory() && fileName.startsWith("Level")) {
-					levels.add(new NetworkLevel(i, Assets.Level.AssetLevelPath
-							+ fileName, formatLevelname(fileName)));
+					levels.add(new NetworkLevel(i, 
+							AssetMgr.combinePathStrings(
+							Assets.Level.AssetLevelPath,
+							fileName), formatLevelname(fileName)));
 				}
 			}
 		}
@@ -173,7 +176,9 @@ public class ClientLobbyState extends NiftyGameState implements
 
 		if (Constants.Debug.networkDebug) {
 			Log.debug("try to handle:" + cmd);
-		} else if (cmd instanceof AckConnect) {
+		}
+		
+		if (cmd instanceof AckConnect) {
 			if (Constants.Debug.networkDebug) {
 				Log.debug("Client connected to serverlobby");
 			}
@@ -189,6 +194,9 @@ public class ClientLobbyState extends NiftyGameState implements
 			}
 			game.enterState(GameStates.SERVER_SELECTION);
 		} else if (cmd instanceof AckSetLevel) {
+			if (Constants.Debug.networkDebug) {
+				Log.debug("Level: " + ((AckSetLevel) cmd).getNetworkLevel().getAssetPath());
+			}
 			selectLevel(((AckSetLevel) cmd).getNetworkLevel());
 		}
 	}

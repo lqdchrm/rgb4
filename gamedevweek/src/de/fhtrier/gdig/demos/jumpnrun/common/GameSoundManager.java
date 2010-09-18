@@ -43,10 +43,10 @@ public class GameSoundManager extends SoundManager {
 		// HACK
 		if (isClient) {
 			Constants.SoundConfig.soundEnabled = true;
-			Constants.SoundConfig.musicEnabled = false;
+			Constants.SoundConfig.musicEnabled = true;
 		} else {
 			Constants.SoundConfig.soundEnabled = false;
-			Constants.SoundConfig.musicEnabled = true;
+			Constants.SoundConfig.musicEnabled = false;
 		}
 		
 		GameSoundManager.init();

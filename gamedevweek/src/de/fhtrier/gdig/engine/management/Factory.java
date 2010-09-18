@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.engine.management;
+﻿package de.fhtrier.gdig.engine.management;
 
 import java.util.ArrayList;
 import java.util.Collection;

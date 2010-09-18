@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.common;
+﻿package de.fhtrier.gdig.demos.jumpnrun.common;
 
 import java.net.InterfaceAddress;
 import java.util.List;

@@ -12,10 +12,10 @@ public class DoPlaySound extends ProtocolCommand {
 
 	public DoPlaySound(int soundAssetId) {
 		super("DoPlaySound");
-		
+
 		this.soundAssetId = soundAssetId;
 	}
-	
+
 	public int getSoundAssetId() {
 		return this.soundAssetId;
 	}
