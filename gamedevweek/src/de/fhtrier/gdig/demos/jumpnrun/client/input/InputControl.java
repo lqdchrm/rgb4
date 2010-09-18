@@ -10,7 +10,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 public class InputControl {
 
 	// has to be adapted every time a new command is added or removed
-	private static final int NUMOFREFKEYS = 11;
+	private static final int NUMOFREFKEYS = 12;
 		
 	// available commands which can be mapped to a key (currently just one)
 	public static final int REFWALKLEFT = 0;
@@ -19,6 +19,7 @@ public class InputControl {
 	public static final int REFFIRE = 3;
 	public static final int REFCHANGEWEAPON= 4;
 	public static final int REFCHANGECOLOR= 5;
+	public static final int REFCHANGEBOTHCOLORS= 11;
 	public static final int REFBACK= 6;
 	public static final int REFPHRASE1 = 7;
 	public static final int REFPHRASE2 = 8;
@@ -116,6 +117,7 @@ public class InputControl {
 			setStoredKeyMapping("REFPHRASE2");
 			setStoredKeyMapping("REFPHRASE3");
 			setStoredKeyMapping("REFPHRASE4");
+			setStoredKeyMapping("REFCHANGEBOTHCOLORS");
 			
 		} catch (Exception e) {
 			e.printStackTrace();

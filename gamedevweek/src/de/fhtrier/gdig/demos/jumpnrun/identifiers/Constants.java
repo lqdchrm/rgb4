@@ -19,12 +19,14 @@ public class Constants {
 		
 		public static boolean friendyFire = true; // if true you can damage team-mates
 
-		@ShowAsSlider(maxValue = 10000, minValue = 10)
-		public static float shotSpeed = 1000.0f;
+		public static float shotSpeed = 400.0f;
+		public static float shotCooldown = 1000.0f;
+		public static float colorChangeCooldownWeapon = 1000.0f;
+		public static float colorChangeCooldownPlayer = 1000.0f;
 		
-		public static float playerWalkSpeed = 4000.0f;
+		public static float playerWalkSpeed = 1000.0f;
 		public static float playerJumpSpeed = 1000.0f;
-		public static float playerMaxSpeed = 850.0f;
+		public static float playerMaxSpeed = 300.0f;
 
 		public static float playerIdleTriggerSpeed = 5.0f;
 		public static float playerFallingTriggerSpeed = 500.0f;
@@ -106,14 +108,15 @@ public class Constants {
 		public static String REFWALKRIGHT = "KEY_RIGHT";
 		
 		public static String REFJUMP = "KEY_UP";
-		public static String REFFIRE = "KEY_SPACE";
-		
-		public static String REFCHANGEWEAPON = "KEY_X";
-		public static String REFCHANGECOLOR = "KEY_Y";
-		
-		public static String REFBACK = "KEY_ESCAPE";
+
 		public static String REFFULLSCREEN = "KEY_F1";
-		
+
+		public static String REFFIRE = "KEY_F";
+		public static String REFCHANGEWEAPON = "KEY_F5";
+		public static String REFCHANGECOLOR = "KEY_F6";
+		public static String REFCHANGEBOTHCOLORS = "KEY_D";
+		public static String REFBACK = "KEY_ESCAPE";
+
 		public static String REFPHRASE1 = "KEY_1";
 		public static String REFPHRASE2 = "KEY_2";
 		public static String REFPHRASE3 = "KEY_3";

@@ -103,7 +103,11 @@ public class Player extends LevelCollidableEntity implements
 	// color
 	int playerColor;
 	int weaponColor;
-
+	// delays
+	float fireDelay = 0;
+	float colorChangeDelayPlayer = 0;
+	float colorChangeDelayWeapon = 0;
+	
 	// initialization
 	public Player(int id, Factory factory) throws SlickException {
 		super(id, EntityType.PLAYER);
@@ -341,26 +345,35 @@ public class Player extends LevelCollidableEntity implements
 			}
 
 			if (InputControl.isRefKeyPressed(InputControl.REFFIRE)) {
-
-				// TODO tell server to create bullet
-				// TODO refactor PlayerAction to PlayerNetworkAction
-				NetworkComponent.getInstance().sendCommand(
-						new QueryAction(PlayerNetworkAction.SHOOT));
-				applyAction(PlayerActions.StartShooting);
+				if(fireDelay == Constants.GamePlayConstants.shotCooldown) {
+					NetworkComponent.getInstance().sendCommand(
+							new QueryAction(PlayerNetworkAction.SHOOT));
+					applyAction(PlayerActions.StartShooting);
+					fireDelay = 0;
+				}
 			}
 
 			// change player color
-			if (InputControl.isRefKeyPressed(InputControl.REFCHANGECOLOR)) {
-				nextColor();
-				SoundManager.playSound(Assets.Sounds.PlayerChangeColorSoundID,
-						1f, 0.2f);
-			}
-
-			// change weapon color
-			if (InputControl.isRefKeyPressed(InputControl.REFCHANGEWEAPON)) {
-				nextWeaponColor();
-				SoundManager.playSound(Assets.Sounds.WeaponChangeColorSoundID,
-						1f, 0.2f);
+//			if (InputControl.isRefKeyPressed(InputControl.REFCHANGECOLOR)) {
+//				nextColor();
+//				SoundManager.playSound(Assets.Sounds.PlayerChangeColorSoundID,
+//						1f, 0.2f);
+//			}
+//
+//			// change weapon color
+//			if (InputControl.isRefKeyPressed(InputControl.REFCHANGEWEAPON)) {
+//				nextWeaponColor();
+//				SoundManager.playSound(Assets.Sounds.WeaponChangeColorSoundID,
+//						1f, 0.2f);
+//			}
+			if(InputControl.isRefKeyPressed(InputControl.REFCHANGEBOTHCOLORS)) {
+				if(colorChangeDelayPlayer == Constants.GamePlayConstants.colorChangeCooldownPlayer) {
+					nextColor();
+					nextWeaponColor();
+					SoundManager.playSound(Assets.Sounds.PlayerChangeColorSoundID,
+							1f, 0.2f);
+					colorChangeDelayPlayer = 0;
+				}
 			}
 
 			// Player Phrases
@@ -464,16 +477,20 @@ public class Player extends LevelCollidableEntity implements
 		float weaponBrightness = StateColor
 				.constIntoBrightness(getWeaponColor());
 
+		float weaponLoad = fireDelay / Constants.GamePlayConstants.shotCooldown;
+		
 		if (Constants.Debug.shadersActive) {
 			weaponCol.a = Constants.GamePlayConstants.weaponGlowFalloff
-					* weaponBrightness;
+					* weaponBrightness * weaponLoad;
 			colorGlowShader.setValue("playercolor", weaponCol);
 		}
 
+//		if(fireDelay == Constants.GamePlayConstants.shotCooldown) {
 		graphicContext.drawImage(weaponGlow, weaponX, weaponY, weaponX
 				- weaponGlow.getWidth(), weaponY + weaponGlow.getHeight()
 				* weaponGlowSize, 0, 0, weaponGlow.getWidth(),
 				weaponGlow.getHeight(), weaponCol);
+//		}
 
 		float brightness = StateColor.constIntoBrightness(getPlayerColor());
 
@@ -550,7 +567,16 @@ public class Player extends LevelCollidableEntity implements
 	public void update(final int deltaInMillis) {
 
 		if (this.isActive()) {
-
+			fireDelay += deltaInMillis;
+			if(fireDelay > Constants.GamePlayConstants.shotCooldown)
+				fireDelay = Constants.GamePlayConstants.shotCooldown;
+			colorChangeDelayPlayer += deltaInMillis;
+			if(colorChangeDelayPlayer > Constants.GamePlayConstants.colorChangeCooldownPlayer)
+				colorChangeDelayPlayer = Constants.GamePlayConstants.colorChangeCooldownPlayer;
+			colorChangeDelayWeapon += deltaInMillis;
+			if(colorChangeDelayWeapon > Constants.GamePlayConstants.colorChangeCooldownWeapon)
+				colorChangeDelayWeapon = Constants.GamePlayConstants.colorChangeCooldownWeapon;
+			
 			// set Drag
 			if (isOnGround()) {
 				getDrag()[Entity.X] = Constants.GamePlayConstants.playerGroundDrag;
