@@ -429,54 +429,54 @@ public class Level extends MoveableEntity {
 	public void handleInput(Input input) {
 		if (isActive()) {
 
-			// Left / Right
-			if (!input.isKeyDown(Input.KEY_A) && !input.isKeyDown(Input.KEY_D)) {
-				getVel()[X] = 0.0f;
-			}
-			if (input.isKeyDown(Input.KEY_A)) {
-				getVel()[X] = 600.0f;
-			}
-			if (input.isKeyDown(Input.KEY_D)) {
-				getVel()[X] = -600.0f;
-			}
-
-			// Up / Down
-			if (!input.isKeyDown(Input.KEY_W) && !input.isKeyDown(Input.KEY_S)) {
-				getVel()[Y] = 0.0f;
-			}
-
-			if (input.isKeyDown(Input.KEY_W)) {
-				getVel()[Y] = 600.0f;
-			}
-
-			if (input.isKeyDown(Input.KEY_S)) {
-				getVel()[Y] = -600.0f;
-			}
-
-			// Zoom
-			if (!input.isKeyDown(Input.KEY_R) && !input.isKeyDown(Input.KEY_F)) {
-				getVel()[SCALE_X] = getVel()[SCALE_Y] = 0.0f;
-			}
-
-			if (input.isKeyDown(Input.KEY_R)) {
-				getVel()[SCALE_X] = getVel()[SCALE_Y] = 1;
-			}
-
-			if (input.isKeyDown(Input.KEY_F)) {
-				getVel()[SCALE_X] = getVel()[SCALE_Y] = -1;
-			}
-
-			// Rotation
-			if (!input.isKeyDown(Input.KEY_Q) && !input.isKeyDown(Input.KEY_E)) {
-				getVel()[ROTATION] = 0.0f;
-			}
-
-			if (input.isKeyDown(Input.KEY_Q)) {
-				getVel()[ROTATION] = -15;
-			}
-			if (input.isKeyDown(Input.KEY_E)) {
-				getVel()[ROTATION] = 15;
-			}
+//			// Left / Right
+//			if (!input.isKeyDown(Input.KEY_A) && !input.isKeyDown(Input.KEY_D)) {
+//				getVel()[X] = 0.0f;
+//			}
+//			if (input.isKeyDown(Input.KEY_A)) {
+//				getVel()[X] = 600.0f;
+//			}
+//			if (input.isKeyDown(Input.KEY_D)) {
+//				getVel()[X] = -600.0f;
+//			}
+//
+//			// Up / Down
+//			if (!input.isKeyDown(Input.KEY_W) && !input.isKeyDown(Input.KEY_S)) {
+//				getVel()[Y] = 0.0f;
+//			}
+//
+//			if (input.isKeyDown(Input.KEY_W)) {
+//				getVel()[Y] = 600.0f;
+//			}
+//
+//			if (input.isKeyDown(Input.KEY_S)) {
+//				getVel()[Y] = -600.0f;
+//			}
+//
+//			// Zoom
+//			if (!input.isKeyDown(Input.KEY_R) && !input.isKeyDown(Input.KEY_F)) {
+//				getVel()[SCALE_X] = getVel()[SCALE_Y] = 0.0f;
+//			}
+//
+//			if (input.isKeyDown(Input.KEY_R)) {
+//				getVel()[SCALE_X] = getVel()[SCALE_Y] = 1;
+//			}
+//
+//			if (input.isKeyDown(Input.KEY_F)) {
+//				getVel()[SCALE_X] = getVel()[SCALE_Y] = -1;
+//			}
+//
+//			// Rotation
+//			if (!input.isKeyDown(Input.KEY_Q) && !input.isKeyDown(Input.KEY_E)) {
+//				getVel()[ROTATION] = 0.0f;
+//			}
+//
+//			if (input.isKeyDown(Input.KEY_Q)) {
+//				getVel()[ROTATION] = -15;
+//			}
+//			if (input.isKeyDown(Input.KEY_E)) {
+//				getVel()[ROTATION] = 15;
+//			}
 		}
 		super.handleInput(input);
 	}
