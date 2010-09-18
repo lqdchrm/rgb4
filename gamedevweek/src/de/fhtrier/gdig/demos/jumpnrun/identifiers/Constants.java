@@ -21,7 +21,6 @@ public class Constants {
 
 		@ShowAsSlider(maxValue = 10000, minValue = 10)
 		public static float shotSpeed = 1000.0f;
-		public static float shotCooldown = 100.0f;
 		
 		public static float playerWalkSpeed = 4000.0f;
 		public static float playerJumpSpeed = 1000.0f;
@@ -57,6 +56,7 @@ public class Constants {
 		public static boolean isMuted = false;
 		public static boolean soundEnabled = true;
 	}
+	
 	public static class Debug extends Configuration {
 		@CommandlineParameter("noRender")
 		public static boolean doNotRender = false;
@@ -104,11 +104,16 @@ public class Constants {
 		
 		public static String REFWALKLEFT = "KEY_LEFT";
 		public static String REFWALKRIGHT = "KEY_RIGHT";
+		
 		public static String REFJUMP = "KEY_UP";
 		public static String REFFIRE = "KEY_SPACE";
+		
 		public static String REFCHANGEWEAPON = "KEY_X";
 		public static String REFCHANGECOLOR = "KEY_Y";
-		public static String REFMENU = "KEY_ESCAPE";
+		
+		public static String REFBACK = "KEY_ESCAPE";
+		public static String REFFULLSCREEN = "KEY_F1";
+		
 		public static String REFPHRASE1 = "KEY_1";
 		public static String REFPHRASE2 = "KEY_2";
 		public static String REFPHRASE3 = "KEY_3";

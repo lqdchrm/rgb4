@@ -136,8 +136,11 @@ public class ClientPlayingState extends PlayingState {
 			Entity e = this.getFactory().getEntity(id);
 			e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 
-			getLevel().add(getFactory().getEntity(id));
-
+			if (dce.getParentId() > -1) {
+				Entity parent = getFactory().getEntity(dce.getParentId());
+				parent.add(getFactory().getEntity(id));
+			}
+			
 			// HACK special treatment for players
 			if (e instanceof Player) {
 				NetworkComponent.getInstance().sendCommand(

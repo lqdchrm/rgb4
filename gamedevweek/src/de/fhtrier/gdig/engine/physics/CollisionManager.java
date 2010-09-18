@@ -114,10 +114,10 @@ public class CollisionManager {
 				Transform.createTranslateTransform(entity.getData()[Entity.X],
 						entity.getData()[Entity.Y]));
 
-		Shape rec2 = entity.getBounds().transform(
-				Transform.createTranslateTransform(
-						entity.getPrevPos()[Entity.X],
-						entity.getPrevPos()[Entity.Y]));
+//		Shape rec2 = entity.getBounds().transform(
+//				Transform.createTranslateTransform(
+//						entity.getPrevPos()[Entity.X],
+//						entity.getPrevPos()[Entity.Y]));
 
 		// TODO erg currently not used
 		// Shape erg = generateSweepShape(rec1, rec2);

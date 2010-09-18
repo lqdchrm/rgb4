@@ -8,13 +8,13 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
+import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
-
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.INetworkCommandListener;
@@ -61,15 +61,13 @@ public abstract class PlayingState extends BasicGameState implements
 	@Override
 	public void enter(GameContainer container, StateBasedGame game)
 			throws SlickException {
-		// TODO Auto-generated method stub
 		super.enter(container, game);
 		
 		// Factory
 		this.factory = new GameFactory();
-
+		
 		// Level
 		this.levelId = factory.createEntity(EntityType.LEVEL);
-		
 		
 		// TODO FrameBuffer - only activate for postprocessing
 		//frameBuffer = new Image(RGB4.SCREENWIDTH, RGB4.SCREENHEIGHT);
@@ -106,8 +104,9 @@ public abstract class PlayingState extends BasicGameState implements
 	public void update(final GameContainer container,
 			final StateBasedGame game, final int deltaInMillis)
 			throws SlickException {
-		final Input input = container.getInput();
 
+		final Input input = container.getInput();
+		
 		if (input.isKeyPressed(Input.KEY_F1)) {
 			container.setPaused(true);
 			try {
@@ -118,7 +117,7 @@ public abstract class PlayingState extends BasicGameState implements
 			container.setPaused(false);
 		}
 
-		if (input.isKeyPressed(Input.KEY_ESCAPE)) {
+		if (InputControl.isRefKeyPressed(InputControl.REFBACK)) {
 			onExitKey(container, game);
 		}
 

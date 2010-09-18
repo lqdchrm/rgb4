@@ -1,5 +1,7 @@
 package de.fhtrier.gdig.demos.jumpnrun.identifiers;
 
+import org.newdawn.slick.tiled.TiledMap;
+
 public class Assets {
 
 	
@@ -15,7 +17,8 @@ public class Assets {
 	public static class Level {
 		public static String AssetLevelPath = "content/rgb4";
 		public static final int TileMapId = 3;
-
+		public static String TileMapPath = "tiles/blocks.tmx";
+		
 		public static class Teleporter
 		{
 			public static final int TeleporterId = 4;

@@ -80,7 +80,7 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 	@Override
 	public void keyPressed(int key, char c) {
 		super.keyPressed(key, c);
-		if (key==Input.KEY_ESCAPE)
+		if (this.isAcceptingInput() && key==Input.KEY_ESCAPE)
 		{
 			game.enterState(GameStates.MENU, new FadeOutTransition(), new FadeInTransition());
 		}

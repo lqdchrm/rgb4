@@ -19,7 +19,7 @@ public class InputControl {
 	public static final int REFFIRE = 3;
 	public static final int REFCHANGEWEAPON= 4;
 	public static final int REFCHANGECOLOR= 5;
-	public static final int REFMENU= 6;
+	public static final int REFBACK= 6;
 	public static final int REFPHRASE1 = 7;
 	public static final int REFPHRASE2 = 8;
 	public static final int REFPHRASE3 = 9;
@@ -111,7 +111,7 @@ public class InputControl {
 			setStoredKeyMapping("REFFIRE");
 			setStoredKeyMapping("REFCHANGEWEAPON");
 			setStoredKeyMapping("REFCHANGECOLOR");
-			setStoredKeyMapping("REFMENU");
+			setStoredKeyMapping("REFBACK");
 			setStoredKeyMapping("REFPHRASE1");
 			setStoredKeyMapping("REFPHRASE2");
 			setStoredKeyMapping("REFPHRASE3");

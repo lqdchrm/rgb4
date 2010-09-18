@@ -32,14 +32,6 @@
 		<layer id="layer" childLayout="center">
 			<panel id="credits" height="100%" width="100%" childLayout="vertical" style="scroller">
  				<panel height="100%"/>
-<!-- 				<image id="logo" height="35%" filename="rgb_logo.png" align="center" 
-					valign="center">
-				</image>
-				<panel height="10%"/>
-				<label height="10%" text="Programming" style="header-label" width="100%"/>
-				<label height="10%" align="center"  text="Robert" style="lobby-text" width="100%"/>
-				<label height="10%" align="center" text="Robert" style="lobby-text" width="100%"/>
-				<label height="10%" align="center"  text="Robert" style="lobby-text" width="100%"/> -->
 			</panel>
 		</layer>		
 	</screen>

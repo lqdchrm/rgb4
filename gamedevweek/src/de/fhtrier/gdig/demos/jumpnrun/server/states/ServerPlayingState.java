@@ -58,7 +58,9 @@ public class ServerPlayingState extends PlayingState {
 	public void enter(GameContainer container, StateBasedGame game)
 			throws SlickException {
 		super.enter(container, game);
-		((Level) factory.getEntity(levelId)).init(true);
+		
+		// Level
+		getLevel().init(true);
 	}
 
 	private boolean handlePlayerActions(QueryAction actionCmd) {
@@ -68,7 +70,7 @@ public class ServerPlayingState extends PlayingState {
 
 		switch (actionCmd.getAction()) {
 		case SHOOT:
-			e = createEntity(EntityType.BULLET);
+			e = createEntity(EntityType.BULLET, this.levelId);
 
 			// set values
 			Bullet bullet = (Bullet) e;
@@ -130,7 +132,7 @@ public class ServerPlayingState extends PlayingState {
 		return false;
 	}
 
-	private Entity createEntity(EntityType type) {
+	private Entity createEntity(EntityType type, int parentId) {
 		int id = this.getFactory().createEntity(type);
 
 		Entity e = getFactory().getEntity(id);
@@ -138,11 +140,15 @@ public class ServerPlayingState extends PlayingState {
 		e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 		e.setActive(true);
 
-		getLevel().add(e);
+		//
+		if (parentId > -1) {
+			Entity parent = getFactory().getEntity(parentId);
+			parent.add(e);
+		}
 
 		// send command to all clients to create gem
 		NetworkComponent.getInstance()
-				.sendCommand(new DoCreateEntity(id, type));
+				.sendCommand(new DoCreateEntity(id, parentId, type));
 		return e;
 	}
 
@@ -155,7 +161,7 @@ public class ServerPlayingState extends PlayingState {
 			for (Entity e : getFactory().getEntities()) {
 				if (e.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient) {
 					NetworkComponent.getInstance().sendCommand(cmd.getSender(),
-							new DoCreateEntity(e.getId(), e.getType()));
+							new DoCreateEntity(e.getId(), this.levelId, e.getType()));
 				}
 			}
 			NetworkComponent.getInstance().sendCommand(cmd.getSender(),
@@ -190,7 +196,7 @@ public class ServerPlayingState extends PlayingState {
 
 				// send command to all clients to create entity
 				NetworkComponent.getInstance().sendCommand(
-						new DoCreateEntity(id, EntityType.PLAYER));
+						new DoCreateEntity(id, this.levelId, EntityType.PLAYER));
 
 				// if query requested new player assume that's the one to be
 				// controlled by client
