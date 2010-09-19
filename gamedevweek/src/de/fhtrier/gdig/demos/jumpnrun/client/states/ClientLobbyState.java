@@ -10,7 +10,6 @@ import java.util.Queue;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
@@ -33,7 +32,6 @@ import de.fhtrier.gdig.engine.network.INetworkCommandListener;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
 import de.fhtrier.gdig.engine.network.impl.protocol.ServerAckDisconnect;
-import de.fhtrier.gdig.engine.sound.SoundManager;
 import de.lessvoid.nifty.EndNotify;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.button.CreateButtonControl;
@@ -49,8 +47,7 @@ import de.lessvoid.nifty.tools.resourceloader.ResourceLoader;
 
 public class ClientLobbyState extends NiftyGameState implements
 		INetworkCommandListener, ScreenController {
-
-	private static final String CROSSHAIR_PNG = "crosshair.png";
+	
 	public static String menuNiftyXMLFile = "client_lobby.xml";
 	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 
@@ -132,11 +129,6 @@ public class ClientLobbyState extends NiftyGameState implements
 		// read the nifty-xml-fiel
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
-	
-//		// show the mouse
-//		enableMouseImage(new Image(
-//				ResourceLoader.getResourceAsStream(CROSSHAIR_PNG),
-//				CROSSHAIR_PNG, false));
 	}
 
 	@Override
@@ -186,7 +178,6 @@ public class ClientLobbyState extends NiftyGameState implements
 			drawPlayers(players.values());
 			cmd.setHandled(true);
 		} else if (cmd instanceof AckStartGame) {
-			SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 500, 0f, true);
 			translateToGamestate(GameStates.PLAYING);
 			cmd.setHandled(true);
 		} else if (cmd instanceof ServerAckDisconnect) {

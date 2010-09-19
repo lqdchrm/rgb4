@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -21,14 +20,11 @@ import de.lessvoid.nifty.tools.resourceloader.ResourceLoader;
 
 public class ClientMenuState extends NiftyGameState implements ScreenController {
 
-	private static final String CROSSHAIR_PNG = "crosshair.png";
 	public static String menuNiftyXMLFile = "mainmenu.xml";
 	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 
 	private StateBasedGame game;
 	private Screen screen;
-	
-	private boolean startedMusic = false;
 
 	public ClientMenuState(final StateBasedGame newGame) throws SlickException {
 		super(GameStates.MENU);
@@ -46,28 +42,15 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
 
-		// show the mouse
-//		enableMouseImage(new Image(
-//				ResourceLoader.getResourceAsStream(CROSSHAIR_PNG),
-//				CROSSHAIR_PNG, false));
-		
+		// play menu background Sound
+		SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0.2f);
+		// SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f, false);
 	}
 
-	@Override
-	public void init(GameContainer container, StateBasedGame game)
-			throws SlickException {
-		super.init(container, game);
-
-
-
-	}
-	
 	public void bind(final Nifty newNifty, final Screen newScreen) {
 		screen = newScreen;
 	}
 	
-	
-
 	public void onStartScreen() {
 		if (screen.getScreenId().equals("start")) {
 			nifty.gotoScreen("mainMenu");
@@ -76,9 +59,7 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 	}
 
 	public void onEndScreen() {
-		SoundManager
-				.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0f, false);
-		SoundManager.stopMusic(Assets.Sounds.MenuSoundtrackId);
+
 	}
 
 	@Override
@@ -143,17 +124,5 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 		// set on transition-in-out-screen
 		if (!nifty.getCurrentScreen().equals("mainMenu_with_transition"))
 			nifty.gotoScreen("mainMenu_with_transition");
-	}
-	
-	@Override
-	public void update(GameContainer container, StateBasedGame game, int d)
-			throws SlickException {
-		super.update(container, game, d);
-		if (startedMusic==false)
-		{
-			startedMusic = true;
-			SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0);
-			SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f, false);
-		}
 	}
 }

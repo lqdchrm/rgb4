@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
@@ -36,7 +35,6 @@ import de.lessvoid.nifty.tools.resourceloader.ResourceLoader;
 public class ClientHostServerState extends NiftyGameState implements
 		ScreenController {
 
-	private static final String CROSSHAIR_PNG = "crosshair.png";
 	public static String menuNiftyXMLFile = "server_settings.xml";
 	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 
@@ -69,17 +67,6 @@ public class ClientHostServerState extends NiftyGameState implements
 		// read the nifty-xml-fiel
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
-		
-		// show the mouse
-//		try {
-//			enableMouseImage(new Image(
-//					ResourceLoader.getResourceAsStream(CROSSHAIR_PNG),
-//					CROSSHAIR_PNG, false));
-//		} catch (SlickException e) {
-//			Log.error("Image loading failed in ServerSettingsState");
-//			e.printStackTrace();
-//		}
-
 	}
 
 	@Override

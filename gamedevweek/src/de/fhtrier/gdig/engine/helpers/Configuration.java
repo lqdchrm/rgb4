@@ -36,8 +36,6 @@ import javax.swing.event.ChangeListener;
 import com.sun.org.apache.xpath.internal.compiler.Keywords;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
-import de.fhtrier.gdig.engine.helpers.Configuration.CommandlineParameter;
-import de.fhtrier.gdig.engine.helpers.Configuration.DefaultTrue;
 
 /**
  * This abstract class allows you to easily configurate your program. To use its
