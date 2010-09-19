@@ -44,8 +44,6 @@ public class ClientGame extends RGB4Game {
 		GameSoundManager.init(true);
 
 		Constants.GamePlayConstants c1 = new Constants.GamePlayConstants();
-
-		Constants.ControlConfig c2 = new Constants.ControlConfig();
 		
 		Constants.Debug c3 = new Constants.Debug();
 		
@@ -54,7 +52,6 @@ public class ClientGame extends RGB4Game {
 		Configuration.showEditor("ClientSettings",
 				new JPanel[] {
 					c1.getEdittingPanel(),
-					c2.getEdittingPanel(),
 					c3.getEdittingPanel(),
 					c4.getEdittingPanel()}
 		);

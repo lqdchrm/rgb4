@@ -104,35 +104,6 @@ public class Constants {
 		public static int deathMatch = 0;
 		public static int teamDeathMatch = 1;
 	}
-	
-	public static class ControlConfig extends Configuration {
-		
-		public static String REFWALKLEFT = "KEY_LEFT";
-		public static String REFWALKRIGHT = "KEY_RIGHT";
-		
-		public static String REFJUMP = "KEY_UP";
-
-		public static String REFFULLSCREEN = "KEY_F1";
-
-		public static String REFFIRE = "KEY_F";
-		public static String REFFIRE2 = "KEY_LCONTROL";
-		public static String REFCHANGEWEAPON = "KEY_F5";
-		public static String REFCHANGECOLOR = "KEY_F6";
-		public static String REFCHANGEBOTHCOLORS = "KEY_D";
-		public static String REFBACK = "KEY_ESCAPE";
-
-		public static String REFPHRASE1 = "KEY_1";
-		public static String REFPHRASE2 = "KEY_2";
-		public static String REFPHRASE3 = "KEY_3";
-		public static String REFPHRASE4 = "KEY_4";
-		
-		public static String REFSCROLLLEFT = "KEY_J";
-		public static String REFSCROLLRIGHT = "KEY_L";
-		public static String REFSCROLLUP = "KEY_I";
-		public static String REFSCROLLDOWN = "KEY_K";
-		public static String REFZOOMIN = "KEY_COMMA";
-		public static String REFZOOMOUT = "KEY_PERIOD";
-	}	
 
 	public static class NetworkConfig extends Configuration {
 		@CommandlineParameter("Server")
