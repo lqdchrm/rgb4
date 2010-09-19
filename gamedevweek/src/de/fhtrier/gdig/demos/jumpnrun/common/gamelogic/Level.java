@@ -5,14 +5,14 @@ import java.util.Random;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.Log;
 
-import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
+import de.fhtrier.gdig.demos.jumpnrun.common.input.GameInputCommands;
+import de.fhtrier.gdig.demos.jumpnrun.common.input.GameInputController;
 import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
@@ -25,6 +25,7 @@ import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.graphics.entities.ImageEntity;
 import de.fhtrier.gdig.engine.graphics.entities.TiledMapEntity;
+import de.fhtrier.gdig.engine.input.InputController;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.physics.entities.MoveableEntity;
@@ -453,59 +454,66 @@ public class Level extends MoveableEntity {
 	}
 
 	@Override
-	public void handleInput(Input input) {
+	public void handleInput(InputController<?> _input) {
+		super.handleInput(_input);
+
 		if (isActive()) {
 
+			GameInputController input = (GameInputController)_input;
+			
 			// Left / Right
-			if (!InputControl.isRefKeyDown(InputControl.REFSCROLLLEFT) && !InputControl.isRefKeyDown(InputControl.REFSCROLLRIGHT)) {
+			if (!input.isKeyDown(GameInputCommands.SCROLLLEFT) &&
+					!input.isKeyDown(GameInputCommands.SCROLLRIGHT)) {
 				getVel()[X] = 0.0f;
 			}
-			if (InputControl.isRefKeyDown(InputControl.REFSCROLLRIGHT)) {
+			if (input.isKeyDown(GameInputCommands.SCROLLRIGHT)) {
 				getVel()[X] = 600.0f;
 			}
-			if (InputControl.isRefKeyDown(InputControl.REFSCROLLLEFT)) {
+			if (input.isKeyDown(GameInputCommands.SCROLLLEFT)) {
 				getVel()[X] = -600.0f;
 			}
 
 			// Up / Down
-			if (!InputControl.isRefKeyDown(InputControl.REFSCROLLUP) && !InputControl.isRefKeyDown(InputControl.REFSCROLLDOWN)) {
+			if (!input.isKeyDown(GameInputCommands.SCROLLUP) &&
+					!input.isKeyDown(GameInputCommands.SCROLLDOWN)) {
 				getVel()[Y] = 0.0f;
 			}
 
-			if (InputControl.isRefKeyDown(InputControl.REFSCROLLDOWN)) {
+			if (input.isKeyDown(GameInputCommands.SCROLLDOWN)) {
 				getVel()[Y] = 600.0f;
 			}
 
-			if (InputControl.isRefKeyDown(InputControl.REFSCROLLUP)) {
+			if (input.isKeyDown(GameInputCommands.SCROLLUP)) {
 				getVel()[Y] = -600.0f;
 			}
 
 			// Zoom
-			if (!InputControl.isRefKeyDown(InputControl.REFZOOMIN) && !InputControl.isRefKeyDown(InputControl.REFZOOMOUT)) {
+			if (!input.isKeyDown(GameInputCommands.ZOOMIN) &&
+					!input.isKeyDown(GameInputCommands.ZOOMOUT)) {
 				getVel()[SCALE_X] = getVel()[SCALE_Y] = 0.0f;
 			}
 
-			if (InputControl.isRefKeyDown(InputControl.REFZOOMIN)) {
+			if (input.isKeyDown(GameInputCommands.ZOOMIN)) {
 				getVel()[SCALE_X] = getVel()[SCALE_Y] = 1;
 			}
 
-			if (InputControl.isRefKeyDown(InputControl.REFZOOMOUT)) {
+			if (input.isKeyDown(GameInputCommands.ZOOMOUT)) {
 				getVel()[SCALE_X] = getVel()[SCALE_Y] = -1;
 			}
 
 			// Rotation
-//			if (!input.isKeyDown(Input.KEY_Q) && !input.isKeyDown(Input.KEY_E)) {
-//				getVel()[ROTATION] = 0.0f;
-//			}
-//
-//			if (input.isKeyDown(Input.KEY_Q)) {
-//				getVel()[ROTATION] = -15;
-//			}
-//			if (input.isKeyDown(Input.KEY_E)) {
-//				getVel()[ROTATION] = 15;
-//			}
+			if (!input.isKeyDown(GameInputCommands.ROTATELEFT) &&
+					!input.isKeyDown(GameInputCommands.ROTATERIGHT)) {
+				getVel()[ROTATION] = 0.0f;
+			}
+
+			if (input.isKeyDown(GameInputCommands.ROTATELEFT)) {
+				getVel()[ROTATION] = -15;
+			}
+			if (input.isKeyDown(GameInputCommands.ROTATERIGHT)) {
+				getVel()[ROTATION] = 15;
+			}
 		}
-		super.handleInput(input);
 	}
 
 	public TiledMap getMap() {

@@ -52,7 +52,7 @@ public class ServerGame extends RGB4Game {
 		NetworkComponent.getInstance().startListening(networkInterface, port);
 		
 		netBroadCastListener = new NetworkBroadcastListener(serverName, "map1",
-				"1.0", port, networkInterface);
+				"1.0", port);
 		netBroadCastListener.start();
 
 		// create SoundManager

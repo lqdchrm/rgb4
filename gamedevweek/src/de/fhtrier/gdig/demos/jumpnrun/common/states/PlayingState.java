@@ -2,16 +2,16 @@
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
-import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
+import de.fhtrier.gdig.demos.jumpnrun.common.input.GameInputCommands;
+import de.fhtrier.gdig.demos.jumpnrun.common.input.GameInputController;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
@@ -56,6 +56,10 @@ public abstract class PlayingState extends BasicGameState implements
 	public void init(final GameContainer arg0, final StateBasedGame arg1)
 			throws SlickException {
 		gameType = Constants.GameTypes.teamDeathMatch; // TODO: change it!
+
+		GameInputController.init(arg0.getInput());
+		GameInputController.getInstance().initKeyboard();
+		GameInputController.getInstance().initGamePad();
 	}
 	
 	@Override
@@ -68,7 +72,7 @@ public abstract class PlayingState extends BasicGameState implements
 		
 		// Level
 		this.levelId = factory.createEntity(EntityType.LEVEL);
-		
+
 		// TODO FrameBuffer - only activate for postprocessing
 		//frameBuffer = new Image(RGB4.SCREENWIDTH, RGB4.SCREENHEIGHT);
 	}
@@ -105,9 +109,10 @@ public abstract class PlayingState extends BasicGameState implements
 			final StateBasedGame game, final int deltaInMillis)
 			throws SlickException {
 
-		final Input input = container.getInput();
+		final GameInputController input = GameInputController.getInstance();
+		input.update();
 		
-		if (input.isKeyPressed(Input.KEY_F1)) {
+		if (input.isKeyPressed(GameInputCommands.FULLSCREEN)) {
 			container.setPaused(true);
 			try {
 				container.setFullscreen(!container.isFullscreen());
@@ -117,7 +122,7 @@ public abstract class PlayingState extends BasicGameState implements
 			container.setPaused(false);
 		}
 
-		if (InputControl.isRefKeyPressed(InputControl.REFBACK)) {
+		if (input.isKeyPressed(GameInputCommands.BACK)) {
 			onExitKey(container, game);
 		}
 

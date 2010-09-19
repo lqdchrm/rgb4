@@ -60,6 +60,8 @@ public class Constants {
 	}
 	
 	public static class Debug extends Configuration {
+		public static boolean showDialogs = false;
+		
 		@CommandlineParameter("noRender")
 		public static boolean doNotRender = false;
 

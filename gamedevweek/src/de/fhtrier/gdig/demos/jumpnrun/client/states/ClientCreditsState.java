@@ -42,7 +42,6 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 	private static String menuNiftyXMLFile = "credits.xml";
 	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 	private static String creditsFile = menuAssetPath+"/credits.txt";
-	private static float timePerLine = 1000;
 	private StateBasedGame game;
 	private Element creditsPanel;
 	

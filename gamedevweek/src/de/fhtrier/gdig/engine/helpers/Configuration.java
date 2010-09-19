@@ -35,8 +35,7 @@ import javax.swing.event.ChangeListener;
 
 import com.sun.org.apache.xpath.internal.compiler.Keywords;
 
-import de.fhtrier.gdig.engine.helpers.Configuration.CommandlineParameter;
-import de.fhtrier.gdig.engine.helpers.Configuration.DefaultTrue;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 
 /**
  * This abstract class allows you to easily configurate your program. To use its
@@ -148,6 +147,7 @@ public abstract class Configuration {
 		return false;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void save(OutputStream out) {
 		try {
 			Properties p = new Properties();
@@ -187,6 +187,7 @@ public abstract class Configuration {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void load(InputStream inStream) {
 		try {
 			Properties p = new Properties();
@@ -238,6 +239,7 @@ public abstract class Configuration {
 		}
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void parseCommandLine(String[] args) {
 		try {
 			for (int i = 0; i < args.length; ++i) {
@@ -264,7 +266,7 @@ public abstract class Configuration {
 							String[] split = args[i].split(":");
 							if (split.length != 2)
 								throw new IllegalArgumentException(
-										"IP Adresse Kann nicht gephrast werden, es werden nur ipv4 Unterstützt.");
+										"ip address not parsable. only ipv4 supported");
 							InetSocketAddress inetSocketAddress = new InetSocketAddress(
 									split[0], Integer.parseInt(split[1]));
 							field.set(this, inetSocketAddress);
@@ -290,30 +292,39 @@ public abstract class Configuration {
 	}
 
 	public void showEditor(String strTitle) {
-		showEditor(strTitle, new JPanel[] { getEdittingPanel() });
+
+		if (Constants.Debug.showDialogs) {
+			showEditor(strTitle, new JPanel[] { getEdittingPanel() });
+		}
 	}
 
 	public static void showEditor(String strTitle, JPanel[] panels) {
-		showEditor(strTitle, panels, null);
+
+		if (Constants.Debug.showDialogs) {
+			showEditor(strTitle, panels, null);
+		}
 	}
 
 	public static void showEditor(String strTitle, JPanel[] panels,
 			Point location) {
-		JFrame f = new JFrame(strTitle);
-		if (location != null)
-			f.setLocation(location);
-		f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		JPanel p = new JPanel();
 
-		BoxLayout boxLayout = new BoxLayout(p, BoxLayout.X_AXIS);
-		p.setLayout(boxLayout);
+		if (Constants.Debug.showDialogs) {
+			JFrame f = new JFrame(strTitle);
+			if (location != null)
+				f.setLocation(location);
+			f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+			JPanel p = new JPanel();
 
-		for (JPanel jPanel : panels) {
-			p.add(jPanel);
+			BoxLayout boxLayout = new BoxLayout(p, BoxLayout.X_AXIS);
+			p.setLayout(boxLayout);
+
+			for (JPanel jPanel : panels) {
+				p.add(jPanel);
+			}
+			f.add(new JScrollPane(p));
+			f.pack();
+			f.setVisible(true);
 		}
-		f.add(new JScrollPane(p));
-		f.pack();
-		f.setVisible(true);
 	}
 
 	public JPanel getEdittingPanel() {
@@ -366,6 +377,7 @@ public abstract class Configuration {
 					// Todo
 					combo.addActionListener(new ActionListener() {
 
+						@SuppressWarnings({ "rawtypes", "unchecked" })
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							Class<? extends Enum> type = (Class<? extends Enum>) field

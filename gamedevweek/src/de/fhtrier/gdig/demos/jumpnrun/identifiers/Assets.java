@@ -1,6 +1,5 @@
 package de.fhtrier.gdig.demos.jumpnrun.identifiers;
 
-import org.newdawn.slick.tiled.TiledMap;
 
 public class Assets {
 

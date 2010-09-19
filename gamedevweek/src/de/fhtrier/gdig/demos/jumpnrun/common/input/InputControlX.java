@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.client.input;
+package de.fhtrier.gdig.demos.jumpnrun.common.input;
 
 import java.lang.reflect.Field;
 
@@ -7,7 +7,7 @@ import org.newdawn.slick.Input;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 
-public class InputControl {
+public class InputControlX {
 
 	// has to be adapted every time a new command is added or removed
 	private static final int NUMOFREFKEYS = 18;
@@ -101,7 +101,7 @@ public class InputControl {
 	
 	public static void setKeyMapping (String refKey, int key, int keyType) {
 		try {
-			int refKeyIndex = (Integer) InputControl.class.getDeclaredField(refKey).get(Input.class);
+			int refKeyIndex = (Integer) InputControlX.class.getDeclaredField(refKey).get(Input.class);
 			
 			REFCONTROLMAPPING2KEY[refKeyIndex] = key;
 			REFCONTROLMAPPING2KEYTYPE[refKeyIndex] = keyType;
@@ -144,7 +144,7 @@ public class InputControl {
 			Field declaredField = Input.class.getDeclaredField(keyIndexName);
 			declaredField.setAccessible(true);
 			int storedKeyIndex = (Integer) declaredField.get(Input.class);
-			int refKeyIndex = (Integer) InputControl.class.getDeclaredField(refKey).get(InputControl.class);
+			int refKeyIndex = (Integer) InputControlX.class.getDeclaredField(refKey).get(InputControlX.class);
 			
 			REFCONTROLMAPPING2KEY[refKeyIndex] = storedKeyIndex;
 			REFCONTROLMAPPING2KEYTYPE[refKeyIndex] = getInputType(keyIndexName);

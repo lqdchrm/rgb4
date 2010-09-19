@@ -8,11 +8,11 @@ import java.util.TreeSet;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.engine.helpers.Identifiable;
+import de.fhtrier.gdig.engine.input.InputController;
 
 public class Entity implements Identifiable {
 	/**
@@ -169,7 +169,7 @@ public class Entity implements Identifiable {
 		return this.order;
 	}
 
-	public void handleInput(final Input input) {
+	public void handleInput(final InputController<?> input) {
 		if (this.recursing) {
 			for (final Entity child : this.childrenInOrder) {
 				child.handleInput(input);
