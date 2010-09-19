@@ -34,7 +34,6 @@ import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.ShootStandi
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.StandingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActionState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActions;
-import de.fhtrier.gdig.demos.jumpnrun.common.input.GameInputCommands;
 import de.fhtrier.gdig.demos.jumpnrun.common.input.GameInputController;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.PlayerData;
@@ -42,6 +41,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEnt
 import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameInputCommands;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.GamePlayConstants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
@@ -360,6 +360,16 @@ public class Player extends LevelCollidableEntity implements
 				}
 			}
 
+			if (input.isKeyPressed(GameInputCommands.ROCKET)) {
+
+				if (fireDelay == Constants.GamePlayConstants.shotCooldown) {
+					NetworkComponent.getInstance().sendCommand(
+						new QueryAction(PlayerNetworkAction.SHOOT_ROCKET));
+					applyAction(PlayerActions.StartShooting);
+					fireDelay = 0;
+				}
+			}
+
 			// change player color
 			if (input.isKeyPressed(GameInputCommands.CHANGECOLOR)) {
 				nextColor();
@@ -645,7 +655,7 @@ public class Player extends LevelCollidableEntity implements
 				this.getPlayerCondition().setHealth(
 						getPlayerCondition().getHealth() - damage);
 
-				if (this.getPlayerCondition().getHealth() <= 0) {
+				if (this.getPlayerCondition().getHealth() <= Constants.EPSILON) {
 					NetworkComponent.getInstance().sendCommand(
 							new SendKill(this.getId(), killer != null ? killer
 									.getId() : -1));
@@ -789,4 +799,5 @@ public class Player extends LevelCollidableEntity implements
 	public ParticleEntity getWeaponParticleEntity() {
 		return this.weaponParticles;
 	}
+	
 }

@@ -15,36 +15,13 @@
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 
 
-	<controlDefinition name="credtext">
-			<panel id="top" height="10%" width="100%" childLayout="center">
-				<label id="ct" text="test" align="center"
-					valign="center">
-					<effect>
-						<onActive name="move" direction="top" mode="out"
-							length="3500" startDelay="0"/>
-					</effect>
-				</label>
-
-			</panel>			
-	</controlDefinition>
-
 	<screen id="start" controller="de.fhtrier.gdig.demos.jumpnrun.client.states.ClientCreditsState">
-		<layer id="layer" childLayout="center">
+		<layer id="layer" childLayout="center" style="in-out-transition" backgroundColor="#000d">
 			<panel id="credits" height="100%" width="100%" childLayout="vertical" style="scroller">
  				<panel height="100%"/>
 			</panel>
 		</layer>		
 	</screen>
 	
-	<screen id="0" controller="de.fhtrier.gdig.demos.jumpnrun.client.states.ClientCreditsState">
-		<layer id="layer" childLayout="center">
-			<panel id="credits" height="100%" width="100%" childLayout="vertical">
-
-			</panel>
-		</layer>		
-	</screen>
-
-
-
 
 </nifty>

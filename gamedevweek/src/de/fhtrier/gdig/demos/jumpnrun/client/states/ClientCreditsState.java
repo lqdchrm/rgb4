@@ -9,11 +9,10 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.state.transition.FadeInTransition;
-import org.newdawn.slick.state.transition.FadeOutTransition;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
+import de.lessvoid.nifty.EndNotify;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.dynamic.ImageCreator;
 import de.lessvoid.nifty.controls.dynamic.LabelCreator;
@@ -28,9 +27,19 @@ import de.lessvoid.nifty.tools.resourceloader.ResourceLoader;
  * 
  * credits: edit content/.../gui/credits.txt
  * 
+ * Different-Fonts mapped by the number of #
+ * (see rgb-style.xml and the <style id="credits-n">-descriptions)
+ * 
+ * 
+ * special one is # for loading images
  * ##test.png,200px,100px : loads picture from gui-dir with size 200,100
- * #Blabla : Glow-Text-Font
- * Hola : normal text
+ * 
+ * For now this 4 types are mapped:
+ * Hola
+ * #Blabla 
+ * ###Hola  
+ * ####Hola 
+ *  
  * 
  * In order to change the length of the scroller edit in rgb-style.xml the scroller-style
  * 
@@ -44,7 +53,8 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 	private static String creditsFile = menuAssetPath+"/credits.txt";
 	private StateBasedGame game;
 	private Element creditsPanel;
-	
+	private boolean waitingForTransition;
+
 	
 	public ClientCreditsState()
 	{
@@ -64,24 +74,21 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 		org.newdawn.slick.util.ResourceLoader
 				.addResourceLocation(new org.newdawn.slick.util.FileSystemLocation(
 						new File(menuAssetPath)));
-		// read the nifty-xml-fiel
+		// read the nifty-xml-file
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
-
+		
+		this.game = game;
 
 	}
 
-	
-	
 
-	
-	
 	@Override
 	public void keyPressed(int key, char c) {
 		super.keyPressed(key, c);
 		if (this.isAcceptingInput() && key==Input.KEY_ESCAPE)
 		{
-			game.enterState(GameStates.MENU, new FadeOutTransition(), new FadeInTransition());
+			translateToGamestate(GameStates.MENU);
 		}
 	}
 
@@ -109,19 +116,7 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 				int markElements = amountMarkerElements(line);
 				String trimmedLine = line.substring(markElements);
 
-				if (markElements < 2)
-				{
-					LabelCreator creator = new LabelCreator(count+"creds", trimmedLine);
-					if (markElements==0)
-						creator.setStyle("lobby-text");
-					else if (markElements==1)
-						creator.setStyle("header-label");
-					creator.setAlign("center");
-					creator.setWidth("100%");
-					creator.setHeight("10%");
-					creator.create(nifty, nifty.getCurrentScreen(), creditsPanel);
-				}
-				else if (markElements == 2)
+				if (markElements == 2)
 				{
 					ImageCreator image = new ImageCreator("img"+count);
 					StringTokenizer stk = new StringTokenizer(trimmedLine,",");
@@ -146,7 +141,15 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 					image.setAlign("center");
 					image.create(nifty, nifty.getCurrentScreen(),creditsPanel);
 				}
-
+				else
+				{
+						LabelCreator creator = new LabelCreator(count+"creds", trimmedLine);
+						creator.setStyle("credits-"+markElements);
+						creator.setAlign("center");
+						creator.setWidth("100%");
+						creator.setHeight("10%");
+						creator.create(nifty, nifty.getCurrentScreen(), creditsPanel);
+				}
 				count++;
 			}
 		} catch (Exception e) {
@@ -156,20 +159,23 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 
 	@Override
 	public void onEndScreen() {
-
 	}
 
 	@Override
 	public void onStartScreen() {
-
-		
 	}
 	
-	
-
-	
-
-
-	
-	
+	public void translateToGamestate(final int gameState)
+	{
+		if (waitingForTransition==false)
+		{
+			waitingForTransition = true;
+			nifty.getCurrentScreen().endScreen(new EndNotify() {
+				public void perform() {
+					game.enterState(gameState);				
+					waitingForTransition = false;
+				}
+			});
+		}
+	}	
 }

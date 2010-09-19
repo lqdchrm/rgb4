@@ -1,10 +1,11 @@
-package de.fhtrier.gdig.demos.jumpnrun.common.input;
+package de.fhtrier.gdig.demos.jumpnrun.identifiers;
 
 public enum GameInputCommands {
 	WALKLEFT,
 	WALKRIGHT,
 	JUMP,
 	SHOOT,
+	ROCKET,
 	OK,
 	BACK,
 	CHANGECOLOR,

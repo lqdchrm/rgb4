@@ -1,6 +1,6 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.input.logic;
 
-import de.fhtrier.gdig.demos.jumpnrun.common.input.GameRefKeys;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameRefKeys;
 import de.fhtrier.gdig.engine.input.logic.iface.IKeyNode;
 import de.fhtrier.gdig.engine.input.logic.iface.INode;
 import de.fhtrier.gdig.engine.input.logic.impl.PassThroughNode;

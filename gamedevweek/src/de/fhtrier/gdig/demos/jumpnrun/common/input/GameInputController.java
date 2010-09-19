@@ -7,6 +7,9 @@ import de.fhtrier.gdig.demos.jumpnrun.common.input.logic.SlickButtonDownNode;
 import de.fhtrier.gdig.demos.jumpnrun.common.input.logic.SlickButtonPressedNode;
 import de.fhtrier.gdig.demos.jumpnrun.common.input.logic.SlickKeyDownNode;
 import de.fhtrier.gdig.demos.jumpnrun.common.input.logic.SlickKeyPressedNode;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameInputCommands;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.GamePadButtons;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameRefKeys;
 import de.fhtrier.gdig.engine.input.InputController;
 import de.fhtrier.gdig.engine.input.logic.iface.INode;
 import de.fhtrier.gdig.engine.input.logic.impl.AndNode;
@@ -81,6 +84,7 @@ public class GameInputController extends InputController<GameInputCommands> {
 		INode jump = Helper.createOrCombination(jumpWithUp, jumpWithA);
 
 		INode shoot = Helper.createSimpleKeyPressedBinding(GameRefKeys.B, Input.KEY_S);
+		INode rocket = Helper.createSimpleKeyPressedBinding(GameRefKeys.START, Input.KEY_SPACE);
 		
 		INode ok = Helper.createSimpleKeyPressedBinding(GameRefKeys.X, Input.KEY_ENTER);
 		INode back = Helper.createSimpleKeyPressedBinding(GameRefKeys.Y, Input.KEY_ESCAPE);
@@ -142,6 +146,7 @@ public class GameInputController extends InputController<GameInputCommands> {
 		addConfigNode(GameInputCommands.WALKRIGHT, walkRight, false);
 		addConfigNode(GameInputCommands.JUMP, jump, true);
 		addConfigNode(GameInputCommands.SHOOT, shoot, true);
+		addConfigNode(GameInputCommands.ROCKET, rocket, true);
 		
 		addConfigNode(GameInputCommands.OK, ok, true);
 		addConfigNode(GameInputCommands.BACK, back, true);
@@ -198,7 +203,8 @@ public class GameInputController extends InputController<GameInputCommands> {
 		INode jump = Helper.createOrCombination(jumpWithUp, jumpWithA);
 
 		INode shoot = Helper.createSimpleButtonPressedBinding(GameRefKeys.B, GamePadButtons.BUTTON4);
-
+		INode rocket = Helper.createSimpleButtonPressedBinding(GameRefKeys.START, GamePadButtons.BUTTON12);
+		
 		INode ok = Helper.createSimpleButtonPressedBinding(GameRefKeys.X, GamePadButtons.BUTTON1);
 		INode back = Helper.createSimpleButtonPressedBinding(GameRefKeys.Y, GamePadButtons.BUTTON2);
 		
@@ -259,6 +265,7 @@ public class GameInputController extends InputController<GameInputCommands> {
 		addConfigNode(GameInputCommands.WALKRIGHT, walkRight, false);
 		addConfigNode(GameInputCommands.JUMP, jump, true);
 		addConfigNode(GameInputCommands.SHOOT, shoot, true);
+		addConfigNode(GameInputCommands.ROCKET, rocket, true);
 		addConfigNode(GameInputCommands.OK, ok, true);
 		addConfigNode(GameInputCommands.BACK, back, true);
 		addConfigNode(GameInputCommands.CHANGECOLOR, changeColor, true);

@@ -102,6 +102,13 @@ public class Assets {
 		public static final String GlowImagePath = "shader/bulletglow.png";
 	}
 
+	public static class Rocket {
+		public static final int AnimId = 21;
+		public static final String AnimPath = "sprites/items/rotatingglas_64_64_100.png";
+		public static final String GlowImagePath = "shader/rotatingglasglow.png";
+	}
+
+	
 	public static class Weapon {
 		public static final int StandingAnimId = 211;
 		public static final String StandingAnimImagePath = "sprites/player/weaponstehen_128_128_15.png";

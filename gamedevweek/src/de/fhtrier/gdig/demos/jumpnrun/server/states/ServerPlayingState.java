@@ -16,6 +16,8 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Bullet;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Rocket;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Rocket.RocketStrategy;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.QueryRespawn;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
@@ -32,6 +34,7 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendPlayerCondition;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
+import de.fhtrier.gdig.engine.helpers.AStarTiledMap;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
@@ -75,8 +78,8 @@ public class ServerPlayingState extends PlayingState {
 			// set values
 			Bullet bullet = (Bullet) e;
 			bullet.owner = player;
-
 			bullet.color = player.getWeaponColor();
+
 			// set player pos as gem pos
 			bullet.getData()[Entity.X] = (player.getData()[Entity.X] + player
 					.getData()[Entity.CENTER_X])
@@ -91,13 +94,40 @@ public class ServerPlayingState extends PlayingState {
 			bullet.getVel()[Entity.X] = player.getVel()[Entity.X]
 					+ (player.getData()[Entity.SCALE_X] == -1 ? Constants.GamePlayConstants.shotSpeed
 							: -Constants.GamePlayConstants.shotSpeed);
-
+			
 			if (player.getData()[Entity.SCALE_X] == -1) // Right
 				bullet.getData()[Entity.SCALE_X] = -1;
+
 
 			else if (player.getData()[Entity.SCALE_X] == 1) // Left
 				bullet.getData()[Entity.SCALE_X] = 1;
 
+			return true;
+		case SHOOT_ROCKET:
+			e = createEntity(EntityType.ROCKET, this.levelId);
+
+			// set values
+			Rocket rocket = (Rocket) e;
+			rocket.owner = player;
+			rocket.map = (AStarTiledMap)getLevel().getMap();
+			
+			rocket.color = player.getWeaponColor();
+			// set player pos as gem pos
+
+			rocket.getData()[Entity.X] = player.getData()[Entity.X] + player.getData()[Entity.CENTER_X];
+			rocket.getData()[Entity.Y] = player.getData()[Entity.Y] + player.getData()[Entity.CENTER_Y];
+			rocket.getData()[Entity.X] =
+				(player.getData()[Entity.X] + player.getData()[Entity.CENTER_X]) +
+				(rocket.getData()[Entity.CENTER_X] - Assets.Weapon.weaponXOffset) * player.getData()[Entity.SCALE_X];
+
+			rocket.getData()[Entity.Y] =
+			player.getData()[Entity.Y] + player.getData()[Entity.CENTER_Y] -
+			rocket.getData()[Entity.CENTER_Y] + Assets.Weapon.weaponYOffset;
+			
+
+			
+			rocket.shootAtClosestPlayer(RocketStrategy.NEXT_ENEMY_TEAM);
+			
 			return true;
 		case RESPAWN:
 			if (actionCmd instanceof QueryRespawn) {

@@ -17,6 +17,7 @@ public class InputControlX {
 	public static final int REFWALKRIGHT = 1;
 	public static final int REFJUMP = 2;
 	public static final int REFFIRE = 3;
+	public static final int REFFIRE2 = 11;
 	public static final int REFCHANGEWEAPON= 4;
 	public static final int REFCHANGECOLOR= 5;
 	public static final int REFCHANGEBOTHCOLORS= 11;
@@ -117,6 +118,7 @@ public class InputControlX {
 			setStoredKeyMapping("REFWALKRIGHT");
 			setStoredKeyMapping("REFJUMP");
 			setStoredKeyMapping("REFFIRE");
+			setStoredKeyMapping("REFFIRE2");
 			setStoredKeyMapping("REFCHANGEWEAPON");
 			setStoredKeyMapping("REFCHANGECOLOR");
 			setStoredKeyMapping("REFBACK");

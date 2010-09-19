@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.common.input;
+package de.fhtrier.gdig.demos.jumpnrun.identifiers;
 
 public class GamePadButtons {
 	public static final int D_LEFT = 0;

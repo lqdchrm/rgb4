@@ -5,7 +5,6 @@ import java.net.InetSocketAddress;
 import org.newdawn.slick.Color;
 
 import de.fhtrier.gdig.engine.helpers.Configuration;
-
 public class Constants {
 
 	public static final float EPSILON = 0.0001f;
@@ -92,6 +91,8 @@ public class Constants {
 		public static boolean showProtocolCommandsOnly = false;
 		
 		public static boolean factoryDebug = false;
+
+		public static boolean debugGameLogic = false;
 	}
 	
 	public static class Level extends Configuration {
@@ -114,6 +115,7 @@ public class Constants {
 		public static String REFFULLSCREEN = "KEY_F1";
 
 		public static String REFFIRE = "KEY_F";
+		public static String REFFIRE2 = "KEY_LCONTROL";
 		public static String REFCHANGEWEAPON = "KEY_F5";
 		public static String REFCHANGECOLOR = "KEY_F6";
 		public static String REFCHANGEBOTHCOLORS = "KEY_D";
@@ -143,5 +145,12 @@ public class Constants {
 		public static int port;
 		@CommandlineParameter("Adress")
 		public static InetSocketAddress adress;
+	}
+	
+	public static class GuiConfig extends Configuration
+	{
+		public static final String WAITING_FOR_MASTER_TEXT = "Waiting for Master to Start!";
+		public static de.lessvoid.nifty.tools.Color btnSelectedColor = new de.lessvoid.nifty.tools.Color(1,1,1,1);
+		public static de.lessvoid.nifty.tools.Color btnNotSelectedColor = new de.lessvoid.nifty.tools.Color(0.8f,0.8f,0.8f,1);
 	}
 }

@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.common.input;
+package de.fhtrier.gdig.demos.jumpnrun.identifiers;
 
 public enum GameRefKeys {
 	D_LEFT,

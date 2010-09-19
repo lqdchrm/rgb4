@@ -224,6 +224,10 @@ public class Entity implements Identifiable {
 	}
 
 	public void remove(final Entity e) {
+		// HACK! 
+		if (e==null)
+			return;
+		
 		if (this.children.containsKey(e.getId())) {
 			this.childrenInOrder.remove(e);
 			this.children.remove(e.getId());

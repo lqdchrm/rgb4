@@ -1,17 +1,19 @@
-package de.fhtrier.gdig.demos.jumpnrun.client.states.gui;
+package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.engine.graphics.shader.Shader;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 
-public class MenuBackground {
+public class MenuBackgroundRenderer {
 	
 	private Image backgroundImage;
 	private Shader menuShader;
@@ -22,18 +24,20 @@ public class MenuBackground {
 	private Image bgglowImage;
 	private int counter = 0;
 	
-	private static MenuBackground instance=null;
+	private ParticleSystem mouseParticle;
+	
+	private static MenuBackgroundRenderer instance=null;
 
-	public static MenuBackground getInstance()
+	public static MenuBackgroundRenderer getInstance()
 	{
 		if (instance==null)
 		{
-			instance = new MenuBackground();
+			instance = new MenuBackgroundRenderer();
 		}
 		return instance;
 	}
 	
-	private MenuBackground()
+	private MenuBackgroundRenderer()
 	{
 		try {
 			AssetMgr amgr = new AssetMgr();
@@ -43,7 +47,7 @@ public class MenuBackground {
 					amgr.getPathRelativeToAssetPath("shader/menucolor.frag"));
 			col = new Color(2, 0, 0, 0.5f);
 		} catch (SlickException e) {
-			e.printStackTrace();
+			Log.error(e);
 		}
 	}
 	
@@ -77,4 +81,9 @@ public class MenuBackground {
 		return f;
 	}
 
+	
+	public void renderMouseParticle()
+	{
+		
+	}
 }
