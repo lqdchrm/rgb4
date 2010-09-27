@@ -1,5 +1,6 @@
 package de.fhtrier.gdig.demos.jumpnrun.starters;
 
+import java.io.IOException;
 import java.net.InterfaceAddress;
 
 import org.newdawn.slick.AppGameContainer;
@@ -13,7 +14,7 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkHelper;
 
 public class JumpNRunServer {
 
-	public static void main(String[] args) throws NumberFormatException, SlickException {
+	public static void main(String[] args) throws NumberFormatException, SlickException, IOException {
 		// create game
 		ServerGame serverGame = null;
 

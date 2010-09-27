@@ -8,6 +8,7 @@ import java.util.concurrent.Semaphore;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
@@ -117,6 +118,14 @@ public class ClientSelectServerState extends NiftyGameState implements
 		// read the nifty-xml-fiel
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
+
+		 try {
+		        enableMouseImage(new Image(
+		            ResourceLoader.getResourceAsStream(Assets.Config.AssetGuiPath + "/crosshair.png"), "Cursor", false));
+		    } catch (SlickException e) {
+		        Log.error("Image loading failed in ServerSettingsState");
+		        e.printStackTrace();
+		    }
 	}
 
 	@Override

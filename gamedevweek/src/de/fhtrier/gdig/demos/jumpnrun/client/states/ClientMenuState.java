@@ -4,8 +4,10 @@ import java.io.File;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
@@ -42,6 +44,14 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
 
+		 try {
+		        enableMouseImage(new Image(
+		            ResourceLoader.getResourceAsStream(Assets.Config.AssetGuiPath + "/crosshair.png"), "Cursor", false));
+		    } catch (SlickException e) {
+		        Log.error("Image loading failed in ServerSettingsState");
+		        e.printStackTrace();
+		    }
+		    
 		// play menu background Sound
 		SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0.2f);
 		// SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f, false);

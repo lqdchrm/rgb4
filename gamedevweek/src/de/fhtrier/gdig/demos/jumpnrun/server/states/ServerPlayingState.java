@@ -7,6 +7,7 @@ import java.util.Queue;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
@@ -314,6 +315,9 @@ public class ServerPlayingState extends PlayingState {
 
 	@Override
 	public void notify(INetworkCommand cmd) {
+		
+		Log.info(cmd.toString());
+		
 		this.queue.add(cmd);
 	}
 

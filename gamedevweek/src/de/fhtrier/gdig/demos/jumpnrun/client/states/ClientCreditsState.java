@@ -6,9 +6,11 @@ import java.io.FileReader;
 import java.util.StringTokenizer;
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
@@ -78,6 +80,15 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
 		
+		 try {
+		        enableMouseImage(new Image(
+		            ResourceLoader.getResourceAsStream(Assets.Config.AssetGuiPath + "/crosshair.png"), "Cursor", false));
+		    } catch (SlickException e) {
+		        Log.error("Image loading failed in ServerSettingsState");
+		        e.printStackTrace();
+		    }
+
+		    
 		this.game = game;
 
 	}
