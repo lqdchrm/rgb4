@@ -70,6 +70,7 @@ public class ServerPlayingState extends PlayingState {
 
 		switch (actionCmd.getAction()) {
 		case SHOOT:
+			for(int i = 0; i < 2 ; i++) {
 			e = createEntity(EntityType.BULLET, this.levelId);
 
 			// set values
@@ -97,7 +98,13 @@ public class ServerPlayingState extends PlayingState {
 
 			else if (player.getData()[Entity.SCALE_X] == 1) // Left
 				bullet.getData()[Entity.SCALE_X] = 1;
-
+			
+			if (i == 0) {
+				bullet.setStartValue(0.0);
+			} else {
+				bullet.setStartValue(Math.PI);
+			}
+			}
 			return true;
 		case RESPAWN:
 			if (actionCmd instanceof QueryRespawn) {
