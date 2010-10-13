@@ -37,6 +37,7 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 
 	AssetMgr asset = new AssetMgr();
 	private Random random;
+	private float trancparentFadeout;
 
 	public void setLevel(Level level) {
 		this.level = level;
@@ -62,7 +63,7 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 		}
 
 		isDDDActive = true;
-
+		trancparentFadeout = 0.5f;
 		outerRadius = 0;
 
 		timeSinceActivation = 0;
@@ -92,7 +93,7 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 	protected void renderImpl(Graphics graphicContext, Image frameBuffer) {
 		super.renderImpl(graphicContext, frameBuffer);
 
-		if (!isDDDActive) {
+		if (!isDDDActive && trancparentFadeout <= 0.0f) {
 			return;
 		}
 
@@ -103,8 +104,8 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 				asset.getImage(Assets.DoomsdayBigExplosionImageId).getWidth(),
 				asset.getImage(Assets.DoomsdayBigExplosionImageId).getHeight(),
 				new Color(constIntoColor.r, constIntoColor.g, constIntoColor.b,
-						0.5f));
-		
+						trancparentFadeout));
+
 		// TODO should not be necessary
 		// graphicContext.flush();
 	}
@@ -116,6 +117,8 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 		float secs = deltaInMillis / 1000.0f;
 
 		if (!isActive() || level == null || !isDDDActive) {
+			if (trancparentFadeout > 0.0f)
+				trancparentFadeout -= 0.05;
 			return;
 		}
 
@@ -126,7 +129,6 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 		}
 
 		this.outerRadius += options.speed * secs;
-
 
 		// determine which entities to check
 		Set<Player> players = new HashSet<Player>();
@@ -139,23 +141,25 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 			if (entity instanceof Player)
 				players.add((Player) entity);
 		}
-		
+
 		// check each player for hit and if so, mark it
 		for (Player player : players) {
 			if (hitPlayer.contains(player)) {
 				continue;
 			}
-			
+
 			float playerPosX = player.getTransformedBounds().getCenterX();
 			float playerPosY = player.getTransformedBounds().getCenterY();
-			
-			float playerdistance = 
-				(playerPosX - getData()[X]) * (playerPosX - getData()[X]) +
-				(playerPosY - getData()[Y]) * (playerPosY - getData()[Y]);
 
-			float hitDistance = (outerRadius-options.hitSize) * (outerRadius-options.hitSize);
-			
-			if (playerdistance >= hitDistance && playerdistance <= (outerRadius*outerRadius) ) {
+			float playerdistance = (playerPosX - getData()[X])
+					* (playerPosX - getData()[X]) + (playerPosY - getData()[Y])
+					* (playerPosY - getData()[Y]);
+
+			float hitDistance = (outerRadius - options.hitSize)
+					* (outerRadius - options.hitSize);
+
+			if (playerdistance >= hitDistance
+					&& playerdistance <= (outerRadius * outerRadius)) {
 				if (!player.doDamage(damageColor, options.damage, null))
 					hitPlayer.add(player);
 
@@ -167,12 +171,14 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 		float right = level.getWidth() - getData()[X];
 		float top = -getData()[Y];
 		float bottom = level.getWidth() - getData()[Y];
-		
-		float innerRadiusSqrd = (outerRadius-options.size) * (outerRadius-options.size);
+
+		float innerRadiusSqrd = (outerRadius - options.size)
+				* (outerRadius - options.size);
 		float maxLevelDistX = Math.max(left, right);
 		float maxLevelDistY = Math.max(top, bottom);
-		float maxLevelDist = maxLevelDistX * maxLevelDistX + maxLevelDistY * maxLevelDistY;
-		
+		float maxLevelDist = maxLevelDistX * maxLevelDistX + maxLevelDistY
+				* maxLevelDistY;
+
 		if (innerRadiusSqrd > maxLevelDist) {
 			isDDDActive = false;
 			setVisible(false);
@@ -186,7 +192,8 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 		result.damageColor = damageColor;
 		result.isActive = isDDDActive;
 		result.outerRadius = outerRadius;
-		
+		result.transparentValue = trancparentFadeout;
+
 		return result;
 	}
 
@@ -199,6 +206,7 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 			damageColor = result.damageColor;
 			isDDDActive = result.isActive;
 			outerRadius = result.outerRadius;
+			trancparentFadeout = result.transparentValue;
 		} else {
 			throw new IllegalArgumentException("Wrong package type received");
 		}
