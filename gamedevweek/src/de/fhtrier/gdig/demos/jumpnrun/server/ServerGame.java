@@ -57,13 +57,14 @@ public class ServerGame extends RGB4Game {
 		// create SoundManager
 		GameSoundManager.init(false);
 
-		
+		/*
 		Constants.GamePlayConstants c = new Constants.GamePlayConstants();
 		Constants.Debug d = new Debug();
 		Constants.SoundConfig s = new Constants.SoundConfig();
 		d.showEditor("Server",
 				new JPanel[] { d.getEdittingPanel(), c.getEdittingPanel(), s.getEdittingPanel() });
-	}
+		 */
+		}
 
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {

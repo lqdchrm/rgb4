@@ -30,7 +30,7 @@ public class ClientGame extends RGB4Game {
 		NetworkComponent.getInstance().addListener(this);
 		
 		GameSoundManager.init(true);
-
+/*
 		Constants.GamePlayConstants c1 = new Constants.GamePlayConstants();
 
 		Constants.ControlConfig c2 = new Constants.ControlConfig();
@@ -45,7 +45,7 @@ public class ClientGame extends RGB4Game {
 					c2.getEdittingPanel(),
 					c3.getEdittingPanel(),
 					c4.getEdittingPanel()}
-		);
+		);*/
 	}
 
 	@Override

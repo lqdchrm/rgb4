@@ -8,6 +8,7 @@ public class Constants
 {
 
 	public static final float EPSILON = 0.0001f;
+	public static final String LIBPATH = "../ext/lib/native";
 
 	public static class GamePlayConstants extends Configuration
 	{
@@ -80,10 +81,13 @@ public class Constants
 		public static boolean guiDebug = false;
 		
 		// network
+		public static boolean serverDebug = true;
 		public static boolean networkDebug = false;
 		public static boolean showProtocolCommandsOnly = false;
 		
 		public static boolean factoryDebug = false;
+
+		
 	}
 	
 	public static class Level extends Configuration
