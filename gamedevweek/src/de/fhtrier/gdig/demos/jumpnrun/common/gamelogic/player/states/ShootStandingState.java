@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states;
+﻿package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states;
 
 import org.newdawn.slick.SlickException;
 
@@ -12,7 +12,6 @@ import de.fhtrier.gdig.engine.management.Factory;
 
 public class ShootStandingState extends AbstractShootState {
 
-
 	public ShootStandingState(int stateId, Player player, Factory factory)
 			throws SlickException {
 		super(stateId, player, Assets.Player.aShootStandingAnimId, Assets.Player.bShootStandingAnimId, Assets.Player.aShootStandingImagePath, Assets.Player.bShootStandingImagePath, Assets.Weapon.ShootStandingAnimId,
@@ -20,7 +19,7 @@ public class ShootStandingState extends AbstractShootState {
 				factory);
 
 	}
-	
+
 	@Override
 	public void enter () {
 		super.enter();

@@ -7,13 +7,9 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.state.transition.FadeInTransition;
-import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.Log;
 
-import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackground;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.engine.sound.SoundManager;
 import de.lessvoid.nifty.EndNotify;
@@ -26,7 +22,6 @@ import de.lessvoid.nifty.tools.resourceloader.ResourceLoader;
 
 public class ClientMenuState extends NiftyGameState implements ScreenController {
 
-	private static final String CROSSHAIR_PNG = "crosshair.png";
 	public static String menuNiftyXMLFile = "mainmenu.xml";
 	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 
@@ -42,62 +37,67 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 				menuAssetPath)));
 
 		org.newdawn.slick.util.ResourceLoader
-				.addResourceLocation(new org.newdawn.slick.util.FileSystemLocation(
-						new File(menuAssetPath)));
-
-		// read the nifty-xml-fiel
+			.addResourceLocation(new org.newdawn.slick.util.FileSystemLocation(
+				new File(menuAssetPath)));
+		
+		// read the nifty-xml-file
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
 
-		// show the mouse
-		enableMouseImage(new Image(
-				ResourceLoader.getResourceAsStream(CROSSHAIR_PNG),
-				CROSSHAIR_PNG, false));
-
-		// init Sound
-		SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0f);
-		SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f,
-				false);
+		 try {
+		        enableMouseImage(new Image(
+		            ResourceLoader.getResourceAsStream(Assets.Config.AssetGuiPath + "/crosshair.png"), "Cursor", false));
+		    } catch (SlickException e) {
+		        Log.error("Image loading failed in ServerSettingsState");
+		        e.printStackTrace();
+		    }
+		    
+		// play menu background Sound
+		SoundManager.loopMusic(Assets.Sounds.MenuSoundtrackId, 1.0f, 0.2f);
+		// SoundManager.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0.2f, false);
 	}
 
 	public void bind(final Nifty newNifty, final Screen newScreen) {
 		screen = newScreen;
 	}
-
+	
 	public void onStartScreen() {
 		if (screen.getScreenId().equals("start")) {
 			nifty.gotoScreen("mainMenu");
-		} else if (screen.getScreenId().equals("newGame")) {
-			// screen.findElementByName("newGame").setFocus();
 		}
 		screen.getFocusHandler().setKeyFocus(null);
 	}
 
 	public void onEndScreen() {
-		SoundManager
-				.fadeMusic(Assets.Sounds.MenuSoundtrackId, 50000, 0f, false);
-		SoundManager.stopMusic(Assets.Sounds.MenuSoundtrackId);
+
 	}
 
 	@Override
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		try {
-			MenuBackground.getInstance().render(container, game, g);
+			MenuBackgroundRenderer.getInstance().render(container, game, g);
 			super.render(container, game, g);
+			MenuBackgroundRenderer.getInstance().renderMouseParticle();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void joinGame() {
-		game.enterState(GameStates.SERVER_SELECTION, new FadeOutTransition(),
-				new FadeInTransition());
+		screen.endScreen(new EndNotify() {
+			public void perform() {
+				game.enterState(GameStates.SERVER_SELECTION);
+			}
+		});
 	}
 
 	public void hostGame() {
-		game.enterState(GameStates.SERVER_SETTINGS, new FadeOutTransition(),
-				new FadeInTransition());
+		screen.endScreen(new EndNotify() {
+			public void perform() {
+				game.enterState(GameStates.SERVER_SETTINGS);
+			}
+		});
 	}
 
 	public void exit() {
@@ -109,20 +109,30 @@ public class ClientMenuState extends NiftyGameState implements ScreenController 
 	}
 
 	public void credits() {
-		game.enterState(GameStates.CLIENT_CREDITS, new FadeOutTransition(),
-				new FadeInTransition());
+		screen.endScreen(new EndNotify() {
+			public void perform() {
+				game.enterState(GameStates.CLIENT_CREDITS);
+			}
+		});
 	}
 
+	@Override
 	public void mouseMoved(final int oldx, final int oldy, final int newx,
 			final int newy) {
 		super.mouseMoved(oldx, oldy, newx, newy);
-
-		if (Constants.Debug.guiDebug) {
-			Log.debug(oldx + ", " + oldy + ", " + newx + ", " + newy);
-		}
 	}
 
+	@Override
 	public Nifty getNifty() {
 		return nifty;
+	}
+	
+	@Override
+	public void leave(GameContainer container, StateBasedGame game)
+			throws SlickException {
+		super.leave(container, game);
+		// set on transition-in-out-screen
+		if (!nifty.getCurrentScreen().equals("mainMenu_with_transition"))
+			nifty.gotoScreen("mainMenu_with_transition");
 	}
 }

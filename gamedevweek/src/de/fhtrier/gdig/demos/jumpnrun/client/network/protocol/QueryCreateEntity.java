@@ -1,6 +1,8 @@
 package de.fhtrier.gdig.demos.jumpnrun.client.network.protocol;
 
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreateEntity;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoCreateEntity;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
 
 /**

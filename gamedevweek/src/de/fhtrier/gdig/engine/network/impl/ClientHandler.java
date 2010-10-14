@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.engine.network.impl;
+﻿package de.fhtrier.gdig.engine.network.impl;
 
 import java.io.EOFException;
 import java.io.IOException;

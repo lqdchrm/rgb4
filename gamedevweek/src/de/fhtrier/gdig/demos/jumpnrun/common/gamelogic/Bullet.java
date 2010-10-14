@@ -21,10 +21,10 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
+import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
 import de.fhtrier.gdig.engine.graphics.shader.Shader;
 import de.fhtrier.gdig.engine.management.AssetMgr;
@@ -40,6 +40,15 @@ public class Bullet extends LevelCollidableEntity {
 	public AssetMgr assets;
 	private static Image bulletGlow;
 	public int color;
+	private int flightTime;
+	private final static float AMPLITUDE = 40;
+	private final static float FREQUENCY = 0.8f;
+	private float offset;
+	private double startValue;
+
+	public void setStartValue(double startValue) {
+		this.startValue = startValue;
+	}
 
 	public Bullet(int id, Factory factory) throws SlickException {
 		super(id, EntityType.BULLET);
@@ -99,6 +108,15 @@ public class Bullet extends LevelCollidableEntity {
 		result.bulletColor = this.color;
 
 		return result;
+	}
+	
+	@Override
+	public void update(int deltaInMillis) {
+		getData()[Entity.Y] = getData()[Entity.Y] + offset * AMPLITUDE;
+		super.update(deltaInMillis);
+		offset = ((float)-Math.cos((Math.PI*2*(startValue + flightTime/1000.0f))*FREQUENCY)) + 1.0f;
+		flightTime += deltaInMillis;
+		getData()[Entity.Y] = getData()[Entity.Y] - offset * AMPLITUDE;
 	}
 
 	@Override

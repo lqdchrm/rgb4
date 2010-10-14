@@ -14,6 +14,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryConnect;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetLevel;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetTeam;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryStartGame;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.ServerGame;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkLevel;
@@ -62,7 +63,7 @@ public class ServerLobbyState extends BasicGameState  implements
 			throws SlickException {
 		// recv and execute items in queue
 		for (INetworkCommand data : this.queue) {
-			if (data != null && !data.isHandled()) {
+			if (data != null ) {
 
 				if (data instanceof ProtocolCommand) {
 					handleProtocolCommands(data);
@@ -87,8 +88,10 @@ public class ServerLobbyState extends BasicGameState  implements
 			NetworkComponent.getInstance().sendCommand(data.getSender(), new AckConnect());
 			players.put(data.getSender(), new NetworkPlayer(name, data.getSender()));
 			NetworkComponent.getInstance().sendCommand(new AckNewPlayerList(players));
-			if (currentLevel!=null)
+			if (currentLevel!=null){
 				NetworkComponent.getInstance().sendCommand(new AckSetLevel(currentLevel));
+			}
+			data.setHandled(true);
 		}
 		else if (data instanceof ClientQueryDisconnect)
 		{
@@ -99,25 +102,24 @@ public class ServerLobbyState extends BasicGameState  implements
 		else if (data instanceof QueryStartGame) {
 			serverGame.enterState(GameStates.PLAYING);
 			NetworkComponent.getInstance().sendCommand(new AckStartGame());
+			data.setHandled(true);
 		}
 		else if (data instanceof QuerySetTeam)
 		{
 			players.get(data.getSender()).setTeamId(((QuerySetTeam)data).getTeamID());
 			NetworkComponent.getInstance().sendCommand(new AckNewPlayerList(players));
+			data.setHandled(true);
 		}
 		else if (data instanceof QuerySetLevel)
 		{
 			currentLevel = ((QuerySetLevel)data).getNetworkLevel();
+			Assets.Config.AssetManagerPath = currentLevel.getAssetPath();
 			NetworkComponent.getInstance().sendCommand(new AckSetLevel(((QuerySetLevel)data).getNetworkLevel()));
+			data.setHandled(true);
 		}
 		
 	}
 
-	@Override
-	public void enter(GameContainer container, StateBasedGame game)
-			throws SlickException {
-		super.enter(container, game);
-	}
 	
 	@Override
 	public void leave(GameContainer container, StateBasedGame game)
@@ -135,6 +137,12 @@ public class ServerLobbyState extends BasicGameState  implements
 	@Override
 	public void notify(INetworkCommand cmd) {
 		queue.add(cmd);
+	}
+	
+	public static void removePlayer(int networkId)
+	{
+		players.remove(networkId);
+		NetworkComponent.getInstance().sendCommand(new AckNewPlayerList(players));
 	}
 
 }

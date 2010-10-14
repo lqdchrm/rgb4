@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.server;
+﻿package de.fhtrier.gdig.demos.jumpnrun.server;
 
 import java.net.InterfaceAddress;
 import java.util.List;
@@ -16,6 +16,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.Debug;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkHelper;
 import de.fhtrier.gdig.demos.jumpnrun.server.states.ServerLobbyState;
 import de.fhtrier.gdig.demos.jumpnrun.server.states.ServerPlayingState;
+import de.fhtrier.gdig.engine.helpers.Configuration;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.NetworkBroadcastListener;
 
@@ -27,7 +28,6 @@ public class ServerGame extends RGB4Game {
 
 	public ServerGame(String serverName, InterfaceAddress ni, int port) throws SlickException {
 		super(Assets.Config.GameTitle + " (" + serverName + ")");
-
 		// do network stuff
 		
 		this.serverName = serverName;
@@ -36,7 +36,8 @@ public class ServerGame extends RGB4Game {
 
 		// TODO read in interface from somewhere
 		if (networkInterface == null) {
-			List<InterfaceAddress> networkInterfaces = NetworkHelper.getInterfaces();
+			List<InterfaceAddress> networkInterfaces = NetworkHelper
+					.getInterfaces();
 
 			if (networkInterfaces.size() > 0) {
 				networkInterface = networkInterfaces.get(0);
@@ -51,20 +52,18 @@ public class ServerGame extends RGB4Game {
 		NetworkComponent.getInstance().startListening(networkInterface, port);
 		
 		netBroadCastListener = new NetworkBroadcastListener(serverName, "map1",
-				"1.0", port, networkInterface );
+				"1.0", port);
 		netBroadCastListener.start();
 
 		// create SoundManager
 		GameSoundManager.init(false);
-
-		/*
+		
 		Constants.GamePlayConstants c = new Constants.GamePlayConstants();
 		Constants.Debug d = new Debug();
 		Constants.SoundConfig s = new Constants.SoundConfig();
-		d.showEditor("Server",
+		Configuration.showEditor("Server",
 				new JPanel[] { d.getEdittingPanel(), c.getEdittingPanel(), s.getEdittingPanel() });
-		 */
-		}
+	}
 
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {

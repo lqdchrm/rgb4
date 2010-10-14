@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.client.states;
+﻿package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import java.util.LinkedList;
 import java.util.Map.Entry;
@@ -12,7 +12,6 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.ClientGame;
-import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
@@ -21,8 +20,6 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerConditi
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.SpawnPoint;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
@@ -65,7 +62,7 @@ public class ClientPlayingState extends PlayingState {
 	private ServerData recv;
 	private ClientData send;
 
-	public ClientPlayingState() throws SlickException {
+	public ClientPlayingState() {
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ClientData();
 	}
@@ -79,9 +76,6 @@ public class ClientPlayingState extends PlayingState {
 		// ask server to join game
 		NetworkComponent.getInstance().sendCommand(new QueryJoin());
 		setState(LocalState.JOINING);
-
-		// InputControl initialisieren
-		InputControl.loadKeyMapping();
 	}
 
 	private boolean handleProtocolCommands(INetworkCommand cmd) {
@@ -107,9 +101,8 @@ public class ClientPlayingState extends PlayingState {
 
 			SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
 			SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
-			SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 50000,
+			SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 5000,
 					0.2f, false);
-
 			return true;
 		}
 
@@ -138,8 +131,11 @@ public class ClientPlayingState extends PlayingState {
 			Entity e = this.getFactory().getEntity(id);
 			e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 
-			getLevel().add(getFactory().getEntity(id));
-
+			if (dce.getParentId() > -1) {
+				Entity parent = getFactory().getEntity(dce.getParentId());
+				parent.add(getFactory().getEntity(id));
+			}
+			
 			// HACK special treatment for players
 			if (e instanceof Player) {
 				NetworkComponent.getInstance().sendCommand(
@@ -161,22 +157,39 @@ public class ClientPlayingState extends PlayingState {
 				getLevel().setCurrentPlayer(-1);
 			}
 
-			// robindi: Bugfix, removeEntity from CollisionManager!
+
 			CollisionManager.removeEntity((CollidableEntity) getFactory()
 					.getEntity(id));
-
+			
 			getLevel().remove(getFactory().getEntity(id));
 
 			// remove Entity recursively from Factory
 			getFactory().removeEntity(id, true);
 
+//			// robindi: Bugfix, removeEntity from CollisionManager!
+//			CollisionManager.removeEntity((CollidableEntity) getFactory().getEntity(id));
+//			
+//			
+//			Entity entityToRemove = getFactory().getEntity(id);				
+//			if (entityToRemove==null && Constants.Debug.networkDebug)
+//			{
+//				Log.error("Tried to remove Entity with id="+id+" but this id was not known to factory!!!");
+//			}
+//			else
+//			{
+//				getLevel().remove(entityToRemove);
+//				// remove Entity recursively from Factory
+//				getFactory().removeEntity(id, true);
+//			}
+
+
 			return true;
 		}
-
+		
 		// DoPlaySound... well it just does what it says
 		if (cmd instanceof DoPlaySound) {
 			DoPlaySound dps = (DoPlaySound) cmd;
-
+			
 			SoundManager.playSound(dps.getSoundAssetId());
 			return true;
 		}
@@ -203,7 +216,7 @@ public class ClientPlayingState extends PlayingState {
 
 		if (cmd instanceof SendKill) {
 			SendKill killCommand = (SendKill) cmd;
-
+			
 			Player player = getLevel().getPlayer(killCommand.getPlayerId());
 			player.die();
 
@@ -212,7 +225,7 @@ public class ClientPlayingState extends PlayingState {
 
 		if (cmd instanceof SendWon) {
 			SendWon wonCommand = (SendWon) cmd;
-
+			
 			Event winEvent;
 			if (wonCommand.getWinnerType() == SendWon.winnerType_Player) {
 				winEvent = new WonGameEvent(getLevel().getPlayer(
@@ -221,7 +234,6 @@ public class ClientPlayingState extends PlayingState {
 				winEvent = new WonGameEvent(Team.getTeamById(wonCommand
 						.getWinnerId()));
 			}
-
 			EventManager.addEvent(winEvent);
 			return true;
 		}
@@ -286,12 +298,6 @@ public class ClientPlayingState extends PlayingState {
 				}
 			}
 		}
-
-		// nur zu DEBUG-Zwecken
-		InputControl.loadKeyMapping();
-
-		// update InputControl
-		InputControl.updateInputControl(container.getInput());
 
 		// update local data
 		super.update(container, game, deltaInMillis);

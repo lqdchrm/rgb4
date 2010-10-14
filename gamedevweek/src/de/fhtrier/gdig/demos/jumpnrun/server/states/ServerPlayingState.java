@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.server.states;
+﻿package de.fhtrier.gdig.demos.jumpnrun.server.states;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -7,6 +7,7 @@ import java.util.Queue;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
@@ -16,6 +17,8 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Bullet;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Rocket;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Rocket.RocketStrategy;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.QueryRespawn;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
@@ -32,6 +35,7 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendPlayerCondition;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
+import de.fhtrier.gdig.engine.helpers.AStarTiledMap;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.network.impl.protocol.ProtocolCommand;
@@ -50,8 +54,17 @@ public class ServerPlayingState extends PlayingState {
 
 		SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
 		SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
-		SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 50000, 0.2f,
+		SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 5000, 0.2f,
 				false);
+	}
+
+	@Override
+	public void enter(GameContainer container, StateBasedGame game)
+			throws SlickException {
+		super.enter(container, game);
+		
+		// Level
+		getLevel().init(true);
 	}
 
 	private boolean handlePlayerActions(QueryAction actionCmd) {
@@ -61,13 +74,14 @@ public class ServerPlayingState extends PlayingState {
 
 		switch (actionCmd.getAction()) {
 		case SHOOT:
-			e = createEntity(EntityType.BULLET);
+			for(int i = 0; i < 2 ; i++) {
+			e = createEntity(EntityType.BULLET, this.levelId);
 
 			// set values
 			Bullet bullet = (Bullet) e;
 			bullet.owner = player;
-
 			bullet.color = player.getWeaponColor();
+
 			// set player pos as gem pos
 			bullet.getData()[Entity.X] = (player.getData()[Entity.X] + player
 					.getData()[Entity.CENTER_X])
@@ -82,13 +96,46 @@ public class ServerPlayingState extends PlayingState {
 			bullet.getVel()[Entity.X] = player.getVel()[Entity.X]
 					+ (player.getData()[Entity.SCALE_X] == -1 ? Constants.GamePlayConstants.shotSpeed
 							: -Constants.GamePlayConstants.shotSpeed);
-
+			
 			if (player.getData()[Entity.SCALE_X] == -1) // Right
 				bullet.getData()[Entity.SCALE_X] = -1;
 
+
 			else if (player.getData()[Entity.SCALE_X] == 1) // Left
 				bullet.getData()[Entity.SCALE_X] = 1;
+	
+	if (i == 0) {
+				bullet.setStartValue(0.0);
+			} else {
+				bullet.setStartValue(Math.PI);
+			}
+			}
 
+			return true;
+		case SHOOT_ROCKET:
+			e = createEntity(EntityType.ROCKET, this.levelId);
+
+			// set values
+			Rocket rocket = (Rocket) e;
+			rocket.owner = player;
+			rocket.map = (AStarTiledMap)getLevel().getMap();
+			
+			rocket.color = player.getWeaponColor();
+			// set player pos as gem pos
+
+			rocket.getData()[Entity.X] = player.getData()[Entity.X] + player.getData()[Entity.CENTER_X];
+			rocket.getData()[Entity.Y] = player.getData()[Entity.Y] + player.getData()[Entity.CENTER_Y];
+			rocket.getData()[Entity.X] =
+				(player.getData()[Entity.X] + player.getData()[Entity.CENTER_X]) +
+				(rocket.getData()[Entity.CENTER_X] - Assets.Weapon.weaponXOffset) * player.getData()[Entity.SCALE_X];
+
+			rocket.getData()[Entity.Y] =
+			player.getData()[Entity.Y] + player.getData()[Entity.CENTER_Y] -
+			rocket.getData()[Entity.CENTER_Y] + Assets.Weapon.weaponYOffset;
+			
+
+			
+			rocket.shootAtClosestPlayer(RocketStrategy.NEXT_ENEMY_TEAM);
 			return true;
 		case RESPAWN:
 			if (actionCmd instanceof QueryRespawn) {
@@ -123,7 +170,7 @@ public class ServerPlayingState extends PlayingState {
 		return false;
 	}
 
-	private Entity createEntity(EntityType type) {
+	private Entity createEntity(EntityType type, int parentId) {
 		int id = this.getFactory().createEntity(type);
 
 		Entity e = getFactory().getEntity(id);
@@ -131,11 +178,15 @@ public class ServerPlayingState extends PlayingState {
 		e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 		e.setActive(true);
 
-		getLevel().add(e);
+		//
+		if (parentId > -1) {
+			Entity parent = getFactory().getEntity(parentId);
+			parent.add(e);
+		}
 
 		// send command to all clients to create gem
 		NetworkComponent.getInstance()
-				.sendCommand(new DoCreateEntity(id, type));
+				.sendCommand(new DoCreateEntity(id, parentId, type));
 		return e;
 	}
 
@@ -148,7 +199,7 @@ public class ServerPlayingState extends PlayingState {
 			for (Entity e : getFactory().getEntities()) {
 				if (e.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient) {
 					NetworkComponent.getInstance().sendCommand(cmd.getSender(),
-							new DoCreateEntity(e.getId(), e.getType()));
+							new DoCreateEntity(e.getId(), this.levelId, e.getType()));
 				}
 			}
 			NetworkComponent.getInstance().sendCommand(cmd.getSender(),
@@ -183,7 +234,7 @@ public class ServerPlayingState extends PlayingState {
 
 				// send command to all clients to create entity
 				NetworkComponent.getInstance().sendCommand(
-						new DoCreateEntity(id, EntityType.PLAYER));
+						new DoCreateEntity(id, this.levelId, EntityType.PLAYER));
 
 				// if query requested new player assume that's the one to be
 				// controlled by client

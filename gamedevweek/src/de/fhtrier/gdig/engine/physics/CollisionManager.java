@@ -1,12 +1,10 @@
 package de.fhtrier.gdig.engine.physics;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Transform;
 
@@ -49,11 +47,10 @@ public class CollisionManager {
 				||
 
 				(CollisionManager.getTransformedBounds(e1)
-						.contains(CollisionManager.getTransformedBounds(e2)))
-				||
+						.contains(CollisionManager.getTransformedBounds(e2))) ||
 
-				(CollisionManager.getTransformedBounds(e2)
-						.contains(CollisionManager.getTransformedBounds(e1))));
+		(CollisionManager.getTransformedBounds(e2).contains(CollisionManager
+				.getTransformedBounds(e1))));
 	}
 
 	/**
@@ -63,45 +60,45 @@ public class CollisionManager {
 	 *            Shape 2
 	 * @return returns extruded shape from shape1 to shape2
 	 */
-	private static Shape generateSweepShape(final Shape r1, final Shape r2) {
-
-		final float maxLeft = Math.min(r1.getMinX(), r2.getMinX());
-		final float maxRight = Math.max(r1.getMaxX(), r2.getMaxX());
-		final float maxTop = Math.min(r1.getMinY(), r2.getMinY());
-		final float maxBottom = Math.max(r1.getMaxY(), r2.getMaxY());
-
-		final float[] points = new float[16];
-
-		final float[] r1Points = r1.getPoints();
-		final float[] r2Points = r2.getPoints();
-		int pointIndex = 0;
-
-		for (int i = 0; i < r1Points.length; i += 2) {
-			if (r1Points[i] == maxLeft || r1Points[i] == maxRight
-					|| r1Points[i + 1] == maxBottom
-					|| r1Points[i + 1] == maxTop) {
-				points[pointIndex] = r1Points[i];
-				points[pointIndex + 1] = r1Points[i + 1];
-				pointIndex += 2;
-			}
-		}
-		for (int i = 0; i < r2Points.length; i += 2) {
-			if (r2Points[i] == maxLeft || r2Points[i] == maxRight
-					|| r2Points[i + 1] == maxBottom
-					|| r2Points[i + 1] == maxTop) {
-				points[pointIndex] = r2Points[i];
-				points[pointIndex + 1] = r2Points[i + 1];
-				pointIndex += 2;
-			}
-		}
-
-		final float[] erg = Arrays.copyOf(points, pointIndex);
-
-		final Polygon p = new Polygon(erg);
-
-		return p;
-
-	}
+//	private static Shape generateSweepShape(final Shape r1, final Shape r2) {
+//
+//		final float maxLeft = Math.min(r1.getMinX(), r2.getMinX());
+//		final float maxRight = Math.max(r1.getMaxX(), r2.getMaxX());
+//		final float maxTop = Math.min(r1.getMinY(), r2.getMinY());
+//		final float maxBottom = Math.max(r1.getMaxY(), r2.getMaxY());
+//
+//		final float[] points = new float[16];
+//
+//		final float[] r1Points = r1.getPoints();
+//		final float[] r2Points = r2.getPoints();
+//		int pointIndex = 0;
+//
+//		for (int i = 0; i < r1Points.length; i += 2) {
+//			if (r1Points[i] == maxLeft || r1Points[i] == maxRight
+//					|| r1Points[i + 1] == maxBottom
+//					|| r1Points[i + 1] == maxTop) {
+//				points[pointIndex] = r1Points[i];
+//				points[pointIndex + 1] = r1Points[i + 1];
+//				pointIndex += 2;
+//			}
+//		}
+//		for (int i = 0; i < r2Points.length; i += 2) {
+//			if (r2Points[i] == maxLeft || r2Points[i] == maxRight
+//					|| r2Points[i + 1] == maxBottom
+//					|| r2Points[i + 1] == maxTop) {
+//				points[pointIndex] = r2Points[i];
+//				points[pointIndex + 1] = r2Points[i + 1];
+//				pointIndex += 2;
+//			}
+//		}
+//
+//		final float[] erg = Arrays.copyOf(points, pointIndex);
+//
+//		final Polygon p = new Polygon(erg);
+//
+//		return p;
+//
+//	}
 
 	/**
 	 * Entity BoundingBox is relative to center, i.e. we need to transform it to
@@ -115,10 +112,10 @@ public class CollisionManager {
 				Transform.createTranslateTransform(entity.getData()[Entity.X],
 						entity.getData()[Entity.Y]));
 
-		Shape rec2 = entity.getBounds().transform(
-				Transform.createTranslateTransform(
-						entity.getPrevPos()[Entity.X],
-						entity.getPrevPos()[Entity.Y]));
+//		Shape rec2 = entity.getBounds().transform(
+//				Transform.createTranslateTransform(
+//						entity.getPrevPos()[Entity.X],
+//						entity.getPrevPos()[Entity.Y]));
 
 		// TODO erg currently not used
 		// Shape erg = generateSweepShape(rec1, rec2);
@@ -176,4 +173,6 @@ public class CollisionManager {
 		}
 
 	}
+	
+	
 }

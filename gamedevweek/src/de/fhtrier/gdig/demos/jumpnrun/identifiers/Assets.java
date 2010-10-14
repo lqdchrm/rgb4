@@ -1,7 +1,9 @@
 package de.fhtrier.gdig.demos.jumpnrun.identifiers;
 
+
 public class Assets {
 
+	
 	// Config
 	public static class Config {
 		public static final String AssetGuiPath = "content/rgb4/gui";
@@ -14,6 +16,20 @@ public class Assets {
 	public static class Level {
 		public static String AssetLevelPath = "content/rgb4";
 		public static final int TileMapId = 3;
+		public static String TileMapPath = "tiles/blocks.tmx";
+		
+		public static class Teleporter
+		{
+			public static final int TeleporterId = 4;
+			public static final String TeleporterAnimationPath = "sprites/levelobjects/teleport_96_96_16.png";
+		}
+		
+		public static class DoomsdayDevice
+		{
+			public static final int DoomsdayDeviceId = 5;
+			public static final String DoomsdayDeviceAnimationPath = "sprites/levelobjects/doom_170_170_32.png";
+		}
+
 		public static final int TileMapRenderOrder = 10;
 	}
 
@@ -86,6 +102,13 @@ public class Assets {
 		public static final String GlowImagePath = "shader/bulletglow.png";
 	}
 
+	public static class Rocket {
+		public static final int AnimId = 21;
+		public static final String AnimPath = "sprites/items/rotatingglas_64_64_100.png";
+		public static final String GlowImagePath = "shader/rotatingglasglow.png";
+	}
+
+	
 	public static class Weapon {
 		public static final int StandingAnimId = 211;
 		public static final String StandingAnimImagePath = "sprites/player/weaponstehen_128_128_15.png";
@@ -127,6 +150,10 @@ public class Assets {
 		public static final float weaponYOffset = 35;
 		public static final String GlowImagePath = "shader/weaponglow.png";
 	}
+
+	// Doomsday
+	public static final int DoomsdayBigExplosionImageId = 43;
+	public static final String DoomsdayBigExplosionImagePath = "sprites/items/doom.png";
 
 	/* Sounds */
 	public static class Sounds {

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import de.fhtrier.gdig.demos.jumpnrun.server.states.ServerLobbyState;
 import de.fhtrier.gdig.engine.network.INetworkCommand;
 import de.fhtrier.gdig.engine.network.impl.protocol.ClientQueryConnect;
 import de.fhtrier.gdig.engine.network.impl.protocol.ClientQueryDisconnect;
@@ -18,7 +19,7 @@ public class NetworkComponentServer extends NetworkComponentImpl {
 
 	protected SortedMap<Integer, ClientHandler> clients;
 	private NetworkConnectionListener networkConnectionListener;
-
+	
 	private static int networkIds = 1;
 
 	public NetworkComponentServer() {
@@ -30,12 +31,11 @@ public class NetworkComponentServer extends NetworkComponentImpl {
 	}
 
 	@Override
-	public void startListening( InterfaceAddress ni, int port ) 
-	{
-		this.networkConnectionListener.startNetworkConnectionListener( ni, port );
+	public void startListening(InterfaceAddress ni, int port) {
+		this.networkConnectionListener.startNetworkConnectionListener(ni, port);
 
 	}
-	
+
 	@Override
 	public void stopListening() {
 		this.networkConnectionListener.stopNetworkConnectionListener();
@@ -88,6 +88,8 @@ public class NetworkComponentServer extends NetworkComponentImpl {
 	@Override
 	public void removeClient(ClientHandler ch) {
 		this.clients.remove(ch.getNetworkId());
+		// HACK: Didn't want to implement a Listener-Functionality just for one line!
+		ServerLobbyState.removePlayer(ch.getNetworkId());
 	}
 
 	@Override
