@@ -324,7 +324,10 @@ public class Player extends LevelCollidableEntity implements
 	public void handleInput(final InputController<?> _input) {
 		super.handleInput(_input);
 		
-		if (this.isActive()) {
+		if (this.condition.getHealth() <= Constants.EPSILON)
+			getAcc()[Entity.X] = 0.0f;
+		
+		if (this.isActive() && this.condition.getHealth() > Constants.EPSILON) {
 			
 			GameInputController input = (GameInputController)_input;
 			
