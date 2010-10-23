@@ -2,6 +2,7 @@ package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,6 +15,8 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetLevel;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QuerySetTeam;
@@ -80,6 +83,7 @@ public class ClientLobbyState extends NiftyGameState implements
 	public void readLevels(File dir, ArrayList<NetworkLevel> levels) {
 
 		File[] files = dir.listFiles();
+		Arrays.sort(files);
 		if (files != null) {
 			for (int i = 0; i < files.length; i++) {
 				String fileName = files[i].getName();
