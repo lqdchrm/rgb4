@@ -59,7 +59,7 @@ public abstract class PlayingState extends BasicGameState implements
 
 		GameInputController.init(arg0.getInput());
 		GameInputController.getInstance().initKeyboard();
-		GameInputController.getInstance().initGamePad();
+		//GameInputController.getInstance().initGamePad();
 	}
 	
 	@Override
