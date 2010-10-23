@@ -119,9 +119,11 @@ public class Level extends MoveableEntity {
 					assets);
 
 			e.setVisible(true);
+			e.getData()[Entity.SCALE_X] = Level1.ImageBackgroundScaling;
+			e.getData()[Entity.SCALE_Y] = Level1.ImageBackgroundScaling;
 			e.getData()[Entity.X] = xOffset;
-			e.getData()[Entity.Y] = Settings.SCREENHEIGHT - img.getHeight();
-			xOffset += img.getWidth();
+			e.getData()[Entity.Y] = Settings.SCREENHEIGHT - img.getHeight()*Level1.ImageBackgroundScaling;
+			xOffset += img.getWidth()*Level1.ImageBackgroundScaling;
 			result.add(e);
 		}
 

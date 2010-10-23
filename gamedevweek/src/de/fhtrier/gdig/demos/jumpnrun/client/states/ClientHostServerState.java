@@ -13,6 +13,8 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryConnect;
@@ -21,7 +23,6 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkHelper;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
-import de.lessvoid.nifty.EndNotify;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.button.CreateButtonControl;
 import de.lessvoid.nifty.controls.button.controller.ButtonControl;
@@ -30,12 +31,14 @@ import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import de.lessvoid.nifty.slick.NiftyGameState;
+import de.lessvoid.nifty.tools.Color;
 import de.lessvoid.nifty.tools.resourceloader.FileSystemLocation;
 import de.lessvoid.nifty.tools.resourceloader.ResourceLoader;
 
 public class ClientHostServerState extends NiftyGameState implements
 		ScreenController {
 
+	private static final String CROSSHAIR_PNG = "crosshair.png";
 	public static String menuNiftyXMLFile = "server_settings.xml";
 	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 
@@ -51,7 +54,6 @@ public class ClientHostServerState extends NiftyGameState implements
 	private List<InterfaceAddress> interfaces;
 	private int selectedInterfaceIndex = -1;
 	private List<ButtonControl> interfaceButtons = new ArrayList<ButtonControl>();
-	private boolean waitingForTransition;
 
 	public ClientHostServerState(final StateBasedGame game) {
 		super(GameStates.SERVER_SETTINGS);
@@ -69,13 +71,16 @@ public class ClientHostServerState extends NiftyGameState implements
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
 		
-		 try {
-		        enableMouseImage(new Image(
-		            ResourceLoader.getResourceAsStream(Assets.Config.AssetGuiPath + "/crosshair.png"), "Cursor", false));
-		    } catch (SlickException e) {
-		        Log.error("Image loading failed in ServerSettingsState");
-		        e.printStackTrace();
-		    }
+		// show the mouse
+		try {
+			enableMouseImage(new Image(
+					ResourceLoader.getResourceAsStream(CROSSHAIR_PNG),
+					CROSSHAIR_PNG, false));
+		} catch (SlickException e) {
+			Log.error("Image loading failed in ServerSettingsState");
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override
@@ -85,8 +90,6 @@ public class ClientHostServerState extends NiftyGameState implements
 
 		interfaces = NetworkHelper.getInterfaces();
 		drawInterfaces();
-		if (interfaces.size()>0)
-			chooseInterface("0");
 	}
 
 	@Override
@@ -104,13 +107,14 @@ public class ClientHostServerState extends NiftyGameState implements
 		// left intentionally blank
 	}
 
-	public void setButton(int nr, List<ButtonControl> buttons) {
+	public void setButton(int nr, List<ButtonControl> buttons, Color setColor,
+			Color notSetColor) {
 		for (int i = 0; i < buttons.size(); i++) {
 			ButtonControl b = buttons.get(i);
 			if (i == nr)
-				b.setColor(Constants.GuiConfig.btnSelectedColor);
+				b.setColor(setColor);
 			else
-				b.setColor(Constants.GuiConfig.btnNotSelectedColor);
+				b.setColor(notSetColor);
 		}
 	}
 
@@ -130,14 +134,17 @@ public class ClientHostServerState extends NiftyGameState implements
 	@Override
 	public void update(GameContainer container, StateBasedGame game, int d)
 			throws SlickException {
+		// TODO Auto-generated method stub
 		super.update(container, game, d);
 
 		if (connecting) {
 			NetworkComponent.getInstance().update();
 		}
-		if (NetworkComponent.getInstance().getNetworkId() != -1  && !waitingForTransition) {
-			gotoLobby();
-			
+		if (NetworkComponent.getInstance().getNetworkId() != -1) {
+			NetworkComponent.getInstance().sendCommand(
+					new QueryConnect(playerNameControl.getText()));
+			game.enterState(GameStates.CLIENT_LOBBY);
+			connecting = false;
 		}
 	}
 
@@ -157,9 +164,8 @@ public class ClientHostServerState extends NiftyGameState implements
 
 				// Here we do some magic to spawn a server process 
 				// TODO check if it's really working
-				ProcessBuilder pb = new ProcessBuilder("java",
-						"-Djava.library.path=server/lib/native", "-jar",
-						"server/server.jar", serverNameControl.getText(),
+				ProcessBuilder pb = new ProcessBuilder(
+						"server/startserver.bat", serverNameControl.getText(),
 						interfaceA, portControl.getText());
 				pb.redirectErrorStream(true);
 
@@ -225,13 +231,8 @@ public class ClientHostServerState extends NiftyGameState implements
 	}
 
 	public void back() {
-		nifty.getCurrentScreen().endScreen(new EndNotify() {
-			
-			@Override
-			public void perform() {
-				game.enterState(GameStates.MENU);
-			}
-		});
+		game.enterState(GameStates.MENU, new FadeOutTransition(),
+				new FadeInTransition());
 	}
 
 	public void drawInterfaces() {
@@ -260,7 +261,8 @@ public class ClientHostServerState extends NiftyGameState implements
 
 		// set interface as active
 		selectedInterfaceIndex = Integer.parseInt(id);
-		setButton(Integer.parseInt(id), interfaceButtons);
+		setButton(Integer.parseInt(id), interfaceButtons,
+				new Color(1, 0, 0, 1), new Color(1, 1, 1, 1));
 	}
 
 	private void clearList(Element e) {
@@ -300,21 +302,4 @@ public class ClientHostServerState extends NiftyGameState implements
 		nifty.closePopup(nifty.getCurrentScreen().getTopMostPopup().getId(),
 				null);
 	}
-	
-	public void gotoLobby()
-	{
-		if (waitingForTransition==false)
-		{
-			waitingForTransition = true;
-			nifty.getCurrentScreen().endScreen(new EndNotify() {
-				public void perform() {
-					game.enterState(GameStates.CLIENT_LOBBY);	
-					NetworkComponent.getInstance().sendCommand(
-							new QueryConnect(playerNameControl.getText()));
-					connecting = false;
-					waitingForTransition = false;
-				}
-			});
-		}
-	}	
 }

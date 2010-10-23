@@ -8,7 +8,7 @@ import de.fhtrier.gdig.engine.helpers.Configuration;
 public class Constants {
 
 	public static final float EPSILON = 0.0001f;
-
+	
 	public static class GamePlayConstants extends Configuration {
 		public static float gravity = 2000.0f;
 
@@ -87,7 +87,7 @@ public class Constants {
 		public static boolean guiDebug = false;
 		
 		// network
-		public static boolean networkDebug = false;
+		public static boolean networkDebug = true;
 		public static boolean showProtocolCommandsOnly = false;
 		
 		public static boolean factoryDebug = false;

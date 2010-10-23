@@ -48,6 +48,13 @@ public class Factory {
 		add(result);
 		return result;
 	}
+	
+	public ImageEntity createImageEntity(int order, int assetId, AssetMgr assets, int x, int y, int width, int height) {
+		ImageEntity result = new ImageEntity(getNewId(), assetId, assets, x, y, width, height);
+		result.setOrder(order);
+		add(result);
+		return result;
+	}
 
 	public ParticleEntity createParticleEntity(int order, int assetId, AssetMgr assets) {
 		ParticleEntity result = new ParticleEntity(getNewId(), assetId, assets);
@@ -106,7 +113,7 @@ public class Factory {
 	protected Entity add(Entity e) {
 		if (entities.containsKey(e.getId())) {
 			throw new IllegalArgumentException(
-					"Factory already contains an entity with this id");
+					"Exception while adding Entity: "+e+" (ID already taken by Entity "+getEntity(e.getId()));
 		}
 		entities.put(e.getId(), e);
 
