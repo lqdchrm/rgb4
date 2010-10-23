@@ -301,4 +301,9 @@ public class Entity implements Identifiable {
 			}
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return "Entity (ID "+getId()+") class: "+this.getClass().getSimpleName()+" Type: "+this.getType();
+	}
 }

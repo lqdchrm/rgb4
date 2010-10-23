@@ -52,7 +52,7 @@
             <zipfileset excludes="META-INF/*.SF" src="../ext/lib/nifty-slick.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../ext/lib/xmlpull-xpp3-1.1.4c.jar"/>
         </jar>
-    	<echo file="${export.dir}/server/startserver.bat">
+    	<echo file="${export.dir}/startserver.bat">
     		java -Djava.library.path=server/lib/native -jar server/server.jar %*
     		pause
     	</echo>
@@ -69,7 +69,7 @@
             <zipfileset excludes="META-INF/*.SF" src="../ext/lib/nifty-slick.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../ext/lib/xmlpull-xpp3-1.1.4c.jar"/>
         </jar>
-    	<echo file="server/startserver.bat">
+    	<echo file="startserver.bat">
     		java -Djava.library.path=../ext/lib/native -jar server/server.jar %*
     		pause
     	</echo>

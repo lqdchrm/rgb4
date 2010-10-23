@@ -4,7 +4,8 @@ public class Level1 {
 
 	public static String FileExt = "png";
 	
-	public static int numBackgroundTiles = 2;
+	public static int numBackgroundTiles = 4;
+	public static final float ImageBackgroundScaling = 4;
 	
 	public static int ImageBackgroundFarId = 1;
 	public static final int ImageBackgroundFarRenderOrder = 0;
@@ -14,6 +15,7 @@ public class Level1 {
 	public static int ImageBackgroundId = 5;
 	public static final int ImageBackgroundRenderOrder = 2;
 	public static final float ImageBackgroundParallaxFactor = 0.9f;
+
 	public static String ImageBackgroundPath = "backgrounds/saeulen_hinten_t3";
 	
 	public static int ImageForegroundId = 9;
