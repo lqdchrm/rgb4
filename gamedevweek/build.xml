@@ -33,7 +33,7 @@
             <zipfileset excludes="META-INF/*.SF" src="../ext/lib/xmlpull-xpp3-1.1.4c.jar"/>
         </jar>
     	<echo file="${export.dir}/startclient.bat">
-    		java -Djava.library.path=server/lib/native -jar client.jar %*
+    		java -Djava.library.path=server/lib/native -jar client.jar
     		pause
     	</echo>
     </target>
@@ -52,27 +52,6 @@
             <zipfileset excludes="META-INF/*.SF" src="../ext/lib/nifty-slick.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../ext/lib/xmlpull-xpp3-1.1.4c.jar"/>
         </jar>
-    	<echo file="${export.dir}/startserver.bat">
-    		java -Djava.library.path=server/lib/native -jar server/server.jar %*
-    		pause
-    	</echo>
-    	<jar destfile="server/server.jar" filesetmanifest="mergewithoutmain">
-            <manifest>
-                <attribute name="Main-Class" value="de.fhtrier.gdig.demos.jumpnrun.starters.JumpNRunServer"/>
-                <attribute name="Class-Path" value="."/>
-            </manifest>
-            <fileset dir="./bin"/>
-            <zipfileset excludes="META-INF/*.SF" src="../ext/lib/jogg-0.0.7.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="../ext/lib/jorbis-0.0.15.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="../ext/lib/lwjgl.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="../ext/lib/slick.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="../ext/lib/nifty-slick.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="../ext/lib/xmlpull-xpp3-1.1.4c.jar"/>
-        </jar>
-    	<echo file="startserver.bat">
-    		java -Djava.library.path=../ext/lib/native -jar server/server.jar %*
-    		pause
-    	</echo>
     </target>
 	
 	<target name="pack-export" depends="create_client">
