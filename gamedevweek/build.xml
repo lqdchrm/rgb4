@@ -55,6 +55,9 @@
     </target>
 	
 	<target name="pack-export" depends="create_client">
-
+	</target>
+		
+	<target name="clean" description="Remove all generated files.">
+	    <delete dir="${export.dir}"/>
 	</target>
 </project>

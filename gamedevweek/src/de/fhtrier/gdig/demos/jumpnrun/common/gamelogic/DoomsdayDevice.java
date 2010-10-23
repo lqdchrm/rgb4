@@ -41,12 +41,15 @@ public class DoomsdayDevice extends Entity {
 				Assets.Level.DoomsdayDevice.DoomsdayDeviceAnimationPath);
 		ddAnimation = factory.createAnimationEntity(EntityOrder.LevelObject,
 				Assets.Level.DoomsdayDevice.DoomsdayDeviceId, assets);
+		
 		ddAnimation.getData()[X] = -ddAnimation.getAssetMgr()
 				.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId)
-				.getCurrentFrame().getWidth() >> 1;
+				.getCurrentFrame().getWidth() / 2.0f;
+
 		ddAnimation.getData()[Y] = -ddAnimation.getAssetMgr()
 				.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId)
 				.getCurrentFrame().getHeight();
+
 		ddAnimation.setVisible(true);
 		add(ddAnimation);
 
@@ -64,11 +67,7 @@ public class DoomsdayDevice extends Entity {
 		doomesdaydeviceExplosion.getData()[X] = getData(X);
 		doomesdaydeviceExplosion.getData()[Y] = getData(Y);
 
-		doomesdaydeviceExplosion.getData()[Entity.X] += ddAnimation
-				.getAssetMgr()
-				.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId)
-				.getImage(0).getWidth() / 2.0f;
-		doomesdaydeviceExplosion.getData()[Entity.Y] += ddAnimation
+		doomesdaydeviceExplosion.getData()[Entity.Y] -= ddAnimation
 				.getAssetMgr()
 				.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId)
 				.getImage(0).getHeight() / 2.0f;

@@ -5,7 +5,7 @@ public class Level1 {
 	public static String FileExt = "png";
 	
 	public static int numBackgroundTiles = 4;
-	public static final float ImageBackgroundScaling = 4;
+	public static final float ImageBackgroundScaling = 5;
 	
 	public static int ImageBackgroundFarId = 1;
 	public static final int ImageBackgroundFarRenderOrder = 0;
