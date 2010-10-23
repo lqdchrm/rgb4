@@ -42,10 +42,8 @@ public class ClientGame extends RGB4Game {
 		NetworkComponent.getInstance().addListener(this);
 
 		GameSoundManager.init(true);
-
+/*
 		Constants.GamePlayConstants c1 = new Constants.GamePlayConstants();
-
-		Constants.ControlConfig c2 = new Constants.ControlConfig();
 		
 		Constants.Debug c3 = new Constants.Debug();
 		
@@ -54,14 +52,14 @@ public class ClientGame extends RGB4Game {
 		Configuration.showEditor("ClientSettings",
 				new JPanel[] {
 					c1.getEdittingPanel(),
-					c2.getEdittingPanel(),
 					c3.getEdittingPanel(),
 					c4.getEdittingPanel()}
-		);
+		);*/
 	}
 
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
+		// container.setMouseCursor(Assets.Config.AssetGuiPath+"/gui-cursor.png", 16,16);
 		addState(new ClientMenuState(this));
 		addState(new ClientSelectServerState());
 		addState(new ClientHostServerState(this));

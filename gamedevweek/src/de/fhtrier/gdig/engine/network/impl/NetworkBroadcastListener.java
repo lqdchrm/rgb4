@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InterfaceAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -15,11 +13,9 @@ public class NetworkBroadcastListener extends Thread {
 	private NetworkServerObject serverObject;
 	private DatagramSocket socket;
 	private boolean halt;
-	private InterfaceAddress realServerAddress;
 
 	public NetworkBroadcastListener(String serverName, String map,
-			String version, int port, InterfaceAddress realServerAddress) {
-		this.realServerAddress = realServerAddress; 
+			String version, int port) {
 		serverObject = new NetworkServerObject();
 		serverObject.setPort(port);
 		serverObject.setMap(map);
@@ -35,55 +31,55 @@ public class NetworkBroadcastListener extends Thread {
 		}
 	}
 	
-	private boolean isOnSubnet( InterfaceAddress receiver, InetAddress sender )
-	{
-		byte[] receiverBytes = receiver.getAddress().getAddress();
-		byte[] senderBytes = sender.getAddress();
-		byte[] subnetBytes = new byte[4];
-		short length = receiver.getNetworkPrefixLength();
-		int position = 0; 
-		
-		if ( length < 8 )
-		{
-			subnetBytes[0] = 0;
-			subnetBytes[1] = 0;
-			subnetBytes[2] = 0;
-			subnetBytes[3] = (byte) (Math.pow( 2, length ) / 2);
-		}
-		else if ( length < 16 )
-		{
-			subnetBytes[0] = 0;
-			subnetBytes[1] = 0;
-			subnetBytes[2] = (byte) (Math.pow( 2, length ) / 2);
-			subnetBytes[3] = 127;
-		}
-		else if ( length < 24 )
-		{
-			subnetBytes[0] = 0;
-			subnetBytes[1] = (byte) (Math.pow( 2, length ) / 2);
-			subnetBytes[2] = 127;
-			subnetBytes[3] = 127;
-		}
-		else
-		{
-			subnetBytes[0] = (byte) (Math.pow( 2, length ) / 2);
-			subnetBytes[1] = 127;
-			subnetBytes[2] = 127;
-			subnetBytes[3] = 127;
-		}
-		
-		for ( int x = senderBytes.length - 1; x >= 0; x-- ) 
-		{
-		   if ( (senderBytes[x] & subnetBytes[x]) != (receiverBytes[x] & subnetBytes[x]) ) 
-		   {
-              return false;
-           }
-		   
-		   position++;
-        }
-		
-        return true;		
-	}
+//	private boolean isOnSubnet( InterfaceAddress receiver, InetAddress sender )
+//	{
+//		byte[] receiverBytes = receiver.getAddress().getAddress();
+//		byte[] senderBytes = sender.getAddress();
+//		byte[] subnetBytes = new byte[4];
+//		short length = receiver.getNetworkPrefixLength();
+//		int position = 0; 
+//		
+//		if ( length < 8 )
+//		{
+//			subnetBytes[0] = 0;
+//			subnetBytes[1] = 0;
+//			subnetBytes[2] = 0;
+//			subnetBytes[3] = (byte) (Math.pow( 2, length ) / 2);
+//		}
+//		else if ( length < 16 )
+//		{
+//			subnetBytes[0] = 0;
+//			subnetBytes[1] = 0;
+//			subnetBytes[2] = (byte) (Math.pow( 2, length ) / 2);
+//			subnetBytes[3] = 127;
+//		}
+//		else if ( length < 24 )
+//		{
+//			subnetBytes[0] = 0;
+//			subnetBytes[1] = (byte) (Math.pow( 2, length ) / 2);
+//			subnetBytes[2] = 127;
+//			subnetBytes[3] = 127;
+//		}
+//		else
+//		{
+//			subnetBytes[0] = (byte) (Math.pow( 2, length ) / 2);
+//			subnetBytes[1] = 127;
+//			subnetBytes[2] = 127;
+//			subnetBytes[3] = 127;
+//		}
+//		
+//		for ( int x = senderBytes.length - 1; x >= 0; x-- ) 
+//		{
+//		   if ( (senderBytes[x] & subnetBytes[x]) != (receiverBytes[x] & subnetBytes[x]) ) 
+//		   {
+//              return false;
+//           }
+//		   
+//		   position++;
+//        }
+//		
+//        return true;		
+//	}
 
 	public void run() {
 		while (!halt) {

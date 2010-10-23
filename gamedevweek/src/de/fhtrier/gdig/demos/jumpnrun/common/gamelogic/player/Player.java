@@ -5,7 +5,6 @@ import java.util.HashMap;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.particles.ConfigurableEmitter;
@@ -13,7 +12,6 @@ import org.newdawn.slick.particles.ConfigurableEmitter.ColorRecord;
 import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.util.Log;
 
-import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
@@ -36,6 +34,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.ShootStandi
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.StandingState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActionState;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.states.identifiers.PlayerActions;
+import de.fhtrier.gdig.demos.jumpnrun.common.input.GameInputController;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.PlayerData;
 import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
@@ -45,6 +44,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.GamePlayConstants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameInputCommands;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoPlaySound;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
@@ -52,6 +52,7 @@ import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.ParticleEntity;
 import de.fhtrier.gdig.engine.graphics.shader.Shader;
 import de.fhtrier.gdig.engine.helpers.IFiniteStateMachineListener;
+import de.fhtrier.gdig.engine.input.InputController;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
@@ -103,7 +104,12 @@ public class Player extends LevelCollidableEntity implements
 	// color
 	int playerColor;
 	int weaponColor;
-
+	
+	// delays
+	float fireDelay = 0f;
+	float colorChangeDelayPlayer = 0f;
+	float colorChangeDelayWeapon = 0f;
+	
 	// initialization
 	public Player(int id, Factory factory) throws SlickException {
 		super(id, EntityType.PLAYER);
@@ -315,23 +321,28 @@ public class Player extends LevelCollidableEntity implements
 
 	// input
 	@Override
-	public void handleInput(final Input input) {
+	public void handleInput(final InputController<?> _input) {
+		super.handleInput(_input);
+		
 		if (this.isActive()) {
-			if (!InputControl.isRefKeyDown(InputControl.REFWALKLEFT)
-					&& !InputControl.isRefKeyDown(InputControl.REFWALKRIGHT)
-					&& !InputControl.isRefKeyDown(InputControl.REFJUMP)) {
+			
+			GameInputController input = (GameInputController)_input;
+			
+			if (!input.isKeyDown(GameInputCommands.WALKLEFT)
+					&& !input.isKeyDown(GameInputCommands.WALKRIGHT)
+					&& !input.isKeyDown(GameInputCommands.JUMP)) {
 				getAcc()[Entity.X] = 0.0f;
 			}
 
-			if (InputControl.isRefKeyDown(InputControl.REFWALKLEFT)) {
+			if (input.isKeyDown(GameInputCommands.WALKLEFT)) {
 				fsmOrientation.apply(PlayerActions.Left);
 			}
 
-			if (InputControl.isRefKeyDown(InputControl.REFWALKRIGHT)) {
+			if (input.isKeyDown(GameInputCommands.WALKRIGHT)) {
 				fsmOrientation.apply(PlayerActions.Right);
 			}
 
-			if (InputControl.isRefKeyPressed(InputControl.REFJUMP)) {
+			if (input.isKeyPressed(GameInputCommands.JUMP)) {
 				if (this.isOnGround()) {
 					getVel()[Entity.Y] = -Constants.GamePlayConstants.playerJumpSpeed;
 					applyAction(PlayerActions.Jump);
@@ -340,52 +351,64 @@ public class Player extends LevelCollidableEntity implements
 				}
 			}
 
-			if (InputControl.isRefKeyPressed(InputControl.REFFIRE)) {
+			if (input.isKeyPressed(GameInputCommands.SHOOT)) {
+				if(fireDelay == Constants.GamePlayConstants.shotCooldown) {
+					NetworkComponent.getInstance().sendCommand(
+							new QueryAction(PlayerNetworkAction.SHOOT));
+					applyAction(PlayerActions.StartShooting);
+					fireDelay = 0;
+				}
+			}
 
-				// TODO tell server to create bullet
-				// TODO refactor PlayerAction to PlayerNetworkAction
-				NetworkComponent.getInstance().sendCommand(
-						new QueryAction(PlayerNetworkAction.SHOOT));
-				applyAction(PlayerActions.StartShooting);
+			if (input.isKeyPressed(GameInputCommands.ROCKET)) {
+
+				if (fireDelay == Constants.GamePlayConstants.shotCooldown) {
+					NetworkComponent.getInstance().sendCommand(
+						new QueryAction(PlayerNetworkAction.SHOOT_ROCKET));
+					applyAction(PlayerActions.StartShooting);
+					fireDelay = 0;
+				}
 			}
 
 			// change player color
-			if (InputControl.isRefKeyPressed(InputControl.REFCHANGECOLOR)) {
+			if (input.isKeyPressed(GameInputCommands.CHANGECOLOR)) {
 				nextColor();
 				SoundManager.playSound(Assets.Sounds.PlayerChangeColorSoundID,
 						1f, 0.2f);
+				colorChangeDelayPlayer = 0;
 			}
 
 			// change weapon color
-			if (InputControl.isRefKeyPressed(InputControl.REFCHANGEWEAPON)) {
+			if (input.isKeyPressed(GameInputCommands.CHANGEWEAPONCOLOR)) {
 				nextWeaponColor();
 				SoundManager.playSound(Assets.Sounds.WeaponChangeColorSoundID,
 						1f, 0.2f);
+				colorChangeDelayPlayer = 0;
 			}
 
 			// Player Phrases
-			if (InputControl.isRefKeyPressed(InputControl.REFPHRASE1)) {
+			if (input.isKeyPressed(GameInputCommands.PHRASE1)) {
 				NetworkComponent.getInstance().sendCommand(
 						new DoPlaySound(Assets.Sounds.PlayerPhrase1SoundID));
 				SoundManager.playSound(Assets.Sounds.PlayerPhrase1SoundID, 1f,
 						1f);
 			}
 
-			if (InputControl.isRefKeyPressed(InputControl.REFPHRASE2)) {
+			if (input.isKeyPressed(GameInputCommands.PHRASE2)) {
 				NetworkComponent.getInstance().sendCommand(
 						new DoPlaySound(Assets.Sounds.PlayerPhrase2SoundID));
 				SoundManager.playSound(Assets.Sounds.PlayerPhrase2SoundID, 1f,
 						1f);
 			}
 
-			if (InputControl.isRefKeyPressed(InputControl.REFPHRASE3)) {
+			if (input.isKeyPressed(GameInputCommands.PHRASE3)) {
 				NetworkComponent.getInstance().sendCommand(
 						new DoPlaySound(Assets.Sounds.PlayerPhrase4SoundID));
 				SoundManager.playSound(Assets.Sounds.PlayerPhrase3SoundID, 1f,
 						1f);
 			}
 
-			if (InputControl.isRefKeyPressed(InputControl.REFPHRASE4)) {
+			if (input.isKeyPressed(GameInputCommands.PHRASE4)) {
 				NetworkComponent.getInstance().sendCommand(
 						new DoPlaySound(Assets.Sounds.PlayerPhrase4SoundID));
 				SoundManager.playSound(Assets.Sounds.PlayerPhrase4SoundID, 1f,
@@ -393,7 +416,6 @@ public class Player extends LevelCollidableEntity implements
 			}
 
 		}
-		super.handleInput(input);
 	}
 
 	public void nextColor() {
@@ -464,9 +486,11 @@ public class Player extends LevelCollidableEntity implements
 		float weaponBrightness = StateColor
 				.constIntoBrightness(getWeaponColor());
 
+		float weaponLoad = fireDelay / Constants.GamePlayConstants.shotCooldown;
+		
 		if (Constants.Debug.shadersActive) {
 			weaponCol.a = Constants.GamePlayConstants.weaponGlowFalloff
-					* weaponBrightness;
+					* weaponBrightness * weaponLoad;
 			colorGlowShader.setValue("playercolor", weaponCol);
 		}
 
@@ -550,7 +574,16 @@ public class Player extends LevelCollidableEntity implements
 	public void update(final int deltaInMillis) {
 
 		if (this.isActive()) {
-
+			fireDelay += deltaInMillis;
+			if(fireDelay > Constants.GamePlayConstants.shotCooldown)
+				fireDelay = Constants.GamePlayConstants.shotCooldown;
+			colorChangeDelayPlayer += deltaInMillis;
+			if(colorChangeDelayPlayer > Constants.GamePlayConstants.colorChangeCooldownPlayer)
+				colorChangeDelayPlayer = Constants.GamePlayConstants.colorChangeCooldownPlayer;
+			colorChangeDelayWeapon += deltaInMillis;
+			if(colorChangeDelayWeapon > Constants.GamePlayConstants.colorChangeCooldownWeapon)
+				colorChangeDelayWeapon = Constants.GamePlayConstants.colorChangeCooldownWeapon;
+			
 			// set Drag
 			if (isOnGround()) {
 				getDrag()[Entity.X] = Constants.GamePlayConstants.playerGroundDrag;
@@ -622,7 +655,7 @@ public class Player extends LevelCollidableEntity implements
 				this.getPlayerCondition().setHealth(
 						getPlayerCondition().getHealth() - damage);
 
-				if (this.getPlayerCondition().getHealth() <= 0) {
+				if (this.getPlayerCondition().getHealth() <= Constants.EPSILON) {
 					NetworkComponent.getInstance().sendCommand(
 							new SendKill(this.getId(), killer != null ? killer
 									.getId() : -1));
@@ -766,4 +799,5 @@ public class Player extends LevelCollidableEntity implements
 	public ParticleEntity getWeaponParticleEntity() {
 		return this.weaponParticles;
 	}
+	
 }

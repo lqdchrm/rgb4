@@ -12,9 +12,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.GameSoundManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.RGB4Game;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.ControlConfig;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.Debug;
-import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.GamePlayConstants;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.NetworkHelper;
 import de.fhtrier.gdig.demos.jumpnrun.server.states.ServerLobbyState;
 import de.fhtrier.gdig.demos.jumpnrun.server.states.ServerPlayingState;
@@ -54,7 +52,7 @@ public class ServerGame extends RGB4Game {
 		NetworkComponent.getInstance().startListening(networkInterface, port);
 		
 		netBroadCastListener = new NetworkBroadcastListener(serverName, "map1",
-				"1.0", port, networkInterface);
+				"1.0", port);
 		netBroadCastListener.start();
 
 		// create SoundManager

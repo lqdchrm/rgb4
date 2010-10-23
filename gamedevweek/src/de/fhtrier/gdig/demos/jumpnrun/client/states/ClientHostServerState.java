@@ -18,7 +18,6 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryConnect;
-import de.fhtrier.gdig.demos.jumpnrun.client.states.gui.MenuBackground;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameStates;
@@ -165,10 +164,9 @@ public class ClientHostServerState extends NiftyGameState implements
 
 				// Here we do some magic to spawn a server process 
 				// TODO check if it's really working
-				ProcessBuilder pb = new ProcessBuilder("java",
-						"-Djava.library.path=./server/lib/native", "-jar",
-						"server/server.jar", serverNameControl.getText(),
-						interfaceA, portControl.getText());
+				ProcessBuilder pb = new ProcessBuilder("java", 
+						"-Djava.library.path=server/lib/native", "-jar", "server/server.jar", 
+						serverNameControl.getText(), interfaceA, portControl.getText());
 				pb.redirectErrorStream(true);
 
 				try {
@@ -293,7 +291,7 @@ public class ClientHostServerState extends NiftyGameState implements
 	public void render(GameContainer container, StateBasedGame game, Graphics g)
 			throws SlickException {
 		try {
-			MenuBackground.getInstance().render(container, game, g);
+			MenuBackgroundRenderer.getInstance().render(container, game, g);
 			super.render(container, game, g);
 		} catch (Exception e) {
 			e.printStackTrace();

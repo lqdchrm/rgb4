@@ -12,7 +12,6 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.ClientGame;
-import de.fhtrier.gdig.demos.jumpnrun.client.input.InputControl;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryCreateEntity;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryJoin;
@@ -77,9 +76,6 @@ public class ClientPlayingState extends PlayingState {
 		// ask server to join game
 		NetworkComponent.getInstance().sendCommand(new QueryJoin());
 		setState(LocalState.JOINING);
-
-		// InputControl initialisieren
-		InputControl.loadKeyMapping();
 	}
 
 	private boolean handleProtocolCommands(INetworkCommand cmd) {
@@ -105,7 +101,7 @@ public class ClientPlayingState extends PlayingState {
 
 			SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
 			SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
-			SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 50000,
+			SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 5000,
 					0.2f, false);
 			return true;
 		}
@@ -135,8 +131,11 @@ public class ClientPlayingState extends PlayingState {
 			Entity e = this.getFactory().getEntity(id);
 			e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
 
-			getLevel().add(getFactory().getEntity(id));
-
+			if (dce.getParentId() > -1) {
+				Entity parent = getFactory().getEntity(dce.getParentId());
+				parent.add(getFactory().getEntity(id));
+			}
+			
 			// HACK special treatment for players
 			if (e instanceof Player) {
 				NetworkComponent.getInstance().sendCommand(
@@ -158,6 +157,7 @@ public class ClientPlayingState extends PlayingState {
 				getLevel().setCurrentPlayer(-1);
 			}
 
+
 			CollisionManager.removeEntity((CollidableEntity) getFactory()
 					.getEntity(id));
 			
@@ -165,6 +165,23 @@ public class ClientPlayingState extends PlayingState {
 
 			// remove Entity recursively from Factory
 			getFactory().removeEntity(id, true);
+
+//			// robindi: Bugfix, removeEntity from CollisionManager!
+//			CollisionManager.removeEntity((CollidableEntity) getFactory().getEntity(id));
+//			
+//			
+//			Entity entityToRemove = getFactory().getEntity(id);				
+//			if (entityToRemove==null && Constants.Debug.networkDebug)
+//			{
+//				Log.error("Tried to remove Entity with id="+id+" but this id was not known to factory!!!");
+//			}
+//			else
+//			{
+//				getLevel().remove(entityToRemove);
+//				// remove Entity recursively from Factory
+//				getFactory().removeEntity(id, true);
+//			}
+
 
 			return true;
 		}
@@ -281,12 +298,6 @@ public class ClientPlayingState extends PlayingState {
 				}
 			}
 		}
-
-		// nur zu DEBUG-Zwecken
-		InputControl.loadKeyMapping();
-
-		// update InputControl
-		InputControl.updateInputControl(container.getInput());
 
 		// update local data
 		super.update(container, game, deltaInMillis);

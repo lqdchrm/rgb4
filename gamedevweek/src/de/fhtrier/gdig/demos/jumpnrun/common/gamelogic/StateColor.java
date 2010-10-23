@@ -51,8 +51,6 @@ public class StateColor {
 	public static float constIntoBrightness(int colorConst)
 			throws IllegalArgumentException {
 		switch (colorConst) {
-		case RED:
-			return 0.8f;
 		default:
 			return Constants.GamePlayConstants.playerBrightness;
 		}

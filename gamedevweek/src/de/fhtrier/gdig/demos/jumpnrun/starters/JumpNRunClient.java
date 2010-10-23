@@ -2,9 +2,11 @@ package de.fhtrier.gdig.demos.jumpnrun.starters;
 
 import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
+import java.util.logging.LogManager;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.opengl.pbuffer.GraphicsFactory;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.ClientGame;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
@@ -18,7 +20,14 @@ public class JumpNRunClient {
 	 */
 	public static void main(String[] args) throws SlickException {
 
-		ClientGame clientGame = new ClientGame();
+		if (Constants.Debug.forceNoFBO)
+			GraphicsFactory.setUseFBO(false);
+		
+		System.setProperty("java.util.logging.config.file",
+				"content/logging.properties");
+		try {
+			LogManager.getLogManager().readConfiguration();
+		} catch (Exception e1) {}
 		
 		boolean fullscreen = false;
 		
@@ -50,6 +59,8 @@ public class JumpNRunClient {
 			
 			fullscreen = true;
 		}
+		
+		ClientGame clientGame = new ClientGame();
 		
 		// initialize (gfx) settings depending on game type
 		if (clientGame != null) {

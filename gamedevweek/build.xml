@@ -10,9 +10,6 @@
 		<mkdir dir="${export.dir}/content"/>
 		<copy todir="${export.dir}/server/lib/native">
 			<fileset dir="../ext/lib/native"></fileset>
-		</copy>		
-		<copy todir="${export.dir}">
-			<fileset file="misc/starter.bat"/>
 		</copy>
 		<copy todir="${export.dir}/content">
 			<fileset dir="content"/>
@@ -35,6 +32,10 @@
             <zipfileset excludes="META-INF/*.SF" src="../ext/lib/nifty-slick.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../ext/lib/xmlpull-xpp3-1.1.4c.jar"/>
         </jar>
+    	<echo file="${export.dir}/startclient.bat">
+    		java -Djava.library.path=server/lib/native -jar client.jar
+    		pause
+    	</echo>
     </target>
 	
     <target name="create_server" depends="create-folders">

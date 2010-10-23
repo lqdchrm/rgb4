@@ -6,6 +6,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Bullet;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.DoomsDayDeviceBigExplosion;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.DoomsdayDevice;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Rocket;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Teleporter;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
@@ -53,6 +54,10 @@ public class GameFactory extends Factory {
 				Teleporter teleporter
 					= new Teleporter(id, this);
 				add(teleporter);
+				return id;
+			case ROCKET:
+				Rocket newRocket = new Rocket(id, this);
+				add(newRocket);
 				return id;
 			}
 		} catch (SlickException e) {

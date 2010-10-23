@@ -1,0 +1,26 @@
+package de.fhtrier.gdig.demos.jumpnrun.identifiers;
+
+public enum GameInputCommands {
+	WALKLEFT,
+	WALKRIGHT,
+	JUMP,
+	SHOOT,
+	ROCKET,
+	OK,
+	BACK,
+	CHANGECOLOR,
+	CHANGEWEAPONCOLOR,
+	PHRASE1,
+	PHRASE2,
+	PHRASE3,
+	PHRASE4,
+	SCROLLLEFT,
+	SCROLLRIGHT,
+	SCROLLUP,
+	SCROLLDOWN,
+	ZOOMIN,
+	ZOOMOUT,
+	ROTATELEFT,
+	ROTATERIGHT,
+	FULLSCREEN
+}

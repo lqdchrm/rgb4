@@ -5,11 +5,10 @@ import java.net.InetSocketAddress;
 import org.newdawn.slick.Color;
 
 import de.fhtrier.gdig.engine.helpers.Configuration;
-
 public class Constants {
 
 	public static final float EPSILON = 0.0001f;
-
+	
 	public static class GamePlayConstants extends Configuration {
 		public static float gravity = 2000.0f;
 
@@ -19,13 +18,14 @@ public class Constants {
 		
 		public static boolean friendyFire = true; // if true you can damage team-mates
 
-		@ShowAsSlider(maxValue = 10000, minValue = 10)
-		public static float shotSpeed = 1000.0f;
-		public static float shotCooldown = 100.0f;
+		public static float shotSpeed = 400.0f;
+		public static float shotCooldown = 1000.0f;
+		public static float colorChangeCooldownWeapon = 1000.0f;
+		public static float colorChangeCooldownPlayer = 1000.0f;
 		
-		public static float playerWalkSpeed = 4000.0f;
+		public static float playerWalkSpeed = 1000.0f;
 		public static float playerJumpSpeed = 1000.0f;
-		public static float playerMaxSpeed = 850.0f;
+		public static float playerMaxSpeed = 300.0f;
 
 		public static float playerIdleTriggerSpeed = 5.0f;
 		public static float playerFallingTriggerSpeed = 500.0f;
@@ -59,6 +59,8 @@ public class Constants {
 	}
 	
 	public static class Debug extends Configuration {
+		public static boolean showDialogs = false;
+		
 		@CommandlineParameter("noRender")
 		public static boolean doNotRender = false;
 
@@ -85,10 +87,12 @@ public class Constants {
 		public static boolean guiDebug = false;
 		
 		// network
-		public static boolean networkDebug = false;
-		public static boolean showProtocolCommandsOnly = false;
+		public static boolean networkDebug = true;
+		public static boolean showProtocolCommandsOnly = true;
 		
-		public static boolean factoryDebug = false;
+		public static boolean factoryDebug = true;
+
+		public static boolean debugGameLogic = false;
 	}
 	
 	public static class Level extends Configuration {
@@ -100,21 +104,6 @@ public class Constants {
 		public static int deathMatch = 0;
 		public static int teamDeathMatch = 1;
 	}
-	
-	public static class ControlConfig extends Configuration {
-		
-		public static String REFWALKLEFT = "KEY_LEFT";
-		public static String REFWALKRIGHT = "KEY_RIGHT";
-		public static String REFJUMP = "KEY_UP";
-		public static String REFFIRE = "KEY_SPACE";
-		public static String REFCHANGEWEAPON = "KEY_X";
-		public static String REFCHANGECOLOR = "KEY_Y";
-		public static String REFMENU = "KEY_ESCAPE";
-		public static String REFPHRASE1 = "KEY_1";
-		public static String REFPHRASE2 = "KEY_2";
-		public static String REFPHRASE3 = "KEY_3";
-		public static String REFPHRASE4 = "KEY_4";
-	}	
 
 	public static class NetworkConfig extends Configuration {
 		@CommandlineParameter("Server")
@@ -127,5 +116,12 @@ public class Constants {
 		public static int port;
 		@CommandlineParameter("Adress")
 		public static InetSocketAddress adress;
+	}
+	
+	public static class GuiConfig extends Configuration
+	{
+		public static final String WAITING_FOR_MASTER_TEXT = "Waiting for Master to Start!";
+		public static de.lessvoid.nifty.tools.Color btnSelectedColor = new de.lessvoid.nifty.tools.Color(1,1,1,1);
+		public static de.lessvoid.nifty.tools.Color btnNotSelectedColor = new de.lessvoid.nifty.tools.Color(0.8f,0.8f,0.8f,1);
 	}
 }
