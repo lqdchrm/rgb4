@@ -88,9 +88,9 @@ public class Constants {
 		
 		// network
 		public static boolean networkDebug = true;
-		public static boolean showProtocolCommandsOnly = false;
+		public static boolean showProtocolCommandsOnly = true;
 		
-		public static boolean factoryDebug = false;
+		public static boolean factoryDebug = true;
 
 		public static boolean debugGameLogic = false;
 	}
