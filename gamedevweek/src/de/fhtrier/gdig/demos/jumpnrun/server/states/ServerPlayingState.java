@@ -7,6 +7,7 @@ import java.util.Queue;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
@@ -73,6 +74,7 @@ public class ServerPlayingState extends PlayingState {
 
 		switch (actionCmd.getAction()) {
 		case SHOOT:
+			for(int i = 0; i < 2 ; i++) {
 			e = createEntity(EntityType.BULLET, this.levelId);
 
 			// set values
@@ -101,6 +103,13 @@ public class ServerPlayingState extends PlayingState {
 
 			else if (player.getData()[Entity.SCALE_X] == 1) // Left
 				bullet.getData()[Entity.SCALE_X] = 1;
+	
+	if (i == 0) {
+				bullet.setStartValue(0.0);
+			} else {
+				bullet.setStartValue(Math.PI);
+			}
+			}
 
 			return true;
 		case SHOOT_ROCKET:
@@ -127,7 +136,6 @@ public class ServerPlayingState extends PlayingState {
 
 			
 			rocket.shootAtClosestPlayer(RocketStrategy.NEXT_ENEMY_TEAM);
-			
 			return true;
 		case RESPAWN:
 			if (actionCmd instanceof QueryRespawn) {

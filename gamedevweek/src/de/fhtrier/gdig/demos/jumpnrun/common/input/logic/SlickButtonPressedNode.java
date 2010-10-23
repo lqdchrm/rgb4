@@ -34,7 +34,11 @@ public class SlickButtonPressedNode extends SlickKeyPressedNode {
 				current = input.getInput().isControllerDown(cntrl);
 				break;
 			default:
+				try {
 				current = input.getInput().isButtonPressed(getKey() - 4, cntrl);
+				} catch (ArrayIndexOutOfBoundsException e) {
+					
+				}
 			}
 		}
 	}
