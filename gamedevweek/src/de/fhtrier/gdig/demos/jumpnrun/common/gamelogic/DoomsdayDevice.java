@@ -12,6 +12,7 @@ import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class DoomsdayDevice extends Entity {
 
@@ -101,10 +102,13 @@ public class DoomsdayDevice extends Entity {
 			return;
 		timeSinceLastExplosion += deltaInMillis;
 		if (timeSinceLastExplosion > chargeTime)
+		{
+			SoundManager.playSound(Assets.Sounds.DoomsdayDeviceSoundId, 1f, 0.5f);
 			explode();
+		}			
 	}
 
-	private void explode() {
+	private void explode() {		
 		doomesdaydeviceExplosion.activate();
 		resetChargetime();
 	}

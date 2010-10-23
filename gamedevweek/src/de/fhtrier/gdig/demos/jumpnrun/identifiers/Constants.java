@@ -57,6 +57,7 @@ public class Constants {
 		public static boolean isMuted = false;
 		public static boolean soundEnabled = true;
 	}
+	
 	public static class Debug extends Configuration {
 		@CommandlineParameter("noRender")
 		public static boolean doNotRender = false;
