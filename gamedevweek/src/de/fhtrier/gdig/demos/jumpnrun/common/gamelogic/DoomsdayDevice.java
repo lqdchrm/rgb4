@@ -63,11 +63,11 @@ public class DoomsdayDevice extends Entity {
 		doomesdaydeviceExplosion.getData()[X] = getData(X);
 		doomesdaydeviceExplosion.getData()[Y] = getData(Y);
 
-		doomesdaydeviceExplosion.getData()[Entity.X] += ddAnimation
-				.getAssetMgr()
-				.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId)
-				.getImage(0).getWidth() / 2.0f;
-		doomesdaydeviceExplosion.getData()[Entity.Y] += ddAnimation
+		// doomesdaydeviceExplosion.getData()[Entity.X] += ddAnimation
+		// .getAssetMgr()
+		// .getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId)
+		// .getImage(0).getWidth() / 2.0f;
+		doomesdaydeviceExplosion.getData()[Entity.Y] -= ddAnimation
 				.getAssetMgr()
 				.getAnimation(Assets.Level.DoomsdayDevice.DoomsdayDeviceId)
 				.getImage(0).getHeight() / 2.0f;
