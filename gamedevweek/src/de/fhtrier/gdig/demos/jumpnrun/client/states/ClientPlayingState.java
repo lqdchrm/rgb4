@@ -19,6 +19,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
@@ -50,7 +51,7 @@ import de.fhtrier.gdig.engine.physics.entities.CollidableEntity;
 import de.fhtrier.gdig.engine.sound.SoundManager;
 
 enum LocalState {
-	JOINING, CREATINGPLAYER, PLAYING, DISCONNECTING, EXITING
+	INIT, JOINING, CREATINGPLAYER, PLAYING, DISCONNECTING, EXITING
 }
 
 public class ClientPlayingState extends PlayingState {
@@ -65,6 +66,7 @@ public class ClientPlayingState extends PlayingState {
 	public ClientPlayingState() {
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ClientData();
+		setState(LocalState.INIT);
 	}
 
 	@Override
@@ -123,8 +125,12 @@ public class ClientPlayingState extends PlayingState {
 		// has
 		// joined
 		if (cmd instanceof DoCreateEntity) {
-			DoCreateEntity dce = (DoCreateEntity) cmd;
-
+						
+			if (localState == LocalState.INIT) {
+				Log.error("tried to create Entity while in init state");
+			}
+			DoCreateEntity dce = (DoCreateEntity) cmd;			
+			
 			// Create Entity
 			int id = this.getFactory().createEntityById(dce.getEntityId(),
 					dce.getType());
@@ -207,6 +213,7 @@ public class ClientPlayingState extends PlayingState {
 			Player player = (Player)getFactory().getEntity(playerId);
 
 			this.getLevel().setCurrentPlayer(acp.getEntityId());
+			Log.info("I got Player-Entity ID: " + acp.getEntityId() + "\t respawning");
 			player.respawn();
 
 			// we got a player, now we can start :-)
@@ -218,7 +225,10 @@ public class ClientPlayingState extends PlayingState {
 			SendKill killCommand = (SendKill) cmd;
 			
 			Player player = getLevel().getPlayer(killCommand.getPlayerId());
+			Player killer = getLevel().getPlayer(killCommand.getKillerId());
 			player.die();
+			Event dieEvent = new PlayerDiedEvent(player,killer);
+			EventManager.addEvent(dieEvent);
 
 			return true;
 		}
