@@ -125,27 +125,32 @@ public class ClientPlayingState extends PlayingState {
 		// has
 		// joined
 		if (cmd instanceof DoCreateEntity) {
-						
+
 			if (localState == LocalState.INIT) {
 				Log.error("tried to create Entity while in init state");
 			}
-			DoCreateEntity dce = (DoCreateEntity) cmd;			
-			
-			// Create Entity
-			int id = this.getFactory().createEntityById(dce.getEntityId(),
-					dce.getType());
-			Entity e = this.getFactory().getEntity(id);
-			e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+			DoCreateEntity dce = (DoCreateEntity) cmd;
 
-			if (dce.getParentId() > -1) {
-				Entity parent = getFactory().getEntity(dce.getParentId());
-				parent.add(getFactory().getEntity(id));
-			}
+			// we are joining and handle join-commands or we are not joining
+			if ((localState == LocalState.JOINING && dce.isWhileJoining())
+					|| (localState != LocalState.JOINING)) {
 
-			// HACK special treatment for players
-			if (e instanceof Player) {
-				NetworkComponent.getInstance().sendCommand(
-						new QueryPlayerCondition(id));
+				// Create Entity
+				int id = this.getFactory().createEntityById(dce.getEntityId(),
+						dce.getType());
+				Entity e = this.getFactory().getEntity(id);
+				e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+
+				if (dce.getParentId() > -1) {
+					Entity parent = getFactory().getEntity(dce.getParentId());
+					parent.add(getFactory().getEntity(id));
+				}
+
+				// HACK special treatment for players
+				if (e instanceof Player) {
+					NetworkComponent.getInstance().sendCommand(
+							new QueryPlayerCondition(id));
+				}
 			}
 			return true;
 		}
@@ -212,7 +217,8 @@ public class ClientPlayingState extends PlayingState {
 			Player player = (Player) getFactory().getEntity(playerId);
 
 			this.getLevel().setCurrentPlayer(acp.getEntityId());
-			Log.info("I got Player-Entity ID: " + acp.getEntityId() + "\t respawning");
+			Log.info("I got Player-Entity ID: " + acp.getEntityId()
+					+ "\t respawning");
 			player.respawn();
 
 			// we got a player, now we can start :-)
@@ -220,13 +226,22 @@ public class ClientPlayingState extends PlayingState {
 			return true;
 		}
 
+		// Game Logic Events
+		if (localState == LocalState.PLAYING) {
+			 return handleGameLogicCommands(cmd);
+		}
+
+		return false;
+	}
+
+	private boolean handleGameLogicCommands(INetworkCommand cmd) {
 		if (cmd instanceof SendKill) {
 			SendKill killCommand = (SendKill) cmd;
 
 			Player player = getLevel().getPlayer(killCommand.getPlayerId());
 			Player killer = getLevel().getPlayer(killCommand.getKillerId());
 			player.die();
-			Event dieEvent = new PlayerDiedEvent(player,killer);
+			Event dieEvent = new PlayerDiedEvent(player, killer);
 			EventManager.addEvent(dieEvent);
 
 			return true;
@@ -267,10 +282,11 @@ public class ClientPlayingState extends PlayingState {
 			SendPlayerCondition sspn = (SendPlayerCondition) cmd;
 
 			Player player = getLevel().getPlayer(sspn.getPlayerId());
+
 			player.setPlayerCondition(sspn.getPlayerCondition());
 			return true;
 		}
-
+		
 		return false;
 	}
 

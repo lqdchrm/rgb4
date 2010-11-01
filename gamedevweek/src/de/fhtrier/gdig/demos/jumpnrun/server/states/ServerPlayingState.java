@@ -69,8 +69,6 @@ public class ServerPlayingState extends PlayingState {
 
 	private boolean handlePlayerActions(QueryAction actionCmd) {
 		Entity e;
-		int playerId = networkId2Player.get(actionCmd.getSender());
-		Player player = (Player) getFactory().getEntity(playerId);
 
 		switch (actionCmd.getAction()) {
 		case SHOOT:
@@ -79,6 +77,9 @@ public class ServerPlayingState extends PlayingState {
 
 			// set values
 			Bullet bullet = (Bullet) e;
+			int playerId = networkId2Player.get(actionCmd.getSender());
+			Player player = (Player) getFactory().getEntity(playerId);
+
 			bullet.owner = player;
 			bullet.color = player.getWeaponColor();
 
@@ -117,6 +118,8 @@ public class ServerPlayingState extends PlayingState {
 
 			// set values
 			Rocket rocket = (Rocket) e;
+			int playerId = networkId2Player.get(actionCmd.getSender());
+			Player player = (Player) getFactory().getEntity(playerId);
 			rocket.owner = player;
 			rocket.map = (AStarTiledMap)getLevel().getMap();
 			
@@ -186,7 +189,7 @@ public class ServerPlayingState extends PlayingState {
 
 		// send command to all clients to create gem
 		NetworkComponent.getInstance()
-				.sendCommand(new DoCreateEntity(id, parentId, type));
+				.sendCommand(new DoCreateEntity(id, parentId, type, false));
 		return e;
 	}
 
@@ -199,7 +202,7 @@ public class ServerPlayingState extends PlayingState {
 			for (Entity e : getFactory().getEntities()) {
 				if (e.getUpdateStrategy() == EntityUpdateStrategy.ServerToClient) {
 					NetworkComponent.getInstance().sendCommand(cmd.getSender(),
-							new DoCreateEntity(e.getId(), this.levelId, e.getType()));
+							new DoCreateEntity(e.getId(), this.levelId, e.getType(), true));
 				}
 			}
 			NetworkComponent.getInstance().sendCommand(cmd.getSender(),
@@ -234,7 +237,7 @@ public class ServerPlayingState extends PlayingState {
 
 				// send command to all clients to create entity
 				NetworkComponent.getInstance().sendCommand(
-						new DoCreateEntity(id, this.levelId, EntityType.PLAYER));
+						new DoCreateEntity(id, this.levelId, EntityType.PLAYER, false));
 
 				// if query requested new player assume that's the one to be
 				// controlled by client
@@ -282,8 +285,7 @@ public class ServerPlayingState extends PlayingState {
 					ClientData d = (ClientData) data;
 					Level level = getLevel();
 					if (level != null) {
-						Entity e = getFactory()
-								.getEntity(d.getNetworkData().id);
+						Entity e = getFactory().getEntity(d.getNetworkData().id);
 						if (e != null) {
 							e.applyNetworkData(d.getNetworkData());
 						}
