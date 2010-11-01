@@ -103,8 +103,8 @@ public class ClientPlayingState extends PlayingState {
 
 			SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
 			SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
-			SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 5000,
-					0.2f, false);
+			SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 5000, 0.2f,
+					false);
 			return true;
 		}
 
@@ -141,7 +141,7 @@ public class ClientPlayingState extends PlayingState {
 				Entity parent = getFactory().getEntity(dce.getParentId());
 				parent.add(getFactory().getEntity(id));
 			}
-			
+
 			// HACK special treatment for players
 			if (e instanceof Player) {
 				NetworkComponent.getInstance().sendCommand(
@@ -163,39 +163,38 @@ public class ClientPlayingState extends PlayingState {
 				getLevel().setCurrentPlayer(-1);
 			}
 
-
 			CollisionManager.removeEntity((CollidableEntity) getFactory()
 					.getEntity(id));
-			
+
 			getLevel().remove(getFactory().getEntity(id));
 
 			// remove Entity recursively from Factory
 			getFactory().removeEntity(id, true);
 
-//			// robindi: Bugfix, removeEntity from CollisionManager!
-//			CollisionManager.removeEntity((CollidableEntity) getFactory().getEntity(id));
-//			
-//			
-//			Entity entityToRemove = getFactory().getEntity(id);				
-//			if (entityToRemove==null && Constants.Debug.networkDebug)
-//			{
-//				Log.error("Tried to remove Entity with id="+id+" but this id was not known to factory!!!");
-//			}
-//			else
-//			{
-//				getLevel().remove(entityToRemove);
-//				// remove Entity recursively from Factory
-//				getFactory().removeEntity(id, true);
-//			}
-
+			// // robindi: Bugfix, removeEntity from CollisionManager!
+			// CollisionManager.removeEntity((CollidableEntity)
+			// getFactory().getEntity(id));
+			//
+			//
+			// Entity entityToRemove = getFactory().getEntity(id);
+			// if (entityToRemove==null && Constants.Debug.networkDebug)
+			// {
+			// Log.error("Tried to remove Entity with id="+id+" but this id was not known to factory!!!");
+			// }
+			// else
+			// {
+			// getLevel().remove(entityToRemove);
+			// // remove Entity recursively from Factory
+			// getFactory().removeEntity(id, true);
+			// }
 
 			return true;
 		}
-		
+
 		// DoPlaySound... well it just does what it says
 		if (cmd instanceof DoPlaySound) {
 			DoPlaySound dps = (DoPlaySound) cmd;
-			
+
 			SoundManager.playSound(dps.getSoundAssetId());
 			return true;
 		}
@@ -210,7 +209,7 @@ public class ClientPlayingState extends PlayingState {
 			AckCreateEntity acp = (AckCreateEntity) cmd;
 			int playerId = acp.getEntityId();
 
-			Player player = (Player)getFactory().getEntity(playerId);
+			Player player = (Player) getFactory().getEntity(playerId);
 
 			this.getLevel().setCurrentPlayer(acp.getEntityId());
 			Log.info("I got Player-Entity ID: " + acp.getEntityId() + "\t respawning");
@@ -223,7 +222,7 @@ public class ClientPlayingState extends PlayingState {
 
 		if (cmd instanceof SendKill) {
 			SendKill killCommand = (SendKill) cmd;
-			
+
 			Player player = getLevel().getPlayer(killCommand.getPlayerId());
 			Player killer = getLevel().getPlayer(killCommand.getKillerId());
 			player.die();
@@ -235,7 +234,7 @@ public class ClientPlayingState extends PlayingState {
 
 		if (cmd instanceof SendWon) {
 			SendWon wonCommand = (SendWon) cmd;
-			
+
 			Event winEvent;
 			if (wonCommand.getWinnerType() == SendWon.winnerType_Player) {
 				winEvent = new WonGameEvent(getLevel().getPlayer(
