@@ -803,4 +803,9 @@ public class Player extends LevelCollidableEntity implements
 		return this.weaponParticles;
 	}
 	
+	@Override
+	public String toString() {
+		return "Player Entity: " + this.getId() + " / " + this.getPlayerCondition().getName() + " / ";
+	}
+	
 }

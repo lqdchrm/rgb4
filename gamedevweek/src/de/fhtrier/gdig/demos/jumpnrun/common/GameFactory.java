@@ -22,9 +22,9 @@ public class GameFactory extends Factory {
 		if (id == -1) {
 			id = getNewId();
 		} else {
-			if (id >= Factory.getLastId()) {
+//			if (id >= Factory.getLastId()) {
 				setLastId(id + 1);
-			}
+//			}
 		}
 
 		try {

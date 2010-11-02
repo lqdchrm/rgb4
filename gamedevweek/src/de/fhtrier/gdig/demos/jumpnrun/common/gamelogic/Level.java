@@ -550,9 +550,14 @@ public class Level extends MoveableEntity {
 		}
 
 		Entity player = factory.getEntity(id);
+				
 		if (player instanceof Player) {
 			return (Player) player;
+		} else if (player == null)
+		{
+			return null;
 		}
+		
 		throw new RuntimeException("id doesn't match requested entity type");
 	}
 

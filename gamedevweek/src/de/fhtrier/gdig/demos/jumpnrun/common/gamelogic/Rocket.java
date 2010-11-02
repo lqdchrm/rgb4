@@ -16,6 +16,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.RocketDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.BulletData;
@@ -146,13 +147,13 @@ public class Rocket extends LevelCollidableEntity {
 		return closestPlayer;
 	}
 
-	private void die() {
+	public void die() {
 		NetworkComponent.getInstance().sendCommand(
 				new DoRemoveEntity(this.getId()));
 		CollisionManager.removeEntity(this);
 		level.remove(this);
 		level.factory.removeEntity(this.getId(), true);
-		
+
 		if (Constants.Debug.debugGameLogic) {
 			Log.debug("ROCKET DIED");
 		}
@@ -228,12 +229,12 @@ public class Rocket extends LevelCollidableEntity {
 			pathCounter = 1;
 		}
 
-		if (nextPathStep == null || (pathCounter < path.getLength())) {
+		if ((nextPathStep == null || (pathCounter < path.getLength()))) {
 			nextPathStep = path.getStep(pathCounter);
 			pathCounter++;
 		} else {
 			path = null;
-			die();
+			EventManager.addEvent(new RocketDiedEvent(this));
 		}
 
 		targetStep.x = nextPathStep.getX() * map.getTileWidth();

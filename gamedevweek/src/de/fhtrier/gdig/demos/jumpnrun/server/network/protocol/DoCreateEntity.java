@@ -10,12 +10,14 @@ public class DoCreateEntity extends ProtocolCommand {
 	private int entityId;
 	private int parentId;
 	private EntityType type;
+	private boolean whileJoining;
 
-	public DoCreateEntity(int entityId, int parentId, EntityType type) {
+	public DoCreateEntity(int entityId, int parentId, EntityType type, boolean whileJoining) {
 		super("DoCreateEntity");
 
 		this.entityId = entityId;
 		this.type = type;
+		this.whileJoining = whileJoining;
 	}
 
 	public int getEntityId() {
@@ -32,5 +34,9 @@ public class DoCreateEntity extends ProtocolCommand {
 
 	public int getParentId() {
 		return parentId;
+	}
+	
+	public boolean isWhileJoining() {
+		return whileJoining;
 	}
 }

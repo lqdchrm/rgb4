@@ -33,7 +33,7 @@
             <zipfileset excludes="META-INF/*.SF" src="../ext/lib/xmlpull-xpp3-1.1.4c.jar"/>
         </jar>
     	<echo file="${export.dir}/startclient.bat">
-    		java -Djava.library.path=server/lib/native -jar client.jar
+    		java -Djava.library.path=server/lib/native -jar client.jar > log.txt 2> error.txt
     		pause
     	</echo>
     </target>
