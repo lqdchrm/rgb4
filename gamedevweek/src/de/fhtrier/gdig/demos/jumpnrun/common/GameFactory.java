@@ -22,9 +22,9 @@ public class GameFactory extends Factory {
 		if (id == -1) {
 			id = getNewId();
 		} else {
-			if (id >= Factory.getLastId()) {
-				setLastId(id + 1);
-			}
+			// if (id >= Factory.getLastId()) {
+			setLastId(id + 1);
+			// }
 		}
 
 		try {
@@ -51,8 +51,7 @@ public class GameFactory extends Factory {
 				add(newDoomsdaydevice);
 				return id;
 			case TELEPORTER:
-				Teleporter teleporter
-					= new Teleporter(id, this);
+				Teleporter teleporter = new Teleporter(id, this);
 				add(teleporter);
 				return id;
 			case ROCKET:
