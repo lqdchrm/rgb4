@@ -24,4 +24,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>doc</name>
+			<type>2</type>
+			<location>/home/roessgro/gdig/docs/doxygen</location>
+		</link>
+	</linkedResources>
 </projectDescription>

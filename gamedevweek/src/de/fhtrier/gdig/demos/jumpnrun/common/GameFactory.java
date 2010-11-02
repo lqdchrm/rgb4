@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.common;
+﻿package de.fhtrier.gdig.demos.jumpnrun.common;
 
 import org.newdawn.slick.SlickException;
 
@@ -22,9 +22,9 @@ public class GameFactory extends Factory {
 		if (id == -1) {
 			id = getNewId();
 		} else {
-			// if (id >= Factory.getLastId()) {
-			setLastId(id + 1);
-			// }
+//			if (id >= Factory.getLastId()) {
+				setLastId(id + 1);
+//			}
 		}
 
 		try {

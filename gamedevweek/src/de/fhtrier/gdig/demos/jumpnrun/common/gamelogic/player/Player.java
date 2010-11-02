@@ -324,7 +324,7 @@ public class Player extends LevelCollidableEntity implements
 	public void handleInput(final InputController<?> _input) {
 		super.handleInput(_input);
 		
-		if (this.isActive()) {
+		if (this.isActive() && this.condition.getHealth() > Constants.EPSILON) {
 			
 			GameInputController input = (GameInputController)_input;
 			
@@ -798,6 +798,11 @@ public class Player extends LevelCollidableEntity implements
 
 	public ParticleEntity getWeaponParticleEntity() {
 		return this.weaponParticles;
+	}
+	
+	@Override
+	public String toString() {
+		return "Player Entity: " + this.getId() + " / " + this.getPlayerCondition().getName() + " / ";
 	}
 	
 }

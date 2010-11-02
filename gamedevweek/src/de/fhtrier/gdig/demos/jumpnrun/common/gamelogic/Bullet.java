@@ -164,6 +164,8 @@ public class Bullet extends LevelCollidableEntity {
 		List<CollidableEntity> iColideWith = CollisionManager
 				.collidingEntities(this);
 
+		boolean sentencedToDeath = false;
+		
 		for (CollidableEntity collidableEntity : iColideWith) {
 			if (collidableEntity instanceof Player) {
 				Player otherPlayer = (Player) collidableEntity;
@@ -227,9 +229,13 @@ public class Bullet extends LevelCollidableEntity {
 							otherPlayer.getPlayerCondition().setHealth(Constants.GamePlayConstants.maxPlayerHealth);
 					}
 
-					this.die();
+					sentencedToDeath=true;
 				}
 			}
+		}
+		
+		if (sentencedToDeath) {
+			this.die();
 		}
 
 		return result;
