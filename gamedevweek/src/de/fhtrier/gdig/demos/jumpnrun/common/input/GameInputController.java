@@ -146,7 +146,8 @@ public class GameInputController extends InputController<GameInputCommands> {
 		addConfigNode(GameInputCommands.WALKRIGHT, walkRight, false);
 		addConfigNode(GameInputCommands.JUMP, jump, true);
 		addConfigNode(GameInputCommands.SHOOT, shoot, true);
-		addConfigNode(GameInputCommands.ROCKET, rocket, true);
+		// TODO activate Rocket
+		// addConfigNode(GameInputCommands.ROCKET, rocket, true);
 		
 		addConfigNode(GameInputCommands.OK, ok, true);
 		addConfigNode(GameInputCommands.BACK, back, true);

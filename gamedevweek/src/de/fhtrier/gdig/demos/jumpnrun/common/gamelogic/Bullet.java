@@ -169,13 +169,9 @@ public class Bullet extends LevelCollidableEntity {
 		for (CollidableEntity collidableEntity : iColideWith) {
 			if (collidableEntity instanceof Player) {
 				Player otherPlayer = (Player) collidableEntity;
-				if (otherPlayer != owner
-						&& otherPlayer.getPlayerCondition().getHealth() > Constants.EPSILON
-						&& (Constants.GamePlayConstants.friendyFire == true || // Friendly
-																				// Fire
-																				// or
-						owner.getPlayerCondition().getTeamId() != otherPlayer
-								.getPlayerCondition().getTeamId())) // Enemy
+				if (otherPlayer != owner &&
+					otherPlayer.getPlayerCondition().getHealth() > Constants.EPSILON &&
+					(Constants.GamePlayConstants.friendyFire == true || owner.getPlayerCondition().getTeamId() != otherPlayer.getPlayerCondition().getTeamId())) 
 				{
 					if (otherPlayer.getPlayerColor() != this.color) {
 						otherPlayer.getPlayerCondition().setHealth(

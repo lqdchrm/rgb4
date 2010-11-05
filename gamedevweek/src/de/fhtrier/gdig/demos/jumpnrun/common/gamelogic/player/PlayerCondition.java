@@ -85,7 +85,7 @@ public class PlayerCondition implements Serializable {
 		broadCast();
 	}
 
-
+	/** damage induced by bullets this player fires */
 	public float getDamage() {
 		return damage;
 	}

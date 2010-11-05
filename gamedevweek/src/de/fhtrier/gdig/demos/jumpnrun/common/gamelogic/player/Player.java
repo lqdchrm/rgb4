@@ -128,7 +128,7 @@ public class Player extends LevelCollidableEntity implements
 
 	private void initCondition() {
 		condition = new PlayerCondition(this.getId(), "XXX", 1,
-				Constants.GamePlayConstants.initialPlayerHealth, 1.0f, 0.2f);
+				Constants.GamePlayConstants.initialPlayerHealth, 1.0f, Constants.GamePlayConstants.defaultShotDamage);
 		setPlayerColor(StateColor.RED); // player gets default-color: red
 		setWeaponColor(StateColor.RED); // weapon of player get default-color:
 										// red
@@ -324,6 +324,8 @@ public class Player extends LevelCollidableEntity implements
 	public void handleInput(final InputController<?> _input) {
 		super.handleInput(_input);
 		
+		// TODO react on player state, not on health
+		// TODO stop player motion in else case
 		if (this.isActive() && this.condition.getHealth() > Constants.EPSILON) {
 			
 			GameInputController input = (GameInputController)_input;

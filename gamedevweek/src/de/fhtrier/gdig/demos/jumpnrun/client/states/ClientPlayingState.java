@@ -239,10 +239,12 @@ public class ClientPlayingState extends PlayingState {
 			SendKill killCommand = (SendKill) cmd;
 
 			Player player = getLevel().getPlayer(killCommand.getPlayerId());
-			Player killer = getLevel().getPlayer(killCommand.getKillerId());
 			player.die();
-			Event dieEvent = new PlayerDiedEvent(player, killer);
-			EventManager.addEvent(dieEvent);
+			
+// 			not needed: DiedEvent sets Statistics --> calculated by server
+//			Player killer = getLevel().getPlayer(killCommand.getKillerId());
+//			Event dieEvent = new PlayerDiedEvent(player, killer);
+//			EventManager.addEvent(dieEvent);
 
 			return true;
 		}
