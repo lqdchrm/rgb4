@@ -313,7 +313,7 @@ public class Rocket extends Projectile {
 				Player otherPlayer = (Player) collidableEntity;
 				if (otherPlayer != owner
 						&& otherPlayer.getPlayerCondition().getHealth() > Constants.EPSILON
-						&& (Constants.GamePlayConstants.friendyFire == true || // Friendly
+						&& (Constants.GamePlayConstants.friendlyFire == true || // Friendly
 																				// Fire
 																				// or
 						owner.getPlayerCondition().getTeamId() != otherPlayer
