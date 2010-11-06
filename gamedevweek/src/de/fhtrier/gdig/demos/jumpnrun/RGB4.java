@@ -75,6 +75,7 @@ public class RGB4 {
 					gc.setSmoothDeltas(false);
 					gc.setAlwaysRender(true);
 					gc.setUpdateOnlyWhenVisible(false);
+					gc.setTargetFrameRate(100);
 				}
 
 				gc.start();
