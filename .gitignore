@@ -7,3 +7,4 @@ gamedev/.classpath
 ext/bin
 gamedev/bin
 .DS_Store
+.metadata/

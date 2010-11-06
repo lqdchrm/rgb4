@@ -26,97 +26,74 @@
 
 			<panel id="top" height="10%" width="100%" childLayout="center" />
 
-			<panel id="overview" width="60%" height="80%" align="center"
-				valign="top" childLayout="vertical" style="rgb-panel">
+			<panel id="overview" width="60%" height="80%" align="center" valign="top" childLayout="vertical" style="rgb-panel">
 				
-				<panel id="mainMenu" childLayout="horizontal"
-					width="100%" height="100%">
-					<panel width="28px"/>
+				<panel id="mainMenu" childLayout="horizontal" width="100%" height="100%">
 					<panel height="100%" childLayout="vertical">
-					<panel width="100%" height="10%" childLayout="vertical">
-						<label style="rgb-header" text="Server Settings" valign="top" align="center"/>
-					</panel>	
-						<panel id="main_panel" childLayout="vertical" width="100%"
-							height="75%">
-	
-							<panel height="10%" />
-	
+
+						<panel width="100%" height="10%" childLayout="vertical">
+							<label style="header" text="Server Settings" valign="top" align="center"/>
+						</panel>
+						
+						<panel id="main_panel" childLayout="vertical" width="100%" height="75%">
+
 							<panel height="40%" width="100%" childLayout="horizontal">
-								<panel id="namePanel" childLayout="vertical" width="40%" align="center">
-									<label style="lobby-text" id="labelName" text="Servername: "
-										height="50px" valign="center" align="right" textVAlign="center"
-										textHAlign="left" />
+							
+								<panel id="namePanel" childLayout="vertical" width="40%" align="center">									
+									<label style="textLabel" id="labelName" text="Servername: " height="50px" valign="center" align="right" textVAlign="center" textHAlign="left" />
 									<panel height="3px" />
-									<label style="lobby-text" text="Port: " height="50px"
-										valign="center" align="right" textVAlign="center" textHAlign="left" />
+									<label style="textLabel" text="Port: " height="50px" valign="center" align="right" textVAlign="center" textHAlign="left" />
 									<panel height="3px" />
-									<label style="lobby-text" text="Playername: " height="50px"
-										valign="center" align="right" textVAlign="center" textHAlign="left" />
+									<label style="textLabel" text="Playername: " height="50px" valign="center" align="right" textVAlign="center" textHAlign="left" />
+									<panel height="3px" />
 								</panel>
 	
 								<panel id="portPanel" childLayout="vertical" width="40%" align="center">
-									<control width="100%" id="servername" name="textfield"
-										text="RGB-Server" height="50px" valign="center" textVAlign="center" />
+									<control width="100%" id="servername" name="textfield" text="RGB-Server" height="50px" valign="center" textVAlign="center" />
 									<panel height="3px" />
-									<control width="100%" id="portnumber" name="textfield"
-										text="49999" height="50px" valign="center" textVAlign="center" />
+									<control width="100%" id="portnumber" name="textfield" text="49999" height="50px" valign="center" textVAlign="center" />
 									<panel height="3px" />
-									<control width="100%" id="playername" name="textfield"
-										text="Player" height="50px" valign="center" textVAlign="center" />
+									<control width="100%" id="playername" name="textfield" text="Player" height="50px" valign="center" textVAlign="center" />
+									<panel height="3px" />
 								</panel>
+								
 							</panel>
 	
 							<panel height="20%" width="100%" childLayout="center">
 								<panel childLayout="vertical" align="center" width="80%">
-									<label text="Interfaces:" align="center" />
-									<panel id="interfaces" style="rgb-section" height="100%" width="100%"
-										childLayout="vertical" align="center">
-									</panel>
+									<label text="Interfaces" style="sectionHeader" align="center" height="90%" />
+									<panel id="interfaces" height="100%" width="100%" childLayout="vertical" align="center" />
 								</panel>
 							</panel>
 	
 						</panel>
 	
 						<panel height="10%" id="bottom_panel" childLayout="horizontal">
-							<panel  height="100%" width="100%"
-								childLayout="horizontal">
+							<panel  height="100%" width="100%" childLayout="horizontal">
+								
 								<panel width="50%" childLayout="horizontal">
-									<panel width="10px"/>
-									<label id="exit" align="left" text="Back" style="lobby-button"
-										hintText="Exit the Game">
+									<label id="exit" align="right" text="Back" style="lobby-button" hintText="Exit the Game">
 										<interact onClick="back()" />
 									</label>
 								</panel>
+								
 								<panel width="50%" childLayout="horizontal">
 									<label id="startstop_server" text="Create server" style="lobby-button" align="right">
 										<interact onClick="createServer()" />
 									</label>
 								</panel>
+								
 							</panel>
+							
 						</panel>
-						<panel width="26px"/>
-					</panel>
-				
+						
+					</panel>				
+
 				</panel>
-
-
 
 			</panel>
 
 		</layer>
-
-<!-- 		<layer childLayout="vertical" style="in-out-transition">
-
-			<panel height="10%" width="100%" childLayout="center" />
-
-			<panel id="overview" width="90%" height="80%" align="center"
-				valign="top" childLayout="horizontal">
-				<panel width="10px"/>
-				<panel align="left" padding="15px,0px,0px,10px" childLayout="center">
-					<image  filename="rgb4_small.png"/>
-				</panel>
-			</panel>
-		</layer>  -->
 
 	</screen>
 
@@ -125,8 +102,8 @@
 			width="50%" height="20%" align="center" valign="center">
 			<panel childLayout="vertical" align="center" valign="center">
 				<panel childLayout="center" height="70%" width="100%">
-					<label id="pop-text" text="You forgot to select an interface!!!"
-						style="lobby-text" align="center" valign="center" color="#000f" />
+					<label id="pop-text" text="Please select an interface!"
+						style="textLabel" align="center" valign="center" color="#000f" />
 				</panel>
 				<panel childLayout="horizontal" align="center" height="30%">
 					<panel childLayout="center" width="100%" align="center">
@@ -145,8 +122,8 @@
 			width="50%" height="20%" align="center" valign="center">
 			<panel childLayout="vertical" align="center" valign="center">
 				<panel childLayout="center" height="70%" width="100%">
-					<label id="pop-text" text="You forgot to enter a name!!!"
-						style="lobby-text" align="center" valign="center" color="#000f" />
+					<label id="pop-text" text="Please enter a name!!!"
+						style="textLabel" align="center" valign="center" color="#000f" />
 				</panel>
 				<panel childLayout="horizontal" align="center" height="30%">
 					<panel childLayout="center" width="100%" align="center">

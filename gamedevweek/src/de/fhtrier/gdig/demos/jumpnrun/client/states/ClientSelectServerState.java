@@ -86,7 +86,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 			InterfaceAddress iA = interfaces.get(i);
 			CreateButtonControl createButton = new CreateButtonControl("button"
 					+ counter++);
-			createButton.setHeight("20px");
+			createButton.setHeight("25px");
 			createButton.setWidth("100%");
 			createButton.set("label", iA.getAddress().getCanonicalHostName());
 			createButton.setAlign("left");
@@ -123,11 +123,12 @@ public class ClientSelectServerState extends NiftyGameState implements
 		try {
 			enableMouseImage(new Image(
 					ResourceLoader.getResourceAsStream(Assets.Config.AssetGuiPath
-							+ "/crosshair.png"), "Cursor", false));
+							+ "/images/crosshair.png"), "Cursor", false));
 		} catch (SlickException e) {
 			Log.error("Image loading failed in ServerSettingsState");
 			e.printStackTrace();
 		}
+
 	}
 
 	@Override
@@ -164,9 +165,8 @@ public class ClientSelectServerState extends NiftyGameState implements
 
 		int count = 0;
 		for (NetworkServerObject server : serverList) {
-			CreateButtonControl createButton = new CreateButtonControl(
-					"mybutton" + count);
-			createButton.setHeight("30px");
+			CreateButtonControl createButton = new CreateButtonControl("mybutton" + count);
+			createButton.setHeight("25px");
 			createButton.setWidth("100%");
 			createButton.set("label", server.getName() + "(" + server.getIp()
 					+ ")");
