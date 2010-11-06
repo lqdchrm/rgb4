@@ -12,6 +12,8 @@ import org.newdawn.slick.particles.ConfigurableEmitter.ColorRecord;
 import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.util.Log;
 
+import sun.security.action.GetLongAction;
+
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
@@ -60,6 +62,10 @@ import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.physics.CollisionManager;
 import de.fhtrier.gdig.engine.sound.SoundManager;
 
+/**
+ * @author krumholt
+ *
+ */
 public class Player extends LevelCollidableEntity implements
 		IFiniteStateMachineListener<PlayerActionState> {
 
@@ -632,6 +638,22 @@ public class Player extends LevelCollidableEntity implements
 			// this.getVel()[Entity.X] = this.getVel()[Entity.Y] = 0.0f;
 			// }
 		}
+		if(isOutsideLevel()) {
+			int damageColor = StateColor.RED;
+			if(playerColor == StateColor.RED) {
+				damageColor = StateColor.BLUE;
+			}
+			doDamage(damageColor, condition.getHealth() + 1.0f, null);
+		}
+	}
+	
+	/**
+	 * @return true if player outside level boundaries
+	 */
+	private boolean isOutsideLevel() {
+		return getData()[Entity.X] < - 300 ||
+			   getData()[Entity.X] > level.getWidth() + 300 ||
+			   getData()[Entity.Y] > level.getHeight() + 5;
 	}
 
 	// getters + setters
