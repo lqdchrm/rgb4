@@ -15,6 +15,7 @@ import org.newdawn.slick.util.Log;
 import sun.security.action.GetLongAction;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
+import de.fhtrier.gdig.demos.jumpnrun.common.RGB4Game;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
@@ -44,6 +45,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.GamePlayConstants;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.NetworkConfig;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameInputCommands;
@@ -629,6 +631,15 @@ public class Player extends LevelCollidableEntity implements
 				this.getVel()[Entity.Y] = -Constants.GamePlayConstants.playerMaxJumpSpeed;
 			}
 
+			if(NetworkConfig.isServer && isOutsideLevel()) {
+				int damageColor = StateColor.RED;
+				// select a different color then the current player color
+				if(playerColor == StateColor.RED) {
+					damageColor = StateColor.BLUE;
+				}
+				doDamage(damageColor, condition.getHealth() + 1.0f, null);
+			}
+			
 			// TODO fix PlayerState
 			// if (this._currentState == PlayerActionState.Standing
 			// && Math.abs(this.getData()[Entity.X]
@@ -637,13 +648,6 @@ public class Player extends LevelCollidableEntity implements
 			// - this.getPrevPos()[Entity.Y]) < Constants.EPSILON) {
 			// this.getVel()[Entity.X] = this.getVel()[Entity.Y] = 0.0f;
 			// }
-		}
-		if(isOutsideLevel()) {
-			int damageColor = StateColor.RED;
-			if(playerColor == StateColor.RED) {
-				damageColor = StateColor.BLUE;
-			}
-			doDamage(damageColor, condition.getHealth() + 1.0f, null);
 		}
 	}
 	
