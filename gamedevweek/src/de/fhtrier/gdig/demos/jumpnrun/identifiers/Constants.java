@@ -36,21 +36,19 @@ public class Constants {
 		public static float playerAirDrag = 0.000001f;
 
 		public static Color defaultPlayerTextColor = Color.white;
-
 		public static float weaponGlowFalloff = 1.5f;
-
 		public static float playerGlowFalloff = 1.5f;
 		public static float playerBrightness = 1.0f;	
 
-		public static float colissionPointDistance = 2.0f;
+		public static float colissionPointDistance = 2.0f;		// internal DO NOT CHANGE!!
 
 		public static float playerMaxJumpSpeed = 1000.0f;
 		
-		public static long playerReviveDelayInMillis = 3000;
+		public static long playerReviveDelayInMillis = 3000;	// time to wait before dead player respawns
 
-		public static float initialPlayerHealth = 1.0f;
-		
-		public static float maxPlayerHealth = 2.0f;
+		public static float initialPlayerHealth = 1.0f;			// start health
+		public static float maxPlayerHealth = 2.0f;				// Player Health can not be greater than this
+		public static float healingFactor = 0.7f;				// Ratio of Damage vs. Healing --> <1 means heal less than damage
 	}
 
 
@@ -104,8 +102,8 @@ public class Constants {
 	}
 	
 	public static class GameTypes extends Configuration {
-		public static int deathMatch = 0;
-		public static int teamDeathMatch = 1;
+		public static final int deathMatch = 0;
+		public static final int teamDeathMatch = 1;
 	}
 
 	public static class NetworkConfig extends Configuration {

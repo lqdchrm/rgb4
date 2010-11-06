@@ -642,70 +642,95 @@ public class Player extends LevelCollidableEntity implements
 	 *            the Damage
 	 * @return true if Player Died, else false.
 	 */
-	public boolean doDamage(int colorolor, float damage, Player killer) {
+	public boolean doDamage(int color, float damage, Player killer) {
+		
 		boolean died = false;
+		
+		// don't handle dead players
 		if (getPlayerCondition().getHealth() <= 0)
 			return false;
-		if (killer == null
-				|| (Constants.GamePlayConstants.friendyFire == true || // Friendly
-																		// Fire
-				// or
-				killer.getPlayerCondition().getTeamId() != this
-						.getPlayerCondition().getTeamId())) // Enemy
-		{
-			if (this.getPlayerColor() != colorolor) {
+		
+		// don't hurt yourself
+		if (this == killer)
+			return false;
+		
+		// check for friendly fire/different teams
+		if (Constants.GamePlayConstants.friendyFire == true ||
+			killer.getPlayerCondition().getTeamId() != this.getPlayerCondition().getTeamId()) {
+			
+			// check color --> different damages / same heals
+			if (this.getPlayerColor() != color) {
+				
+				// do damage
 				this.getPlayerCondition().setHealth(
 						getPlayerCondition().getHealth() - damage);
 
+				// check if died
 				if (this.getPlayerCondition().getHealth() <= Constants.EPSILON) {
+					
+					// tell everyone
 					NetworkComponent.getInstance().sendCommand(
 							new SendKill(this.getId(), killer != null ? killer
 									.getId() : -1));
 
+					// enqueue event, that calculates statistics
 					Event dieEvent = new PlayerDiedEvent(this, killer);
 					dieEvent.update();
 					died = true;
 				}
 
-				if (PlayingState.gameType == Constants.GameTypes.deathMatch) {
-					if (killer != null
-							&& killer.getPlayerCondition().getKills() >= Constants.GamePlayConstants.winningKills_Deathmatch) {
-						NetworkComponent.getInstance().sendCommand(
-								new SendWon(killer.getId(),
+				// handle game modes
+				switch(PlayingState.gameType) {
+				
+					// Deatch Match
+					case Constants.GameTypes.deathMatch:
+						
+						if (killer != null &&
+							killer.getPlayerCondition().getKills() >= Constants.GamePlayConstants.winningKills_Deathmatch) {
+						
+							NetworkComponent.getInstance().sendCommand(new SendWon(killer.getId(),
 										SendWon.winnerType_Player));
 
-						Event wonEvent = new WonGameEvent(killer);
-						EventManager.addEvent(wonEvent);
-					}
-				} else if (PlayingState.gameType == Constants.GameTypes.teamDeathMatch) {
-					// TODO: do it not hardcoded
-					if (Team.team1.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
-						NetworkComponent.getInstance().sendCommand(
-								new SendWon(Team.team1.id,
+							Event wonEvent = new WonGameEvent(killer);
+							EventManager.addEvent(wonEvent);
+						}
+					break;
+				
+					// Team Death Match
+					case Constants.GameTypes.teamDeathMatch:
+						
+						if (Team.team1.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
+						
+							NetworkComponent.getInstance().sendCommand(new SendWon(Team.team1.id,
 										SendWon.winnerType_Team));
 
-						Event wonEvent = new WonGameEvent(Team.team1);
-						EventManager.addEvent(wonEvent);
-					} else if (Team.team2.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
-						NetworkComponent.getInstance().sendCommand(
-								new SendWon(Team.team2.id,
-										SendWon.winnerType_Team));
+							Event wonEvent = new WonGameEvent(Team.team1);
+							EventManager.addEvent(wonEvent);
+						} else if (Team.team2.getKills() >= Constants.GamePlayConstants.winningKills_TeamDeathmatch) {
+						
+							NetworkComponent.getInstance().sendCommand(
+								new SendWon(Team.team2.id, SendWon.winnerType_Team));
 
-						Event wonEvent = new WonGameEvent(Team.team1);
-						EventManager.addEvent(wonEvent);
-					}
+							Event wonEvent = new WonGameEvent(Team.team1);
+							EventManager.addEvent(wonEvent);
+						}
+					break;
 				}
-			} else {
-				// player gets stronger when hit by bullet of the same
-				// color!
+			} else { // same color
+
+				// heal player
 				this.getPlayerCondition().setHealth(
-						getPlayerCondition().getHealth() + damage / 2);
+						getPlayerCondition().getHealth() +
+						damage * Constants.GamePlayConstants.healingFactor);
+				
+				// cap health at maxHealth
 				if (this.getPlayerCondition().getHealth() > Constants.GamePlayConstants.maxPlayerHealth)
 					this.getPlayerCondition().setHealth(
 							Constants.GamePlayConstants.maxPlayerHealth);
 			}
 
 		}
+		
 		return died;
 	}
 
