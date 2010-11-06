@@ -16,14 +16,17 @@ import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.DoomsdayDeviceExplosionData;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoPlaySound;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.helpers.Configuration;
 import de.fhtrier.gdig.engine.management.AssetMgr;
+import de.fhtrier.gdig.engine.network.NetworkComponent;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class DoomsDayDeviceBigExplosion extends Entity {
 
-	private Options options;
 	private boolean isDDDActive = false;
 
 	private Level level;
@@ -52,9 +55,6 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 
 		asset.storeImage(Assets.DoomsdayBigExplosionImageId,
 				Assets.DoomsdayBigExplosionImagePath);
-
-		options = new Options();
-		options.showEditor("DOOM");
 	}
 
 	public boolean activate() {
@@ -85,6 +85,10 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 		default:
 			break;
 		}
+		
+		NetworkComponent.getInstance().sendCommand(new DoPlaySound(Assets.Sounds.DoomsdayDeviceSoundId));
+		SoundManager.playSound(Assets.Sounds.DoomsdayDeviceSoundId,1.0f,2.0f);
+		
 		setVisible(true);
 		return true;
 	}
@@ -123,12 +127,12 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 		}
 
 		timeSinceActivation += deltaInMillis;
-
-		if (options.timeUntilDetonation > timeSinceActivation) {
+	
+		if (Constants.DoomsDayDeviceConfig.soundPrecarriage > timeSinceActivation) {
 			return;
 		}
 
-		this.outerRadius += options.speed * secs;
+		this.outerRadius += Constants.DoomsDayDeviceConfig.speed * secs;
 
 		// determine which entities to check
 		Set<Player> players = new HashSet<Player>();
@@ -155,12 +159,12 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 					* (playerPosX - getData()[X]) + (playerPosY - getData()[Y])
 					* (playerPosY - getData()[Y]);
 
-			float hitDistance = (outerRadius - options.hitSize)
-					* (outerRadius - options.hitSize);
+			float hitDistance = (outerRadius - Constants.DoomsDayDeviceConfig.hitSize)
+					* (outerRadius - Constants.DoomsDayDeviceConfig.hitSize);
 
 			if (playerdistance >= hitDistance
 					&& playerdistance <= (outerRadius * outerRadius)) {
-				if (!player.doDamage(damageColor, options.damage, null))
+				if (!player.doDamage(damageColor, Constants.DoomsDayDeviceConfig.damage, null))
 					hitPlayer.add(player);
 
 			}
@@ -172,8 +176,8 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 		float top = -getData()[Y];
 		float bottom = level.getWidth() - getData()[Y];
 
-		float innerRadiusSqrd = (outerRadius - options.size)
-				* (outerRadius - options.size);
+		float innerRadiusSqrd = (outerRadius - Constants.DoomsDayDeviceConfig.size)
+				* (outerRadius - Constants.DoomsDayDeviceConfig.size);
 		float maxLevelDistX = Math.max(left, right);
 		float maxLevelDistY = Math.max(top, bottom);
 		float maxLevelDist = maxLevelDistX * maxLevelDistX + maxLevelDistY
@@ -215,16 +219,5 @@ public class DoomsDayDeviceBigExplosion extends Entity {
 	@Override
 	protected NetworkData _createNetworkData() {
 		return new DoomsdayDeviceExplosionData(getId());
-	}
-
-	private static class Options extends Configuration {
-		/**
-		 * Time in Millseconds till detonation after Activation.
-		 */
-		int timeUntilDetonation = 1230;
-		float size = 400f;
-		float speed = 400f;
-		float hitSize = 120f;
-		float damage = 0.5f;
 	}
 }

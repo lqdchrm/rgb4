@@ -1,6 +1,8 @@
 # Compiled source #
 ###################
 *.class
+gamedevweek/export/
+spriteviewer/bin/
 gamedev/.classpath
 ext/bin
 gamedev/bin
