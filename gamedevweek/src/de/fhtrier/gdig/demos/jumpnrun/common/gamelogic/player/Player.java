@@ -47,6 +47,7 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameInputCommands;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoPlaySound;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendTeamCondition;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.ParticleEntity;
@@ -679,7 +680,7 @@ public class Player extends LevelCollidableEntity implements
 					NetworkComponent.getInstance().sendCommand(
 							new SendKill(this.getId(), killer != null ? killer
 									.getId() : -1));
-
+					
 					// enqueue event, that calculates statistics
 					Event dieEvent = new PlayerDiedEvent(this, killer);
 					dieEvent.update();

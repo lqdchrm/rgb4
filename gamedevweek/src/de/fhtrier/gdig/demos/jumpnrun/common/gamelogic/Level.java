@@ -470,10 +470,10 @@ public class Level extends MoveableEntity {
 				getVel()[X] = 0.0f;
 			}
 			if (input.isKeyDown(GameInputCommands.SCROLLRIGHT)) {
-				getVel()[X] = 600.0f;
+				getVel()[X] = -600.0f;
 			}
 			if (input.isKeyDown(GameInputCommands.SCROLLLEFT)) {
-				getVel()[X] = -600.0f;
+				getVel()[X] = 600.0f;
 			}
 
 			// Up / Down
@@ -483,11 +483,11 @@ public class Level extends MoveableEntity {
 			}
 
 			if (input.isKeyDown(GameInputCommands.SCROLLDOWN)) {
-				getVel()[Y] = 600.0f;
+				getVel()[Y] = -600.0f;
 			}
 
 			if (input.isKeyDown(GameInputCommands.SCROLLUP)) {
-				getVel()[Y] = -600.0f;
+				getVel()[Y] = 600.0f;
 			}
 
 			// Zoom

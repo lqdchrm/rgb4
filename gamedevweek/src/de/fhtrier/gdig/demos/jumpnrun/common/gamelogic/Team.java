@@ -62,4 +62,12 @@ public class Team {
 	public int getDeaths() {
 		return deaths;
 	}
+	
+	public void setKills(int kills) {
+		this.kills = kills;
+	}
+	
+	public void setDeaths(int deaths) {
+		this.deaths = deaths;
+	}
 }
