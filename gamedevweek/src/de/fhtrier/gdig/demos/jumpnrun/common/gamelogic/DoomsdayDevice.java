@@ -122,9 +122,9 @@ public class DoomsdayDevice extends Entity {
 	
 	@Override
 	protected void renderImpl(Graphics graphicContext, Image frameBuffer) {
-		ddAnimation.getData()[Y] += Constants.DoomsDayDeviceConfig.offset;
+		ddAnimation.getData()[Y] += Constants.DoomsDayDeviceConfig.renderOffset;
 		super.renderImpl(graphicContext, frameBuffer);
-		ddAnimation.getData()[Y] -= Constants.DoomsDayDeviceConfig.offset;
+		ddAnimation.getData()[Y] -= Constants.DoomsDayDeviceConfig.renderOffset;
 	}
 
 }
