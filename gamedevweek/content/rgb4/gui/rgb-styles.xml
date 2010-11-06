@@ -8,10 +8,8 @@
 		<attributes childLayout="vertical" align="center" valign="center"
 			height="50%" />
 		<effect>
-			<onStartScreen name="fade" startColor="#fff0" endColor="#ffff"
-				length="250" startDelay="0" inherit="true" />
-			<onEndScreen name="fade" startColor="#ffff" endColor="#fff0"
-				length="250" inherit="true" />
+			<onStartScreen name="fade" startColor="#fff0" endColor="#ffff" length="250" startDelay="0" inherit="true" />
+			<onEndScreen name="fade" startColor="#ffff" endColor="#fff0" length="250" inherit="true" />
 		</effect>
 	</style>
 
@@ -20,7 +18,7 @@
 	<!-- +++++++++++++++++++++++++++++++++++++++ -->
 	<style id="menu-item">
 		<attributes align="center"
-			font="small-font-unselected.fnt"
+			font="/fonts/DroidSansRegular24.fnt"
 			focusable="true" controller="de.lessvoid.nifty.controls.MenuItemControl"
 			inputMapping="de.lessvoid.nifty.input.mapping.MenuInputMapping" />
 		<effect>
@@ -28,7 +26,7 @@
 			<onFocus name="shake" global="false" length="1000" distance="3"
 				post="false" />
 			<onFocus name="changeFont"
-				font="small-font-selected.fnt"
+				font="/fonts/DroidSansRegular24.fnt"
 				timeType="infinite" />
 		</effect>
 	</style>
@@ -43,22 +41,18 @@
 	<style id="standard-action">
 		<attributes></attributes>
 		<effect>
-				<onHover name="shake" global="false" length="1000" distance="3"
-					post="false" />
+				<onHover name="shake" global="false" length="1000" distance="3" post="false" />
 				<onStartScreen name="fade"></onStartScreen>
 		</effect>			
 	</style>
 
 	<style id="lobby-button">
-		<attributes align="center"
-			font="small-font-unselected.fnt"
+		<attributes align="center" width="80%"
+			font="/fonts/PublicGothicFederal42.fnt" color="#2F3D96"
 			focusable="true" controller="de.lessvoid.nifty.controls.MenuItemControl"
 			inputMapping="de.lessvoid.nifty.input.mapping.MenuInputMapping" />
 		<effect>
-			<onHover name="focus" />
-			<onFocus name="changeFont"
-				font="small-font-selected.fnt"
-				timeType="infinite" />
+			<onHover name="shake" global="false" length="1000" distance="3" post="false" />
 		</effect>
 	</style>
 
@@ -67,33 +61,17 @@
 	</style>
 	
 	<style id="credits-0">
-			<attributes font="verdana-24-regular.fnt" focusable="false" />
+		<attributes font="/fonts/DroidSansBold24.fnt" focusable="false" />
 	</style>
 
 	<style id="credits-1">
- 		<attributes font="verdana-24-glow.fnt" color="#ffff" focusable="false" align="center" valign="center"/> 
+ 		<attributes font="/fonts/DroidSansRegular24.fnt" color="#ffff" focusable="false" align="center" valign="center"/> 
 	</style>
-	
-
-<!-- credits-2 is reserverd for images -->
-	<style id="credits-3">
- 		<attributes font="rockwell.fnt" color="#ffff" focusable="false" align="center" valign="center"/> 
-	</style>
-
-	<style id="credits-4">
- 		<attributes font="rm_narrowboat_48.fnt" color="#ffff" focusable="false" align="center" valign="center"/> 
-	</style>
-
 	
 	<style id="header-label">
- 		<attributes font="rm_narrowboat_48.fnt" color="#300f" focusable="false" align="center" valign="center"/>  
-<!-- 		<attributes font="verdana-24-glow.fnt" color="#000f" focusable="false" align="center" valign="center"/> -->
+ 		<attributes font="/fonts/PublicGothicFederal42.fnt" color="#300f" focusable="false" align="center" valign="center"/>  
 	</style>
 	
-	<style id="standard-panel-background">
-	</style>
-
-
 	<style id="lobby-panel-background">
 		<attributes backgroundColor="#aaaa"/>
 	</style>
@@ -103,22 +81,22 @@
 	</style>
 
 
-	<style id="rgb-header">
- 		<attributes font="rm_narrowboat_48.fnt" color="#300f" focusable="false"/>  
+	<style id="header">
+ 		<attributes font="/fonts/PublicGothicFederal42.fnt" color="#009233" focusable="false"/>  
+	</style>
+	
+	<style id="sectionHeader">
+ 		<attributes font="/fonts/PublicGothicFederal42.fnt" color="#009233" focusable="false"/>  
 	</style>
 
 	<style id="rgb-panel">
-		<attributes backgroundImage="gui-panel.png" imageMode="resize:28,176,28,49,28,176,28,169,28,176,28,26" />
-	</style>
-
-	<style id="rgb-panel-schrottone">
-		<attributes backgroundImage="rgb-panel-color.png" imageMode="resize:55,35,56,96,55,351,56,337,55,351,56,49" />
+		<attributes backgroundColor="#28282895" padding="10px"/>
 	</style>
 	
 	<style id="rgb-section">
-		<attributes backgroundColor="#100a"/>
-	</style>
-
+		<attributes font="/fonts/DroidSansRegular16.fnt" backgroundColor="#28282895" padding="4px"/>
+	</style>	
+	
 	<style id="standard-footer">
 		<attributes padding="10px,10px,10px,10px" backgroundColor="#333e" />
 	</style>
@@ -126,16 +104,14 @@
 
 	<style id="lobby-header">
 		<attributes align="center"
-			font="small-font-unselected.fnt"
+			font="/fonts/PublicGothicFederal42.fnt"
 			focusable="false" />
 	</style>
 	
 	<style id="player-list">
-		<attributes backgroundColor="#000a"/>
 	</style>
 	
 	<style id="level-list">
-		<attributes backgroundColor="#000a"/>
 	</style>
 	
 	<style id="scroller">
@@ -144,38 +120,32 @@
 		</effect>
 	</style>
 
-	<style id="lobby-text">
-		<attributes font="verdana-24-regular.fnt" focusable="false" />
-
-		<!--
-			<attributes
-			font="small-font-unselected.fnt"
-			focusable="false"/>
-		-->
+	<style id="console-text">
+		<attributes font="/fonts/DroidSansRegular16.fnt" color="#000f" />
 	</style>
 	
-	<style id="console-text">
-		<attributes font="verdana_16.fnt" color="#000f" />
-	</style>	
-		
-  <style id="nifty-button#text">
-    <attributes font="verdana_16.fnt" align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="true"/>
-    <effect>
-      <onHover name="saveState" />
-<!--     <onHover name="changeFont" font="verdana-24-glow.fnt" post="false" inherit="false"/>  -->
-      <onHover name="colorPulsate" startColor="#0000" endColor="#000f" post="false" inherit="false"/>
-      <onHover name="renderElement" />
-      <onHover name="restoreState" />
-    </effect>
-  </style>	
+	  <style id="nifty-panel">
+	    <attributes backgroundColor="#ffffff99" align="center" width="80%" height="40px" childLayout="center" visibleToMouse="true" color="#000000"/>
+	  </style>		
+	
+	
+  	<!-- style for the button background panel -->
+	  <style id="nifty-button#panel">
+	    <attributes backgroundColor="#0F0F0F99" align="center" width="80%" height="40px" childLayout="center" visibleToMouse="true" />
+	  </style>
+
+	  <!-- style for the button text -->
+	  <style id="nifty-button#text">
+	    <attributes font="/fonts/DroidSansRegular16.fnt" align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="true" color="#ffffff" />
+	  </style>
   
   
   <style id="waiting_for_master">
-    <attributes font="verdana-24-regular.fnt" align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="true"/>
+    <attributes font="/fonts/DroidSansRegular24.fnt" align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="true"/>
   </style>
   
   <style id="nifty-textfield#panel">
-    <attributes backgroundColor="#100a" childLayout="overlay" height="40px" />
+    <attributes backgroundColor="#100a" childLayout="overlay" height="40px" childClip="true"/>
   </style>
   
   <style id="nifty-textfield#field">
@@ -183,14 +153,18 @@
   </style>
 
   <style id="nifty-textfield#text">
-    <attributes font="verdana-24-shadow.fnt" visibleToMouse="false" align="left" textHAlign="left" valign="center" />
+    <attributes font="/fonts/DroidSansRegular24.fnt" visibleToMouse="false" align="left" textHAlign="left" valign="center"/>
   </style>
   
  <style id="nifty-textfield#cursor">
-    <attributes filename="gui-cursor-empty.png" valign="top"/>
+    <attributes filename="images/gui-cursor-empty.png" valign="top"/>
     <effect>
-      <onActive name="imageOverlayPulsate" period="500" timeType="infinite" pulsateType="rectangle" filename="gui-cursor.png" post="true"/>
+      <onActive name="imageOverlayPulsate" period="500" timeType="infinite" pulsateType="rectangle" filename="images/gui-cursor.png" post="true"/>
     </effect>
+  </style>
+
+  <style id="textLabel">
+	<attributes font="/fonts/DroidSansBold24.fnt" focusable="false" padding="4px"/>
   </style>
   
   <style id="in-out-transition">

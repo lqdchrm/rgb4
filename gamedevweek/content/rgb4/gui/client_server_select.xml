@@ -12,15 +12,14 @@
 
 
 
-	<screen id="start"
-		controller="de.fhtrier.gdig.demos.jumpnrun.client.states.ClientSelectServerState">
+	<screen id="start" controller="de.fhtrier.gdig.demos.jumpnrun.client.states.ClientSelectServerState">
 
 		<layer id="layer" childLayout="vertical" style="in-out-transition">
 			<panel height="10%"/>
 			<panel id="dialog" childLayout="vertical" width="55%" height="85%"
 				align="center" valign="center" style="rgb-panel">
 				<panel width="100%" height="10%" childLayout="vertical">
-					<label style="rgb-header" text="Choose Server" valign="top" align="center"/>
+					<label style="header" text="Choose Server" valign="top" align="center"/>
 				</panel>
 				<panel width="100%" height="90%" childLayout="horizontal">
 					<panel width="28px" />
@@ -28,25 +27,21 @@
 					<panel childLayout="vertical" padding="10px,10px,10px,10px">
 						<panel height="30%" childLayout="vertical">
 							<label text="Interfaces:" />
-							<panel id="interfaces" width="100%" height="80%"
-								childLayout="vertical" style="rgb-section">
-							</panel>
+							<panel id="interfaces" width="100%" height="80%" childLayout="vertical"></panel>
 						</panel>
 
 						<panel height="5%" />
 
 						<panel height="30%" childLayout="vertical">
 							<label id="exit" text="Servers:" />
-							<panel id="servers" height="80%" width="100%" childLayout="vertical" style="rgb-section">
-							</panel>
+							<panel id="servers" height="80%" width="100%" childLayout="vertical"></panel>
 						</panel>
 
 
 
 						<panel width="100%" height="10%" childLayout="horizontal">
 							<label text="Playername" width="40%" valign="center" />
-							<control width="60%" id="playername" name="textfield"
-								text="Player" height="30px" valign="center" textVAlign="bottom" />
+							<control width="60%" id="playername" name="textfield" text="Player" height="40px" valign="center" textVAlign="bottom" />
 						</panel>
 
 						<panel height="10%" />
@@ -81,7 +76,7 @@
 			width="50%" height="20%" align="center" valign="center">
 			<panel childLayout="vertical" align="center" valign="center">
 				<panel childLayout="center" height="70%" width="100%">
-					<label id="pop-text" text="You forgot to select a server!!!"
+					<label id="pop-text" text="Please select a server!"
 						style="lobby-text" align="center" valign="center" color="#000f" />
 				</panel>
 				<panel childLayout="horizontal" align="center" height="30%">
@@ -101,8 +96,7 @@
 			width="50%" height="20%" align="center" valign="center">
 			<panel childLayout="vertical" align="center" valign="center">
 				<panel childLayout="center" height="70%" width="100%">
-					<label id="pop-text" text="You forgot to enter a name!!!"
-						style="lobby-text" align="center" valign="center" color="#000f" />
+					<label id="pop-text" text="Please enter a name!" style="lobby-text" align="center" valign="center" color="#000f" />
 				</panel>
 				<panel childLayout="horizontal" align="center" height="30%">
 					<panel childLayout="center" width="100%" align="center">

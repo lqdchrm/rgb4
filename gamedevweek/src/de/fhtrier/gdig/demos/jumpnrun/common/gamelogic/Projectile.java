@@ -4,6 +4,7 @@ import java.util.List;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.engine.network.NetworkComponent;
@@ -52,9 +53,13 @@ public class Projectile extends LevelCollidableEntity {
 			if (collidableEntity instanceof Player) {
 				Player hitPlayer = (Player) collidableEntity;
 				
-				hitPlayer.doDamage(color, owner.getPlayerCondition().getDamage(), owner);
-				doRemoveBullet = true;
-				
+				// don't collide with owner and teammates
+				if (hitPlayer != owner &&
+					(Constants.GamePlayConstants.friendlyFire == true ||
+					 owner.getPlayerCondition().getTeamId() != hitPlayer.getPlayerCondition().getTeamId())) {
+					hitPlayer.doDamage(color, owner.getPlayerCondition().getDamage(), owner);
+					doRemoveBullet = true;
+				}
 			}
 		}
 		

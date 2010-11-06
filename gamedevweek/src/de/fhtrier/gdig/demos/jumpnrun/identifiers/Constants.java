@@ -51,6 +51,16 @@ public class Constants {
 		public static float healingFactor = 0.7f;				// Ratio of Damage vs. Healing --> <1 means heal less than damage
 	}
 
+	public static class DoomsDayDeviceConfig extends Configuration {
+		public static int soundPrecarriage = 6000;
+		public static int minChargeTime = 20;
+		public static int maxChargeTime = 21;
+		public static float size = 400f;
+		public static float speed = 400f;
+		public static float hitSize = 120f;
+		public static float damage = 0.5f;
+		
+	}
 
 	public static class SoundConfig extends Configuration {
 		public static boolean musicEnabled = true;
@@ -118,7 +128,7 @@ public class Constants {
 	public static class GuiConfig extends Configuration
 	{
 		public static final String WAITING_FOR_MASTER_TEXT = "Waiting for Master to Start!";
-		public static de.lessvoid.nifty.tools.Color btnSelectedColor = new de.lessvoid.nifty.tools.Color(1,1,1,1);
+		public static de.lessvoid.nifty.tools.Color btnSelectedColor = new de.lessvoid.nifty.tools.Color(1,0,0,1);
 		public static de.lessvoid.nifty.tools.Color btnNotSelectedColor = new de.lessvoid.nifty.tools.Color(0.8f,0.8f,0.8f,1);
 	}
 }

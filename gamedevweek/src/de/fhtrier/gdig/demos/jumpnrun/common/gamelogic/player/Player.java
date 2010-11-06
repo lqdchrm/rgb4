@@ -684,6 +684,7 @@ public class Player extends LevelCollidableEntity implements
 		
 		// check for friendly fire/different teams
 		if (Constants.GamePlayConstants.friendlyFire == true ||
+			killer == null ||
 			killer.getPlayerCondition().getTeamId() != this.getPlayerCondition().getTeamId()) {
 			
 			// check color --> different damages / same heals

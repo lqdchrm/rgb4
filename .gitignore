@@ -1,8 +1,11 @@
 # Compiled source #
 ###################
 *.class
+gamedevweek/export/
+spriteviewer/bin/
 gamedev/.classpath
 ext/bin
 gamedev/bin
 gamedev/export
 .DS_Store
+.metadata/
