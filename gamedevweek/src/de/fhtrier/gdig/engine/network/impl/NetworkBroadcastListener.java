@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -14,13 +15,26 @@ public class NetworkBroadcastListener extends Thread {
 	private DatagramSocket socket;
 	private boolean halt;
 
+	/**
+	 * 
+	 * @param serverName
+	 *            Der Name des Servers
+	 * @param map
+	 * @param version
+	 *            Die Version des Servers
+	 * @param adresse
+	 *            Die Adresse des Servers
+	 * @param port
+	 *            Der Port des Servers
+	 */
 	public NetworkBroadcastListener(String serverName, String map,
-			String version, int port) {
+			String version, InetAddress adresse, int port) {
 		serverObject = new NetworkServerObject();
 		serverObject.setPort(port);
 		serverObject.setMap(map);
 		serverObject.setName(serverName);
 		serverObject.setVersion(version);
+		serverObject.setIp(adresse);
 
 		halt = false;
 
