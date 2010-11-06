@@ -52,6 +52,7 @@ public class JumpNRunServer {
 				gc.setAlwaysRender(true);
 				gc.setUpdateOnlyWhenVisible(false);
 				gc.setShowFPS(Constants.Debug.showDebugOverlay);
+				gc.setTargetFrameRate(100);
 				gc.start();
 			} catch (SlickException e) {
 				e.printStackTrace();

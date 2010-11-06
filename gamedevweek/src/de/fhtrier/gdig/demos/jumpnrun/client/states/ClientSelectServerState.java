@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import javax.swing.JOptionPane;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -51,7 +53,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 	private String currentConnectionIp = null;
 	private int currentConnectionPort = -1;
 	private int currentServerId = -1;
-	
+
 	private StateBasedGame game;
 
 	// gui-elements
@@ -109,23 +111,24 @@ public class ClientSelectServerState extends NiftyGameState implements
 		// add asset-folder to the ResourceLocators of nifty and slick2d
 		ResourceLoader.addResourceLocation(new FileSystemLocation(new File(
 				menuAssetPath)));
-	
-		org.newdawn.slick.util.ResourceLoader
-		.addResourceLocation(new org.newdawn.slick.util.FileSystemLocation(
-				new File(menuAssetPath)));
 
+		org.newdawn.slick.util.ResourceLoader
+				.addResourceLocation(new org.newdawn.slick.util.FileSystemLocation(
+						new File(menuAssetPath)));
 
 		// read the nifty-xml-fiel
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
 
-		 try {
-		        enableMouseImage(new Image(
-		            ResourceLoader.getResourceAsStream(Assets.Config.AssetGuiPath + "/images/crosshair.png"), "Cursor", false));
-		    } catch (SlickException e) {
-		        Log.error("Image loading failed in ServerSettingsState");
-		        e.printStackTrace();
-		    }
+		try {
+			enableMouseImage(new Image(
+					ResourceLoader.getResourceAsStream(Assets.Config.AssetGuiPath
+							+ "/crosshair.png"), "Cursor", false));
+		} catch (SlickException e) {
+			Log.error("Image loading failed in ServerSettingsState");
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override
@@ -148,7 +151,8 @@ public class ClientSelectServerState extends NiftyGameState implements
 			NetworkComponent.getInstance().update();
 		}
 
-		if (NetworkComponent.getInstance().getNetworkId() != -1  && !waitingForTransition) {
+		if (NetworkComponent.getInstance().getNetworkId() != -1
+				&& !waitingForTransition) {
 			gotoLobby();
 		}
 
@@ -164,22 +168,24 @@ public class ClientSelectServerState extends NiftyGameState implements
 			CreateButtonControl createButton = new CreateButtonControl("mybutton" + count);
 			createButton.setHeight("25px");
 			createButton.setWidth("100%");
-			createButton.set("label", server.getName() + "(" + server.getIp() + ")");
+			createButton.set("label", server.getName() + "(" + server.getIp()
+					+ ")");
 			createButton.setAlign("left");
 			// TODO setin real values
 			createButton.setInteractOnClick("chooseServer(" + count + ","
 					+ server.getIp() + "," + server.getPort() + ")");
 			ButtonControl bC = createButton.create(nifty,
 					nifty.getCurrentScreen(), guiServerPanel);
-			if (count==0 && currentConnectionIp==null) {
-				chooseServer("0", server.getIp().toString(), Integer.toString(server.getPort()));
+			if (count == 0 && currentConnectionIp == null) {
+				chooseServer("0", server.getIp().toString(),
+						Integer.toString(server.getPort()));
 			}
 			count++;
 			serverButtons.add(bC);
 		}
 
 		setButton(currentServerId, serverButtons);
-		
+
 		serverList.clear();
 
 		serverMutex.release();
@@ -240,7 +246,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 		networkLobby.getServers(iA);
 		currentConnectionIp = null;
 		currentConnectionPort = -1;
-		currentServerId=-1;
+		currentServerId = -1;
 	}
 
 	public void setButton(int nr, List<ButtonControl> buttons) {
@@ -280,8 +286,9 @@ public class ClientSelectServerState extends NiftyGameState implements
 			currentConnectionIp = null;
 			currentConnectionPort = -1;
 
-		}
-
+		} else
+			JOptionPane.showMessageDialog(null, "Fehler! currentConnectionIP="
+					+ currentConnectionIp + " connection=" + connecting);
 	}
 
 	public void back() {
@@ -309,15 +316,13 @@ public class ClientSelectServerState extends NiftyGameState implements
 		nifty.closePopup(nifty.getCurrentScreen().getTopMostPopup().getId(),
 				null);
 	}
-	
-	public void gotoLobby()
-	{
-		if (waitingForTransition==false)
-		{
+
+	public void gotoLobby() {
+		if (waitingForTransition == false) {
 			waitingForTransition = true;
 			nifty.getCurrentScreen().endScreen(new EndNotify() {
 				public void perform() {
-					game.enterState(GameStates.CLIENT_LOBBY);				
+					game.enterState(GameStates.CLIENT_LOBBY);
 					NetworkComponent.getInstance().sendCommand(
 							new QueryConnect(guiPlayernameTextField.getText()));
 					connecting = false;
@@ -326,7 +331,5 @@ public class ClientSelectServerState extends NiftyGameState implements
 			});
 		}
 	}
-	
-
 
 }

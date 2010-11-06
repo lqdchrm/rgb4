@@ -57,20 +57,20 @@ public class ClientHostServerState extends NiftyGameState implements
 
 	public ClientHostServerState(final StateBasedGame game) {
 		super(GameStates.SERVER_SETTINGS);
-		
+
 		this.game = game;
-		
+
 		// add asset-folder to the ResourceLocators of nifty and slick2d
 		ResourceLoader.addResourceLocation(new FileSystemLocation(new File(
 				menuAssetPath)));
 		org.newdawn.slick.util.ResourceLoader
 				.addResourceLocation(new org.newdawn.slick.util.FileSystemLocation(
 						new File(menuAssetPath)));
-		
+
 		// read the nifty-xml-fiel
 		fromXml(menuNiftyXMLFile,
 				ResourceLoader.getResourceAsStream(menuNiftyXMLFile), this);
-		
+
 		// show the mouse
 		try {
 			enableMouseImage(new Image(
@@ -136,15 +136,16 @@ public class ClientHostServerState extends NiftyGameState implements
 			throws SlickException {
 		// TODO Auto-generated method stub
 		super.update(container, game, d);
+		NetworkComponent.getInstance().update();
 
 		if (connecting) {
-			NetworkComponent.getInstance().update();
-		}
-		if (NetworkComponent.getInstance().getNetworkId() != -1) {
-			NetworkComponent.getInstance().sendCommand(
-					new QueryConnect(playerNameControl.getText()));
-			game.enterState(GameStates.CLIENT_LOBBY);
-			connecting = false;
+			if (NetworkComponent.getInstance().getNetworkId() == -1) {
+				NetworkComponent.getInstance().sendCommand(
+						new QueryConnect(playerNameControl.getText()));
+			} else {
+				game.enterState(GameStates.CLIENT_LOBBY);
+				connecting = false;
+			}
 		}
 	}
 
@@ -162,11 +163,12 @@ public class ClientHostServerState extends NiftyGameState implements
 				String interfaceA = interfaces.get(selectedInterfaceIndex)
 						.getAddress().getHostAddress().replace('/', ' ').trim();
 
-				// Here we do some magic to spawn a server process 
+				// Here we do some magic to spawn a server process
 				// TODO check if it's really working
-				ProcessBuilder pb = new ProcessBuilder("java", 
-						"-Djava.library.path=server/lib/native", "-jar", "server/server.jar", 
-						serverNameControl.getText(), interfaceA, portControl.getText());
+				ProcessBuilder pb = new ProcessBuilder("java",
+						"-Djava.library.path=server/lib/native", "-jar",
+						"server/server.jar", serverNameControl.getText(),
+						interfaceA, portControl.getText());
 				pb.redirectErrorStream(true);
 
 				try {

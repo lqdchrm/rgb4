@@ -64,7 +64,7 @@ public class PlayerActionFSM extends FiniteStateMachine<PlayerActionState, Playe
 		add(PlayerActionState.Dying, PlayerActions.Revive, PlayerActionState.Reviving);
 		add(PlayerActionState.Reviving, PlayerActions.DoNothing, PlayerActionState.Standing);
 		
-		//		add(PlayerActionState.Standing, PlayerActions.Fall, PlayerActionState.Falling);
+//		add(PlayerActionState.Standing, PlayerActions.Fall, PlayerActionState.Falling);
 //		add(PlayerActionState.Running, PlayerActions.Jump, PlayerActionState.Jumping);
 //		add(PlayerActionState.Running, PlayerActions.Fall, PlayerActionState.Falling);
 //		add(PlayerActionState.Falling, PlayerActions.Land, PlayerActionState.Standing);
