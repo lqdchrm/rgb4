@@ -59,6 +59,7 @@ public class Constants {
 		public static float speed = 400f;
 		public static float hitSize = 120f;
 		public static float damage = 0.5f;
+		public static int renderOffset = 9;
 		
 	}
 
