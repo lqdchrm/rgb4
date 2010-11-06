@@ -19,6 +19,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
@@ -50,7 +51,7 @@ import de.fhtrier.gdig.engine.physics.entities.CollidableEntity;
 import de.fhtrier.gdig.engine.sound.SoundManager;
 
 enum LocalState {
-	JOINING, CREATINGPLAYER, PLAYING, DISCONNECTING, EXITING
+	INIT, JOINING, CREATINGPLAYER, PLAYING, DISCONNECTING, EXITING
 }
 
 public class ClientPlayingState extends PlayingState {
@@ -65,6 +66,7 @@ public class ClientPlayingState extends PlayingState {
 	public ClientPlayingState() {
 		this.queue = new LinkedList<INetworkCommand>();
 		this.send = new ClientData();
+		setState(LocalState.INIT);
 	}
 
 	@Override
@@ -101,8 +103,8 @@ public class ClientPlayingState extends PlayingState {
 
 			SoundManager.playSound(Assets.Sounds.PlayerJoiningSoundID);
 			SoundManager.loopMusic(Assets.Sounds.LevelSoundtrackId, 1.0f, 0f);
-			SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 5000,
-					0.2f, false);
+			SoundManager.fadeMusic(Assets.Sounds.LevelSoundtrackId, 5000, 0.2f,
+					false);
 			return true;
 		}
 
@@ -123,23 +125,32 @@ public class ClientPlayingState extends PlayingState {
 		// has
 		// joined
 		if (cmd instanceof DoCreateEntity) {
+
+			if (localState == LocalState.INIT) {
+				Log.error("tried to create Entity while in init state");
+			}
 			DoCreateEntity dce = (DoCreateEntity) cmd;
 
-			// Create Entity
-			int id = this.getFactory().createEntityById(dce.getEntityId(),
-					dce.getType());
-			Entity e = this.getFactory().getEntity(id);
-			e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+			// we are joining and handle join-commands or we are not joining
+			if ((localState == LocalState.JOINING && dce.isWhileJoining())
+					|| (localState != LocalState.JOINING)) {
 
-			if (dce.getParentId() > -1) {
-				Entity parent = getFactory().getEntity(dce.getParentId());
-				parent.add(getFactory().getEntity(id));
-			}
-			
-			// HACK special treatment for players
-			if (e instanceof Player) {
-				NetworkComponent.getInstance().sendCommand(
-						new QueryPlayerCondition(id));
+				// Create Entity
+				int id = this.getFactory().createEntityById(dce.getEntityId(),
+						dce.getType());
+				Entity e = this.getFactory().getEntity(id);
+				e.setUpdateStrategy(EntityUpdateStrategy.ServerToClient);
+
+				if (dce.getParentId() > -1) {
+					Entity parent = getFactory().getEntity(dce.getParentId());
+					parent.add(getFactory().getEntity(id));
+				}
+
+				// HACK special treatment for players
+				if (e instanceof Player) {
+					NetworkComponent.getInstance().sendCommand(
+							new QueryPlayerCondition(id));
+				}
 			}
 			return true;
 		}
@@ -157,39 +168,38 @@ public class ClientPlayingState extends PlayingState {
 				getLevel().setCurrentPlayer(-1);
 			}
 
-
 			CollisionManager.removeEntity((CollidableEntity) getFactory()
 					.getEntity(id));
-			
+
 			getLevel().remove(getFactory().getEntity(id));
 
 			// remove Entity recursively from Factory
 			getFactory().removeEntity(id, true);
 
-//			// robindi: Bugfix, removeEntity from CollisionManager!
-//			CollisionManager.removeEntity((CollidableEntity) getFactory().getEntity(id));
-//			
-//			
-//			Entity entityToRemove = getFactory().getEntity(id);				
-//			if (entityToRemove==null && Constants.Debug.networkDebug)
-//			{
-//				Log.error("Tried to remove Entity with id="+id+" but this id was not known to factory!!!");
-//			}
-//			else
-//			{
-//				getLevel().remove(entityToRemove);
-//				// remove Entity recursively from Factory
-//				getFactory().removeEntity(id, true);
-//			}
-
+			// // robindi: Bugfix, removeEntity from CollisionManager!
+			// CollisionManager.removeEntity((CollidableEntity)
+			// getFactory().getEntity(id));
+			//
+			//
+			// Entity entityToRemove = getFactory().getEntity(id);
+			// if (entityToRemove==null && Constants.Debug.networkDebug)
+			// {
+			// Log.error("Tried to remove Entity with id="+id+" but this id was not known to factory!!!");
+			// }
+			// else
+			// {
+			// getLevel().remove(entityToRemove);
+			// // remove Entity recursively from Factory
+			// getFactory().removeEntity(id, true);
+			// }
 
 			return true;
 		}
-		
+
 		// DoPlaySound... well it just does what it says
 		if (cmd instanceof DoPlaySound) {
 			DoPlaySound dps = (DoPlaySound) cmd;
-			
+
 			SoundManager.playSound(dps.getSoundAssetId());
 			return true;
 		}
@@ -204,9 +214,11 @@ public class ClientPlayingState extends PlayingState {
 			AckCreateEntity acp = (AckCreateEntity) cmd;
 			int playerId = acp.getEntityId();
 
-			Player player = (Player)getFactory().getEntity(playerId);
+			Player player = (Player) getFactory().getEntity(playerId);
 
 			this.getLevel().setCurrentPlayer(acp.getEntityId());
+			Log.info("I got Player-Entity ID: " + acp.getEntityId()
+					+ "\t respawning");
 			player.respawn();
 
 			// we got a player, now we can start :-)
@@ -214,18 +226,32 @@ public class ClientPlayingState extends PlayingState {
 			return true;
 		}
 
+		// Game Logic Events
+		if (localState == LocalState.PLAYING) {
+			 return handleGameLogicCommands(cmd);
+		}
+
+		return false;
+	}
+
+	private boolean handleGameLogicCommands(INetworkCommand cmd) {
 		if (cmd instanceof SendKill) {
 			SendKill killCommand = (SendKill) cmd;
-			
+
 			Player player = getLevel().getPlayer(killCommand.getPlayerId());
 			player.die();
+			
+// 			not needed: DiedEvent sets Statistics --> calculated by server
+//			Player killer = getLevel().getPlayer(killCommand.getKillerId());
+//			Event dieEvent = new PlayerDiedEvent(player, killer);
+//			EventManager.addEvent(dieEvent);
 
 			return true;
 		}
 
 		if (cmd instanceof SendWon) {
 			SendWon wonCommand = (SendWon) cmd;
-			
+
 			Event winEvent;
 			if (wonCommand.getWinnerType() == SendWon.winnerType_Player) {
 				winEvent = new WonGameEvent(getLevel().getPlayer(
@@ -258,10 +284,11 @@ public class ClientPlayingState extends PlayingState {
 			SendPlayerCondition sspn = (SendPlayerCondition) cmd;
 
 			Player player = getLevel().getPlayer(sspn.getPlayerId());
+
 			player.setPlayerCondition(sspn.getPlayerCondition());
 			return true;
 		}
-
+		
 		return false;
 	}
 

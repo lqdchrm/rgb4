@@ -18,8 +18,10 @@ public class Constants {
 		
 		public static boolean friendyFire = true; // if true you can damage team-mates
 
-		public static float shotSpeed = 400.0f;
-		public static float shotCooldown = 1000.0f;
+		public static float shotSpeed = 600.0f;
+		public static float shotCooldown = 200.0f;
+		public static float defaultShotDamage = 0.09f;
+		
 		public static float colorChangeCooldownWeapon = 1000.0f;
 		public static float colorChangeCooldownPlayer = 1000.0f;
 		
@@ -59,7 +61,7 @@ public class Constants {
 	}
 	
 	public static class Debug extends Configuration {
-		public static boolean showDialogs = false;
+		public static boolean showDialogs = true;
 		
 		@CommandlineParameter("noRender")
 		public static boolean doNotRender = false;
@@ -88,9 +90,9 @@ public class Constants {
 		
 		// network
 		public static boolean networkDebug = true;
-		public static boolean showProtocolCommandsOnly = false;
+		public static boolean showProtocolCommandsOnly = true;
 		
-		public static boolean factoryDebug = false;
+		public static boolean factoryDebug = true;
 
 		public static boolean debugGameLogic = false;
 	}
@@ -98,6 +100,7 @@ public class Constants {
 	public static class Level extends Configuration {
 		public static int collisionLayer = 1;
 		public static int logicLayer = 3;
+		public static float initialZoom = 0.75f;
 	}
 	
 	public static class GameTypes extends Configuration {

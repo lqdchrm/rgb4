@@ -164,16 +164,14 @@ public class Bullet extends LevelCollidableEntity {
 		List<CollidableEntity> iColideWith = CollisionManager
 				.collidingEntities(this);
 
+		boolean sentencedToDeath = false;
+		
 		for (CollidableEntity collidableEntity : iColideWith) {
 			if (collidableEntity instanceof Player) {
 				Player otherPlayer = (Player) collidableEntity;
-				if (otherPlayer != owner
-						&& otherPlayer.getPlayerCondition().getHealth() > Constants.EPSILON
-						&& (Constants.GamePlayConstants.friendyFire == true || // Friendly
-																				// Fire
-																				// or
-						owner.getPlayerCondition().getTeamId() != otherPlayer
-								.getPlayerCondition().getTeamId())) // Enemy
+				if (otherPlayer != owner &&
+					otherPlayer.getPlayerCondition().getHealth() > Constants.EPSILON &&
+					(Constants.GamePlayConstants.friendyFire == true || owner.getPlayerCondition().getTeamId() != otherPlayer.getPlayerCondition().getTeamId())) 
 				{
 					if (otherPlayer.getPlayerColor() != this.color) {
 						otherPlayer.getPlayerCondition().setHealth(
@@ -227,9 +225,13 @@ public class Bullet extends LevelCollidableEntity {
 							otherPlayer.getPlayerCondition().setHealth(Constants.GamePlayConstants.maxPlayerHealth);
 					}
 
-					this.die();
+					sentencedToDeath=true;
 				}
 			}
+		}
+		
+		if (sentencedToDeath) {
+			this.die();
 		}
 
 		return result;

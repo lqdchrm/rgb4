@@ -16,10 +16,12 @@ import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
+import de.fhtrier.gdig.demos.jumpnrun.common.events.RocketDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.BulletData;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
+import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
@@ -38,7 +40,7 @@ import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.physics.CollisionManager;
 import de.fhtrier.gdig.engine.physics.entities.CollidableEntity;
 
-public class Rocket extends CollidableEntity {
+public class Rocket extends LevelCollidableEntity {
 
 	public enum RocketStrategy {
 		NEXT_ENEMY_TEAM
@@ -145,10 +147,12 @@ public class Rocket extends CollidableEntity {
 		return closestPlayer;
 	}
 
-	private void die() {
+	public void die() {
 		NetworkComponent.getInstance().sendCommand(
 				new DoRemoveEntity(this.getId()));
 		CollisionManager.removeEntity(this);
+		level.remove(this);
+		level.factory.removeEntity(this.getId(), true);
 
 		if (Constants.Debug.debugGameLogic) {
 			Log.debug("ROCKET DIED");
@@ -225,12 +229,12 @@ public class Rocket extends CollidableEntity {
 			pathCounter = 1;
 		}
 
-		if (nextPathStep == null || (pathCounter < path.getLength())) {
+		if ((nextPathStep == null || (pathCounter < path.getLength()))) {
 			nextPathStep = path.getStep(pathCounter);
 			pathCounter++;
 		} else {
 			path = null;
-			die();
+			EventManager.addEvent(new RocketDiedEvent(this));
 		}
 
 		targetStep.x = nextPathStep.getX() * map.getTileWidth();
