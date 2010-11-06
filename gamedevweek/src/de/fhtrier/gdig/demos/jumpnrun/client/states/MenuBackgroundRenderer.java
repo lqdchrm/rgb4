@@ -24,8 +24,6 @@ public class MenuBackgroundRenderer {
 	private Image bgglowImage;
 	private int counter = 0;
 	
-	private ParticleSystem mouseParticle;
-	
 	private static MenuBackgroundRenderer instance=null;
 
 	public static MenuBackgroundRenderer getInstance()
@@ -41,8 +39,8 @@ public class MenuBackgroundRenderer {
 	{
 		try {
 			AssetMgr amgr = new AssetMgr();
-			backgroundImage = new Image(Assets.Config.AssetGuiPath+"/menubg_pflanze.png");
-			bgglowImage = new Image(Assets.Config.AssetGuiPath+"/menubg_pflanze_glow.png");
+			backgroundImage = new Image(Assets.Config.AssetGuiPath+"/images/menubg_pflanze.png");
+			bgglowImage = new Image(Assets.Config.AssetGuiPath+"/images/menubg_pflanze_glow.png");
 			menuShader = new Shader(amgr.getPathRelativeToAssetPath("shader/simple.vert"),
 					amgr.getPathRelativeToAssetPath("shader/menucolor.frag"));
 			col = new Color(2, 0, 0, 0.5f);

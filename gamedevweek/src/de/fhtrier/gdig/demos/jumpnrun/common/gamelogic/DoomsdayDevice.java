@@ -30,6 +30,8 @@ public class DoomsdayDevice extends Entity {
 	AssetMgr assets;
 	AssetEntity ddAnimation;
 
+	int minChargeTime = 20;
+	int maxChargeTime = 21;
 	private GameFactory factory;
 	private Level level;
 
@@ -88,7 +90,8 @@ public class DoomsdayDevice extends Entity {
 	}
 
 	public void resetChargetime() {
-		chargeTime = (random.nextInt(Constants.DoomsDayDeviceConfig.maxChargeTime - Constants.DoomsDayDeviceConfig.minChargeTime) + Constants.DoomsDayDeviceConfig.minChargeTime) * 1000;
+		timeSinceLastExplosion = 0;
+		chargeTime = (random.nextInt(maxChargeTime - minChargeTime) + minChargeTime) * 1000;
 	}
 
 	public void setLevel(Level level) {
@@ -106,11 +109,12 @@ public class DoomsdayDevice extends Entity {
 				
 		if (timeSinceLastExplosion > chargeTime)
 		{
+			SoundManager.playSound(Assets.Sounds.DoomsdayDeviceSoundId, 1f, 0.5f);
 			explode();
-		}
+		}			
 	}
 
-	private void explode() {
+	private void explode() {		
 		doomesdaydeviceExplosion.activate();
 		timeSinceLastExplosion = 0;
 		resetChargetime();

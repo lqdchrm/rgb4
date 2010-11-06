@@ -129,7 +129,7 @@ public class Constants {
 	public static class GuiConfig extends Configuration
 	{
 		public static final String WAITING_FOR_MASTER_TEXT = "Waiting for Master to Start!";
-		public static de.lessvoid.nifty.tools.Color btnSelectedColor = new de.lessvoid.nifty.tools.Color(1,1,1,1);
+		public static de.lessvoid.nifty.tools.Color btnSelectedColor = new de.lessvoid.nifty.tools.Color(1,0,0,1);
 		public static de.lessvoid.nifty.tools.Color btnNotSelectedColor = new de.lessvoid.nifty.tools.Color(0.8f,0.8f,0.8f,1);
 	}
 }
