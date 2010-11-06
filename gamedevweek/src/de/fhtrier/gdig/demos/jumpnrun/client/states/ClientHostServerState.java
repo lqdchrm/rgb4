@@ -261,8 +261,7 @@ public class ClientHostServerState extends NiftyGameState implements
 
 		// set interface as active
 		selectedInterfaceIndex = Integer.parseInt(id);
-		setButton(Integer.parseInt(id), interfaceButtons,
-				new Color(1, 0, 0, 1), new Color(1, 1, 1, 1));
+		setButton(Integer.parseInt(id), interfaceButtons, Constants.GuiConfig.btnSelectedColor, Constants.GuiConfig.btnNotSelectedColor);
 	}
 
 	private void clearList(Element e) {

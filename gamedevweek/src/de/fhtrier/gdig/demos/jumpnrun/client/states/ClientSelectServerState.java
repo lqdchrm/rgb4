@@ -123,7 +123,7 @@ public class ClientSelectServerState extends NiftyGameState implements
 		try {
 			enableMouseImage(new Image(
 					ResourceLoader.getResourceAsStream(Assets.Config.AssetGuiPath
-							+ "/crosshair.png"), "Cursor", false));
+							+ "/images/crosshair.png"), "Cursor", false));
 		} catch (SlickException e) {
 			Log.error("Image loading failed in ServerSettingsState");
 			e.printStackTrace();
