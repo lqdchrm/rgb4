@@ -61,8 +61,9 @@ public class ServerGame extends RGB4Game {
 		Constants.GamePlayConstants c = new Constants.GamePlayConstants();
 		Constants.Debug d = new Debug();
 		Constants.SoundConfig s = new Constants.SoundConfig();
+		Constants.DoomsDayDeviceConfig doom = new Constants.DoomsDayDeviceConfig();
 		Configuration.showEditor("Server",
-				new JPanel[] { d.getEdittingPanel(), c.getEdittingPanel(), s.getEdittingPanel() });
+				new JPanel[] { d.getEdittingPanel(), c.getEdittingPanel(), s.getEdittingPanel(), doom.getEdittingPanel()});
 	}
 
 	@Override
