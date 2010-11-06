@@ -417,6 +417,8 @@ public class Player extends LevelCollidableEntity implements
 						0.6f);
 			}
 
+		} else {
+			getAcc()[Entity.X] = 0.0f;
 		}
 	}
 
@@ -478,6 +480,10 @@ public class Player extends LevelCollidableEntity implements
 		Shader.activateAdditiveBlending();
 		float weaponGlowSize = 0.6f + this.getPlayerCondition().getAmmo() * 0.4f;
 		float glowSize = 0.1f + this.getPlayerCondition().getHealth() * 0.9f;
+		if(this.getPlayerCondition().getHealth() <= Constants.EPSILON) {
+			weaponGlowSize = 0.0f;
+			glowSize = 0.0f;
+		}
 
 		// TODO find active Animation-Asset and setTintColor(playerCol)
 

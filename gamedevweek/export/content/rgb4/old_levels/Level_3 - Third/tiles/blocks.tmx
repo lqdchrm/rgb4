@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="120" height="80" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="elemente_level_compact" tilewidth="32" tileheight="32">
+  <image source="elemente_level_compact.png" trans="ff00ff"/>
+ </tileset>
+ <tileset firstgid="73" name="Logik" tilewidth="32" tileheight="32">
+  <image source="numbers.png"/>
+ </tileset>
+ <layer name="Hintergrund Deko" width="120" height="80">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3BAQ0AAADCoPdPbQ8HFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMCnAV/6YiAAlgAA
+  </data>
+ </layer>
+ <layer name="Kollisionsebene" width="120" height="80">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+2a3W7UMBCFzd8d901A9AqkNgEKEoi2oqIUId7/jfBoY3V2NM7GaWwnk3Oko7Pr7G7dfB7HsXLuIKt65/2mdiegbLrw/li7E1A2ga9tnTnwtSzi+6F2J6BsAl/bwvxsW1hf2Rb42hb42hauv7ZltX4/eX9O9NcqPc0r4mvx/uiX932i/xTrXTlZ5QsddOnA17LA17ZK8n3m/dz7BUtueexloX4tobX+b6hf28L6yraI7w93mDfI7+t2B1pA4VpBvvX+Xrc7UEZ9c5ifLQvrK9vC+sq26PnnqXxP7dlb3J+vpaXOdQrfsGf/2/thSP7+qfvza90jqNG3pc51Cl9oe8Lzk7aF+rUt8LUt8LUt4kv7zzeDcY+zffF7qyvv1rvxfut9Lj77yvva+3XJDi6gPTxfF2NDNUss28E9ey3n6jO3Te6Wnq87xVGyofbWHfMNjCXfy0j7VrmvWXM5yvYLd8y3c4f5mTyVL7jP19IctfZucLj2hvd8rUW+dWl8wf1RJTgSuy/D3wkOzCTb3j0ylwb3uEpwJDYax565E+/JYV5uxfGWtYcx0Cjte+Jeal6NcQwcOJ/wOhzn7Y34Dq/jXvmtTmmXvOdw7yPtKdxLaIxjo7TPmVflOQ7zqWTKeWj12whzPl3kM9px/n5KEne61wzcr1wa31h7CY3VYxdpj3HUzg8/z/KYnHM5azkPy99O4cNfa3U7N586z5fQGN+xemyVDDy0a+FYxq6dnI08PvW35bysjZUlk6xxD2uNEvtO2l7f2LwamOU6J3Ny6mc439g6bMmMtYWxRqbrYc5alnt9Mec6B0ukPHeatetAjrEm+0Lv793xcyoPbtnngsYkn5P56X3H8s4d31/krEP5d7Q1lsbmFNuSY1T2dwvP3tMz5BqT2PWz9Bw9lW+KtTE1p+5r3AelKtwHxcYrz5J1ElyKr7yvmpJb4Vt7DRVbU52q3yZiyXDK9+b0cyt8a6+htJxTT6Xzn/ffRN8U8rU7vlfvVpaSM9JmrqFOkfnnaaTNrD2+kKhfJOoXifrdY9YeX0jULxL1i0T97jFrjy8k6hd5OttIe+3xhUT9InH9RaJ+95i1xxcS9YtE/SJRv3vM2uMLifpFon6RqN89Zu3xhUT9IlG/SNTvHvM/VqORlACWAAA=
+  </data>
+ </layer>
+ <layer name="Vordergrund Deko" width="120" height="80">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3BAQ0AAADCoPdPbQ8HFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMCnAV/6YiAAlgAA
+  </data>
+ </layer>
+ <layer name="Logik Layer" width="120" height="80">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3Z0QkCQRBEwU1PM9FMNBMvShMQZGCOXseqAJaGx3ztWgAAAAAAAABM8UwPoNUjPQAAAAAAAADgZK/0gA1c0gMouza8oXteR8cq3fslOlbp/t0vdKz6x+4TO1ZN6K5j3Y7ddQQAAOAMt/SAD+7pAUMca9++R3rEEJ19u/743S8AAAAAAAAAAAAAAAAAkPIGrGgEeQCWAAA=
+  </data>
+ </layer>
+</map>

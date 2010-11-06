@@ -19,7 +19,6 @@ public class PlayerDiedEvent extends Event {
 	public void update() {
 
 		player.getPlayerCondition().setDeaths(player.getPlayerCondition().getDeaths() + 1);
-
 		
 		if (killer != null) {
 			killer.getPlayerCondition().setKills(killer.getPlayerCondition().getKills() + 1);

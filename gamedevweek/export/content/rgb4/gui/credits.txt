@@ -1,0 +1,10 @@
+#The GDIG Team proudly presented
+000 - no #
+#111 (one #)
+###3333 (three #)
+####44444 (four #)
+
+##rgb4_logo_trimmed.png,397px,162px
+
+#3rd party
+GUI-Font: RM Narrowboat by Ray Meadows
