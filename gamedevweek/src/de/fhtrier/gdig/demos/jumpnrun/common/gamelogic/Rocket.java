@@ -8,7 +8,6 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
-import org.newdawn.slick.util.Log;
 import org.newdawn.slick.util.pathfinding.Path;
 import org.newdawn.slick.util.pathfinding.Path.Step;
 
@@ -21,13 +20,11 @@ import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.BulletData;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
-import de.fhtrier.gdig.demos.jumpnrun.common.physics.entities.LevelCollidableEntity;
 import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoRemoveEntity;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
@@ -40,7 +37,7 @@ import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.physics.CollisionManager;
 import de.fhtrier.gdig.engine.physics.entities.CollidableEntity;
 
-public class Rocket extends LevelCollidableEntity {
+public class Rocket extends Projectile {
 
 	public enum RocketStrategy {
 		NEXT_ENEMY_TEAM
@@ -51,7 +48,6 @@ public class Rocket extends LevelCollidableEntity {
 
 	// fields set after entity-creation
 	public AStarTiledMap map = null;
-	public Player owner = null;
 
 	// data about the target
 	protected Player targetPlayer = null;
@@ -72,7 +68,6 @@ public class Rocket extends LevelCollidableEntity {
 	public AnimationEntity bullet;
 	public AssetMgr assets;
 	private static Image bulletGlow;
-	public int color;
 
 	public Rocket(int id, GameFactory factory) throws SlickException {
 		super(id, EntityType.ROCKET);
@@ -147,18 +142,6 @@ public class Rocket extends LevelCollidableEntity {
 		return closestPlayer;
 	}
 
-	public void die() {
-		NetworkComponent.getInstance().sendCommand(
-				new DoRemoveEntity(this.getId()));
-		CollisionManager.removeEntity(this);
-		level.remove(this);
-		level.factory.removeEntity(this.getId(), true);
-
-		if (Constants.Debug.debugGameLogic) {
-			Log.debug("ROCKET DIED");
-		}
-	}
-
 	public void shootAtClosestPlayer(RocketStrategy strategy) {
 
 		switch (strategy) {
@@ -195,7 +178,7 @@ public class Rocket extends LevelCollidableEntity {
 	}
 
 	/*
-	 * overrider for different behaviors here: after reaching each path-step
+	 * overrider for different behaviors here: after reaching each path-steprocket
 	 * check the target players position and recalculate path. following always
 	 * the SAME target player
 	 */
@@ -265,8 +248,6 @@ public class Rocket extends LevelCollidableEntity {
 		} else if (direction.y < 0 && getData()[Y] < targetStep.y) {
 			updateRocketData();
 		}
-
-		// handleCollisions();
 	}
 
 	@Override
@@ -332,11 +313,11 @@ public class Rocket extends LevelCollidableEntity {
 				Player otherPlayer = (Player) collidableEntity;
 				if (otherPlayer != owner
 						&& otherPlayer.getPlayerCondition().getHealth() > Constants.EPSILON
-						&& (Constants.GamePlayConstants.friendyFire == true || // Friendly
+						&& (Constants.GamePlayConstants.friendlyFire == true || // Friendly
 																				// Fire
 																				// or
 						owner.getPlayerCondition().getTeamId() != otherPlayer
-								.getPlayerCondition().getTeamId())) // Enemy
+								.getPlayerCondition().getTeamId())) // Enemyrocket
 				{
 					if (otherPlayer.getPlayerColor() != this.color) {
 						otherPlayer.getPlayerCondition().setHealth(
@@ -421,5 +402,9 @@ public class Rocket extends LevelCollidableEntity {
 			Shader.popShader();
 		}
 	}
-
+	
+	@Override
+	public void die() {
+		super.die();
+	}
 }

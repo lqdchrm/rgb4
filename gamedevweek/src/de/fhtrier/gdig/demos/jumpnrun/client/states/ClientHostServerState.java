@@ -38,7 +38,7 @@ import de.lessvoid.nifty.tools.resourceloader.ResourceLoader;
 public class ClientHostServerState extends NiftyGameState implements
 		ScreenController {
 
-	private static final String CROSSHAIR_PNG = "crosshair.png";
+	private static final String CROSSHAIR_PNG = "/images/crosshair.png";
 	public static String menuNiftyXMLFile = "server_settings.xml";
 	public static String menuAssetPath = Assets.Config.AssetGuiPath;
 
@@ -243,12 +243,10 @@ public class ClientHostServerState extends NiftyGameState implements
 
 		for (int i = 0; i < interfaces.size(); i++) {
 			InterfaceAddress iA = interfaces.get(i);
-			CreateButtonControl createButton = new CreateButtonControl("button"
-					+ i);
-			createButton.setHeight("20px");
+			CreateButtonControl createButton = new CreateButtonControl("button"	+ i);			
 			createButton.setWidth("100%");
-			createButton.set("label", iA.getAddress().getCanonicalHostName());
-			createButton.setAlign("left");
+			createButton.set("label", iA.getAddress().getCanonicalHostName());			
+			createButton.setAlign("left");			
 			// TODO setin real values
 			createButton.setInteractOnClick("chooseInterface(" + i + ")");
 			ButtonControl bC = createButton.create(nifty,
@@ -263,8 +261,7 @@ public class ClientHostServerState extends NiftyGameState implements
 
 		// set interface as active
 		selectedInterfaceIndex = Integer.parseInt(id);
-		setButton(Integer.parseInt(id), interfaceButtons,
-				new Color(1, 0, 0, 1), new Color(1, 1, 1, 1));
+		setButton(Integer.parseInt(id), interfaceButtons, Constants.GuiConfig.btnSelectedColor, Constants.GuiConfig.btnNotSelectedColor);
 	}
 
 	private void clearList(Element e) {

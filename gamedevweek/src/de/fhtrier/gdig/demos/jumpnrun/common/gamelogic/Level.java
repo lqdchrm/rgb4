@@ -76,7 +76,8 @@ public class Level extends MoveableEntity {
 		add(this.ground);
 
 		// physics
-		setData(new float[] { 0, 0, 0, 0, 1, 1, 0 });
+		float initialLevelZoom = Constants.Level.initialZoom;
+		setData(new float[] { 0, 0, 0, 0, initialLevelZoom, initialLevelZoom, 0 });
 
 		// network
 		setUpdateStrategy(EntityUpdateStrategy.Local);

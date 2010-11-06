@@ -3,15 +3,20 @@ package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 import java.util.Random;
 
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoPlaySound;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
 import de.fhtrier.gdig.engine.graphics.entities.AssetEntity;
 import de.fhtrier.gdig.engine.management.AssetMgr;
+import de.fhtrier.gdig.engine.network.NetworkComponent;
+import de.fhtrier.gdig.engine.sound.SoundManager;
 
 public class DoomsdayDevice extends Entity {
 
@@ -99,12 +104,17 @@ public class DoomsdayDevice extends Entity {
 		if (!isActive())
 			return;
 		timeSinceLastExplosion += deltaInMillis;
+				
 		if (timeSinceLastExplosion > chargeTime)
+		{
+			SoundManager.playSound(Assets.Sounds.DoomsdayDeviceSoundId, 1f, 0.5f);
 			explode();
+		}			
 	}
 
-	private void explode() {
+	private void explode() {		
 		doomesdaydeviceExplosion.activate();
+		timeSinceLastExplosion = 0;
 		resetChargetime();
 	}
 

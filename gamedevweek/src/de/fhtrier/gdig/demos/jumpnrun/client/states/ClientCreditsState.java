@@ -82,7 +82,7 @@ public class ClientCreditsState extends NiftyGameState implements ScreenControll
 		
 		 try {
 		        enableMouseImage(new Image(
-		            ResourceLoader.getResourceAsStream(Assets.Config.AssetGuiPath + "/crosshair.png"), "Cursor", false));
+		            ResourceLoader.getResourceAsStream(Assets.Config.AssetGuiPath + "/images/crosshair.png"), "Cursor", false));
 		    } catch (SlickException e) {
 		        Log.error("Image loading failed in ServerSettingsState");
 		        e.printStackTrace();

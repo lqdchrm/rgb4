@@ -18,8 +18,7 @@
 	<screen id="start" controller="de.fhtrier.gdig.demos.jumpnrun.client.states.ClientMenuState">
 		<layer id="layer" childLayout="vertical">
 			<panel id="top" height="100%" width="100%" childLayout="center">
-				<image id="logo" filename="rgb_logo.png" align="center"
-					valign="center">
+				<image id="logo" filename="images/rgb_logo.png" align="center" valign="center">
 					<effect>
 						<onStartScreen name="move" direction="top" mode="in"
 							length="1500" startDelay="100"/>
@@ -36,8 +35,7 @@
 		
 		<layer id="layer" childLayout="vertical" style="out-transition">
 			<panel id="top" height="100%" width="100%" childLayout="center">
-				<image id="logo" filename="rgb_logo.png" align="center"
-					valign="center">
+				<image id="logo" filename="images/rgb_logo.png" align="center" valign="center">
 				</image>
 			</panel>
 		</layer>	
@@ -45,7 +43,7 @@
 		<layer id="hostgame" childLayout="center" align="left" valign="top" style="out-transition">
 			<panel padding="539px,0px,0px,271px" childLayout="center" align="left" valign="top">
 				<panel width="100%" childLayout="horizontal">
-					<image filename="button_hostgame.png" style="standard-action">
+					<image filename="images/button_hostgame.png" style="standard-action">
 						<interact onClick="hostGame()" />	
 					</image>
 				</panel>
@@ -55,7 +53,7 @@
 		<layer id="startgame" childLayout="center" align="left" valign="top" style="out-transition">
 			<panel padding="396px,0px,0px,616px" childLayout="center" align="left" valign="top">
 				<panel width="100%" childLayout="horizontal">
-					<image filename="button_startgame.png" style="standard-action">
+					<image filename="images/button_startgame.png" style="standard-action">
 						<interact onClick="joinGame()" />
 					</image>		
 				</panel>
@@ -65,7 +63,7 @@
 		<layer id="exit" childLayout="center" align="left" valign="top" style="out-transition">
 			<panel padding="605px,0px,0px,555px" childLayout="center" align="left" valign="top">
 				<panel width="100%" childLayout="horizontal">
-					<image filename="button_exit.png" style="standard-action">
+					<image filename="images/button_exit.png" style="standard-action">
 						<interact onClick="exit()" />
 					</image>		
 				</panel>
@@ -75,7 +73,7 @@
 		<layer id="credits" childLayout="center" align="left" valign="top" style="out-transition">
 			<panel padding="636px,0px,0px,373px" childLayout="center" align="left" valign="top">
 				<panel width="100%" childLayout="horizontal">
-					<image filename="button_credits.png" style="standard-action">
+					<image filename="images/button_credits.png" style="standard-action">
 						<interact onClick="credits()" />
 					</image>		
 				</panel>
@@ -91,7 +89,7 @@
 	<screen id="mainMenu_with_transition" controller="de.fhtrier.gdig.demos.jumpnrun.client.states.ClientMenuState">
 		<layer id="layer" childLayout="vertical" style="in-out-transition">
 			<panel id="top" height="100%" width="100%" childLayout="center">
-				<image id="logo" filename="rgb_logo.png" align="center"
+				<image id="logo" filename="images/rgb_logo.png" align="center"
 					valign="center">
 				</image>
 			</panel>
@@ -100,7 +98,7 @@
 		<layer id="hostgame" childLayout="center" align="left" valign="top" style="in-out-transition">
 			<panel padding="539px,0px,0px,271px" childLayout="center" align="left" valign="top">
 				<panel width="100%" childLayout="horizontal">
-					<image filename="button_hostgame.png" style="standard-action">
+					<image filename="images/button_hostgame.png" style="standard-action">
 						<interact onClick="hostGame()" />	
 					</image>
 				</panel>
@@ -110,7 +108,7 @@
 		<layer id="startgame" childLayout="center" align="left" valign="top" style="in-out-transition">
 			<panel padding="396px,0px,0px,616px" childLayout="center" align="left" valign="top">
 				<panel width="100%" childLayout="horizontal">
-					<image filename="button_startgame.png" style="standard-action">
+					<image filename="images/button_startgame.png" style="standard-action">
 						<interact onClick="joinGame()" />
 					</image>		
 				</panel>
@@ -120,7 +118,7 @@
 		<layer id="exit" childLayout="center" align="left" valign="top" style="in-out-transition">
 			<panel padding="605px,0px,0px,555px" childLayout="center" align="left" valign="top">
 				<panel width="100%" childLayout="horizontal">
-					<image filename="button_exit.png" style="standard-action">
+					<image filename="images/button_exit.png" style="standard-action">
 						<interact onClick="exit()" />
 					</image>		
 				</panel>
@@ -130,14 +128,11 @@
 		<layer id="credits" childLayout="center" align="left" valign="top" style="in-out-transition">
 			<panel padding="636px,0px,0px,373px" childLayout="center" align="left" valign="top">
 				<panel width="100%" childLayout="horizontal">
-					<image filename="button_credits.png" style="standard-action">
+					<image filename="images/button_credits.png" style="standard-action">
 						<interact onClick="credits()" />
 					</image>		
 				</panel>
 			</panel>
 		</layer>				
 	</screen>
-
-
-
 </nifty>
