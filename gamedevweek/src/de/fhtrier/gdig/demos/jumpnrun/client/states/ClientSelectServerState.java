@@ -279,16 +279,14 @@ public class ClientSelectServerState extends NiftyGameState implements
 		} else if (guiPlayernameTextField.getText().trim().equals("")) {
 			popupNoName();
 		} else if (currentConnectionIp != null && !connecting) {
-			NetworkComponent.getInstance().connect(
+			if (NetworkComponent.getInstance().connect(
 					currentConnectionIp.replace('/', ' ').trim(),
-					currentConnectionPort);
-			connecting = true;
-			currentConnectionIp = null;
-			currentConnectionPort = -1;
-
-		} else
-			JOptionPane.showMessageDialog(null, "Fehler! currentConnectionIP="
-					+ currentConnectionIp + " connection=" + connecting);
+					currentConnectionPort)) {
+				connecting = true;
+				currentConnectionIp = null;
+				currentConnectionPort = -1;
+			}
+		}
 	}
 
 	public void back() {
