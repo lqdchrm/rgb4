@@ -9,9 +9,9 @@
  <tileset firstgid="434" name="numbers" tilewidth="32" tileheight="32">
   <image source="numbers.png"/>
  </tileset>
- <layer name="Background" width="90" height="62" opacity="0.12">
+ <layer name="Background" width="90" height="62" opacity="0.1">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAA+3aOUwVUQBG4fdUtHdBekSxFQWlYXeBxgUVkEYxUbaGJWHTxiVxw8ZKVnv3HlHoUcAe114EqT095btvRt+ck3ztZPIXk9zcSaXMzMzMzMzMzMzMzMyi7VA6lSpJx/0WuV8NG9e6c9ZrZOPz7mxmZmZmZv9xFZxpKlGFas83Wes0257BWZxL8M5jGMcEJjGFaTwL9PzLbHsFbbia4J2f4wVe4hVe4w3eBnp+D9v2og/9Cd55Bu8wi/f4gDnMB3r+Lba9jTu4m+CdF/ARn7CIJSzjc5wvlYOt4Au+4hu+4wd+xvhOudgvrOI31rCOP9iI86VysDTfzC3Yim3Iw3bsSPC3NBvtZM9d2I09yMdeFLhz0ArZcx+KsB8HUIyD7hy0w+x5BKUow1EcQ7k7B62OPY/jBE7iFOrR4M5Bu8CeF9GEZrTgElrdOWjX2PM62tGBTnSh252DNsCegxjCMEZwAzcz2Nl/ljZ3jz3u4wEe4hFG8TiDnfxnaXNP2WMM45jAJKYwncFO/rP07+f9S/byziWavHOJJu9cosk7l+h74s6ePyLK80c0ef4wMzMzs7j6C6X96/QwVwAA
+   H4sIAAAAAAAAA+3aOUwUUQCH8V0V6QHBXkFsQVFsAMWTxgNUlAYhwQMbjkQFbTwS8KCxkrsHr15A7VWQHs8eD6z9GhITyn07gzvfl/zayeS/ySYvb1IpMzMzMzMzMzMzMzOzaKtIp1KV6bjfIvc7wMb17pz1Gtm4yZ3NzMzMzOw/roYzTS3qsN/zTdY6zrYncBKnErzzMEYwijGMYwKTgZ7fyrYX0Ib2BO88hWk8xTM8xwu8DPT8LrbtRg96E7zzK8xgFnN4jTd4G+j5t9n2Du7iXoJ3fof3+IB5LOAjFuN8qRxsCZ/wGV/wFd/wPcZ3ysWW8QM/8Qu/sYI/cb5UDpbmP3MDNmIT8rAZ+Qn+L81GBexZiCJsQTFKsNWdg7aNPbejFGXYgXLsdOeg7WLP3ajCHuxFNfa5c9AOsuchHMYRHMUxNLhz0E6z5xmcRTPO4Txa3DloHex5EZdwGVfQiavuHLRr7HkdN9CHftzErQx29pultQ2wxyDu4wEe4hGGMtjJb5bW9oQ9hjGCUYxhHBMZ7OQ3S+u31TuXmn9+H+9fwuadSzR55xJN3rlEk3cu0ffYnT1/RJTnj2jy/GFmZmZmcfUXLWviYjBXAAA=
   </data>
  </layer>
  <layer name="Collision" width="90" height="62" opacity="0.56">
