@@ -18,6 +18,7 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerConditi
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Bullet;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Rocket;
+import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.StateColor;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Rocket.RocketStrategy;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.QueryRespawn;

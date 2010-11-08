@@ -12,7 +12,10 @@ import org.newdawn.slick.particles.ConfigurableEmitter.ColorRecord;
 import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.util.Log;
 
+import sun.security.action.GetLongAction;
+
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
+import de.fhtrier.gdig.demos.jumpnrun.common.RGB4Game;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
@@ -42,11 +45,13 @@ import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.GamePlayConstants;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.NetworkConfig;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameInputCommands;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoPlaySound;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendTeamCondition;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.ParticleEntity;
@@ -59,6 +64,10 @@ import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.physics.CollisionManager;
 import de.fhtrier.gdig.engine.sound.SoundManager;
 
+/**
+ * @author krumholt
+ *
+ */
 public class Player extends LevelCollidableEntity implements
 		IFiniteStateMachineListener<PlayerActionState> {
 
@@ -457,7 +466,7 @@ public class Player extends LevelCollidableEntity implements
 	}
 
 	public void respawn() {
-		LogicPoint randomSpawnPoint = level.getRandomSpawnPoint(1);
+		LogicPoint randomSpawnPoint = level.getRandomSpawnPoint(getPlayerCondition().getTeamId()+1);
 		getData()[Entity.X] = randomSpawnPoint.x;
 		getData()[Entity.Y] = randomSpawnPoint.y;
 
@@ -622,6 +631,15 @@ public class Player extends LevelCollidableEntity implements
 				this.getVel()[Entity.Y] = -Constants.GamePlayConstants.playerMaxJumpSpeed;
 			}
 
+			if(NetworkConfig.isServer && isOutsideLevel()) {
+				int damageColor = StateColor.RED;
+				// select a different color then the current player color
+				if(playerColor == StateColor.RED) {
+					damageColor = StateColor.BLUE;
+				}
+				doDamage(damageColor, condition.getHealth() + 1.0f, null);
+			}
+			
 			// TODO fix PlayerState
 			// if (this._currentState == PlayerActionState.Standing
 			// && Math.abs(this.getData()[Entity.X]
@@ -631,6 +649,15 @@ public class Player extends LevelCollidableEntity implements
 			// this.getVel()[Entity.X] = this.getVel()[Entity.Y] = 0.0f;
 			// }
 		}
+	}
+	
+	/**
+	 * @return true if player outside level boundaries
+	 */
+	private boolean isOutsideLevel() {
+		return getData()[Entity.X] < - 300 ||
+			   getData()[Entity.X] > level.getWidth() + 300 ||
+			   getData()[Entity.Y] > level.getHeight() + 5;
 	}
 
 	// getters + setters
@@ -679,7 +706,7 @@ public class Player extends LevelCollidableEntity implements
 					NetworkComponent.getInstance().sendCommand(
 							new SendKill(this.getId(), killer != null ? killer
 									.getId() : -1));
-
+					
 					// enqueue event, that calculates statistics
 					Event dieEvent = new PlayerDiedEvent(this, killer);
 					dieEvent.update();

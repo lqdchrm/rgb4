@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="200" height="60" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="elemente_level_compact" tilewidth="32" tileheight="32">
+  <image source="elemente_level_compact.png"/>
+ </tileset>
+ <tileset firstgid="145" name="numbers" tilewidth="32" tileheight="32">
+  <image source="numbers.png"/>
+ </tileset>
+ <tileset firstgid="273" name="elemente_level_compact2" tilewidth="32" tileheight="32">
+  <image source="elemente_level_compact2.png"/>
+ </tileset>
+ <layer name="Hintergrund" width="200" height="60">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3cNawUURhA4buLJLh1PKXHe7zHe7zHe7zHe9wa3N3d3SHBHRIcDj3Zx2Rm9u4j50tOt8nct/n/O8VLNgRJkiRJkiRJkiRJkiRJkiRJkiRJkiSV28ZCCJsKsU8hVaZD7MZh90P6q8vsxhX3Q5IkSZIkSZIkNSJVhRCqqYZqqY7qqYv/85BCV/agG3WnHtSTelFv90MKfdiDvtSP+tMAGkiD3A8pDGYPhtBQGkbDaQSNdD+kMIo9GE1jaCyNo/E0wf2QwkT2YBJNpik0labRdPdDCjPYg5k0i2bTHJpL89wPKcxnDxbQQlpEi2kJLXU/pLCMPVhOK2glraLVtMb9kMJm9mALbaVttJ120E73QwpH2IOjdIyO0wk6Saci7cdanruO1tMGd1QZ2Mcc7acDdDDhTF3l89foOt2gm3SLbkeazV08dzftob3uhzJwnjm6QBfpUsKZesLnn9Izek4v6CW9ijSbp3nuGTpL59yPxGK/f9Pc1Xl5wDke0iN6nPBMn/n8F/pK3+g7/aCfkf62Ozz3Lt2j+xXy/aZR7nmN/f5Nc1fn5T3n+EAf6VPCM7UohtCSWlFrakNtqV0xn7M25DXnf0Nv6V2k7zfLO7Dc8xr7/Zvmrs5LE2a5KTWj5gnnujOfr6JqqqFaqqP6SPvx6893yrMLVIx0hizvwHLPa+z3b5q7Wg1rz050oI7UKdJ+ZHkH5jGvpX7TMvb7N81drcYhyzswj3kt9ZuWlfD+1f8tyzswj3kt9ZuWlfD+lf6V8ypJkiRJkiRJkiRJkiRJ5fcbmRRs4YC7AAA=
+  </data>
+ </layer>
+ <layer name="Kollision" width="200" height="60" opacity="0.54">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3WOwoCMRiF0fHR6Ra0V/BVKWrn/vdkBhUE/bsMieYc+KppEsiF6ToAAAAAAAAAAAAAAAAAAAAAqMsoNf7S5Nm3b9MiJwUAAAAAAAAAAAAgt1lqXvoQUJnXLlapZeGzQG0W3WMX9gGf7ANi9gEx+4CYfUDMPiBmHxCzjzw2qW3FHYa7+l9rdR+53/Muta64feb7trK3X9lHa++59lrZ21D7yP2ez135N6H29va+j2PqlCnvWSXLtbf+P+O1j9J3kmrMPqQ4+5Di7EOKsw8pzj6kOPuQ4uxDirMPKc4+pLh+H5fUVdJHt9QdIkZavYC7AAA=
+  </data>
+ </layer>
+ <layer name="Vordergrund" width="200" height="60">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3ZuW4TUQCF4bED1AQeDV6AAl4B2lRI8CYsDZRAWMuwQ8lOzU4Nx4WlMfFItpg7cy1/n/QXqTxzcw9YStMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADU4VQ6PfZDQGXmuzibzo38LFCb+S7sAw6zj0VXJk1zNV1L1ydjPw1js49Ft7KJ2+lO2rePrWcfiw6yicfpSXpqH1vPPha9ySbepnfp/Ybv40ae/+ZA73A3n3Mv3U8PNvzc2krvo+ZzW3Z/vuTnr+lb+l7Z867rYZ7/0UDv8Cyf8zy9SC83/NzaSu+j5nNbdn/+zH6eNs0kTaejPFZvXuVdXg905h/yOR/Tp/S5st/z/yi9j1XObcjvAW3L7s/xbGI3nUgn19jH7O9IexVX+m+/P3KOP9Ov9Hvg32XJ+1N6H6uc25DfA+b6vs/n05mKu9Dz+/67t538W3IkHU3HBv5/t+T9Kb2PVc5tle8B23afa6/03tZR8ntkqX24z1qnmvbW1t5Hn8/oPmvM+rrLs3s838fY7yTVmH1I3dmH1J19SN3Zh9SdfUjd2YfUnX1I3dmH1J19SN3N9nExXZJ0qMvpL+ErUheAuwAA
+  </data>
+ </layer>
+ <layer name="Logik" width="200" height="60" opacity="0.34">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3OQQ0AMAgEMPz/Nqc4GCp2IWkVtAoAAAAAAAAAAAAAAAAAAAAA9uh0AAAAAAAAAAAAAIBvTjoAITcdAAAAAAAAAAAAAAAAAAAAAAAAgPEA8pP3g4C7AAA=
+  </data>
+ </layer>
+</map>

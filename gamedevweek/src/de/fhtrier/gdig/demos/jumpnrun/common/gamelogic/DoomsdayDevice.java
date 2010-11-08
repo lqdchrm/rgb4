@@ -2,6 +2,8 @@ package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
 import java.util.Random;
 
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
@@ -114,6 +116,13 @@ public class DoomsdayDevice extends Entity {
 		doomesdaydeviceExplosion.activate();
 		timeSinceLastExplosion = 0;
 		resetChargetime();
+	}
+	
+	@Override
+	protected void renderImpl(Graphics graphicContext, Image frameBuffer) {
+		ddAnimation.getData()[Y] += Constants.DoomsDayDeviceConfig.renderOffset;
+		super.renderImpl(graphicContext, frameBuffer);
+		ddAnimation.getData()[Y] -= Constants.DoomsDayDeviceConfig.renderOffset;
 	}
 
 }
