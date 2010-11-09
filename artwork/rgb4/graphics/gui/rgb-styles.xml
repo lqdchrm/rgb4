@@ -44,13 +44,13 @@
 
 	<style id="lobby-button">
 		<attributes align="center"
-			font="small-font-unselected.fnt"
+			font="Arial"
 			focusable="true" controller="de.lessvoid.nifty.controls.MenuItemControl"
 			inputMapping="de.lessvoid.nifty.input.mapping.MenuInputMapping" />
 		<effect>
 			<onHover name="focus" />
 			<onFocus name="changeFont"
-				font="small-font-selected.fnt"
+				font="Arial"
 				timeType="infinite" />
 		</effect>
 	</style>

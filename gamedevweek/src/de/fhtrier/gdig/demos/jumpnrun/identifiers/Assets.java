@@ -203,7 +203,8 @@ public class Assets {
 		public static final String BulletSoundPath = "sounds/bullet.ogg";
 		public static final String RocketStartSoundPath = "sounds/rocketstart.ogg";
 		public static final String RocketExplodeSoundPath = "sounds/rocketexplode.ogg";
-		public static final String DoomsdayDeviceSoundPath = "sounds/doomsdaydevice.ogg";
+//		public static final String DoomsdayDeviceSoundPath = "sounds/doomsdaydevice1.ogg";
+		public static final String DoomsdayDeviceSoundPath = "sounds/doomsdaydevice2.ogg"; // Alternativer sound
 		public static final String BeamSoundPath = "sounds/beam.ogg";
 
 		public static final int WeaponChangeColorSoundID = 60;

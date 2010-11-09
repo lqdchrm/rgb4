@@ -137,7 +137,7 @@ public class ClientLobbyState extends NiftyGameState implements
 		
 		 try {
 		        enableMouseImage(new Image(
-		            ResourceLoader.getResourceAsStream(Assets.Config.AssetGuiPath + "/crosshair.png"), "Cursor", false));
+		            ResourceLoader.getResourceAsStream(Assets.Config.AssetGuiPath + "/images/crosshair.png"), "Cursor", false));
 		    } catch (SlickException e) {
 		        Log.error("Image loading failed in ServerSettingsState");
 		        e.printStackTrace();
@@ -232,7 +232,7 @@ public class ClientLobbyState extends NiftyGameState implements
 			if (isGameCreator) {
 				CreateButtonControl createButton = new CreateButtonControl(
 						"button");
-				createButton.setHeight("23px");
+				createButton.setHeight("25px");
 				createButton.setWidth("90%");
 				createButton.set("label", level.getLevelName());
 				createButton.setAlign("center");

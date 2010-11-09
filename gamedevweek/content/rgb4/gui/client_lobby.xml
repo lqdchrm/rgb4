@@ -13,7 +13,7 @@
 	<controlDefinition name="playerControl">
 		<panel width="100%" height="100%" childLayout="horizontal"
 			align="left">
-			<label id="playername" style="lobby-text" text="playername"
+			<label id="playername" style="textLabel" text="playername"
 				align="left" />
 		</panel>
 	</controlDefinition>
@@ -44,7 +44,7 @@
 				align="center" valign="center" childLayout="vertical">
 
 				<panel width="100%" height="10%" childLayout="vertical">
-					<label style="rgb-header" text="Lobby" valign="top" align="center" />
+					<label style="header" text="Lobby" valign="top" align="center" />
 				</panel>
 				<panel width="100%" height="90%" childLayout="horizontal">
 					<panel width="28px" />
@@ -56,10 +56,9 @@
 							<panel id="player_panel" style="standard-panel" width="60%"
 								childLayout="horizontal">
 								<panel width="45%" childLayout="vertical">
-									<label style="lobby-text" text="Team 1:" height="10%" />
+									<label style="header" text="Team 1:" height="10%" />
 	
-									<panel id="team_1" height="80%" width="100%" style="rgb-section" backgroundImage="team1.png"
-										align="left" childLayout="vertical">
+									<panel id="team_1" height="80%" width="100%" style="rgb-section" align="left" childLayout="vertical">
 										<interact onClick="chooseTeam(1)" />
 									</panel>
 								</panel>
@@ -67,10 +66,9 @@
 								<panel width="10%" childLayout="vertical" />
 	
 								<panel width="45%" childLayout="vertical">
-									<label style="lobby-text" text="Team 2:" height="10%" />
+									<label style="header" text="Team 2:" height="10%" />
 	
-									<panel id="team_2" height="80%" width="100%" style="rgb-section" backgroundImage="team2.png"
-										align="left" childLayout="vertical">
+									<panel id="team_2" height="80%" width="100%" style="rgb-section" align="left" childLayout="vertical">
 										<interact onClick="chooseTeam(2)" />
 									</panel>
 								</panel>
@@ -80,17 +78,14 @@
 							<panel id="level_panel" style="standard-panel" width="40%"
 								childLayout="vertical">
 	
-								<label style="lobby-text" text="Current Level:" height="10%"/>
+								<label style="header" text="Current Level:" height="10%"/>
 	
-								<panel childLayout="vertical" height="80%" width="100%"
-									style="rgb-section">
-									<label id="current_level" style="lobby-text" text="none"
-										height="10%" width="100%" backgroundColor="#000a" />
+								<panel childLayout="vertical" height="80%" width="100%">
+									<label id="current_level" style="console-text" text="none" align="center" height="10%" width="88%" backgroundColor="#A5A5A595" color="#000000" />
 	
 									<panel height="10px" />
 	
-									<panel id="level_list" childLayout="vertical" width="100%"
-										align="center"></panel>
+									<panel id="level_list" childLayout="vertical" width="100%" align="center"></panel>
 								</panel>
 	
 							</panel>

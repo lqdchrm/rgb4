@@ -19,7 +19,6 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryLeave;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerCondition;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
-import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Team;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
@@ -40,6 +39,7 @@ import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeColor;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendChangeWeaponColor;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendPlayerCondition;
+import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendTeamCondition;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.gamelogic.EntityUpdateStrategy;
@@ -235,14 +235,17 @@ public class ClientPlayingState extends PlayingState {
 	}
 
 	private boolean handleGameLogicCommands(INetworkCommand cmd) {
+		
 		if (cmd instanceof SendKill) {
 			SendKill killCommand = (SendKill) cmd;
 
 			Player player = getLevel().getPlayer(killCommand.getPlayerId());
-			Player killer = getLevel().getPlayer(killCommand.getKillerId());
 			player.die();
-			Event dieEvent = new PlayerDiedEvent(player, killer);
-			EventManager.addEvent(dieEvent);
+			
+// 			not needed: DiedEvent sets Statistics --> calculated by server
+//			Player killer = getLevel().getPlayer(killCommand.getKillerId());
+//			Event dieEvent = new PlayerDiedEvent(player, killer);
+//			EventManager.addEvent(dieEvent);
 
 			return true;
 		}
@@ -284,6 +287,19 @@ public class ClientPlayingState extends PlayingState {
 			Player player = getLevel().getPlayer(sspn.getPlayerId());
 
 			player.setPlayerCondition(sspn.getPlayerCondition());
+			return true;
+		}
+		
+		if (cmd instanceof SendTeamCondition) {
+			SendTeamCondition stc = (SendTeamCondition) cmd;
+			
+			Team team = Team.getTeamById(stc.getTeamId());
+			
+			if (team != null) {
+				team.setKills(stc.getKills());
+				team.setDeaths(stc.getDeaths());
+			}
+			
 			return true;
 		}
 		
