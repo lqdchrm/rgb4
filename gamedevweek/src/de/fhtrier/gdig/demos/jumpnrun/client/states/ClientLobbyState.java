@@ -2,6 +2,7 @@ package de.fhtrier.gdig.demos.jumpnrun.client.states;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -80,6 +81,7 @@ public class ClientLobbyState extends NiftyGameState implements
 	public void readLevels(File dir, ArrayList<NetworkLevel> levels) {
 
 		File[] files = dir.listFiles();
+		Arrays.sort(files);
 		if (files != null) {
 			for (int i = 0; i < files.length; i++) {
 				String fileName = files[i].getName();
