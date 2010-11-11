@@ -36,7 +36,11 @@ public class NetworkLobbyListener extends Thread {
 				InetAddress serverAddress = userSocket.getInetAddress();
 				NetworkServerObject server = (NetworkServerObject) serverStream
 						.readObject();
-				server.setIp(serverAddress);
+				// Die Adresse des Servers muss nicht die addresse sein von der
+				// von dem das Serverobject kommt, falls der Server mehrere
+				// Interfaces hat. Daher muss set IP auf Serverseite gemacht
+				// werden.
+				// server.setIp(serverAddress);
 
 				long curr = System.currentTimeMillis();
 

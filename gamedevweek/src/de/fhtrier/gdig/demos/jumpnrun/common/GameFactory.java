@@ -1,4 +1,4 @@
-package de.fhtrier.gdig.demos.jumpnrun.common;
+﻿package de.fhtrier.gdig.demos.jumpnrun.common;
 
 import org.newdawn.slick.SlickException;
 
@@ -51,8 +51,7 @@ public class GameFactory extends Factory {
 				add(newDoomsdaydevice);
 				return id;
 			case TELEPORTER:
-				Teleporter teleporter
-					= new Teleporter(id, this);
+				Teleporter teleporter = new Teleporter(id, this);
 				add(teleporter);
 				return id;
 			case ROCKET:
