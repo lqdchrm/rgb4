@@ -106,6 +106,8 @@ public class Constants {
 		public static int collisionLayer = 1;
 		public static int logicLayer = 3;
 		public static float initialZoom = 0.75f;
+		// public static float initialZoom = 1.0f;
+		public static float outOfLevelDistanceForProjectiles = 500.0f;
 	}
 	
 	public static class GameTypes extends Configuration {

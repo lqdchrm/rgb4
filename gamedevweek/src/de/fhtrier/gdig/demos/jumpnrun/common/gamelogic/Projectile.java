@@ -28,6 +28,15 @@ public class Projectile extends LevelCollidableEntity {
 		level.factory.removeEntity(this.getId(), true);
 	}
 	
+	private boolean checkIfOutsideOfLevel()
+	{
+		// TODO Dirty Hack
+		boolean result = this.getData()[X] < -Constants.Level.outOfLevelDistanceForProjectiles ||
+						 this.getData()[X] > level.getWidth() + Constants.Level.outOfLevelDistanceForProjectiles;
+		
+		return result;
+	}
+	
 	@Override
 	public boolean handleCollisions() {
 		if (!isActive()) {
@@ -37,6 +46,9 @@ public class Projectile extends LevelCollidableEntity {
 		// check for tile collision
 		boolean result = super.handleCollisions();
 
+		// check for out of level
+		result |= checkIfOutsideOfLevel();
+		
 		if (result) {
 			die();
 			return result;
@@ -49,6 +61,7 @@ public class Projectile extends LevelCollidableEntity {
 		// flag telling if bullet should be removed
 		boolean doRemoveBullet = false;
 		
+		// check for object collision
 		for (CollidableEntity collidableEntity : iColideWith) {
 			if (collidableEntity instanceof Player) {
 				Player hitPlayer = (Player) collidableEntity;
