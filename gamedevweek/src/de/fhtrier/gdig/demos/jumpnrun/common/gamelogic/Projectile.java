@@ -31,8 +31,8 @@ public class Projectile extends LevelCollidableEntity {
 	private boolean checkIfOutsideOfLevel()
 	{
 		// TODO Dirty Hack
-		boolean result = this.getData()[X] < -Constants.Level.outOfLevelDistanceForProjectiles ||
-						 this.getData()[X] > level.getWidth() + Constants.Level.outOfLevelDistanceForProjectiles;
+		boolean result = this.getData()[X] < -Constants.Level.outOfLevelDistance ||
+						 this.getData()[X] > level.getWidth() + Constants.Level.outOfLevelDistance;
 		
 		return result;
 	}

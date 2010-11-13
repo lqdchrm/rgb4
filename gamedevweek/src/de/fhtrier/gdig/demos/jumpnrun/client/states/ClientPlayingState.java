@@ -217,8 +217,6 @@ public class ClientPlayingState extends PlayingState {
 			Player player = (Player) getFactory().getEntity(playerId);
 
 			this.getLevel().setCurrentPlayer(acp.getEntityId());
-			Log.info("I got Player-Entity ID: " + acp.getEntityId()
-					+ "\t respawning");
 			player.respawn();
 
 			// we got a player, now we can start :-)
