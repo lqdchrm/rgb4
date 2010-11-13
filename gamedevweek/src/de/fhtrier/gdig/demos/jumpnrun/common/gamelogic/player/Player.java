@@ -466,7 +466,8 @@ public class Player extends LevelCollidableEntity implements
 	}
 
 	public void respawn() {
-		LogicPoint randomSpawnPoint = level.getRandomSpawnPoint(getPlayerCondition().getTeamId()+1);
+		// caution team id might be 1 or 2
+		LogicPoint randomSpawnPoint = level.getRandomSpawnPoint(getPlayerCondition().getTeamId());
 		getData()[Entity.X] = randomSpawnPoint.x;
 		getData()[Entity.Y] = randomSpawnPoint.y;
 

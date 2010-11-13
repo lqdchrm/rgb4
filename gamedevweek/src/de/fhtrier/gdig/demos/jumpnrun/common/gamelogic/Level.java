@@ -273,23 +273,23 @@ public class Level extends MoveableEntity {
 		}
 	}
 
-	public ArrayList<LogicPoint> getSpawnPoints(int id) {
-		return spawnPoints.get(id - 1);
+	public ArrayList<LogicPoint> getSpawnPoints(int teamId) {
+		return spawnPoints.get(teamId - 1);
 	}
 
-	public LogicPoint getRandomSpawnPoint(int id) {
-		ArrayList<LogicPoint> sp = getSpawnPoints(id);
+	public LogicPoint getRandomSpawnPoint(int teamId) {
+		ArrayList<LogicPoint> sp = getSpawnPoints(teamId);
 		return sp.get(rd.nextInt(sp.size()));
 	}
 
 	public LogicPoint getRandomSpawnPoint() {
 		ArrayList<LogicPoint> sp = getSpawnPoints(rd
-				.nextInt(spawnPoints.size()) + 1);
+				.nextInt(spawnPoints.size()));
 		return sp.get(rd.nextInt(sp.size()));
 	}
 
 	public ArrayList<LogicPoint> getTeleporterExitPoints(int id) {
-		return teleportExitPoints.get(id - 1);
+		return teleportExitPoints.get(id);
 	}
 
 	public LogicPoint getRandomTeleporterExitPoint(int id) {
@@ -299,7 +299,7 @@ public class Level extends MoveableEntity {
 
 	public LogicPoint getRandomTeleporterExitPoint() {
 		ArrayList<LogicPoint> sp = getTeleporterExitPoints(rd
-				.nextInt(teleportExitPoints.size()) + 1);
+				.nextInt(teleportExitPoints.size()));
 		return sp.get(rd.nextInt(sp.size()));
 	}
 
