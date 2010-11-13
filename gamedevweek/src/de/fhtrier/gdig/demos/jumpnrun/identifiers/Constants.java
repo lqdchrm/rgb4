@@ -70,7 +70,7 @@ public class Constants {
 	}
 	
 	public static class Debug extends Configuration {
-		public static boolean showDialogs = true;
+		public static boolean showDialogs = false;
 		
 		@CommandlineParameter("noRender")
 		public static boolean doNotRender = false;
@@ -107,7 +107,7 @@ public class Constants {
 		public static int logicLayer = 3;
 		public static float initialZoom = 0.75f;
 		// public static float initialZoom = 1.0f;
-		public static float outOfLevelDistanceForProjectiles = 500.0f;
+		public static float outOfLevelDistance = 500.0f;
 	}
 	
 	public static class GameTypes extends Configuration {

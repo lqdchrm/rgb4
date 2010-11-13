@@ -655,10 +655,11 @@ public class Player extends LevelCollidableEntity implements
 	/**
 	 * @return true if player outside level boundaries
 	 */
+	// TODO unify with Projectile outoflevelcheck
 	private boolean isOutsideLevel() {
-		return getData()[Entity.X] < - 300 ||
-			   getData()[Entity.X] > level.getWidth() + 300 ||
-			   getData()[Entity.Y] > level.getHeight() + 5;
+		return getData()[Entity.X] < - Constants.Level.outOfLevelDistance ||
+			   getData()[Entity.X] > level.getWidth() + Constants.Level.outOfLevelDistance ||
+			   getData()[Entity.Y] > level.getHeight() + Constants.Level.outOfLevelDistance;
 	}
 
 	// getters + setters
