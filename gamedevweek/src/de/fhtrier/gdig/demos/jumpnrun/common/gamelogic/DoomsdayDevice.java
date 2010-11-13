@@ -89,7 +89,6 @@ public class DoomsdayDevice extends Entity {
 		chargeTime = (random
 				.nextInt(Constants.DoomsDayDeviceConfig.maxChargeTime
 						- Constants.DoomsDayDeviceConfig.minChargeTime) + Constants.DoomsDayDeviceConfig.minChargeTime) * 1000;
-		System.out.println(chargeTime);
 	}
 
 	public void setLevel(Level level) {

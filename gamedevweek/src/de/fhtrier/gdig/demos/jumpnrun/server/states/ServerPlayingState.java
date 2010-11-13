@@ -26,6 +26,7 @@ import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
 import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
+import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants.NetworkConfig;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.ServerData;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.AckCreateEntity;
@@ -66,11 +67,13 @@ public class ServerPlayingState extends PlayingState {
 		
 		// Level
 		getLevel().init(true);
+		
+		// HACK 
+		NetworkConfig.isServer = true;
 	}
 
 	private boolean handlePlayerActions(QueryAction actionCmd) {
 		Entity e;
-
 		switch (actionCmd.getAction()) {
 		case SHOOT:
 			for(int i = 0; i < 2 ; i++) {
