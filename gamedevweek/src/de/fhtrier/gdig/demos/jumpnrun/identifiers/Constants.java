@@ -16,7 +16,7 @@ public class Constants {
 		public static int winningKills_Deathmatch = 10;
 		public static int winningKills_TeamDeathmatch = 25;
 		
-		public static boolean friendlyFire = true; // if true you can damage team-mates
+		public static boolean friendlyFire = false; // if true you can damage team-mates
 
 		public static float shotSpeed = 600.0f;
 		public static float shotCooldown = 200.0f;
