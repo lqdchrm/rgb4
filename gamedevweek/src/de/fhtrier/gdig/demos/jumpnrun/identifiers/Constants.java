@@ -54,7 +54,7 @@ public class Constants {
 	public static class DoomsDayDeviceConfig extends Configuration {
 		public static int soundPrecarriage = 6000;
 		public static int minChargeTime = 20;
-		public static int maxChargeTime = 21;
+		public static int maxChargeTime = 40;
 		public static float size = 400f;
 		public static float speed = 400f;
 		public static float hitSize = 120f;

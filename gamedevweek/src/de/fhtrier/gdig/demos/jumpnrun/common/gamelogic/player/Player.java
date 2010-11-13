@@ -632,6 +632,7 @@ public class Player extends LevelCollidableEntity implements
 				this.getVel()[Entity.Y] = -Constants.GamePlayConstants.playerMaxJumpSpeed;
 			}
 
+			
 			if(NetworkConfig.isServer && isOutsideLevel()) {
 				int damageColor = StateColor.RED;
 				// select a different color then the current player color
