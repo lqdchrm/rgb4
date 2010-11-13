@@ -1,10 +1,27 @@
 #The GDIG Team proudly presented
-000 - no #
-#111 (one #)
-
-
 
 ##/images/rgb4_logo_trimmed.png,397px,162px
 
+#Team
+Bastian Schumacher
+Falco Wockenfuss
+Paul Schiffgens
+Thomas Schrader
+Thomas Trocha
+Artur Bullert
+Max Virnich
+Robin Dick
+Slayerzwerg
+Jan Wurm
+Markus Esch
+Florian Niembs
+Daniel Dewald
+Benni Olah
+Benni Helsper
+Patrick Kranz
+Christian Gerhards
+Robert Roessger
+Tobias Krumholz
+
 #3rd party
-GUI-Font: RM Narrowboat by Ray Meadows
+Slick2d - http://slick.cokeandcode.com/
