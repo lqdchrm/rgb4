@@ -84,7 +84,7 @@ public class GameInputController extends InputController<GameInputCommands> {
 		INode jump = Helper.createOrCombination(jumpWithUp, jumpWithA);
 
 		INode shoot = Helper.createSimpleKeyPressedBinding(GameRefKeys.B, Input.KEY_D);
-		INode rocket = Helper.createSimpleKeyPressedBinding(GameRefKeys.START, Input.KEY_SPACE);
+		// INode rocket = Helper.createSimpleKeyPressedBinding(GameRefKeys.START, Input.KEY_SPACE);
 		
 		INode ok = Helper.createSimpleKeyPressedBinding(GameRefKeys.X, Input.KEY_ENTER);
 		INode back = Helper.createSimpleKeyPressedBinding(GameRefKeys.Y, Input.KEY_ESCAPE);

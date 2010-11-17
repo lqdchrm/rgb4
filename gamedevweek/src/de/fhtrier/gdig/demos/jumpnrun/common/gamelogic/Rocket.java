@@ -1,7 +1,5 @@
 package de.fhtrier.gdig.demos.jumpnrun.common.gamelogic;
 
-import java.util.List;
-
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -12,30 +10,22 @@ import org.newdawn.slick.util.pathfinding.Path;
 import org.newdawn.slick.util.pathfinding.Path.Step;
 
 import de.fhtrier.gdig.demos.jumpnrun.common.GameFactory;
-import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
-import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.RocketDiedEvent;
-import de.fhtrier.gdig.demos.jumpnrun.common.events.WonGameEvent;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.BulletData;
 import de.fhtrier.gdig.demos.jumpnrun.common.network.NetworkData;
-import de.fhtrier.gdig.demos.jumpnrun.common.states.PlayingState;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Assets;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.Constants;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityOrder;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.AnimationEntity;
 import de.fhtrier.gdig.engine.graphics.shader.Shader;
 import de.fhtrier.gdig.engine.helpers.AStarTiledMap;
 import de.fhtrier.gdig.engine.management.AssetMgr;
 import de.fhtrier.gdig.engine.management.Factory;
-import de.fhtrier.gdig.engine.network.NetworkComponent;
 import de.fhtrier.gdig.engine.physics.CollisionManager;
-import de.fhtrier.gdig.engine.physics.entities.CollidableEntity;
 
 public class Rocket extends Projectile {
 
@@ -47,7 +37,7 @@ public class Rocket extends Projectile {
 	public static final int ANY_TEAM = -1;
 
 	// fields set after entity-creation
-	public AStarTiledMap map = null;
+	public AStarTiledMap astarmap = null;
 
 	// data about the target
 	protected Player targetPlayer = null;
@@ -148,9 +138,9 @@ public class Rocket extends Projectile {
 		case NEXT_ENEMY_TEAM:
 			targetPlayer = getClosestPlayer(
 					(getData()[X] + getData()[CENTER_X])
-							/ this.map.getTileWidth(),
+							/ this.astarmap.getTileWidth(),
 					(getData()[Y] + getData()[CENTER_Y])
-							/ this.map.getTileHeight(), ANY_COLOR, owner
+							/ this.astarmap.getTileHeight(), ANY_COLOR, owner
 							.getPlayerCondition().getTeamId());
 			break;
 		}
@@ -165,16 +155,16 @@ public class Rocket extends Projectile {
 	}
 
 	public void calculatePathToCurrentTarget() {
-		path = map
+		path = astarmap
 				.calculatePath(
-						(int) ((getData()[X] + bulletGlow.getWidth() / 2) / map
+						(int) ((getData()[X] + bulletGlow.getWidth() / 2.0f) / astarmap
 								.getTileWidth()),
-						(int) ((getData()[Y] + bulletGlow.getHeight() / 2) / map
+						(int) ((getData()[Y] + bulletGlow.getHeight() / 2.0f) / astarmap
 								.getTileHeight()),
 						(int) ((targetPlayer.getData()[X] + targetPlayer
-								.getData()[CENTER_X]) / map.getTileWidth()),
+								.getData()[CENTER_X]) / astarmap.getTileWidth()),
 						(int) ((targetPlayer.getData()[Y] + targetPlayer
-								.getData()[CENTER_Y]) / map.getTileHeight()));
+								.getData()[CENTER_Y]) / astarmap.getTileHeight()));
 	}
 
 	/*
@@ -187,8 +177,8 @@ public class Rocket extends Projectile {
 				+ targetPlayer.getData()[CENTER_X];
 		float targetY = targetPlayer.getData()[Y]
 				+ targetPlayer.getData()[CENTER_Y];
-		int tileTargetX = (int) (targetX / map.getTileWidth());
-		int tileTargetY = (int) (targetY / map.getTileHeight());
+		int tileTargetX = (int) (targetX / astarmap.getTileWidth());
+		int tileTargetY = (int) (targetY / astarmap.getTileHeight());
 
 		// did the target leave the path?
 		if (!path.contains(tileTargetX, tileTargetY)) {
@@ -220,8 +210,8 @@ public class Rocket extends Projectile {
 			EventManager.addEvent(new RocketDiedEvent(this));
 		}
 
-		targetStep.x = nextPathStep.getX() * map.getTileWidth();
-		targetStep.y = nextPathStep.getY() * map.getTileHeight();
+		targetStep.x = nextPathStep.getX() * astarmap.getTileWidth();
+		targetStep.y = nextPathStep.getY() * astarmap.getTileHeight();
 		direction.x = targetStep.x - getData()[X];
 		direction.y = targetStep.y - getData()[Y];
 		direction.normalise();
@@ -258,8 +248,8 @@ public class Rocket extends Projectile {
 				for (int i = 0; i < path.getLength(); i++) {
 					Step step = path.getStep(i);
 					graphicContext.draw(new Rectangle(step.getX()
-							* map.getTileWidth(), step.getY()
-							* map.getTileHeight(), 32, 32));
+							* astarmap.getTileWidth(), step.getY()
+							* astarmap.getTileHeight(), 32, 32));
 				}
 			}
 		}

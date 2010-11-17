@@ -3,7 +3,6 @@ package de.fhtrier.gdig.engine.network.impl;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -33,7 +32,7 @@ public class NetworkLobbyListener extends Thread {
 
 				ObjectInputStream serverStream = new ObjectInputStream(
 						userSocket.getInputStream());
-				InetAddress serverAddress = userSocket.getInetAddress();
+				// InetAddress serverAddress = userSocket.getInetAddress();
 				NetworkServerObject server = (NetworkServerObject) serverStream
 						.readObject();
 				// Die Adresse des Servers muss nicht die addresse sein von der

@@ -12,10 +12,7 @@ import org.newdawn.slick.particles.ConfigurableEmitter.ColorRecord;
 import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.util.Log;
 
-import sun.security.action.GetLongAction;
-
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
-import de.fhtrier.gdig.demos.jumpnrun.common.RGB4Game;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.Event;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.EventManager;
 import de.fhtrier.gdig.demos.jumpnrun.common.events.PlayerDiedEvent;
@@ -51,7 +48,6 @@ import de.fhtrier.gdig.demos.jumpnrun.identifiers.EntityType;
 import de.fhtrier.gdig.demos.jumpnrun.identifiers.GameInputCommands;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.DoPlaySound;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendKill;
-import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendTeamCondition;
 import de.fhtrier.gdig.demos.jumpnrun.server.network.protocol.SendWon;
 import de.fhtrier.gdig.engine.gamelogic.Entity;
 import de.fhtrier.gdig.engine.graphics.entities.ParticleEntity;
@@ -364,7 +360,7 @@ public class Player extends LevelCollidableEntity implements
 			}
 
 			if (input.isKeyPressed(GameInputCommands.SHOOT)) {
-				if (fireDelay == Constants.GamePlayConstants.shotCooldown) {
+				if (fireDelay >= Constants.GamePlayConstants.shotCooldown) {
 					NetworkComponent.getInstance().sendCommand(
 							new QueryAction(PlayerNetworkAction.SHOOT));
 					applyAction(PlayerActions.StartShooting);
@@ -374,7 +370,7 @@ public class Player extends LevelCollidableEntity implements
 
 			if (input.isKeyPressed(GameInputCommands.ROCKET)) {
 
-				if (fireDelay == Constants.GamePlayConstants.shotCooldown) {
+				if (fireDelay >= Constants.GamePlayConstants.shotCooldown) {
 					NetworkComponent.getInstance().sendCommand(
 							new QueryAction(PlayerNetworkAction.SHOOT_ROCKET));
 					applyAction(PlayerActions.StartShooting);

@@ -7,7 +7,6 @@ import java.util.Queue;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.util.Log;
 
 import de.fhtrier.gdig.demos.jumpnrun.client.network.ClientData;
 import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryAction;
@@ -18,7 +17,6 @@ import de.fhtrier.gdig.demos.jumpnrun.client.network.protocol.QueryPlayerConditi
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Bullet;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Level;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Rocket;
-import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.StateColor;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.Rocket.RocketStrategy;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.Player;
 import de.fhtrier.gdig.demos.jumpnrun.common.gamelogic.player.QueryRespawn;
@@ -125,7 +123,7 @@ public class ServerPlayingState extends PlayingState {
 			int playerId = networkId2Player.get(actionCmd.getSender());
 			Player player = (Player) getFactory().getEntity(playerId);
 			rocket.owner = player;
-			rocket.map = (AStarTiledMap)getLevel().getMap();
+			rocket.astarmap = (AStarTiledMap)getLevel().getMap();
 			
 			rocket.color = player.getWeaponColor();
 			// set player pos as gem pos

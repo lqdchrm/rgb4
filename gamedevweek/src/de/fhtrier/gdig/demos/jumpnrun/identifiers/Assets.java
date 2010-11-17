@@ -9,14 +9,14 @@ public class Assets {
 		public static final String AssetGuiPath = "content/rgb4/gui";
 		public static String AssetManagerPath = "content/rgb4/default/";
 		public static final String AssetManagerFallbackPath = "content/rgb4/fallback/";
-		public static String GameTitle = "RGB 4 - Der Letzte macht das Licht aus";
+		public static final String GameTitle = "RGB 4 - Der Letzte macht das Licht aus";
 	}
 
 	// Level
 	public static class Level {
-		public static String AssetLevelPath = "content/rgb4";
+		public static final String AssetLevelPath = "content/rgb4";
 		public static final int TileMapId = 3;
-		public static String TileMapPath = "tiles/blocks.tmx";
+		public static final String TileMapPath = "tiles/blocks.tmx";
 		
 		public static class Teleporter
 		{

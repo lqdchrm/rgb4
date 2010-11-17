@@ -86,19 +86,21 @@ public abstract class PlayingState extends BasicGameState implements
 		
 		if (level != null)
 		{
-			if (!Constants.Debug.shadersActive)
-			{
-				// TODO Only use draw to texture if post processing is
-				// implemented in Level.java
-				// frameBuffer.getGraphics().clear();
-				//level.render(frameBuffer.getGraphics(), frameBuffer);
-				//graphicContext.drawImage(frameBuffer, 0, 0);
-				level.render(graphicContext, null);
-			}
-			else
-			{
-				level.render(graphicContext, null);
-			}
+//			if (!Constants.Debug.shadersActive)
+//			{
+//				// TODO Only use draw to texture if post processing is
+//				// implemented in Level.java
+//				// frameBuffer.getGraphics().clear();
+//				//level.render(frameBuffer.getGraphics(), frameBuffer);
+//				//graphicContext.drawImage(frameBuffer, 0, 0);
+//				level.render(graphicContext, null);
+//			}
+//			else
+//			{
+//				level.render(graphicContext, null);
+//			}
+			
+			level.render(graphicContext, null);
 		}
 	}
 	
