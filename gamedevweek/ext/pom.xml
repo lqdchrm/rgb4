@@ -1,0 +1,103 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.fhtrier.gdig</groupId>
+    <artifactId>ext</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+  
+    <name>RGB IV Externals</name>
+  
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>2.5.1</version>
+                <executions>
+
+                    <execution>
+                        <id>jogg</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <groupId>de.fhtrier.gdid.libs</groupId>
+                            <artifactId>jogg</artifactId>
+                            <version>0.0.7</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                            <file>${basedir}/lib/jogg-0.0.7.jar</file>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>jorbis</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <groupId>de.fhtrier.gdid.libs</groupId>
+                            <artifactId>jorbis</artifactId>
+                            <version>0.0.15</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                            <file>${basedir}/lib/jorbis-0.0.15.jar</file>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>xmlpull</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <groupId>de.fhtrier.gdid.libs</groupId>
+                            <artifactId>xmlpull-xpp3</artifactId>
+                            <version>1.1.4c</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                            <file>${basedir}/lib/xmlpull-xpp3-1.1.4c.jar</file>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+                    
+                    <execution>
+                        <id>slick2d</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <groupId>de.fhtrier.gdid.libs</groupId>
+                            <artifactId>slick2d</artifactId>
+                            <version>1.0</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                            <file>${basedir}/lib/slick.jar</file>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>nifty-slick</id>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <groupId>de.fhtrier.gdid.libs</groupId>
+                            <artifactId>nifty-slick</artifactId>
+                            <version>1.0</version>
+                            <packaging>jar</packaging>
+                            <generatePom>true</generatePom>
+                            <file>${basedir}/lib/nifty-slick.jar</file>
+                        </configuration>
+                        <goals>
+                            <goal>install-file</goal>
+                        </goals>
+                    </execution>
+
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

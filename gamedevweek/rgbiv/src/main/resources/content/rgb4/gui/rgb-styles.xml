@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nifty-styles>
+
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<!-- main menu style -->
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<style id="menu">
+		<attributes childLayout="vertical" align="center" valign="center"
+			height="50%" />
+		<effect>
+			<onStartScreen name="fade" startColor="#fff0" endColor="#ffff" length="250" startDelay="0" inherit="true" />
+			<onEndScreen name="fade" startColor="#ffff" endColor="#fff0" length="250" inherit="true" />
+		</effect>
+	</style>
+
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<!-- menu item style -->
+	<!-- +++++++++++++++++++++++++++++++++++++++ -->
+	<style id="menu-item">
+		<attributes align="center"
+			font="/fonts/DroidSansRegular24.fnt"
+			focusable="true" controller="de.lessvoid.nifty.controls.MenuItemControl"
+			inputMapping="de.lessvoid.nifty.input.mapping.MenuInputMapping" />
+		<effect>
+			<onHover name="focus" />
+			<onFocus name="shake" global="false" length="1000" distance="3"
+				post="false" />
+			<onFocus name="changeFont"
+				font="/fonts/DroidSansRegular24.fnt"
+				timeType="infinite" />
+		</effect>
+	</style>
+
+	<style id="fader">
+		<effect>
+			<onStartScreen name="fade" start="#0" end="#f"	length="1500" startDelay="100"/>
+			<onEndScreen name="fade"  start="#f" end="#0"	length="1500"/>
+		</effect>
+	</style>
+
+	<style id="standard-action">
+		<attributes></attributes>
+		<effect>
+				<onHover name="shake" global="false" length="1000" distance="3" post="false" />
+				<onStartScreen name="fade"></onStartScreen>
+		</effect>			
+	</style>
+
+	<style id="lobby-button">
+		<attributes align="center" width="80%"
+			font="/fonts/PublicGothicFederal42.fnt" color="#2F3D96"
+			focusable="true" controller="de.lessvoid.nifty.controls.MenuItemControl"
+			inputMapping="de.lessvoid.nifty.input.mapping.MenuInputMapping" />
+		<effect>
+			<onHover name="shake" global="false" length="1000" distance="3" post="false" />
+		</effect>
+	</style>
+
+	<style id="standard-header">
+		<attributes padding="10px,10px,10px,10px" backgroundColor="#333e" />
+	</style>
+	
+	<style id="credits-0">
+		<attributes font="/fonts/DroidSansBold24.fnt" focusable="false" />
+	</style>
+
+	<style id="credits-1">
+ 		<attributes font="/fonts/DroidSansRegular24.fnt" color="#ffff" focusable="false" align="center" valign="center"/> 
+	</style>
+	
+	<style id="header-label">
+ 		<attributes font="/fonts/PublicGothicFederal42.fnt" color="#300f" focusable="false" align="center" valign="center"/>  
+	</style>
+	
+	<style id="lobby-panel-background">
+		<attributes backgroundColor="#aaaa"/>
+	</style>
+
+	<style id="standard-panel">
+		<attributes valign="top" align="left" childLayout="vertical" padding="10px,10px,10px,10px"/>
+	</style>
+
+
+	<style id="header">
+ 		<attributes font="/fonts/PublicGothicFederal42.fnt" color="#009233" focusable="false"/>  
+	</style>
+	
+	<style id="sectionHeader">
+ 		<attributes font="/fonts/PublicGothicFederal42.fnt" color="#009233" focusable="false"/>  
+	</style>
+
+	<style id="rgb-panel">
+		<attributes backgroundColor="#28282895" padding="10px"/>
+	</style>
+	
+	<style id="rgb-section">
+		<attributes font="/fonts/DroidSansRegular16.fnt" backgroundColor="#28282895" padding="4px"/>
+	</style>	
+	
+	<style id="standard-footer">
+		<attributes padding="10px,10px,10px,10px" backgroundColor="#333e" />
+	</style>
+
+
+	<style id="lobby-header">
+		<attributes align="center"
+			font="/fonts/PublicGothicFederal42.fnt"
+			focusable="false" />
+	</style>
+	
+	<style id="player-list">
+	</style>
+	
+	<style id="level-list">
+	</style>
+	
+	<style id="scroller">
+		<effect>
+           <onActive name="autoScroll" length="90000" start="0" end="-3100" inherit="true" onEndEffect="scrollEnd()" neverStopRendering="true" />
+		</effect>
+	</style>
+
+	<style id="console-text">
+		<attributes font="/fonts/DroidSansRegular16.fnt" color="#000f" />
+	</style>
+	
+	  <style id="nifty-panel">
+	    <attributes backgroundColor="#ffffff99" align="center" width="80%" height="40px" childLayout="center" visibleToMouse="true" color="#000000"/>
+	  </style>		
+	
+	
+  	<!-- style for the button background panel -->
+	  <style id="nifty-button#panel">
+	    <attributes backgroundColor="#0F0F0F99" align="center" width="80%" height="40px" childLayout="center" visibleToMouse="true" />
+	  </style>
+
+	  <!-- style for the button text -->
+	  <style id="nifty-button#text">
+	    <attributes font="/fonts/DroidSansRegular16.fnt" align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="true" color="#ffffff" />
+	  </style>
+  
+  
+  <style id="waiting_for_master">
+    <attributes font="/fonts/DroidSansRegular24.fnt" align="center" valign="center" textHAlign="center" textVAlign="center" visibleToMouse="true"/>
+  </style>
+  
+  <style id="nifty-textfield#panel">
+    <attributes backgroundColor="#100a" childLayout="overlay" height="40px" childClip="true"/>
+  </style>
+  
+  <style id="nifty-textfield#field">
+    <attributes childLayout="center" visibleToMouse="true" childClip="true" />
+  </style>
+
+  <style id="nifty-textfield#text">
+    <attributes font="/fonts/DroidSansRegular24.fnt" visibleToMouse="false" align="left" textHAlign="left" valign="center"/>
+  </style>
+  
+ <style id="nifty-textfield#cursor">
+    <attributes filename="images/gui-cursor-empty.png" valign="top"/>
+    <effect>
+      <onActive name="imageOverlayPulsate" period="500" timeType="infinite" pulsateType="rectangle" filename="images/gui-cursor.png" post="true"/>
+    </effect>
+  </style>
+
+  <style id="textLabel">
+	<attributes font="/fonts/DroidSansBold24.fnt" focusable="false" padding="4px"/>
+  </style>
+  
+  <style id="in-out-transition">
+		<effect>
+			<onStartScreen name="fade" start="#0" end="#f" length="900" inherit="true" />
+			<onEndScreen name="fade" start="#f" end="#0" length="900" inherit="true" />
+		</effect>
+  </style>
+  
+  <style id="out-transition">
+		<effect>
+			<onEndScreen name="fade" start="#f" end="#0" length="900" inherit="true" />
+		</effect>
+  </style>
+  	
+</nifty-styles>

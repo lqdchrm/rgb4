@@ -9,3 +9,8 @@ gamedev/bin
 gamedev/export
 .DS_Store
 .metadata/
+/gamedevweek/nbproject/private/
+/gamedevweek/rgbiv/target/
+*.log
+**/nbactions.xml
+gamedevweek/rgbiv/nbactions.xml

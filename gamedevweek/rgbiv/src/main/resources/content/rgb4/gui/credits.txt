@@ -1,0 +1,27 @@
+#The GDIG Team proudly presented
+
+##/images/rgb4_logo_trimmed.png,397px,162px
+
+#Team
+Bastian Schumacher
+Falco Wockenfuss
+Paul Schiffgens
+Thomas Schrader
+Thomas Trocha
+Artur Bullert
+Max Virnich
+Robin Dick
+Slayerzwerg
+Jan Wurm
+Markus Esch
+Florian Niembs
+Daniel Dewald
+Benni Olah
+Benni Helsper
+Patrick Kranz
+Christian Gerhards
+Robert Roessger
+Tobias Krumholz
+
+#3rd party
+Slick2d - http://slick.cokeandcode.com/
